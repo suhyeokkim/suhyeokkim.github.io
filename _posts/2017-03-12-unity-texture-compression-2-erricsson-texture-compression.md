@@ -8,7 +8,7 @@ tag: [unity, texture_compression]
 
 #### 이 글은 [이전 블로그](jhedde.tistory.com)에서 가져온 글입니다.
 
-모든 내용은 전부 Jacob Ström 홈페이지의 자료등을 참고했습니다.(http://www.jacobstrom.com/output.html)
+모든 내용은 전부 Jacob Ström 홈페이지의 자료등을 참고했습니다.([http://www.jacobstrom.com/output.html](http://www.jacobstrom.com/output.html))
 
 ---
 

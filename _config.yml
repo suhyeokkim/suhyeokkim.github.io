@@ -17,7 +17,7 @@ title: Apocrypha
 author: hermaeus mora
 description: 지식을 정리합니다.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "hrmrzizon.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 lang: ko
 timezone: UTC
 exclude:
@@ -30,7 +30,7 @@ exclude:
   - jekyll-whiteglass.gemspec
   - screenshot.png
   - vendor
-
+ 
 # Social media
 twitter_username:
 twitter_image:

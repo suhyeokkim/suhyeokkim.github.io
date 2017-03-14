@@ -6,7 +6,7 @@ show: false
 tag: [unity, texture_compression]
 ---
 
-모든 내용은 전부 Jacob Ström 홈페이지의 자료등을 참고했습니다.(http://www.jacobstrom.com/output.html)
+모든 내용은 전부 Jacob Ström 홈페이지의 자료등을 참고했습니다.([http://www.jacobstrom.com/output.html](http://www.jacobstrom.com/output.html))
 
 ## 3\. ETC2
 
@@ -22,6 +22,8 @@ ETC 에서 동차(difference) 모드는 서브블록의 색 공간을 합쳐서 
 | |
 
 위 그림에서 오버플로우, 언더플로우가 생길 떄 보조 모드에서 55bit 가 남는다고 쓰여있다. diffbit 을 사용하는 1bit, 색상의 빨간색 컴포넌트 R0, dR 두개를 합치면 8bit 로 63bit 에서 값을 빼서 구한 값이다. 사실 55bit 가 아닌 59bit 를 사용가능하다.
+
+오버플로우, 언더플로우가 생기는 모든 케이스가 아래 표에 표현되어 있다.
 
 | ![diagram]({{ site.url }}/assets/etc2_overflow_bit_table.png) |
 | :---: |
