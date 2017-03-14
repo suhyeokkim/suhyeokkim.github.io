@@ -1,0 +1,75 @@
+==================================================================
+https://keybase.io/hrmrzizon
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://hrmrzizon.github.io
+  * I am hrmrzizon (https://keybase.io/hrmrzizon) on keybase.
+  * I have a public key with fingerprint C69B 2571 491A A353 840E  CA23 7F28 F162 F3E0 207C
+
+To do so, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "eldest_kid": "0120ec91d2f2357289c7b10715deae42211dbf7a8a90d1143739f7f9e913dbaa75c30a",
+            "fingerprint": "c69b2571491aa353840eca237f28f162f3e0207c",
+            "host": "keybase.io",
+            "key_id": "7f28f162f3e0207c",
+            "kid": "0101ea0341a7830f9c06a7ce381ebf49329635bc2ead806449abff578df6b78f3a420a",
+            "uid": "f85304c758406bd4882f39617c6edd19",
+            "username": "hrmrzizon"
+        },
+        "service": {
+            "hostname": "hrmrzizon.github.io",
+            "protocol": "https:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1489489665,
+    "expire_in": 157680000,
+    "prev": "ea12fdc2e8a0857d96789fa8e110426571454904be524905551dbf4c6ab7e955",
+    "seqno": 10,
+    "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.65
+Comment: https://keybase.io/crypto
+
+yMNvAnicbZJtUFRVGMd3dTGhULBBQAHpBhGy0j33/SxmpghqjNYHNJC3c+89d7mD
+7MLusgErBDi+NITFlm5OJtkYZTolSSOVWFKOkoyEYzMMTfGWpg5TIAoL5NC9lF+a
+zpyZM+eZ//N7/s9zzvfB8w1BxlefHhPHB2J3Ga9ceL/M8PKlbqOHEO1yBWHxEEV4
+7sA7Zex05RepMmEhSECRWIJAphSKZnlKgBIvApIHrIwRZigKAFlUeCQgSMoAMDRP
+Q4VXIIaAlkWEeFaiSUSYCUW1WbGjxKHaXBpW4qBIsTxgIECIZmmB0aogiuYVSlAA
+Ryk0JimSl7TEQrtTz9DMiciJk1W7FtMu+XP2/kf/0DcJMCJpBiBeoEkFSiSHeAnT
+AsCiwkCaghzNihKFkSyQHMNAJCoKywuywom8oNCIoeZ8l83hFIGlSUbiWc0oJ8qM
+IGglIQd4icOyDKAudGKHDRVjTV3oKHZUqpV2G1FlJrSwW5WwPlm9lf9Kkq2qq7BM
+/KevEofdZZfsO3WBy1XitOgAV0WJnvEKFvP/ZeWLqk3W5qlluLHDqWqFLEBTSi5V
+hwNGgNrmONZM4PIS1YHzVV3B8pxAakuvg90aEiNAKbI2AwGRAsvLkOMFqCABA0Ay
+FKe/D8tAkhExS2kny7L6YzMSh0QeQ5Yl9O5KbXaNrUFdyKoxnarVhlxlDkxUdVzI
+MRmMQYYFAfP0j2YICgx5+P2++nXxrBRfEFDDv7V518bwgPvnrWMv1XvT0jcdujfb
+kvnakb1Z/kOTP+TFhj9SmL7p2+z4hNSlN/HwzMnTp711dMNz3mlItcZOR+d63yh/
+7+DXjbeGXp//IPJMfwwze636wW9TZP10q79n3eNpU7Yjnb+3JS/214ckLTEPeiLa
+c4dOrXbWwpaJ+q6q6i0/3p61Zq+tlaa6VyxgKs7l7ChoT1L7E1IiB3FP+YkzKU0L
+fWGFUS1Ky4vla1b44tLuLevaETjm5WOOkndC1smuqMafrBnGgZ/dE4m5TPTl47ZA
+c+Sev0JNwycyTQHN8cdg225J3WeO2x1CXim6GzFz0beK37NxtHo/ZHsam0vpS50D
+ZytzR29M3PmuPdATtrLGy20ODM12B/siRpxh2/IOb7mfdZY0315YPO4uGGX6p8f9
+OezqD8iWtI9esClNGYs6epsGS8Hb+/amNyQMV38Mn2xrthg/O3n3zdCDwZNFvqNf
+bH12qC814NyB9cudzzebvuxg360Lutx/4/OReQ11hqqt60WUlVTuGelfc7w++byD
+2fBMVCWf+OjFuFPdn1yb9DuJT/Mar26XlhzOaO30MKKnd6W3Zpny4fXBlKttoXn+
+m+TI2uvhcsWx7L5VTwDW9M3EreV9MWFS9PYm0x+Lth0Qu0J9qZb4maLaDY8lvjOe
+OfJL71NLqao/2+ukvwF7fbw2
+=Dam7
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/hrmrzizon
+
+==================================================================
