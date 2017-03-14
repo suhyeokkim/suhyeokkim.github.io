@@ -29,8 +29,8 @@ exclude:
   - CHANGELOG.media
   - jekyll-whiteglass.gemspec
   - screenshot.png
-  - vendor
- 
+  - vendor 
+
 # Social media
 twitter_username:
 twitter_image:
