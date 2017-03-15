@@ -16,6 +16,7 @@ script:
   - git clone -b master --depth 1 --quiet https://${TOKEN}@github.com/hrmrzizon/hrmrzizon.github.com.git _site
   - rm -rf _site/*
   - bundle exec jekyll build
+  - ls
 after_success:
   - cd _site
   - git add -A
