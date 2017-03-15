@@ -17,6 +17,7 @@ script:
   - rm -rf _site/*
   - bundle exec jekyll build
   - ls
+  - git config --global --list
 after_success:
   - cd _site
   - git add -A
