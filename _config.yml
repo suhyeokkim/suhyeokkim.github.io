@@ -25,11 +25,8 @@ exclude:
   - Gemfile.lock
   - Rakefile
   - README.md
-  - LICENSE.txt
-  - CHANGELOG.media
-  - jekyll-whiteglass.gemspec
-  - screenshot.png
-  - vendor 
+  - vendor
+  - spec
 
 # Social media
 twitter_username:

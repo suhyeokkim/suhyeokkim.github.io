@@ -20,7 +20,7 @@ after_success:
   - cd _site
   - git add -A
   - git commit -m "Travis-CI updated to $(git rev-parse --short $TRAVIS_COMMIT) at $(date -u +'%Y-%m-%d %H:%M:%S %Z')"
-  - git push https://${TOKEN}@github.com/hrmrzizon/hrmrziozn.github.com.git master --quiet
+  - git push -f https://${TOKEN}@github.com/hrmrzizon/hrmrziozn.github.com.git master --quiet
 branches:
   only:
     - source
