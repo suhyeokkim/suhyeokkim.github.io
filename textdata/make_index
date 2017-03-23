@@ -7,6 +7,7 @@ to write
 6. generational, mark-sweep gc, ref count, tri color gc
 7. mvc,mvp,mvvm
 8. reactivex-backpressure
+9. megatexturing, splating textue
 
 ## 댓글 기능 붙이기
 

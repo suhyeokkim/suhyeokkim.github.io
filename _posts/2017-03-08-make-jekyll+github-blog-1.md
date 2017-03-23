@@ -143,8 +143,8 @@ gem install jekyll
 모든 세팅이 다 끝났다면 이제 블로그를 직접 확인할 수 있다.
 
 {% highlight shell %}
-jekyll serve
 {% endhighlight %}
+jekyll serve
 
 위 명령어를 입력 후, 루프백 IP(127.0.0.1)나, localhost 도메인을 통해 블로그 서버를 직접 확인할 수 있다. 참고로 jekyll 은 4000 포트를 쓰니 참고 바란다.
 
