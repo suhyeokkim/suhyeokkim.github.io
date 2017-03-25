@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Make Jekyll+github Blog 2</title>
+  <meta name="description" content="아는 지인이 좋다고 추천해서 jekyll+github 으로 블로그를 만들게 되었다. 한글로 된 자료가 그리 많지 않아 직접 기록해보려 한다. atom 에디터 설정하기 에디터 다운 받기~ 댓글 기능 붙이기 간단하다. disqus 홈페이지 에 가입한다. 가입할 때 만든 페이지 관리 창으로 간다. Installing disqus 를 선택 후 jekyll 을 선택한다. 포스팅 위의 header 정보에 “comments: true” 가 되어 있어야 댓글이 나온다. 그 다음 Embeded Code 를 _includes 폴더에 파일로 하나 만들어 둔다. 그리고 post.html 에 {\% include (파일이름) \%} 이 코드를 원하는 곳에 넣어주면 작동한다. travis-ci 설정하기">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="hrmrzizon.github.io/2017/03/05/make-jekyll+github-blog-2/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Apocrypha" href="hrmrzizon.github.io/feed.xml">
+
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Make Jekyll+github Blog 2">
+  <meta name="twitter:description" content="아는 지인이 좋다고 추천해서 jekyll+github 으로 블로그를 만들게 되었다. 한글로 된 자료가 그리 많지 않아 직접 기록해보려 한다. atom 에디터 설정하기 에디터 다운 받기~ 댓글 기능 붙이기 간단하다. disqus 홈페이지 에 가입한다. 가입할 때 만든 페이지 관리 창으로 간다. Installing disqus 를 선택 후 jekyll 을...">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Apocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Make Jekyll+github Blog 2</h1>
+    
+    <p class="post-meta"><time datetime="2017-03-05T00:00:00+00:00" itemprop="datePublished">Mar 5, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-hyeok Kim</span></span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>아는 지인이 좋다고 추천해서 jekyll+github 으로 블로그를 만들게 되었다.
+한글로 된 자료가 그리 많지 않아 직접 기록해보려 한다.</p>
+
+<h3>atom 에디터 설정하기</h3>
+
+<p>에디터 다운 받기~</p>
+
+<h2>댓글 기능 붙이기</h2>
+
+<p>간단하다.</p>
+
+<ol>
+  <li><a href="https://disqus.com/">disqus 홈페이지</a> 에 가입한다.</li>
+  <li>가입할 때 만든 페이지 관리 창으로 간다.</li>
+  <li>Installing disqus 를 선택 후 jekyll 을 선택한다.</li>
+  <li>포스팅 위의 header 정보에 “comments: true” 가 되어 있어야 댓글이 나온다.</li>
+  <li>그 다음 Embeded Code 를 _includes 폴더에 파일로 하나 만들어 둔다.</li>
+  <li>그리고 post.html 에 {\% include (파일이름) \%} 이 코드를 원하는 곳에 넣어주면 작동한다.</li>
+</ol>
+
+<h2>travis-ci 설정하기</h2>
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://zizon.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy; hermaeus mora - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Ue4 Class Equipment</title>
+  <meta name="description" content="이 글은 언리얼 엔진 4 교육을 위한 글입니다. 강의 환경 강의 자료 http://hrmrzizon.github.io 언리얼 엔진 4 웹 문서 언리얼 엔진 4 에서 지원하는 예제들 추천 하드웨어 사양 OS CPU Ram 여유 디스크 공간 windows 7,8,10 Intell 혹은 AMD, 쿼드 코어, 2.5GHz 이상 8GB 이상 100GB 이상 사양 확인하기 : CPU-Z 다운로드 페이지 소프트웨어 설치 우선 언리얼 엔진 4 공식 홈페이지에 접속해 전용 런쳐를 다운로드 합니다. 홈페이지 우측 상단에 링크가 있습니다. 런처 설치는 오래 걸리지 않습니다. 런처 설치가 끝나면 엔진을 설치할 수 있습니다. 그런데 주의할 사항이 있습니다. 엔진과 앞으로의 엔진 사용은 꽤 많은 공간을 요구하기 때문에 디스크 여유 공간이 많이 있어야 합니다. 현재 4.15 버젼이 차지하는 디스크 공간은 21.9GB 입니다. 앞으로 디스크 렌더 캐싱, 프로젝트 등 디스크 공간을 요구하는 일이 많아질 것입니다. 또한 빠른 설치를 위해 원활한 네트워크 환경에서 설치를 진행하시길 바랍니다. 이제 런처에서 엔진 바이너리를 설치합니다. 현재 최신 버젼인 4.15 버젼을 설치해줍니다. 엔진 설치가 끝나거나 환경이 원활하다면 Visual Studio 2015 다운로드 페이지에서 다운로드 받아 설치합니다. IDE도 필요하지만 대부분 Windows 환경에서 실행하기 때문에 Windows SDK도 설치해주어야 합니다. 역시 많은 디스크 공간을 요구합니다. 또한 원활한 네트워크 환경에서 진행하길 바랍니다. 설치하면서 읽어볼 거리 Scalability, 엔진 퀄리티와 개발자">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="hrmrzizon.github.io/2017/03/05/ue4-class-equipment/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Apocrypha" href="hrmrzizon.github.io/feed.xml">
+
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Ue4 Class Equipment">
+  <meta name="twitter:description" content="이 글은 언리얼 엔진 4 교육을 위한 글입니다. 강의 환경 강의 자료 http://hrmrzizon.github.io 언리얼 엔진 4 웹 문서 언리얼 엔진 4 에서 지원하는 예제들 추천 하드웨어 사양 OS CPU Ram 여유 디스크 공간 windows 7,8,10 Intell 혹은 AMD, 쿼드 코어, 2.5GHz 이상 8GB 이상 100GB 이상 사...">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Apocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Ue4 Class Equipment</h1>
+    
+    <p class="post-meta"><time datetime="2017-03-05T00:00:00+00:00" itemprop="datePublished">Mar 5, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-hyeok Kim</span></span> • 
+  
+  
+    
+      <a href="/categories/edu-ue4/">edu,ue4</a>
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>이 글은 언리얼 엔진 4 교육을 위한 글입니다.</p>
+
+<h2>강의 환경</h2>
+
+<h3>강의 자료</h3>
+
+<ul>
+  <li><a href="http://hrmrzizon.github.io">http://hrmrzizon.github.io</a></li>
+  <li><a href="https://docs.unrealengine.com/latest/KOR/index.html">언리얼 엔진 4 웹 문서</a></li>
+  <li><a href="https://docs.unrealengine.com/latest/KOR/Resources/index.html">언리얼 엔진 4 에서 지원하는 예제들</a></li>
+</ul>
+
+<h3>추천 하드웨어 사양</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">OS</th>
+      <th style="text-align: center">CPU</th>
+      <th style="text-align: center">Ram</th>
+      <th style="text-align: center">여유 디스크 공간</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">windows 7,8,10</td>
+      <td style="text-align: center">Intell 혹은 AMD, 쿼드 코어, 2.5GHz 이상</td>
+      <td style="text-align: center">8GB 이상</td>
+      <td style="text-align: center">100GB 이상</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>사양 확인하기 : <a href="http://www.cpuid.com/softwares/cpu-z.html">CPU-Z 다운로드 페이지</a></p>
+
+<h3>소프트웨어 설치</h3>
+
+<p>우선 <a href="https://www.unrealengine.com/ko">언리얼 엔진 4 공식 홈페이지</a>에 접속해 전용 런쳐를 다운로드 합니다. 홈페이지 우측 상단에 링크가 있습니다. 런처 설치는 오래 걸리지 않습니다.</p>
+
+<p>런처 설치가 끝나면 엔진을 설치할 수 있습니다. <strong>그런데 주의할 사항이 있습니다.</strong> 엔진과 앞으로의 엔진 사용은 꽤 많은 공간을 요구하기 때문에 디스크 여유 공간이 많이 있어야 합니다. 현재 4.15 버젼이 차지하는 디스크 공간은 <strong>21.9GB</strong> 입니다. 앞으로 디스크 렌더 캐싱, 프로젝트 등 디스크 공간을 요구하는 일이 많아질 것입니다. 또한 빠른 설치를 위해 원활한 네트워크 환경에서 설치를 진행하시길 바랍니다.</p>
+
+<p>이제 런처에서 엔진 바이너리를 설치합니다. 현재 최신 버젼인 4.15 버젼을 설치해줍니다.</p>
+
+<p>엔진 설치가 끝나거나 환경이 원활하다면 <a href="https://www.visualstudio.com/ko/downloads/">Visual Studio 2015 다운로드 페이지</a>에서 다운로드 받아 설치합니다. IDE도 필요하지만 대부분 Windows 환경에서 실행하기 때문에 Windows SDK도 설치해주어야 합니다. 역시 많은 디스크 공간을 요구합니다. 또한 원활한 네트워크 환경에서 진행하길 바랍니다.</p>
+
+<h3>설치하면서 읽어볼 거리</h3>
+
+<ul>
+  <li><a href="https://docs.unrealengine.com/latest/KOR/Engine/Performance/Scalability/ScalabilityAndYou/index.html">Scalability, 엔진 퀄리티와 개발자</a></li>
+</ul>
+
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://zizon.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy; hermaeus mora - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
