@@ -6,6 +6,9 @@ rvm:
 before_install:
   - gem update --system
   - gem update --remote bundler
+install:
+  - bundle install --jobs=3 --retry=3 --path=${BUNDLE_PATH:-vendor/bundle}
+  - gem install coveralls
 before_script:
   - git config --global user.name "$(git --no-pager show --no-patch --format='%an')"
   - git config --global user.email "$(git --no-pager show --no-patch --format='%ae')"
@@ -13,6 +16,7 @@ script:
   - git clone -b master --depth 1 --quiet "https://${TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git" _site
   - rm -r _site/*
   - bundle exec jekyll build
+  - bundle exec rake
 after_success:
   - cd _site
   - git add -A
