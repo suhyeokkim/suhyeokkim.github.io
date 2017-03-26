@@ -1,0 +1,4 @@
+git add .travis.yml
+git add _config.yml
+git commit --amend
+git push -f origin source
