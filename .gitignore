@@ -2,9 +2,4 @@
 .bundle
 .sass-cache
 Gemfile.lock
-
-.ssh/*
-deploy_key.*
-deploy_key
-
 _site
