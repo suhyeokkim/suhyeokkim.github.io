@@ -5,7 +5,7 @@
   
   <link href="hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-03-28T04:51:36+00:00</updated>
+  <updated>2017-03-28T06:43:15+00:00</updated>
   <id>hrmrzizon.github.io//</id>
 
   
@@ -146,6 +146,8 @@
       
         <category term="texture_compression" />
       
+        <category term="analysis" />
+      
 
       
 
@@ -187,6 +189,8 @@
         <category term="unity" />
       
         <category term="texture_compression" />
+      
+        <category term="analysis" />
       
 
       
@@ -288,6 +292,8 @@
         <category term="unity" />
       
         <category term="texture_compression" />
+      
+        <category term="analysis" />
       
 
       
@@ -472,6 +478,8 @@
       
         <category term="texture_compression" />
       
+        <category term="analysis" />
+      
 
       
 
@@ -512,7 +520,7 @@
       
         <category term="gc" />
       
-        <category term="common" />
+        <category term="analysis" />
       
 
       
@@ -607,6 +615,8 @@
       
         <category term="texture_compression" />
       
+        <category term="analysis" />
+      
 
       
 
@@ -654,11 +664,11 @@
       
         <category term="csharp" />
       
+        <category term="analysis" />
+      
+        <category term="try" />
+      
 
-      
-        <category term="unity" />
-      
-        <category term="csharp" />
       
 
       
@@ -849,6 +859,8 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
       
         <category term="makeblog" />
       
+        <category term="try" />
+      
 
       
 
@@ -934,10 +946,6 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
       
 
       
-        <category term="edu" />
-      
-        <category term="ue4" />
-      
 
       
         <summary type="html">이 글은 언리얼 엔진 4 교육을 위한 글입니다. 강의를 듣는 태도? 강사는 강의를 합니다. 아마 목청껏 떠들겁니다. 듣는 사람, 강의자를 위해 실례되는 행동은 삼가주시기 바랍니다. 실습 진행시에는 집중을 위해 잡담은 지양해주세요. 게임 엔진을 다루는 태도? 일반적인 게임 엔진은 많은 시스템을 구축해 놓고 그 시스템들 안에서 개발하는 방식을 채택합니다. 특히 언리얼 엔진 4 는 많은 시스템들이 존재합니다. 이 시스템들을 현명하게 활용해 게임을 만들어야 합니다. 간단하게 “현명하게 활용하는 방법” 을 살펴보겠습니다. 엔진에 존재하는 기능을 활용하라. 존재하는 기능을 활용하세요. 만약 문제가 있는 기능이라면 사용하지 말아야 겠지만 대부분의 기능들은 검증된 기능일 것입니다. 안정성이 보장된 기능을 사용하라. 언리얼 엔진 4는 기능을 공식으로 지원하기 전에 실험 단계를 거칩니다. 공식으로 지원하는 기능만 사용해도 안정성을 보장받을 것 입니다. 지원하는 문서들을 적극적으로 읽어보라. 설명이 필요 없네요. 이것들은 꼭 알고 있어야 합니다!! 언리얼 엔진 4 는 개발 언어를 C++ 과 Blueprint 를 사용합니다. 프로그램의 로직을 직접 짤 수 있어야 하고, C++ 의 문법들을 숙지하고 있어야 합니다. 언리얼 엔진 4 자체에서 C++ 문법을 확장한 부분도 있기 때문에 구분할 필요도 있구요. 도움될만한 지식들 component base development object oriented programming</summary>
@@ -979,10 +987,6 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
         <category term="ue4" />
       
 
-      
-        <category term="edu" />
-      
-        <category term="ue4" />
       
 
       
@@ -1061,11 +1065,11 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
 
 &lt;p&gt;게임 시스템을 보면, Unity 는 Scene 이란 GameObject 들의 계층 구조의 집합을 정의해놓고 모든 로직이 그 안에서 돌아가게 합니다. GameObject 들은 여러 Component 들을 붙이거나 뗄 수 있습니다. CBD 기반이지요.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;hrmrzizon.github.io/images/Unity_HierarchyWindowCallout.png&quot; alt=&quot;Unity Hierarchy 뷰어&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/Unity_HierarchyWindowCallout.png&quot; alt=&quot;Unity Hierarchy 뷰어&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Unrealengine 에서는 레벨이란 단위안에 지형, 액터등 많은 것들을 가지고 사용자가 직접 로드하게 하거나 자동으로 로드해줍니다. 또한 여러 오브젝트들에 하위 컴포넌트나, Blueprint 스크립트를 붙일 수 있습니다.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;hrmrzizon.github.io/images/unityandue4.jpg&quot; alt=&quot;Unity 와 UE4&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/unityandue4.jpg&quot; alt=&quot;Unity 와 UE4&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://docs.unrealengine.com/latest/INT/GettingStarted/FromUnity/index.html&quot;&gt;Unrea Engine 4 For Unity Developers&lt;/a&gt;&lt;/p&gt;
 
@@ -1111,6 +1115,8 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
         <category term="edu" />
       
         <category term="ue4" />
+      
+        <category term="analysis" />
       
 
       
