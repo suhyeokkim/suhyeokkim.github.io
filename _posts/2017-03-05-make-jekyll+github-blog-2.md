@@ -3,7 +3,9 @@ layout: post
 author: "Su-hyeok Kim"
 comments: true
 show: false
-tag: [jekyll, makeblog]
+categories:
+  - jekyll
+  - makeblog
 ---
 
 아는 지인이 좋다고 추천해서 jekyll+github 으로 블로그를 만들게 되었다.

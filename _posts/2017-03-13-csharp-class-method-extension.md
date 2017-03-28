@@ -3,7 +3,9 @@ layout: post
 author: "Su-hyeok Kim"
 comments: true
 show: true
-tag: [csharp, c#]
+categories:
+    - csharp
+    - c#
 ---
 
 unirx 를 살펴보다 모르는 문법이 나와서 기록해둔다. [MSDN 확장 메서드 문서](https://msdn.microsoft.com/ko-kr/library/bb383977.aspx) 를 참고했다.

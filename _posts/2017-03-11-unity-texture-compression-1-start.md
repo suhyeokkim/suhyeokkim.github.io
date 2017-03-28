@@ -3,7 +3,9 @@ layout: post
 author: "Su-hyeok Kim"
 comments: true
 show: true
-tag: [unity, texture_compression]
+categories:
+    - unity
+    - texture_compression
 ---
 
 #### 이 글은 [이전 블로그](jhedde.tistory.com)에서 가져온 글입니다.

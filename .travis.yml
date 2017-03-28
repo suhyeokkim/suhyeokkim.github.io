@@ -8,7 +8,6 @@ before_install:
   - gem update --remote bundler
 install:
   - bundle install --jobs=3 --retry=3 --path=${BUNDLE_PATH:-vendor/bundle}
-  - gem install coveralls
 before_script:
   - git config --global user.name "$(git --no-pager show --no-patch --format='%an')"
   - git config --global user.email "$(git --no-pager show --no-patch --format='%ae')"

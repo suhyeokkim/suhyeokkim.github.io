@@ -13,12 +13,13 @@
 # you will see them accessed via {{ site.title }}, {{ site.author }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: Apocrypha
-author: hermaeus mora
-description: 지식을 정리합니다.
+title: Appocrypha
+author: Su-Hyeok Kim
+description: Software 정보를 올립니다.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "hrmrzizon.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 lang: ko
+theme: jekyll-whiteglass
 timezone: UTC
 exclude:
   - Gemfile
@@ -27,18 +28,20 @@ exclude:
   - README.md
   - vendor
   - spec
+  - textdata
+  - tl
 
 # Social media
-twitter_username:
-twitter_image:
-facebook_app_id:
-facebook_image:
+facebook_app_id: 639405536264839
+facebook_image: http://hrmrzizon.github.io/images/github_profile_image.jpg
 google_analytics: UA-93000374-1
 
 # Plugins
 gems:
   - jekyll-archives
+  - jekyll-gist
   - jekyll-paginate
+  - jekyll-redirect-from
   - jekyll-sitemap
 
 # Build settings

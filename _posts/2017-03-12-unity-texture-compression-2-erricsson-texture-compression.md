@@ -3,7 +3,9 @@ layout: post
 author: "Su-hyeok Kim"
 comments: true
 show: true
-tag: [unity, texture_compression]
+categories:
+    - unity
+    - texture_compression
 ---
 
 #### 이 글은 [이전 블로그](jhedde.tistory.com)에서 가져온 글입니다.
@@ -20,7 +22,7 @@ tag: [unity, texture_compression]
 
 PACKMAN 은 블록 방식의 텍스쳐 압축 기법으로, 직사각형 픽셀 그룹을 만들어 압축한다. RGB 채널이 각각 8bit인 픽셀 8개를(2*4=8) 총 32bit로 압축시킨다. 압축을 안할 시 192bit 이니 1/6 의 공간을 차지하게 압축한다.
 
-| ![12bit_general_color]({{ site.url }}/assets/etc1_12bit_general_color.png)              | + | ![per-pixel_luminance]({{ site.url }}/assets/etc1_per-pixel_luminance.png)           | + | ![packman-compressed]({{ site.url }}/assets/etc1_packman-compressed.png) |
+| ![12bit_general_color](/images/etc1_12bit_general_color.png)              | + | ![per-pixel_luminance](/images/etc1_per-pixel_luminance.png)           | + | ![packman-compressed](/images/etc1_packman-compressed.png) |
 | :-----: | :-----: | :-----: | :-----: | :-----: |
 | 12bit general color |  | per-pixel_luminance | | packman-compressed |
 | | | | | |
@@ -29,7 +31,7 @@ PACKMAN 의 정보는 블록에서 평균색(첫번째 그림:general color)과 
 
 평균색은 말 그대로 픽셀들간의 평균 색이고, 색 편차는 픽셀별로 다른 색들을 평균 색과 비교해서 가장 가까운 편차를 선정한다. 위 문단에서 테이블의 인덱스를 기록한다고 했는데 더 자세하게 알아보기 위해 테이블을 가져왔다.
 
-![luminancetable]({{ site.url }}/assets/etc1_luminance_table.png)
+![luminancetable](/images/etc1_luminance_table.png)
 
 위 표는 자주 사용될만한 색 편차들을 정해놓은 표다. 원래는 4개의 숫자가 한개의 세트로 16세트로 구성되어 있으나, 위 표에는 앞의 8개만 나와있다.
 
@@ -56,7 +58,7 @@ PACKMAN 압축 방식은 문제가 있었다. PACKMAN 방식으로 압축된 이
 
 RGB444의 한계를 느끼고 RGB555 로 평균 색을 확장해서 색차의 범위를 확인했다. 20개의 서로 다른 이미지들의 색 편차(deviation)의 통계 데이터를 확인해보자.
 
-| ![histogram_difference]({{ site.url }}/assets/etc1_histogram_difference_average_color.png) |
+| ![histogram_difference](/images/etc1_histogram_difference_average_color.png) |
 | :---: |
 | RGB555로 양자화된 평균 색상의 편차 그래프 |
 | |
@@ -69,7 +71,7 @@ table codeword 의 사이즈를 1bit 씩 줄여 2*4 픽셀 그룹이 2개니 2bi
 
 직관적으로 데이터 구성을 이해하기 위해 논문에 있던 이미지를 첨부하겠다.
 
-| ![histogram_difference]({{ site.url }}/assets/etc1_table_diff_vs_normal.png) |
+| ![histogram_difference]({{ site.url }}/images/etc1_table_diff_vs_normal.png) |
 | :---: |
 | 데이터 구성 |
 | |

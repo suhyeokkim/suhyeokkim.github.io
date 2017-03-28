@@ -3,7 +3,9 @@ layout: post
 author: "Su-hyeok Kim"
 comments: true
 show: true
-tag: [jekyll, makeblog]
+categories:
+    - jekyll
+    - makeblog
 ---
 
 아는 지인이 좋다고 추천해서 jekyll+github 으로 블로그를 만들게 되었다.
@@ -23,7 +25,7 @@ tag: [jekyll, makeblog]
 
 ### GitHub 가입하기
 
-![Github.com]({{ site.url }}/assets/github_homepage_signup.png)
+![Github.com](/images/github_homepage_signup.png)
 
 [Github.com][github_com]에서 가입하면 된다. 가입 절차는 간단하니 직접 해보라.
 
@@ -31,7 +33,7 @@ tag: [jekyll, makeblog]
 
 하나의 저장소를 만든다. 이때 중요한 것은 레포지토리 이름을 반드시 "__\(닉네임\)__.githum.com" 으로 적어주여야 한다.
 
-![make_repo]({{ site.url }}/assets/github_make_repo.png)
+![make_repo](/images/github_make_repo.png)
 
 위와 같이 말이다. 우리는 원격 블로그 저장소를 만들었다. 이제 저장할 블로그 내용물을 만들 차례다.
 
@@ -57,7 +59,7 @@ Github 에서는 Ruby 로 만들어진 Jekyll 프레임워크 기반의 블로�
 
 GitHub 에서 원하는 jekyll 테마를 clone 해준다. 이 글을 쓸 무렵 필자는 [whiteglass][jekyll-whiteglass] 테마를 사용했었다.
 
-![whiteglass_theme]({{ site.url }}/assets/github_jekyll_whiteglass_theme.png)
+![whiteglass_theme](/images/github_jekyll_whiteglass_theme.png)
 
 > git clone {other's url}
 

@@ -3,7 +3,9 @@ layout: post
 author: "Su-hyeok Kim"
 comments: true
 show: false
-tag: [unity, texture_compression]
+categories:
+    - unity
+    - texture_compression
 ---
 
 모든 내용은 전부 Jacob Ström 홈페이지의 자료등을 참고했습니다.([http://www.jacobstrom.com/output.html](http://www.jacobstrom.com/output.html))
@@ -16,7 +18,7 @@ ETC2 는 ETC 에서 블록의 모드를 더 추가해 다양한 방식으로 표
 
 ETC 에서 동차(difference) 모드는 서브블록의 색 공간을 합쳐서 활용하여 RGB555+dRGB333 으로 색을 표현했다. 여기서 유효하지 않은 비트 공간을 일부로 만들 수 있다. 바로 각자 색 성분이 합쳐져 0미만으로 언더 플로우가 나게하거나, 32 이상으로 만들어 오버플로우를(RGB555) 줘서 신호를 주는 것이다. 그렇게 RGB 세 성분을 유효하지 않게 만들어 3가지의 모드를 확보한다. ETC2 는 이 3가지 모드를 보조(auxiliary) 모드라고 칭한다. 아래 그림은 모드를 선택하는 다이어그램이다.
 
-| ![diagram]({{ site.url }}/assets/etc2_invalid_bit_diagram.png) |
+| ![diagram](/images/etc2_invalid_bit_diagram.png) |
 | :---: |
 | ETC2 의 모드 선택 다이어그램 |
 | |
@@ -25,7 +27,7 @@ ETC 에서 동차(difference) 모드는 서브블록의 색 공간을 합쳐서 
 
 오버플로우, 언더플로우가 생기는 모든 케이스가 아래 표에 표현되어 있다. 데이터를 이진수로 보면 R0, dR 컴포넌트의 맨 마지막
 
-| ![diagram]({{ site.url }}/assets/etc2_overflow_bit_table.png) |
+| ![diagram](/images/etc2_overflow_bit_table.png) |
 | :---: |
 | ETC2 의 invalid 한 색상 테이블 |
 | |

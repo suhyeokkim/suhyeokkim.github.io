@@ -4,7 +4,9 @@ categories: edu,ue4
 author: "Su-hyeok Kim"
 comments: true
 show: false
-tag: [edu, ue4]
+categories:
+  - edu
+  - ue4
 ---
 
  이 글은 언리얼 엔진 4 교육을 위한 글입니다.

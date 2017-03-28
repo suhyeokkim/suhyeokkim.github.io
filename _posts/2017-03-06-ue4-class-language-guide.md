@@ -5,4 +5,7 @@ tag: [edu, ue4]
 comments: true
 show: false
 education: true
+categories:
+    - edu
+    - ue4
 ---
