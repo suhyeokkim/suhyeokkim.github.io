@@ -5,7 +5,7 @@
   
   <link href="hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-03-28T01:39:34+00:00</updated>
+  <updated>2017-03-28T01:48:03+00:00</updated>
   <id>hrmrzizon.github.io//</id>
 
   
@@ -100,11 +100,11 @@
       
 
       
-
-      
         <category term="csharp" />
       
-        <category term="c#" />
+        <category term="c\#" />
+      
+
       
 
       
@@ -142,11 +142,11 @@
       
 
       
-
-      
         <category term="unity" />
       
         <category term="texture_compression" />
+      
+
       
 
       
@@ -184,11 +184,11 @@
       
 
       
-
-      
         <category term="unity" />
       
         <category term="texture_compression" />
+      
+
       
 
       
@@ -285,11 +285,11 @@
       
 
       
-
-      
         <category term="unity" />
       
         <category term="texture_compression" />
+      
+
       
 
       
@@ -468,11 +468,11 @@
       
 
       
-
-      
         <category term="unity" />
       
         <category term="texture_compression" />
+      
+
       
 
       
@@ -510,11 +510,11 @@
       
 
       
-
-      
         <category term="gc" />
       
         <category term="common" />
+      
+
       
 
       
@@ -603,11 +603,11 @@
       
 
       
-
-      
         <category term="unity" />
       
         <category term="texture_compression" />
+      
+
       
 
       
@@ -649,6 +649,10 @@
         </author>
       
 
+      
+        <category term="jekyll" />
+      
+        <category term="makeblog" />
       
 
       
@@ -841,11 +845,11 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
       
 
       
-
-      
         <category term="jekyll" />
       
         <category term="makeblog" />
+      
+
       
 
       
@@ -924,6 +928,10 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
       
 
       
+        <category term="edu" />
+      
+        <category term="ue4" />
+      
 
       
         <category term="edu" />
@@ -965,6 +973,10 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
         </author>
       
 
+      
+        <category term="edu" />
+      
+        <category term="ue4" />
       
 
       
@@ -1012,11 +1024,11 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
       
 
       
-
-      
         <category term="edu" />
       
         <category term="ue4" />
+      
+
       
 
       
@@ -1096,11 +1108,11 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
       
 
       
-
-      
         <category term="edu" />
       
         <category term="ue4" />
+      
+
       
 
       
@@ -1187,13 +1199,11 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
       
 
       
-        <category term="edu,ue4" />
-      
-
-      
         <category term="edu" />
       
         <category term="ue4" />
+      
+
       
 
       
@@ -1251,11 +1261,11 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
       
 
       
-
-      
         <category term="jekyll" />
       
         <category term="makeblog" />
+      
+
       
 
       
