@@ -6,6 +6,7 @@ show: false
 categories:
     - unity
     - texture_compression
+    - analysis
 ---
 
 모든 내용은 전부 Jacob Ström 홈페이지의 자료등을 참고했습니다.([http://www.jacobstrom.com/output.html](http://www.jacobstrom.com/output.html))

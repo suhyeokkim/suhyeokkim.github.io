@@ -6,6 +6,7 @@ show: true
 categories:
     - unity
     - texture_compression
+    - analysis
 ---
 
 #### 이 글은 [이전 블로그](jhedde.tistory.com)에서 가져온 글입니다.

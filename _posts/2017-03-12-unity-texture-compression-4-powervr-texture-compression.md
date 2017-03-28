@@ -6,6 +6,7 @@ show: false
 categories:
     - unity
     - texture_compression
+    - analysis
 ---
 
 ## 4\. PVRTC

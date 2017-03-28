@@ -5,5 +5,5 @@ comments: true
 show: false
 categories:
     - gc
-    - common
+    - analysis
 ---

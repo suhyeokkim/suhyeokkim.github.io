@@ -6,7 +6,8 @@ show: false
 categories:
     - unity
     - csharp
-tag: [unity, csharp]
+    - analysis
+    - try
 ---
 
 1. function call

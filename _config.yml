@@ -17,7 +17,7 @@ title: Appocrypha
 author: Su-Hyeok Kim
 description: Software 정보를 올립니다.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "hrmrzizon.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://hrmrzizon.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 lang: ko
 theme: jekyll-whiteglass
 timezone: UTC

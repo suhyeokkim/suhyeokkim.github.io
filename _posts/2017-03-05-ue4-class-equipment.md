@@ -1,6 +1,5 @@
 ---
 layout: post
-categories: edu,ue4
 author: "Su-hyeok Kim"
 comments: true
 show: false
