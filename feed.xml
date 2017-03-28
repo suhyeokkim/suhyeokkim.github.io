@@ -5,7 +5,7 @@
   
   <link href="hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-03-28T01:58:49+00:00</updated>
+  <updated>2017-03-28T02:45:10+00:00</updated>
   <id>hrmrzizon.github.io//</id>
 
   
@@ -222,7 +222,7 @@
 &lt;table&gt;
   &lt;thead&gt;
     &lt;tr&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;hrmrzizon.github.io/assets/etc2_invalid_bit_diagram.png&quot; alt=&quot;diagram&quot; /&gt;&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/etc2_invalid_bit_diagram.png&quot; alt=&quot;diagram&quot; /&gt;&lt;/th&gt;
     &lt;/tr&gt;
   &lt;/thead&gt;
   &lt;tbody&gt;
@@ -242,7 +242,7 @@
 &lt;table&gt;
   &lt;thead&gt;
     &lt;tr&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;hrmrzizon.github.io/assets/etc2_overflow_bit_table.png&quot; alt=&quot;diagram&quot; /&gt;&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/etc2_overflow_bit_table.png&quot; alt=&quot;diagram&quot; /&gt;&lt;/th&gt;
     &lt;/tr&gt;
   &lt;/thead&gt;
   &lt;tbody&gt;
@@ -327,11 +327,11 @@
 &lt;table&gt;
   &lt;thead&gt;
     &lt;tr&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;hrmrzizon.github.io/assets/etc1_12bit_general_color.png&quot; alt=&quot;12bit_general_color&quot; /&gt;&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/etc1_12bit_general_color.png&quot; alt=&quot;12bit_general_color&quot; /&gt;&lt;/th&gt;
       &lt;th style=&quot;text-align: center&quot;&gt;+&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;hrmrzizon.github.io/assets/etc1_per-pixel_luminance.png&quot; alt=&quot;per-pixel_luminance&quot; /&gt;&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/etc1_per-pixel_luminance.png&quot; alt=&quot;per-pixel_luminance&quot; /&gt;&lt;/th&gt;
       &lt;th style=&quot;text-align: center&quot;&gt;+&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;hrmrzizon.github.io/assets/etc1_packman-compressed.png&quot; alt=&quot;packman-compressed&quot; /&gt;&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/etc1_packman-compressed.png&quot; alt=&quot;packman-compressed&quot; /&gt;&lt;/th&gt;
     &lt;/tr&gt;
   &lt;/thead&gt;
   &lt;tbody&gt;
@@ -356,7 +356,7 @@
 
 &lt;p&gt;평균색은 말 그대로 픽셀들간의 평균 색이고, 색 편차는 픽셀별로 다른 색들을 평균 색과 비교해서 가장 가까운 편차를 선정한다. 위 문단에서 테이블의 인덱스를 기록한다고 했는데 더 자세하게 알아보기 위해 테이블을 가져왔다.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;hrmrzizon.github.io/assets/etc1_luminance_table.png&quot; alt=&quot;luminancetable&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/etc1_luminance_table.png&quot; alt=&quot;luminancetable&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;위 표는 자주 사용될만한 색 편차들을 정해놓은 표다. 원래는 4개의 숫자가 한개의 세트로 16세트로 구성되어 있으나, 위 표에는 앞의 8개만 나와있다.&lt;/p&gt;
 
@@ -394,7 +394,7 @@
 &lt;table&gt;
   &lt;thead&gt;
     &lt;tr&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;hrmrzizon.github.io/assets/etc1_histogram_difference_average_color.png&quot; alt=&quot;histogram_difference&quot; /&gt;&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/etc1_histogram_difference_average_color.png&quot; alt=&quot;histogram_difference&quot; /&gt;&lt;/th&gt;
     &lt;/tr&gt;
   &lt;/thead&gt;
   &lt;tbody&gt;
@@ -418,7 +418,7 @@
 &lt;table&gt;
   &lt;thead&gt;
     &lt;tr&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;hrmrzizon.github.io/assets/etc1_table_diff_vs_normal.png&quot; alt=&quot;histogram_difference&quot; /&gt;&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;hrmrzizon.github.io/images/etc1_table_diff_vs_normal.png&quot; alt=&quot;histogram_difference&quot; /&gt;&lt;/th&gt;
     &lt;/tr&gt;
   &lt;/thead&gt;
   &lt;tbody&gt;
@@ -703,7 +703,7 @@
 
 &lt;h3&gt;GitHub 가입하기&lt;/h3&gt;
 
-&lt;p&gt;&lt;img src=&quot;hrmrzizon.github.io/assets/github_homepage_signup.png&quot; alt=&quot;Github.com&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/github_homepage_signup.png&quot; alt=&quot;Github.com&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com&quot;&gt;Github.com&lt;/a&gt;에서 가입하면 된다. 가입 절차는 간단하니 직접 해보라.&lt;/p&gt;
 
@@ -711,7 +711,7 @@
 
 &lt;p&gt;하나의 저장소를 만든다. 이때 중요한 것은 레포지토리 이름을 반드시 “&lt;strong&gt;(닉네임)&lt;/strong&gt;.githum.com” 으로 적어주여야 한다.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;hrmrzizon.github.io/assets/github_make_repo.png&quot; alt=&quot;make_repo&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/github_make_repo.png&quot; alt=&quot;make_repo&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;위와 같이 말이다. 우리는 원격 블로그 저장소를 만들었다. 이제 저장할 블로그 내용물을 만들 차례다.&lt;/p&gt;
 
@@ -744,7 +744,7 @@
 
 &lt;p&gt;GitHub 에서 원하는 jekyll 테마를 clone 해준다. 이 글을 쓸 무렵 필자는 &lt;a href=&quot;https://github.com/yous/whiteglass&quot;&gt;whiteglass&lt;/a&gt; 테마를 사용했었다.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;hrmrzizon.github.io/assets/github_jekyll_whiteglass_theme.png&quot; alt=&quot;whiteglass_theme&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/github_jekyll_whiteglass_theme.png&quot; alt=&quot;whiteglass_theme&quot; /&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;git clone {other’s url}&lt;/p&gt;
@@ -1007,7 +1007,7 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
 
 &lt;h2&gt;에디터 활용하기&lt;/h2&gt;
 
-&lt;p&gt;&lt;img src=&quot;hrmrzizon.github.io/assets/unityandue4.jpg&quot; alt=&quot;Unity 와 UE4&quot; /&gt;&lt;/p&gt;</content>
+&lt;p&gt;&lt;img src=&quot;hrmrzizon.github.io/images/unityandue4.jpg&quot; alt=&quot;Unity 와 UE4&quot; /&gt;&lt;/p&gt;</content>
 
       
       
@@ -1061,11 +1061,11 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
 
 &lt;p&gt;게임 시스템을 보면, Unity 는 Scene 이란 GameObject 들의 계층 구조의 집합을 정의해놓고 모든 로직이 그 안에서 돌아가게 합니다. GameObject 들은 여러 Component 들을 붙이거나 뗄 수 있습니다. CBD 기반이지요.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;hrmrzizon.github.io/assets/Unity_HierarchyWindowCallout.png&quot; alt=&quot;Unity Hierarchy 뷰어&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;hrmrzizon.github.io/images/Unity_HierarchyWindowCallout.png&quot; alt=&quot;Unity Hierarchy 뷰어&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Unrealengine 에서는 레벨이란 단위안에 지형, 액터등 많은 것들을 가지고 사용자가 직접 로드하게 하거나 자동으로 로드해줍니다. 또한 여러 오브젝트들에 하위 컴포넌트나, Blueprint 스크립트를 붙일 수 있습니다.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;hrmrzizon.github.io/assets/unityandue4.jpg&quot; alt=&quot;Unity 와 UE4&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;hrmrzizon.github.io/images/unityandue4.jpg&quot; alt=&quot;Unity 와 UE4&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://docs.unrealengine.com/latest/INT/GettingStarted/FromUnity/index.html&quot;&gt;Unrea Engine 4 For Unity Developers&lt;/a&gt;&lt;/p&gt;
 
