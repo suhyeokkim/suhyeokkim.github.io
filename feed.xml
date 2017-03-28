@@ -3,10 +3,10 @@
   <generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator>
   
   
-  <link href="hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
-  <link href="hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-03-28T06:49:56+00:00</updated>
-  <id>hrmrzizon.github.io//</id>
+  <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
+  <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
+  <updated>2017-03-28T08:14:33+00:00</updated>
+  <id>https://hrmrzizon.github.io//</id>
 
   
     <title type="html">Appocrypha</title>
@@ -30,11 +30,11 @@
       
       <title type="html">Csharp Class Method Extension</title>
       
-      <link href="hrmrzizon.github.io/2017/03/13/csharp-class-method-extension/" rel="alternate" type="text/html" title="Csharp Class Method Extension" />
+      <link href="https://hrmrzizon.github.io/2017/03/13/csharp-class-method-extension/" rel="alternate" type="text/html" title="Csharp Class Method Extension" />
       <published>2017-03-13T00:00:00+00:00</published>
       <updated>2017-03-13T00:00:00+00:00</updated>
-      <id>hrmrzizon.github.io/2017/03/13/csharp-class-method-extension</id>
-      <content type="html" xml:base="hrmrzizon.github.io/2017/03/13/csharp-class-method-extension/">&lt;p&gt;unirx 를 살펴보다 모르는 문법이 나와서 기록해둔다. &lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/bb383977.aspx&quot;&gt;MSDN 확장 메서드 문서&lt;/a&gt; 를 참고했다.&lt;/p&gt;
+      <id>https://hrmrzizon.github.io/2017/03/13/csharp-class-method-extension</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/13/csharp-class-method-extension/">&lt;p&gt;unirx 를 살펴보다 모르는 문법이 나와서 기록해둔다. &lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/bb383977.aspx&quot;&gt;MSDN 확장 메서드 문서&lt;/a&gt; 를 참고했다.&lt;/p&gt;
 
 &lt;h2&gt;C# 클래스 확장 메서드&lt;/h2&gt;
 
@@ -121,11 +121,11 @@
       
       <title type="html">Unity Texture Compression 5 S3 Texture Compression</title>
       
-      <link href="hrmrzizon.github.io/2017/03/12/unity-texture-compression-5-s3-texture-compression/" rel="alternate" type="text/html" title="Unity Texture Compression 5 S3 Texture Compression" />
+      <link href="https://hrmrzizon.github.io/2017/03/12/unity-texture-compression-5-s3-texture-compression/" rel="alternate" type="text/html" title="Unity Texture Compression 5 S3 Texture Compression" />
       <published>2017-03-12T00:00:00+00:00</published>
       <updated>2017-03-12T00:00:00+00:00</updated>
-      <id>hrmrzizon.github.io/2017/03/12/unity-texture-compression-5-s3-texture-compression</id>
-      <content type="html" xml:base="hrmrzizon.github.io/2017/03/12/unity-texture-compression-5-s3-texture-compression/">&lt;h2&gt;5. S3TCs&lt;/h2&gt;</content>
+      <id>https://hrmrzizon.github.io/2017/03/12/unity-texture-compression-5-s3-texture-compression</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/12/unity-texture-compression-5-s3-texture-compression/">&lt;h2&gt;5. S3TCs&lt;/h2&gt;</content>
 
       
       
@@ -165,11 +165,11 @@
       
       <title type="html">Unity Texture Compression 4 Powervr Texture Compression</title>
       
-      <link href="hrmrzizon.github.io/2017/03/12/unity-texture-compression-4-powervr-texture-compression/" rel="alternate" type="text/html" title="Unity Texture Compression 4 Powervr Texture Compression" />
+      <link href="https://hrmrzizon.github.io/2017/03/12/unity-texture-compression-4-powervr-texture-compression/" rel="alternate" type="text/html" title="Unity Texture Compression 4 Powervr Texture Compression" />
       <published>2017-03-12T00:00:00+00:00</published>
       <updated>2017-03-12T00:00:00+00:00</updated>
-      <id>hrmrzizon.github.io/2017/03/12/unity-texture-compression-4-powervr-texture-compression</id>
-      <content type="html" xml:base="hrmrzizon.github.io/2017/03/12/unity-texture-compression-4-powervr-texture-compression/">&lt;h2&gt;4. PVRTC&lt;/h2&gt;</content>
+      <id>https://hrmrzizon.github.io/2017/03/12/unity-texture-compression-4-powervr-texture-compression</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/12/unity-texture-compression-4-powervr-texture-compression/">&lt;h2&gt;4. PVRTC&lt;/h2&gt;</content>
 
       
       
@@ -209,11 +209,11 @@
       
       <title type="html">Unity Texture Compression 3 Erricson Texture Compression 2</title>
       
-      <link href="hrmrzizon.github.io/2017/03/12/unity-texture-compression-3-erricson-texture-compression-2/" rel="alternate" type="text/html" title="Unity Texture Compression 3 Erricson Texture Compression 2" />
+      <link href="https://hrmrzizon.github.io/2017/03/12/unity-texture-compression-3-erricson-texture-compression-2/" rel="alternate" type="text/html" title="Unity Texture Compression 3 Erricson Texture Compression 2" />
       <published>2017-03-12T00:00:00+00:00</published>
       <updated>2017-03-12T00:00:00+00:00</updated>
-      <id>hrmrzizon.github.io/2017/03/12/unity-texture-compression-3-erricson-texture-compression-2</id>
-      <content type="html" xml:base="hrmrzizon.github.io/2017/03/12/unity-texture-compression-3-erricson-texture-compression-2/">&lt;p&gt;모든 내용은 전부 Jacob Ström 홈페이지의 자료등을 참고했습니다.(&lt;a href=&quot;http://www.jacobstrom.com/output.html&quot;&gt;http://www.jacobstrom.com/output.html&lt;/a&gt;)&lt;/p&gt;
+      <id>https://hrmrzizon.github.io/2017/03/12/unity-texture-compression-3-erricson-texture-compression-2</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/12/unity-texture-compression-3-erricson-texture-compression-2/">&lt;p&gt;모든 내용은 전부 Jacob Ström 홈페이지의 자료등을 참고했습니다.(&lt;a href=&quot;http://www.jacobstrom.com/output.html&quot;&gt;http://www.jacobstrom.com/output.html&lt;/a&gt;)&lt;/p&gt;
 
 &lt;h2&gt;3. ETC2&lt;/h2&gt;
 
@@ -312,11 +312,11 @@
       
       <title type="html">Unity Texture Compression 2 Erricsson Texture Compression</title>
       
-      <link href="hrmrzizon.github.io/2017/03/12/unity-texture-compression-2-erricsson-texture-compression/" rel="alternate" type="text/html" title="Unity Texture Compression 2 Erricsson Texture Compression" />
+      <link href="https://hrmrzizon.github.io/2017/03/12/unity-texture-compression-2-erricsson-texture-compression/" rel="alternate" type="text/html" title="Unity Texture Compression 2 Erricsson Texture Compression" />
       <published>2017-03-12T00:00:00+00:00</published>
       <updated>2017-03-12T00:00:00+00:00</updated>
-      <id>hrmrzizon.github.io/2017/03/12/unity-texture-compression-2-erricsson-texture-compression</id>
-      <content type="html" xml:base="hrmrzizon.github.io/2017/03/12/unity-texture-compression-2-erricsson-texture-compression/">&lt;h4&gt;이 글은 &lt;a href=&quot;jhedde.tistory.com&quot;&gt;이전 블로그&lt;/a&gt;에서 가져온 글입니다.&lt;/h4&gt;
+      <id>https://hrmrzizon.github.io/2017/03/12/unity-texture-compression-2-erricsson-texture-compression</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/12/unity-texture-compression-2-erricsson-texture-compression/">&lt;h4&gt;이 글은 &lt;a href=&quot;jhedde.tistory.com&quot;&gt;이전 블로그&lt;/a&gt;에서 가져온 글입니다.&lt;/h4&gt;
 
 &lt;p&gt;모든 내용은 전부 Jacob Ström 홈페이지의 자료등을 참고했습니다.(&lt;a href=&quot;http://www.jacobstrom.com/output.html&quot;&gt;http://www.jacobstrom.com/output.html&lt;/a&gt;)&lt;/p&gt;
 
@@ -424,7 +424,7 @@
 &lt;table&gt;
   &lt;thead&gt;
     &lt;tr&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;hrmrzizon.github.io/images/etc1_table_diff_vs_normal.png&quot; alt=&quot;histogram_difference&quot; /&gt;&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;https://hrmrzizon.github.io/images/etc1_table_diff_vs_normal.png&quot; alt=&quot;histogram_difference&quot; /&gt;&lt;/th&gt;
     &lt;/tr&gt;
   &lt;/thead&gt;
   &lt;tbody&gt;
@@ -497,11 +497,11 @@
       
       <title type="html">Garbage collecting</title>
       
-      <link href="hrmrzizon.github.io/2017/03/12/garbage-collecting/" rel="alternate" type="text/html" title="Garbage collecting" />
+      <link href="https://hrmrzizon.github.io/2017/03/12/garbage-collecting/" rel="alternate" type="text/html" title="Garbage collecting" />
       <published>2017-03-12T00:00:00+00:00</published>
       <updated>2017-03-12T00:00:00+00:00</updated>
-      <id>hrmrzizon.github.io/2017/03/12/garbage%20collecting</id>
-      <content type="html" xml:base="hrmrzizon.github.io/2017/03/12/garbage-collecting/"></content>
+      <id>https://hrmrzizon.github.io/2017/03/12/garbage%20collecting</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/12/garbage-collecting/"></content>
 
       
       
@@ -539,11 +539,11 @@
       
       <title type="html">Unity Texture Compression 1 Start</title>
       
-      <link href="hrmrzizon.github.io/2017/03/11/unity-texture-compression-1-start/" rel="alternate" type="text/html" title="Unity Texture Compression 1 Start" />
+      <link href="https://hrmrzizon.github.io/2017/03/11/unity-texture-compression-1-start/" rel="alternate" type="text/html" title="Unity Texture Compression 1 Start" />
       <published>2017-03-11T00:00:00+00:00</published>
       <updated>2017-03-11T00:00:00+00:00</updated>
-      <id>hrmrzizon.github.io/2017/03/11/unity-texture-compression-1-start</id>
-      <content type="html" xml:base="hrmrzizon.github.io/2017/03/11/unity-texture-compression-1-start/">&lt;h4&gt;이 글은 &lt;a href=&quot;jhedde.tistory.com&quot;&gt;이전 블로그&lt;/a&gt;에서 가져온 글입니다.&lt;/h4&gt;
+      <id>https://hrmrzizon.github.io/2017/03/11/unity-texture-compression-1-start</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/11/unity-texture-compression-1-start/">&lt;h4&gt;이 글은 &lt;a href=&quot;jhedde.tistory.com&quot;&gt;이전 블로그&lt;/a&gt;에서 가져온 글입니다.&lt;/h4&gt;
 
 &lt;hr /&gt;
 
@@ -634,11 +634,11 @@
       
       <title type="html">Unity Object Communicatoin</title>
       
-      <link href="hrmrzizon.github.io/2017/03/08/unity-object-communicatoin/" rel="alternate" type="text/html" title="Unity Object Communicatoin" />
+      <link href="https://hrmrzizon.github.io/2017/03/08/unity-object-communicatoin/" rel="alternate" type="text/html" title="Unity Object Communicatoin" />
       <published>2017-03-08T00:00:00+00:00</published>
       <updated>2017-03-08T00:00:00+00:00</updated>
-      <id>hrmrzizon.github.io/2017/03/08/unity-object-communicatoin</id>
-      <content type="html" xml:base="hrmrzizon.github.io/2017/03/08/unity-object-communicatoin/">&lt;ol&gt;
+      <id>https://hrmrzizon.github.io/2017/03/08/unity-object-communicatoin</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/08/unity-object-communicatoin/">&lt;ol&gt;
   &lt;li&gt;function call&lt;/li&gt;
   &lt;li&gt;event, delegate&lt;/li&gt;
   &lt;li&gt;unityevent&lt;/li&gt;
@@ -685,11 +685,11 @@
       
       <title type="html">Make Jekyll+github Blog 1</title>
       
-      <link href="hrmrzizon.github.io/2017/03/08/make-jekyll+github-blog-1/" rel="alternate" type="text/html" title="Make Jekyll+github Blog 1" />
+      <link href="https://hrmrzizon.github.io/2017/03/08/make-jekyll+github-blog-1/" rel="alternate" type="text/html" title="Make Jekyll+github Blog 1" />
       <published>2017-03-08T00:00:00+00:00</published>
       <updated>2017-03-08T00:00:00+00:00</updated>
-      <id>hrmrzizon.github.io/2017/03/08/make-jekyll+github-blog-1</id>
-      <content type="html" xml:base="hrmrzizon.github.io/2017/03/08/make-jekyll+github-blog-1/">&lt;p&gt;아는 지인이 좋다고 추천해서 jekyll+github 으로 블로그를 만들게 되었다.
+      <id>https://hrmrzizon.github.io/2017/03/08/make-jekyll+github-blog-1</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/08/make-jekyll+github-blog-1/">&lt;p&gt;아는 지인이 좋다고 추천해서 jekyll+github 으로 블로그를 만들게 되었다.
 한글로 된 자료가 그리 많지 않아 직접 기록해보려 한다.&lt;/p&gt;
 
 &lt;h2&gt;개요&lt;/h2&gt;
@@ -878,11 +878,11 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
       
       <title type="html">Ue4 Class Tutorial</title>
       
-      <link href="hrmrzizon.github.io/2017/03/06/ue4-class-tutorial/" rel="alternate" type="text/html" title="Ue4 Class Tutorial" />
+      <link href="https://hrmrzizon.github.io/2017/03/06/ue4-class-tutorial/" rel="alternate" type="text/html" title="Ue4 Class Tutorial" />
       <published>2017-03-06T00:00:00+00:00</published>
       <updated>2017-03-06T00:00:00+00:00</updated>
-      <id>hrmrzizon.github.io/2017/03/06/ue4-class-tutorial</id>
-      <content type="html" xml:base="hrmrzizon.github.io/2017/03/06/ue4-class-tutorial/">&lt;p&gt;이 글은 언리얼 엔진 4 교육을 위한 글입니다.&lt;/p&gt;
+      <id>https://hrmrzizon.github.io/2017/03/06/ue4-class-tutorial</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/06/ue4-class-tutorial/">&lt;p&gt;이 글은 언리얼 엔진 4 교육을 위한 글입니다.&lt;/p&gt;
 
 &lt;h2&gt;강의를 듣는 태도?&lt;/h2&gt;
 
@@ -961,11 +961,11 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
       
       <title type="html">Ue4 Class Language Guide</title>
       
-      <link href="hrmrzizon.github.io/2017/03/06/ue4-class-language-guide/" rel="alternate" type="text/html" title="Ue4 Class Language Guide" />
+      <link href="https://hrmrzizon.github.io/2017/03/06/ue4-class-language-guide/" rel="alternate" type="text/html" title="Ue4 Class Language Guide" />
       <published>2017-03-06T00:00:00+00:00</published>
       <updated>2017-03-06T00:00:00+00:00</updated>
-      <id>hrmrzizon.github.io/2017/03/06/ue4-class-language-guide</id>
-      <content type="html" xml:base="hrmrzizon.github.io/2017/03/06/ue4-class-language-guide/"></content>
+      <id>https://hrmrzizon.github.io/2017/03/06/ue4-class-language-guide</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/06/ue4-class-language-guide/"></content>
 
       
       
@@ -1003,15 +1003,15 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
       
       <title type="html">Ue4 Class Editor Basic</title>
       
-      <link href="hrmrzizon.github.io/2017/03/06/ue4-class-editor-basic/" rel="alternate" type="text/html" title="Ue4 Class Editor Basic" />
+      <link href="https://hrmrzizon.github.io/2017/03/06/ue4-class-editor-basic/" rel="alternate" type="text/html" title="Ue4 Class Editor Basic" />
       <published>2017-03-06T00:00:00+00:00</published>
       <updated>2017-03-06T00:00:00+00:00</updated>
-      <id>hrmrzizon.github.io/2017/03/06/ue4-class-editor-basic</id>
-      <content type="html" xml:base="hrmrzizon.github.io/2017/03/06/ue4-class-editor-basic/">&lt;p&gt;이 글은 언리얼 엔진 4 교육을 위한 글입니다.&lt;/p&gt;
+      <id>https://hrmrzizon.github.io/2017/03/06/ue4-class-editor-basic</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/06/ue4-class-editor-basic/">&lt;p&gt;이 글은 언리얼 엔진 4 교육을 위한 글입니다.&lt;/p&gt;
 
 &lt;h2&gt;에디터 활용하기&lt;/h2&gt;
 
-&lt;p&gt;&lt;img src=&quot;hrmrzizon.github.io/images/unityandue4.jpg&quot; alt=&quot;Unity 와 UE4&quot; /&gt;&lt;/p&gt;</content>
+&lt;p&gt;&lt;img src=&quot;https://hrmrzizon.github.io/images/unityandue4.jpg&quot; alt=&quot;Unity 와 UE4&quot; /&gt;&lt;/p&gt;</content>
 
       
       
@@ -1049,11 +1049,11 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
       
       <title type="html">Ue4 Vs Unity5</title>
       
-      <link href="hrmrzizon.github.io/2017/03/05/ue4-vs-unity5/" rel="alternate" type="text/html" title="Ue4 Vs Unity5" />
+      <link href="https://hrmrzizon.github.io/2017/03/05/ue4-vs-unity5/" rel="alternate" type="text/html" title="Ue4 Vs Unity5" />
       <published>2017-03-05T00:00:00+00:00</published>
       <updated>2017-03-05T00:00:00+00:00</updated>
-      <id>hrmrzizon.github.io/2017/03/05/ue4-vs-unity5</id>
-      <content type="html" xml:base="hrmrzizon.github.io/2017/03/05/ue4-vs-unity5/">&lt;h3&gt;&lt;em&gt;이 글은 강의를 듣는 분들을 위해 작성된 심심풀이 땅콩같은 글임을 알립니다. &lt;strong&gt;절대&lt;/strong&gt; 논란의 여지가 되고 싶지 않습니다.&lt;/em&gt;&lt;/h3&gt;
+      <id>https://hrmrzizon.github.io/2017/03/05/ue4-vs-unity5</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/05/ue4-vs-unity5/">&lt;h3&gt;&lt;em&gt;이 글은 강의를 듣는 분들을 위해 작성된 심심풀이 땅콩같은 글임을 알립니다. &lt;strong&gt;절대&lt;/strong&gt; 논란의 여지가 되고 싶지 않습니다.&lt;/em&gt;&lt;/h3&gt;
 
 &lt;p&gt;Unity 로 게임 개발을 시작한지 약 2년이 넘었습니다. 이제 언리얼 엔진 4에 발을 들여놓으려고 합니다. 막 파악하면서 느낀 점을 적어보려고 합니다. 기존 개발을 해오던 분들과 의견이 다를수도 있으니 너그러운 마음으로 읽어주시길 바랍니다.&lt;/p&gt;
 
@@ -1135,11 +1135,11 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
       
       <title type="html">Ue4 Class Equipment</title>
       
-      <link href="hrmrzizon.github.io/2017/03/05/ue4-class-equipment/" rel="alternate" type="text/html" title="Ue4 Class Equipment" />
+      <link href="https://hrmrzizon.github.io/2017/03/05/ue4-class-equipment/" rel="alternate" type="text/html" title="Ue4 Class Equipment" />
       <published>2017-03-05T00:00:00+00:00</published>
       <updated>2017-03-05T00:00:00+00:00</updated>
-      <id>hrmrzizon.github.io/2017/03/05/ue4-class-equipment</id>
-      <content type="html" xml:base="hrmrzizon.github.io/2017/03/05/ue4-class-equipment/">&lt;p&gt;이 글은 언리얼 엔진 4 교육을 위한 글입니다.&lt;/p&gt;
+      <id>https://hrmrzizon.github.io/2017/03/05/ue4-class-equipment</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/05/ue4-class-equipment/">&lt;p&gt;이 글은 언리얼 엔진 4 교육을 위한 글입니다.&lt;/p&gt;
 
 &lt;h2&gt;강의 환경&lt;/h2&gt;
 
@@ -1226,11 +1226,11 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
       
       <title type="html">Make Jekyll+github Blog 2</title>
       
-      <link href="hrmrzizon.github.io/2017/03/05/make-jekyll+github-blog-2/" rel="alternate" type="text/html" title="Make Jekyll+github Blog 2" />
+      <link href="https://hrmrzizon.github.io/2017/03/05/make-jekyll+github-blog-2/" rel="alternate" type="text/html" title="Make Jekyll+github Blog 2" />
       <published>2017-03-05T00:00:00+00:00</published>
       <updated>2017-03-05T00:00:00+00:00</updated>
-      <id>hrmrzizon.github.io/2017/03/05/make-jekyll+github-blog-2</id>
-      <content type="html" xml:base="hrmrzizon.github.io/2017/03/05/make-jekyll+github-blog-2/">&lt;p&gt;아는 지인이 좋다고 추천해서 jekyll+github 으로 블로그를 만들게 되었다.
+      <id>https://hrmrzizon.github.io/2017/03/05/make-jekyll+github-blog-2</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/05/make-jekyll+github-blog-2/">&lt;p&gt;아는 지인이 좋다고 추천해서 jekyll+github 으로 블로그를 만들게 되었다.
 한글로 된 자료가 그리 많지 않아 직접 기록해보려 한다.&lt;/p&gt;
 
 &lt;h3&gt;atom 에디터 설정하기&lt;/h3&gt;
