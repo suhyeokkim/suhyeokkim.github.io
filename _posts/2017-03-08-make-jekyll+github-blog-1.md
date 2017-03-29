@@ -81,7 +81,7 @@ git remote -v
 잘 살펴보면 알겠지만 중간에 들어간 url 은 가져온 프로젝트의 url 이다. 변경하려면 다음과 같이 하면된다
 
 {% highlight shell %}
-git remote remote origin // 등록된 origin을 지운다.
+git remote remove origin // 등록된 origin을 지운다.
 git remote add origin (repository-url) // 본인 블로그 레포지토리 url 을 등록시켜 준다.
 {% endhighlight %}
 
