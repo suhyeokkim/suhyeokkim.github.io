@@ -2,6 +2,13 @@ Unity 심화
 
 대주제 1. 엔진 기능 활용
 
+흐름 : theory, Runtime to Editor
+
+theory : unity directory structure, garbage collection, 3d drawing pipeline, texture compression
+runtime : unity event handling, unity gameobject communication
+runtime and editor : scriptable object
+editor : useful attributes and properties
+
 ### 1. 활용
 
 > scriptable object
