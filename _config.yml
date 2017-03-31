@@ -30,6 +30,7 @@ exclude:
   - spec
   - textdata
   - tl
+  - "*-hidelevel-*"
 
 # Social media
 facebook_app_id: 639405536264839
