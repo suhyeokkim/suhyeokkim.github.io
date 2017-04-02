@@ -3,8 +3,12 @@ layout: post
 author: "Su-hyeok Kim"
 comments: true
 show: false
-education: true
 categories:
-    - edu
-    - ue4
+  - unity
+  - analysis
 ---
+
+1. delegate
+2. event
+3. unityevent
+4. usage
