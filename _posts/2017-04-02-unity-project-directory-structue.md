@@ -78,3 +78,5 @@ Unity 는 Android, PC, macOS 등 왠만한 플랫폼을 지원하는 크로스 �
 - [Unity Compile Order](https://docs.unity3d.com/Manual/ScriptCompileOrderFolders.html)
 - [용일이의 개발,번역 블로그](http://yongil.net/unity/2015/04/23/Unity-Special-Folder-Names-in-your-Assets-Folder.html)
 - [Unity Plugins](https://docs.unity3d.com/Manual/PluginInspector.html)
+
+# Plugins 를 제외한 모든걸 포함하는 예제가 필요함
