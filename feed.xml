@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-04-01T06:14:57+00:00</updated>
+  <updated>2017-04-02T23:38:03+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -24,6 +24,575 @@
     </author>
   
 
+  
+  
+    <entry>
+      
+      <title type="html">Unity Project Directory Structue</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/04/02/unity-project-directory-structue/" rel="alternate" type="text/html" title="Unity Project Directory Structue" />
+      <published>2017-04-02T00:00:00+00:00</published>
+      <updated>2017-04-02T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/04/02/unity-project-directory-structue</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/04/02/unity-project-directory-structue/">&lt;p&gt;Unity 프로젝트는 여러 종류의 데이터를 디렉토리로 판단해 컴파일 한다. 반대로 이 디렉토리 구조를 통해 Unity 의 컴파일 시스템을 알아볼 수도 있다. 디렉토리 구조 자체는 간단하나 숨겨진 뜻은 조금 복잡하다. 그러니 한번 알아보기로 하자.&lt;/p&gt;
+
+&lt;p&gt;* 이글은  &lt;em&gt;Unity Personal 5.5.2f&lt;/em&gt; 기준으로 쓰여져 있습니다.&lt;/p&gt;
+
+&lt;h2&gt;Unity 프로젝트 구조&lt;/h2&gt;
+
+&lt;p&gt;일반적인 Unity 프로젝트 디렉토리 구조는 아래와 같다.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;em&gt;Assets&lt;/em&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;em&gt;library&lt;/em&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;em&gt;ProjectSetting&lt;/em&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Assets 디렉토리는 스크립트, 리소스, 플러그인 등 프로젝트에서 쓰이는 대부분의 데이터를 모아놓은 디렉토리다. 개발은 거의 Assets 폴더안에서 이루어진다. 또한 이 디렉토리 안에서도 여러 종류의 특별한 디렉토리 이름이 있다.&lt;/p&gt;
+
+&lt;p&gt;ProjectSetting 디렉토리는 프로젝트의 여러 옵션들을 관리하는 파일을 가지고 있다. 안을 들여다보면 &lt;em&gt;Edit -&amp;gt; Project Settings&lt;/em&gt; 에서 볼 수 있는 이름들과 같은 파일들이 있다.&lt;/p&gt;
+
+&lt;p&gt;Library 디렉토리는 위에서 말한 Assets 디렉토리와 ProjectSetting 디렉토리의 모든 데이터를 Unity 가 바로 가져다 쓸 수 있도록 Unity 만의 데이터로 변형한 결과물이다. Unity 에서는 이 결과물들로 대부분의 컴파일을 처리한다.&lt;/p&gt;
+
+&lt;p&gt;이 디렉토리의 데이터는 실제 데이터가 아닌 메타 데이터다. 즉 프로젝트에서 당장 없어도 되는 파일이다. 파일을 옮길 때 디스크 크기를 신경써야 한다면 이 디렉토리는 지워도 된다. 그리고 VCS 에 프로젝트를 등록할 때는 Libary 디렉토리는 올리면 안된다. 혼자서 쓸때는 상관없지만 여러명이서 사용할 때는 Asset, ProjectSetting 디렉토리의 데이터와 Library 의 데이터가 달라질 수 있다. 만약 다르다면 실행 시에 오류가 나거나, 다시 컴파일할 수도 있다.&lt;/p&gt;
+
+&lt;h2&gt;Assets 안의 특별한 이름들&lt;/h2&gt;
+
+&lt;p&gt;위에서도 언급했지만 Assets 디렉토리는 게임의 실질적인 데이터들이 들어가 있는 디렉토리다. 그래서 Unity 에서는 에셋들을 관리하기 위해 Assets 디렉토리 안에서도 데이터를 구분하도록 몇개의 디렉토리 이름을 예약해 놓았다. 예약된 이름들은 무조건 정해진 동작을 하니 정해진 동작과 같은 목적이 아니라면 디렉토리 이름을 다르게 설정해주어야 한다.&lt;/p&gt;
+
+&lt;p&gt;또한 최상단에 위치하는 디렉토리 하나만 인식하거나, 모든 하위 디렉토리의 이름들을 인식하는 경우 두가지가 있다. 아래 두 항목은 최상단에 위치하는 디렉토리만 인식하는 경우다.&lt;/p&gt;
+
+&lt;h3&gt;Root 에서만 인식되는 이름들&lt;/h3&gt;
+
+&lt;h4&gt;“Standard Assets”&lt;/h4&gt;
+
+&lt;p&gt;Unity 의 예제 프로젝트들을 실행하면 대부분의 프로젝트들은 Standard Assets 디렉토리가 존재한다. 예제마다 항상 보이는 이 디렉토리는 일반적인 에셋과 다른 분류를 위해 만들어진 이름이다. &lt;a href=&quot;https://docs.unity3d.com/Manual/ScriptCompileOrderFolders.html&quot;&gt;Unity Compile Order&lt;/a&gt; 를 보면 알겠지만 맨 처음 컴파일이 되는 디렉토리는 Standard Assets 다.&lt;/p&gt;
+
+&lt;p&gt;그래서 먼저 컴파일이 되면 사용자 입장에서는 무엇이 중요한 것인가? 중요한 한가지만 뽑자면, Assets 폴더안의 다른 언어로 쓰여진 스크립트에서 Standard Assets 스크립트를 참조할 수 있다. 이 말은, C# 으로 유니티 프로젝트를 개발하는 사람이 js 로 쓰여진 스크립트를 변환없이 사용이 가능하단 소리다.&lt;/p&gt;
+
+&lt;h4&gt;“Streaming Assets”&lt;/h4&gt;
+
+&lt;p&gt;Unity 에서 사용되는 모든 파일들은 변환을 거치거나, 메타 파일을 생성해 Unity 시스템에서 접근을 용이하게 한다. 하지만 몇몇의 경우 Unity 에서 변환을 하면 안되는 경우가 몇몇 있다. Unity 문서에서, iOS 에서는 영상을 재생하려면 원본 파일이 필요하다는 예시가 있었다.&lt;/p&gt;
+
+&lt;p&gt;그래서 필요한 디렉토리가 Streaming Assets 다. 이름 자체도 스트리밍을 염두해두고 만든 듯 싶다. 이 디렉토리의 파일을 접근하는 방법은 언어에서 제공하는 API를 사용하거나, &lt;a href=&quot;https://docs.unity3d.com/ScriptReference/WWW.html&quot;&gt;WWW&lt;/a&gt; 를 통해 접근할 수도 있다. 플랫폼 별로 경로가 다르니 유의하길 바란다.&lt;/p&gt;
+
+&lt;h3&gt;Sub-directory 에서도 인식되는 이름들&lt;/h3&gt;
+
+&lt;p&gt;아래 두 항목은 모든 디렉토리에서 인식되는 이름들이다.&lt;/p&gt;
+
+&lt;h4&gt;“Resources”&lt;/h4&gt;
+
+&lt;p&gt;Unity 에서는 빌드를 컴파일 할때, 각 씬의 게임오브젝트 마다 연결된 에셋(&lt;em&gt;Assets 안의 데이터를 칭한다.&lt;/em&gt;)들을 찾아서 컴파일 한다. 그리고 런타임에서 Hierarchy 안에 게임 오브젝트가 만들어졌을 때, 게임 오브젝트에 연결된 에셋들을 로드한다.(중복되면 한번만 로드한다.)&lt;/p&gt;
+
+&lt;p&gt;그런데 로드하는 과정에서 약간의 문제가 생길 소지가 있다. 크기가 아주 큰 에셋을 로드하면 많은 메모리 공간을 차지해 문제가 생길 우려가 있다.(튕긴다거나..) 특히 메모리가 부족한 모바일 플랫폼에서는 신경써서 관리를 해주어야 한다.&lt;/p&gt;
+
+&lt;p&gt;그래서 원본 에셋을 동적으로 로드하고, 해제하는 기능을 제공한다. 그 기능을 사용하게 해주는 디렉토리가 Resources 다. 이 디렉토리 안의 데이터들은 런타임에서 경로를 입력해 로드, 언로드가 가능하다.&lt;/p&gt;
+
+&lt;h4&gt;“Editor”&lt;/h4&gt;
+
+&lt;p&gt;Unity 에서는 Unity 에디터 안에서 일정한 범위의 에디터 커스터마이징을 제공한다. 그런 에디터에서 쓰이는 코드들 또한 Assets 안에 존재한다. 그리고 그 코드들을 모아놓는 디렉토리가 Editor 디렉토리다. 또한 이 폴더안에 모두 분류하는 직접적인 이유가 있다.&lt;/p&gt;
+
+&lt;p&gt;Unity 는 런타임 내에서는 에디터 코드와 전혀 상관없이 돌아가게 모듈화를 강제한다. 빌드를 컴파일하게 되면, Editor 디렉토리는 모두 제외하고 컴파일을 한다. 또한 Unity 에서 에디터 바이너리를 제공하는 UnityEditor.dll 또한 빌드에 포함되지 않는다. 런타임 코드에서 UnityEngine 네임스페이스를 참조하고 컴파일하면 직접 에러를 볼 수 있을것이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://docs.unity3d.com/Manual/ScriptCompileOrderFolders.html&quot;&gt;Unity Compile Order&lt;/a&gt; 에서도 Editor 컴파일은 가장 나중에 한다. 에디터 컴파일과 빌드 컴파일을 쉽게 분리하기 위해 이렇게 순서를 정한듯 하다.&lt;/p&gt;
+
+&lt;h4&gt;“Plugins”&lt;/h4&gt;
+
+&lt;p&gt;Unity 는 Android, PC, macOS 등 왠만한 플랫폼을 지원하는 크로스 플랫폼 게임 엔진이다. 하지만 엔진에서는 자체적으로 지원하는 기능들만 크로스 플랫폼을 지원하고, Third-party 라이브러리는 지원할 수가 없다. 그래서 Unity 에서는 플랫폼 별로 Plugins 디렉토리에 넣을 수 있는 기능을 제공한다. 또한 정적, 동적 라이브러리 들을 포함하는 용도로도 쓰인다. 자세한 사항은 &lt;a href=&quot;https://docs.unity3d.com/Manual/PluginInspector.html&quot;&gt;Unity Plugins&lt;/a&gt; 를 참조하라.&lt;/p&gt;
+
+&lt;h2&gt;참조&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/kr/current/Manual/SpecialFolders.html&quot;&gt;Unity Special Folder&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/Manual/ScriptCompileOrderFolders.html&quot;&gt;Unity Compile Order&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://yongil.net/unity/2015/04/23/Unity-Special-Folder-Names-in-your-Assets-Folder.html&quot;&gt;용일이의 개발,번역 블로그&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/Manual/PluginInspector.html&quot;&gt;Unity Plugins&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1&gt;Plugins 를 제외한 모든걸 포함하는 예제가 필요함&lt;/h1&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="unity" />
+      
+        <category term="try" />
+      
+
+      
+
+      
+        <summary type="html">Unity 프로젝트는 여러 종류의 데이터를 디렉토리로 판단해 컴파일 한다. 반대로 이 디렉토리 구조를 통해 Unity 의 컴파일 시스템을 알아볼 수도 있다. 디렉토리 구조 자체는 간단하나 숨겨진 뜻은 조금 복잡하다. 그러니 한번 알아보기로 하자. * 이글은 Unity Personal 5.5.2f 기준으로 쓰여져 있습니다. Unity 프로젝트 구조 일반적인 Unity 프로젝트 디렉토리 구조는 아래와 같다. Assets library ProjectSetting Assets 디렉토리는 스크립트, 리소스, 플러그인 등 프로젝트에서 쓰이는 대부분의 데이터를 모아놓은 디렉토리다. 개발은 거의 Assets 폴더안에서 이루어진다. 또한 이 디렉토리 안에서도 여러 종류의 특별한 디렉토리 이름이 있다. ProjectSetting 디렉토리는 프로젝트의 여러 옵션들을 관리하는 파일을 가지고 있다. 안을 들여다보면 Edit -&amp;gt; Project Settings 에서 볼 수 있는 이름들과 같은 파일들이 있다. Library 디렉토리는 위에서 말한 Assets 디렉토리와 ProjectSetting 디렉토리의 모든 데이터를 Unity 가 바로 가져다 쓸 수 있도록 Unity 만의 데이터로 변형한 결과물이다. Unity 에서는 이 결과물들로 대부분의 컴파일을 처리한다. 이 디렉토리의 데이터는 실제 데이터가 아닌 메타 데이터다. 즉 프로젝트에서 당장 없어도 되는 파일이다. 파일을 옮길 때 디스크 크기를 신경써야 한다면 이 디렉토리는 지워도 된다. 그리고 VCS 에 프로젝트를 등록할 때는 Libary 디렉토리는 올리면 안된다. 혼자서 쓸때는 상관없지만 여러명이서 사용할 때는 Asset, ProjectSetting 디렉토리의 데이터와 Library 의 데이터가 달라질 수 있다. 만약 다르다면 실행 시에 오류가 나거나, 다시 컴파일할 수도 있다. Assets 안의 특별한 이름들 위에서도 언급했지만 Assets 디렉토리는 게임의 실질적인 데이터들이 들어가 있는 디렉토리다. 그래서 Unity 에서는 에셋들을 관리하기 위해 Assets 디렉토리 안에서도 데이터를 구분하도록 몇개의 디렉토리 이름을 예약해 놓았다. 예약된 이름들은 무조건 정해진 동작을 하니 정해진 동작과 같은 목적이 아니라면 디렉토리 이름을 다르게 설정해주어야 한다. 또한 최상단에 위치하는 디렉토리 하나만 인식하거나, 모든 하위 디렉토리의 이름들을 인식하는 경우 두가지가 있다. 아래 두 항목은 최상단에 위치하는 디렉토리만 인식하는 경우다. Root 에서만 인식되는 이름들 “Standard Assets” Unity 의 예제 프로젝트들을 실행하면 대부분의 프로젝트들은 Standard Assets 디렉토리가 존재한다. 예제마다 항상 보이는 이 디렉토리는 일반적인 에셋과 다른 분류를 위해 만들어진 이름이다. Unity Compile Order 를 보면 알겠지만 맨 처음 컴파일이 되는 디렉토리는 Standard Assets 다. 그래서 먼저 컴파일이 되면 사용자 입장에서는 무엇이 중요한 것인가? 중요한 한가지만 뽑자면, Assets 폴더안의 다른 언어로 쓰여진 스크립트에서 Standard Assets 스크립트를 참조할 수 있다. 이 말은, C# 으로 유니티 프로젝트를 개발하는 사람이 js 로 쓰여진 스크립트를 변환없이 사용이 가능하단 소리다. “Streaming Assets” Unity 에서 사용되는 모든 파일들은 변환을 거치거나, 메타 파일을 생성해 Unity 시스템에서 접근을 용이하게 한다. 하지만 몇몇의 경우 Unity 에서 변환을 하면 안되는 경우가 몇몇 있다. Unity 문서에서, iOS 에서는 영상을 재생하려면 원본 파일이 필요하다는 예시가 있었다. 그래서 필요한 디렉토리가 Streaming Assets 다. 이름 자체도 스트리밍을 염두해두고 만든 듯 싶다. 이 디렉토리의 파일을 접근하는 방법은 언어에서 제공하는 API를 사용하거나, WWW 를 통해 접근할 수도 있다. 플랫폼 별로 경로가 다르니 유의하길 바란다. Sub-directory 에서도 인식되는 이름들 아래 두 항목은 모든 디렉토리에서 인식되는 이름들이다. “Resources” Unity 에서는 빌드를 컴파일 할때, 각 씬의 게임오브젝트 마다 연결된 에셋(Assets 안의 데이터를 칭한다.)들을 찾아서 컴파일 한다. 그리고 런타임에서 Hierarchy 안에 게임 오브젝트가 만들어졌을 때, 게임 오브젝트에 연결된 에셋들을 로드한다.(중복되면 한번만 로드한다.) 그런데 로드하는 과정에서 약간의 문제가 생길 소지가 있다. 크기가 아주 큰 에셋을 로드하면 많은 메모리 공간을 차지해 문제가 생길 우려가 있다.(튕긴다거나..) 특히 메모리가 부족한 모바일 플랫폼에서는 신경써서 관리를 해주어야 한다. 그래서 원본 에셋을 동적으로 로드하고, 해제하는 기능을 제공한다. 그 기능을 사용하게 해주는 디렉토리가 Resources 다. 이 디렉토리 안의 데이터들은 런타임에서 경로를 입력해 로드, 언로드가 가능하다. “Editor” Unity 에서는 Unity 에디터 안에서 일정한 범위의 에디터 커스터마이징을 제공한다. 그런 에디터에서 쓰이는 코드들 또한 Assets 안에 존재한다. 그리고 그 코드들을 모아놓는 디렉토리가 Editor 디렉토리다. 또한 이 폴더안에 모두 분류하는 직접적인 이유가 있다. Unity 는 런타임 내에서는 에디터 코드와 전혀 상관없이 돌아가게 모듈화를 강제한다. 빌드를 컴파일하게 되면, Editor 디렉토리는 모두 제외하고 컴파일을 한다. 또한 Unity 에서 에디터 바이너리를 제공하는 UnityEditor.dll 또한 빌드에 포함되지 않는다. 런타임 코드에서 UnityEngine 네임스페이스를 참조하고 컴파일하면 직접 에러를 볼 수 있을것이다. Unity Compile Order 에서도 Editor 컴파일은 가장 나중에 한다. 에디터 컴파일과 빌드 컴파일을 쉽게 분리하기 위해 이렇게 순서를 정한듯 하다. “Plugins” Unity 는 Android, PC, macOS 등 왠만한 플랫폼을 지원하는 크로스 플랫폼 게임 엔진이다. 하지만 엔진에서는 자체적으로 지원하는 기능들만 크로스 플랫폼을 지원하고, Third-party 라이브러리는 지원할 수가 없다. 그래서 Unity 에서는 플랫폼 별로 Plugins 디렉토리에 넣을 수 있는 기능을 제공한다. 또한 정적, 동적 라이브러리 들을 포함하는 용도로도 쓰인다. 자세한 사항은 Unity Plugins 를 참조하라. 참조 Unity Special Folder Unity Compile Order 용일이의 개발,번역 블로그 Unity Plugins Plugins 를 제외한 모든걸 포함하는 예제가 필요함</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Unity Event Handling</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/04/02/unity-event-handling/" rel="alternate" type="text/html" title="Unity Event Handling" />
+      <published>2017-04-02T00:00:00+00:00</published>
+      <updated>2017-04-02T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/04/02/unity-event-handling</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/04/02/unity-event-handling/">&lt;p&gt;Unity 에서 객체간의 이벤트를 처리하는 방법들을 써본다. c# 에서 지원하는 delegate, event 와 UnityEvent 를 알아볼 것이다.&lt;/p&gt;
+
+&lt;h2&gt;C# Delegate, Event&lt;/h2&gt;
+
+&lt;h4&gt;행동을 대신하다. Delegate&lt;/h4&gt;
+
+&lt;p&gt;대리자(Delgate) 의 개념이 고안된지는 꽤 많은 시간이 흘렀다. 시작으로 거슬러 올라가면, 가장 사람들이 많이 접한 형태는 Windows API 의 메세지 처리 콜백 함수가 있겠다. 긴말 필요없이 간단한 예제를 살펴보자.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c#&quot; data-lang=&quot;c#&quot;&gt;&lt;span class=&quot;c1&quot;&gt;//
+// delegate 를 이용한 간단한 Unity 예제다.  
+//
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;delegate&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;CheckForAwake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CheckForAwake&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;onAwake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Awake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// 단순히 함수를 대입한다.
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;onAwake&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;LogAwake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;onAwake&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;onAwake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Invoke&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// 람다식을 += 를 사용해 onAwake 델리게이트에 추가한다.
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;CheckForAwake&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;otherAwake&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Debug&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Awake!! Twice!!&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;onAwake&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;otherAwake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;onAwake&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;onAwake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Invoke&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// 람다식을 -= 를 사용해 onAwake 델리게이트에서 지운다.
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;onAwake&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;-=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;otherAwake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;onAwake&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;onAwake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Invoke&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// null 을 넣어 빈 델리게이트를 표현한다.
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;onAwake&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;onAwake&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;onAwake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Invoke&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;LogAwake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Debug&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Awake!!&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;위의 예제는 대리자(Delgate)의 사용방법을 보여준다. 대리자(Delgate)는 단순히 대입을 통해 한개의 함수만 넣을 수도 있고, ‘+’, ‘-‘ 연산자들을 통해 여러개의 함수를 가질수도 있다. 다만 같은 인자, 같은 반환형을 가져야 위와 같이 사용할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;위 예제를 살펴보았을 때 대리자(Delgate)는 함수들을 여러개 가질 수도 있고, null 값을 가질수 있는 자료형이라고 칭할 수 있겠다.&lt;/p&gt;
+
+&lt;p&gt;그리고 일일히 타입을 지정하지 않고도 미리 지정된 대리자들을 사용가능하다. (참고 : &lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/018hxwa8.aspx&quot;&gt;Action&lt;/a&gt;, &lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/bb549151.aspx&quot;&gt;Func&lt;/a&gt; 등 많은 타입이 있다.)&lt;/p&gt;
+
+&lt;h4&gt;특정 정보를 전달해준다. Event&lt;/h4&gt;
+
+&lt;p&gt;C# 에서 event 키워드는 대리자(Delgate) 선언에 같이 쓸 수 있는 키워드로, 선언된 대리자(Delgate)의 접근을 제한하는 역할을 한다. 근데 “접근을 제한할려면 접근 키워드를 쓰지 왜 event 라는 다른 키워드를 쓰는 것인가?” 라는 생각이 들 수도 있다. 역시 아래 예제를 보면서 설명하겠다.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c#&quot; data-lang=&quot;c#&quot;&gt;&lt;span class=&quot;c1&quot;&gt;//
+// 씬 로드 event 를 이용한 예제다.
+//
+&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// 대리자 이벤트 변수
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;event&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UnityEngine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SceneManagement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Scene&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UnityEngine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SceneManagement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;LoadSceneMode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;onLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Awake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// 자기 자신의 대리자 이벤트 변수는 어떤 접근도 가능함.
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;onLoad&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;OnSceneLoaded&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;onLoad&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;onLoad&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;OnSceneLoaded&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// 컴파일 에러! 외부의 event 변수는 assign 이 안됨.
+&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;// SceneManager.sceneLoaded = onLoad;
+&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// += 접근은 가능함.
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;SceneManager&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sceneLoaded&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;onLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;OnDestroy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// 컴파일 에러! 외부의 event 변수는 assign 이 안됨.
+&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;// SceneManager.sceneLoaded = null;
+&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// -= 접근은 가능함.
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;SceneManager&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sceneLoaded&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;-=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;onLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;OnSceneLoaded&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UnityEngine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SceneManagement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Scene&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scene&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UnityEngine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SceneManagement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;LoadSceneMode&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Debug&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{0}, {1}&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scene&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ToString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;위의 코드는 event 의 접근 제한이 어디에 걸려있는지 알 수 있다. 자기 자신의 이벤트 대리자는 얼마든지 접근이 가능하지만, 외부에서 이벤트 대리자를 접근할 때는 대입 연산자는 불가능하고, 등록(+=) 하거나 취소(-=) 하는 연산자만 쓸 수 있다.&lt;/p&gt;
+
+&lt;p&gt;즉 이벤트 키워드는 대리자 자체를 이벤트를 알려주는 옵저버 패턴의 형태로 만들어 주는 역할을 한다.&lt;/p&gt;
+
+&lt;h2&gt;Serializable 한 이벤트 : UnityEvent&lt;/h2&gt;
+
+&lt;p&gt;Unity 에서는 이벤트 대리자를 Serializable 한 class 로 만들어 저장이 가능한 UnityEvent 를 제공한다. UnityEvent 는 두가지의 방법으로 사용할 수 있다. 하나는 에디터에서 객체와 대리자 정보를 저장해 데이터로 저장되는 지속성 이벤트와, 런타임에서 c# 이벤트 대리자 처럼 사용하는 방법이 있다. 두가지 방법 모두다 이벤트 대리자를 쓰는 방식과 동일하다. 단지 메소드를 저장하는 방식의 차이일 뿐이다.&lt;/p&gt;
+
+&lt;p&gt;지속성 이벤트에 등록하려면 두가지 요구조건이 있다. static 함수가 아니여야 하며, 접근 제한자는 public 으로 설정되어 있어야 Unity 에디터에서 등록이 가능하다.&lt;/p&gt;
+
+&lt;p&gt;UnityEvent 는 원하는 파라미터를 커스터마이징해서 사용 가능하다. &lt;a href=&quot;https://docs.unity3d.com/ScriptReference/Events.UnityEvent_1.html&quot;&gt;UnityEvent 제너릭 클래스 상속&lt;/a&gt;을 통해 지원하며 최대 4개까지 지원한다. 또한 클래스를 선언할 때 System.Serializable 어트리뷰트를 붙여주어야 Serialize 가 되어 인스펙터에서 볼 수 있다.&lt;/p&gt;
+
+&lt;p&gt;UnityEvent 에 등록하면 인자를 전달하는 두가지 방식을 선택할 수 있다. 하나는 정해진 인자를 전달하는 static parameter 방식, 나머지 하나는 해당 UnityEvent 의 정해진 인자와 등록하려는 메소드의 인자가 동일하면 인자들을 그대로 등록한 메소드에 넘기는 dynamic parameter 방식이 있다.&lt;/p&gt;
+
+&lt;p&gt;예제 : &lt;a href=&quot;https://hrmrzizon.github.io/assets/examples/DelegateEventExample.zip&quot;&gt;DelegateEventExample&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1&gt;제대로 된 예제를 넣어놓아야 함. 시발 모르겟다 좆됫음.&lt;/h1&gt;
+
+&lt;h2&gt;실제 사용 사례 및 장단점&lt;/h2&gt;
+
+&lt;p&gt;실제로는 한 씬에서 UI 로직을 구성할 때 가장 많이 쓰인다. UGUI 의 많은 위젯들도 UnityEvent 로 여러 입력들을 알려준다. UI 전용 이벤트를 처리해주는 EventTrigger 라는 컴포넌트도 있을 정도로 UnityEvent 를 많이 활용한다. 실제 작업할 때는 UI Widget 하나에 여러 Event 를 붙여 다른 Widget 에 연결시켜 사용하는게 가장 편하다.&lt;/p&gt;
+
+&lt;p&gt;게임 로직도 UnityEvent 로 구성하면 만들때는 쉽지만 UnityEvent 는 가독성이 상당히 안좋기 때문에 게임 로직을 구성하면 나중에는 손댈수 없는 스파게티 덩어리가 만들어질 것이다. MVVM 구조에서는 유용하게 쓰일 수도 있다. 또한 빠른 작업속도로 프로토타입에는 적합하다.&lt;/p&gt;
+
+&lt;h2&gt;참조&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/ms173176.aspx&quot;&gt;MSDN 방법: 대리자 선언, 인스턴스화 및 사용&lt;/a&gt;
+&lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/ms173172.aspx&quot;&gt;MSDN C# Delegate&lt;/a&gt;
+&lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/awbftdfh.aspx&quot;&gt;MSDN C# Event&lt;/a&gt;
+&lt;a href=&quot;http://jacksondunstan.com/articles/3335&quot;&gt;Event Performance&lt;/a&gt;
+&lt;a href=&quot;https://docs.unity3d.com/kr/current/Manual/UnityEvents.html&quot;&gt;UnityEvent Manual&lt;/a&gt;&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="unity" />
+      
+        <category term="c#" />
+      
+        <category term="csharp" />
+      
+        <category term="analysis" />
+      
+
+      
+
+      
+        <summary type="html">Unity 에서 객체간의 이벤트를 처리하는 방법들을 써본다. c# 에서 지원하는 delegate, event 와 UnityEvent 를 알아볼 것이다. C# Delegate, Event 행동을 대신하다. Delegate 대리자(Delgate) 의 개념이 고안된지는 꽤 많은 시간이 흘렀다. 시작으로 거슬러 올라가면, 가장 사람들이 많이 접한 형태는 Windows API 의 메세지 처리 콜백 함수가 있겠다. 긴말 필요없이 간단한 예제를 살펴보자. // // delegate 를 이용한 간단한 Unity 예제다. // public delegate void CheckForAwake(); public CheckForAwake onAwake; void Awake() { // 단순히 함수를 대입한다. onAwake = LogAwake; if(onAwake != null) onAwake.Invoke(); // 람다식을 += 를 사용해 onAwake 델리게이트에 추가한다. CheckForAwake otherAwake = () =&amp;gt; Debug.Log(&quot;Awake!! Twice!!&quot;); onAwake += otherAwake; if(onAwake != null) onAwake.Invoke(); // 람다식을 -= 를 사용해 onAwake 델리게이트에서 지운다. onAwake -= otherAwake; if(onAwake != null) onAwake.Invoke(); // null 을 넣어 빈 델리게이트를 표현한다. onAwake = null; } void Start() { if(onAwake != null) onAwake.Invoke(); } void LogAwake() { Debug.Log(&quot;Awake!!&quot;); } 위의 예제는 대리자(Delgate)의 사용방법을 보여준다. 대리자(Delgate)는 단순히 대입을 통해 한개의 함수만 넣을 수도 있고, ‘+’, ‘-‘ 연산자들을 통해 여러개의 함수를 가질수도 있다. 다만 같은 인자, 같은 반환형을 가져야 위와 같이 사용할 수 있다. 위 예제를 살펴보았을 때 대리자(Delgate)는 함수들을 여러개 가질 수도 있고, null 값을 가질수 있는 자료형이라고 칭할 수 있겠다. 그리고 일일히 타입을 지정하지 않고도 미리 지정된 대리자들을 사용가능하다. (참고 : Action, Func 등 많은 타입이 있다.) 특정 정보를 전달해준다. Event C# 에서 event 키워드는 대리자(Delgate) 선언에 같이 쓸 수 있는 키워드로, 선언된 대리자(Delgate)의 접근을 제한하는 역할을 한다. 근데 “접근을 제한할려면 접근 키워드를 쓰지 왜 event 라는 다른 키워드를 쓰는 것인가?” 라는 생각이 들 수도 있다. 역시 아래 예제를 보면서 설명하겠다. // // 씬 로드 event 를 이용한 예제다. // // 대리자 이벤트 변수 public event Action&amp;lt;UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode&amp;gt; onLoad; void Awake() { // 자기 자신의 대리자 이벤트 변수는 어떤 접근도 가능함. onLoad = OnSceneLoaded; onLoad = null; onLoad += OnSceneLoaded; // 컴파일 에러! 외부의 event 변수는 assign 이 안됨. // SceneManager.sceneLoaded = onLoad; // += 접근은 가능함. SceneManager.sceneLoaded += onLoad; } void OnDestroy() { // 컴파일 에러! 외부의 event 변수는 assign 이 안됨. // SceneManager.sceneLoaded = null; // -= 접근은 가능함. SceneManager.sceneLoaded -= onLoad; } void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode) { Debug.Log(string.Format(&quot;{0}, {1}&quot;, scene.name, mode.ToString()); } 위의 코드는 event 의 접근 제한이 어디에 걸려있는지 알 수 있다. 자기 자신의 이벤트 대리자는 얼마든지 접근이 가능하지만, 외부에서 이벤트 대리자를 접근할 때는 대입 연산자는 불가능하고, 등록(+=) 하거나 취소(-=) 하는 연산자만 쓸 수 있다. 즉 이벤트 키워드는 대리자 자체를 이벤트를 알려주는 옵저버 패턴의 형태로 만들어 주는 역할을 한다. Serializable 한 이벤트 : UnityEvent Unity 에서는 이벤트 대리자를 Serializable 한 class 로 만들어 저장이 가능한 UnityEvent 를 제공한다. UnityEvent 는 두가지의 방법으로 사용할 수 있다. 하나는 에디터에서 객체와 대리자 정보를 저장해 데이터로 저장되는 지속성 이벤트와, 런타임에서 c# 이벤트 대리자 처럼 사용하는 방법이 있다. 두가지 방법 모두다 이벤트 대리자를 쓰는 방식과 동일하다. 단지 메소드를 저장하는 방식의 차이일 뿐이다. 지속성 이벤트에 등록하려면 두가지 요구조건이 있다. static 함수가 아니여야 하며, 접근 제한자는 public 으로 설정되어 있어야 Unity 에디터에서 등록이 가능하다. UnityEvent 는 원하는 파라미터를 커스터마이징해서 사용 가능하다. UnityEvent 제너릭 클래스 상속을 통해 지원하며 최대 4개까지 지원한다. 또한 클래스를 선언할 때 System.Serializable 어트리뷰트를 붙여주어야 Serialize 가 되어 인스펙터에서 볼 수 있다. UnityEvent 에 등록하면 인자를 전달하는 두가지 방식을 선택할 수 있다. 하나는 정해진 인자를 전달하는 static parameter 방식, 나머지 하나는 해당 UnityEvent 의 정해진 인자와 등록하려는 메소드의 인자가 동일하면 인자들을 그대로 등록한 메소드에 넘기는 dynamic parameter 방식이 있다. 예제 : DelegateEventExample 제대로 된 예제를 넣어놓아야 함. 시발 모르겟다 좆됫음. 실제 사용 사례 및 장단점 실제로는 한 씬에서 UI 로직을 구성할 때 가장 많이 쓰인다. UGUI 의 많은 위젯들도 UnityEvent 로 여러 입력들을 알려준다. UI 전용 이벤트를 처리해주는 EventTrigger 라는 컴포넌트도 있을 정도로 UnityEvent 를 많이 활용한다. 실제 작업할 때는 UI Widget 하나에 여러 Event 를 붙여 다른 Widget 에 연결시켜 사용하는게 가장 편하다. 게임 로직도 UnityEvent 로 구성하면 만들때는 쉽지만 UnityEvent 는 가독성이 상당히 안좋기 때문에 게임 로직을 구성하면 나중에는 손댈수 없는 스파게티 덩어리가 만들어질 것이다. MVVM 구조에서는 유용하게 쓰일 수도 있다. 또한 빠른 작업속도로 프로토타입에는 적합하다. 참조 MSDN 방법: 대리자 선언, 인스턴스화 및 사용 MSDN C# Delegate MSDN C# Event Event Performance UnityEvent Manual</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Using Texture Compression In Unity</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/03/31/using-texture-compression-in-unity/" rel="alternate" type="text/html" title="Using Texture Compression In Unity" />
+      <published>2017-03-31T00:00:00+00:00</published>
+      <updated>2017-03-31T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/03/31/using-texture-compression-in-unity</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/31/using-texture-compression-in-unity/">&lt;ol&gt;
+  &lt;li&gt;texture compression introduce&lt;/li&gt;
+  &lt;li&gt;usage&lt;/li&gt;
+&lt;/ol&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="unity" />
+      
+        <category term="analysis" />
+      
+
+      
+
+      
+        <summary type="html">texture compression introduce usage</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Useful Attributes And Properties</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/03/31/useful-attributes-and-properties/" rel="alternate" type="text/html" title="Useful Attributes And Properties" />
+      <published>2017-03-31T00:00:00+00:00</published>
+      <updated>2017-03-31T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/03/31/useful-attributes-and-properties</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/31/useful-attributes-and-properties/">&lt;ol&gt;
+  &lt;li&gt;c# attribute explain&lt;/li&gt;
+  &lt;li&gt;unity attribute explain&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.tallior.com/unity-attributes/&quot;&gt;Attribute&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;AnimationCurve&lt;/p&gt;
+
+&lt;p&gt;PropertyAttribute
+PropertyDrawer&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="unity" />
+      
+        <category term="analysis" />
+      
+
+      
+
+      
+        <summary type="html">c# attribute explain unity attribute explain Attribute AnimationCurve PropertyAttribute PropertyDrawer</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Unity Scriptable Object</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/03/31/unity-scriptable-object/" rel="alternate" type="text/html" title="Unity Scriptable Object" />
+      <published>2017-03-31T00:00:00+00:00</published>
+      <updated>2017-03-31T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/03/31/unity-scriptable-object</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/31/unity-scriptable-object/">&lt;ol&gt;
+  &lt;li&gt;declare scriptable object&lt;/li&gt;
+  &lt;li&gt;make scriptable object code, editor&lt;/li&gt;
+  &lt;li&gt;usage&lt;/li&gt;
+&lt;/ol&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="unity" />
+      
+        <category term="analysis" />
+      
+
+      
+
+      
+        <summary type="html">declare scriptable object make scriptable object code, editor usage</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Unity Gameobject Communication</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/03/31/unity-gameobject-communication/" rel="alternate" type="text/html" title="Unity Gameobject Communication" />
+      <published>2017-03-31T00:00:00+00:00</published>
+      <updated>2017-03-31T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/03/31/unity-gameobject-communication</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/31/unity-gameobject-communication/">&lt;ol&gt;
+  &lt;li&gt;SendMessage, BroadcastMessage&lt;/li&gt;
+  &lt;li&gt;usage&lt;/li&gt;
+&lt;/ol&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="unity" />
+      
+        <category term="analysis" />
+      
+
+      
+
+      
+        <summary type="html">SendMessage, BroadcastMessage usage</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Unity 3d Drawing Pipeline</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/03/31/unity-3d-drawing-pipeline/" rel="alternate" type="text/html" title="Unity 3d Drawing Pipeline" />
+      <published>2017-03-31T00:00:00+00:00</published>
+      <updated>2017-03-31T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/03/31/unity-3d-drawing-pipeline</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/31/unity-3d-drawing-pipeline/">&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://simonschreibt.de/gat/renderhell/&quot;&gt;렌더헬&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="unity" />
+      
+        <category term="analysis" />
+      
+
+      
+
+      
+        <summary type="html">렌더헬</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Garbage Collection In Unity</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/03/31/garbage-collection-in-unity/" rel="alternate" type="text/html" title="Garbage Collection In Unity" />
+      <published>2017-03-31T00:00:00+00:00</published>
+      <updated>2017-03-31T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/03/31/garbage-collection-in-unity</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/31/garbage-collection-in-unity/">&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.mono-project.com/docs/advanced/garbage-collector/sgen/&quot;&gt;Mono SGen GC&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.google.co.kr/webhp?sourceid=chrome-instant&amp;amp;ion=1&amp;amp;espv=2&amp;amp;ie=UTF-8#q=c%23+garbage+collection+how+it+works&amp;amp;*&quot;&gt;First research : C# GC&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://d2.naver.com/helloworld/1329&quot;&gt;java gc&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://ronniej.sfuh.tk/c-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC-%EC%A3%BC%EA%B8%B0-%EC%8A%A4%EC%BD%94%ED%94%84-%EA%B0%80%EB%B9%84%EC%A7%80-%EC%BB%AC%EB%A0%89%EC%85%98-lifetime-scope-garbage-collection/&quot;&gt;C# GC&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="mono" />
+      
+        <category term="csharp" />
+      
+        <category term="c#" />
+      
+        <category term="gc" />
+      
+        <category term="analysis" />
+      
+
+      
+
+      
+        <summary type="html">Mono SGen GC First research : C# GC java gc C# GC</summary>
+      
+
+      
+      
+    </entry>
+  
   
   
     <entry>
@@ -93,7 +662,7 @@
 
       
         <author>
-            <name>Su-hyeok Kim</name>
+            <name>Su-Hyeok Kim</name>
           
           
         </author>
@@ -135,7 +704,7 @@
 
       
         <author>
-            <name>Su-hyeok Kim</name>
+            <name>Su-Hyeok Kim</name>
           
           
         </author>
@@ -179,7 +748,7 @@
 
       
         <author>
-            <name>Su-hyeok Kim</name>
+            <name>Su-Hyeok Kim</name>
           
           
         </author>
@@ -282,7 +851,7 @@
 
       
         <author>
-            <name>Su-hyeok Kim</name>
+            <name>Su-Hyeok Kim</name>
           
           
         </author>
@@ -467,7 +1036,7 @@
 
       
         <author>
-            <name>Su-hyeok Kim</name>
+            <name>Su-Hyeok Kim</name>
           
           
         </author>
@@ -485,48 +1054,6 @@
 
       
         <summary type="html">이 글은 이전 블로그에서 가져온 글입니다. 모든 내용은 전부 Jacob Ström 홈페이지의 자료등을 참고했습니다.(http://www.jacobstrom.com/output.html) 2. ETC(Erricsson Texture Compression) 처음 알아볼 압축 방식은 ETC(Erricsson Texture Comperssion) 이다. Jacob Ström1, Tomas Akenine-Möller 두 사람이 학부 실저에 고안해낸 PACKMAN(2004) 을 더 발전시켜 iPACKMAN(2005) 이라는 학명으로 SIGGRAPH 라는 유명한 컨퍼런스에 등장했다. 이 후 iPACKMAN 의 공식 명칭이 Errcisson Texture Compression(ETC1) 으로 되어 쓰이게 된다. ETC 를 알아보기 전, 먼저 고안된 PACKMAN 을 알아보기로 하자. (1) PACKMAN? PACKMAN 은 블록 방식의 텍스쳐 압축 기법으로, 직사각형 픽셀 그룹을 만들어 압축한다. RGB 채널이 각각 8bit인 픽셀 8개를(2*4=8) 총 32bit로 압축시킨다. 압축을 안할 시 192bit 이니 1/6 의 공간을 차지하게 압축한다. + + 12bit general color   per-pixel_luminance   packman-compressed           PACKMAN 의 정보는 블록에서 평균색(첫번째 그림:general color)과 색 편차가 들어가 있는 테이블의 인덱스를 픽셀별로 기록해(두번째 그림:per-pixel luminance) 평균 색 + 색 편차로 각 픽셀의 색을 결정해 텍스쳐를 구성한다.(세번째 그림:packman-compressed) 평균색은 말 그대로 픽셀들간의 평균 색이고, 색 편차는 픽셀별로 다른 색들을 평균 색과 비교해서 가장 가까운 편차를 선정한다. 위 문단에서 테이블의 인덱스를 기록한다고 했는데 더 자세하게 알아보기 위해 테이블을 가져왔다. 위 표는 자주 사용될만한 색 편차들을 정해놓은 표다. 원래는 4개의 숫자가 한개의 세트로 16세트로 구성되어 있으나, 위 표에는 앞의 8개만 나와있다. 색 편차 데이터가 구성되는 방식은 8개의 픽셀들간에 가장 오차가 적을만한 table codeword 를 선정한 후 4개의 데이터 중 하나를 골라 인덱스를 저장한다. 색편차를 저장하는 데이터의 종류는 table codeword 와 그 세트안의 인덱스 정보 두개다. 또한 픽셀 인덱스는 픽셀별로 필요하기 때문에 8개가 필요하다. 색 편차 데이터의 구성 방식을 알아보았으니 전체 색 구성 방식을 알아보자. 필요한 정보와 데이터의 크기는 아래와 같다. 픽셀간의 평균색 : RGB444(12bit) 테이블 코드워드 : 0~15(4bit) 픽셀별 인덱스 : 0~3(2bit) 평균색은 RGB444 방식으로 12bit로 표현되며, table codeword 는 총 16개가 있으니 4bit 가 필요하다, 그리고 픽셀별 인덱스는 4가지의 숫자만 표현하면 되니 2bit 면 충분하다. 그래서 8개의 픽셀색을 표현하는데 필요한 비트는 12+4+2*8= 32bit 가 필요하다. (2) iPACKMAN? PACKMAN 압축 방식은 문제가 있었다. PACKMAN 방식으로 압축된 이미지와 각 픽셀당 RGB444 로 압축된 이미지를 비교했을 때 휘도(luminance)만 보면 더 좋은 결과를 보여주었지만 색차(chrominance) 면에서 보면 더 안좋은 결과를 보였다. 특히 그라데이션 같이 색이 천천히 바뀌는 이미지에서 색차 밴딩(chrominance banding)이 심했다고 한다. RGB444 방식을 사용해서 작은 차이를 표현하기 어렵고, 한 블록(8개의 픽셀)당 한개의 RGB444 색만 사용하기 때문이다. 그래서 iPACKMAN 에서는 색차 밴딩을 해결하기 위해 PACKMAN 의 방식에서 변형된 모드를 하나 추가했다. 그 모드 때문에 꽤 많은 부분이 바뀌었다. 모드를 제외한 변경사항은 아래와 같다. table codeword 가 3bit 로 줄었다. 블록의 개념이 24 픽셀 그룹 하나에서 24 픽셀 그룹 두개를 합친 4*4 픽셀 그룹으로 확장됬다. 위에서 색차 밴딩이 심하다고 언급했다. 그리고 원인은 RGB444 에 있다고도 말했다. 그래서 데이터의 정밀도를 높이기 위해, 두 2*4 픽셀 그룹의 공간을 합쳐 기존에 독립적으로 2개의 RGB444 색상이 구성되던 방식과 달리 약간의 변화를 주어 RGB555+dRGB333 으로 데이터를 구성하는 방식을 고안해냈다. RGB444의 한계를 느끼고 RGB555 로 평균 색을 확장해서 색차의 범위를 확인했다. 20개의 서로 다른 이미지들의 색 편차(deviation)의 통계 데이터를 확인해보자. RGB555로 양자화된 평균 색상의 편차 그래프   데이터를 보면 대부분 가운데에 몰려있다. 그래서 88%의 데이터를 포함가능한 -4 ~ 3 간격을 타겟으로 RGB555 를 사용후, RGB333 을 편차값으로 사용해 두 블록을 사용하는 방법을 사용했다. table codeword 가 3bit 로 줄은 이유는 이미지를 표현할 공간을 만들어야 했기 때문에 다른 것들을 살피다가 table codeword 를 줄인것으로 예측된다. table codeword 는 고정된 색상 편차 테이블의 인덱스인데, 20개의 이미지 테스트에서 3bit 로 줄이는 테스트를 해 보았을 때, 놀랍게도 평균 0.2db 차이가 안나 바꾸었다고 한다. table codeword 의 사이즈를 1bit 씩 줄여 2*4 픽셀 그룹이 2개니 2bit 여유 공간이 남았다. 이 공간들은 데이터의 구성을 표현하는 데이터가 된다. 1bit 는 새롭게 추가된 difference mode 냐, normal mode 냐를 표현하는 비트 플래그로, 1bit 는 수직으로 데이터가 구성되는지, 수평으로 데이터가 구성되는지에 대한 비트 플래그로 표현했다. 직관적으로 데이터 구성을 이해하기 위해 논문에 있던 이미지를 첨부하겠다. 데이터 구성   (3) 특징 ETC 의 특징은 아래와 같다. 모바일 디바이스를 기준으로 한 손실 압축 기법이다. 투명하지 않은(Non-Alpha) 텍스쳐(RGB24)를 지원한다.  OpenGL ES 2.0 이상 부터 표준 포맷이 되었으며, 안드로이드 프로요(2.2) 부터 공식 지원하기 시작했다. ETC 는 기본적으로 모바일 디바이스를 타겟으로 만들어진 텍스쳐 압축 알고리즘이다. 그렇기에 구현 방식 또한 상당히 간단하고 명료하다. 보통 ETC 는 OpenGL ES 3.0 아래 버젼을 지원하는 GPU 를 탑재한 디바이스를 지원할 때 주로 사용되는 방식이다. 또한 알파를 설정할 수 없어 상당히 불편한 경우가 많다. 이 사람은 추후 ETC2 연구에도 참여하였다.&amp;nbsp;&amp;#8617;</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Garbage collecting</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/03/12/garbage-collecting/" rel="alternate" type="text/html" title="Garbage collecting" />
-      <published>2017-03-12T00:00:00+00:00</published>
-      <updated>2017-03-12T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/03/12/garbage%20collecting</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/12/garbage-collecting/"></content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="gc" />
-      
-        <category term="analysis" />
-      
-
-      
-
-      
-        <summary type="html"></summary>
       
 
       
@@ -604,7 +1131,7 @@
 
       
         <author>
-            <name>Su-hyeok Kim</name>
+            <name>Su-Hyeok Kim</name>
           
           
         </author>
@@ -653,7 +1180,7 @@
 
       
         <author>
-            <name>Su-hyeok Kim</name>
+            <name>Su-Hyeok Kim</name>
           
           
         </author>
@@ -848,7 +1375,7 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
 
       
         <author>
-            <name>Su-hyeok Kim</name>
+            <name>Su-Hyeok Kim</name>
           
           
         </author>
@@ -866,177 +1393,6 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
 
       
         <summary type="html">아는 지인이 좋다고 추천해서 jekyll+github 으로 블로그를 만들게 되었다. 한글로 된 자료가 그리 많지 않아 직접 기록해보려 한다. 개요 원리는 간단하다. GitHub 에서 jekyll 로 만들어진 블로그 백엔드 서비스(BaaS)를 지원하고, 사용자는 일정한 형식으로 레포지토리를 구성하면 블로그가 짠! 하고 나타난다. GitHub 에서 작업할 것들 순서는 아래와 같다. GitHub 계정이 없을 시 가입하기 GitHub 에 블로그 레포지토리 만들기 GitHub 가입하기 Github.com에서 가입하면 된다. 가입 절차는 간단하니 직접 해보라. GitHub 에 블로그 레포지토리 만들기 하나의 저장소를 만든다. 이때 중요한 것은 레포지토리 이름을 반드시 “(닉네임).githum.com” 으로 적어주여야 한다. 위와 같이 말이다. 우리는 원격 블로그 저장소를 만들었다. 이제 저장할 블로그 내용물을 만들 차례다. 블로그 만들기 Github 에서는 Ruby 로 만들어진 Jekyll 프레임워크 기반의 블로그를 지원한다. 즉 Jekyll 로 블로그를 만들어 GitHub 레포지토리에 올리면 잘 보인다. 만들어진 GitHub 레포지토리를 들어가보면 기본적으로 만들어진 블로그가 있다. 포스팅이 가능하고 기본적인 정보를 올릴 수 있다. 하지만 이 블로그는 만들어진 테마를 가져와서 세팅하는 것이기 때문에 내 멋대로 커스터마이징이 힘들다. 그렇다고 직접 스킨을 만들기에는.. 아무것도 모르는 사람이 처음부터 직접 만들기는 힘들다. 그러면 다른 사람이 만들어진걸 가져다 쓰는게 가장 빠르고 간편한 방법이다. 만들어진 테마 가져오기 우선 jekyll 테마 홈페이지이나 github에서 민들어진 jekyll 테마들을 찾아볼 수 있다. github 에서 가져오거나, jekyll 테마 홈페이지에서 직접 파일을 받아 쓸 수 있다. 1. GitHub 에서 테마 가져오기 여러 방법이 있지만 필자는 clone 해서 로컬 저장소를 만든다. 연결된 remote repository 를 블로그 repository 로 바꾼다. 위 방식으로 진행했다. GitHub 에서 원하는 jekyll 테마를 clone 해준다. 이 글을 쓸 무렵 필자는 whiteglass 테마를 사용했었다. git clone {other’s url} 위의 그림의 위치에서 url 을 복사해 세팅할 디렉토리에 위와 같이 입력해주면 된다. clone 을 한 후에는 가져온 remote repository 가 연결되어 있을 것이다. 일단 확인부터 해보자. 우선 프로젝트 루트 디렉토리로 이동해 shell 을 키고 아래 커맨드를 입력한다 git remote -v 그럼 아마도 아래와 같이 나올것이다. origin (other’s-url) (fetch) origin (other’s-url) (push) 잘 살펴보면 알겠지만 중간에 들어간 url 은 가져온 프로젝트의 url 이다. 변경하려면 다음과 같이 하면된다 git remote remove origin // 등록된 origin을 지운다. git remote add origin (repository-url) // 본인 블로그 레포지토리 url 을 등록시켜 준다. 그 다음 다시 등록된 remote repository 를 확인해보자. git remote -v 등록한 url 로 나오면 성공이다. 이제 연결을 해주었으니 원할 때 remote repository 로 보내면 된다. 정석인 방법은 원본 프로젝트를 fork 해서 나의 레포지토리로 바꾼 후 수정을 거쳐 하는것이지만, 언제 스킨을 바꿀지 모르기에 위 방식대로 진행했다. 2. jekyll 테마 프로젝트를 구해서 설정하기 이 방법도 크게 다르지 않다. 단지 local repository의 설정이 다를뿐이다. 아래와 같이 진행하면 된다. jekyll 테마 프로젝트의 루트 디렉토리에서 git 저장소로 설정한다. 블로그 repository 를 remote repository 로 등록시켜 준다. 위 방식으로 진행했다. 프로젝트의 루트 디렉토리로 shell 을 이동해 아래와 같이 명령을 입력해준다. git init 맨 처음 local repository로 설정해주는 명령어다. 인자가 따로 필요없이 그냥 저렇게만 쳐주면 된다. 기존에 연결된 remote repository 가 없으니 바로 remote repository 를 설정해주면 된다. git remote add origin (repository-url) // 본인 블로그 레포지토리 url 을 등록시켜 준다. 여기까지 하면 local repository 를 설정하는건 끝이다. jekyll 개발환경 설정하기 테마까지 로컬 저장소에 설정을 해놓았으니 컴퓨터에서 가상의 서버를 돌려가면서 본인의 포스팅을 확인할 환경을 만들어 주어야 한다. 물론 세팅을 하지않고 포스팅을 할수는 있다. 변경하고 push 하고, 확인하고, 변경후 push하고 확인하는 루틴이 계속될 것이다. 하지만 위에서 말한 방법은 매우 귀찮다. 쓰는대로 바로바로 진행이 되어야 편할 것이라 생각했기에 직접 jekyll 개발환경을 세팅하는 방향을 선택했다. 리눅스 계열 OS 를 사용하는 개발자들은 대부분 구버젼의 Ruby 가 깔려 있겠지만 Windows 환경에서는 전혀 그런게 없다. 그래서 필자는 직접 설치 해주었다. Ruby installer 사이트에 들어가면 간단하게 isntaller 만 받아 설치를 해줄 수 있다. 설치 과정 중 환경변수(Path) 설정하는 옵션을 설정하면 간단하게 사용이 가능하다. 이제 bundler 라는 툴을 깔아주어야 한다. 쉘에서 많이 사용하며 Ruby 의 불편한 의존성 관리를 도와주는 툴이라고 한다. jekyll 에서는 기본적으로 bundler 를 사용하기 때문에 꼭 설치해주어야 한다. gem install bundler 이제 jekyll 만 깔아주면 개발 환경 구축은 끝이다. 아래 명령어를 입력하자. gem install jekyll 로컬 환경에서 블로그 확인하기 모든 세팅이 다 끝났다면 이제 블로그를 직접 확인할 수 있다. jekyll serve 위 명령어를 입력 후, 루프백 IP(127.0.0.1)나, localhost 도메인을 통해 블로그 서버를 직접 확인할 수 있다. 참고로 jekyll 은 4000 포트를 쓰니 참고 바란다.</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Ue4 Class Tutorial</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/03/06/ue4-class-tutorial/" rel="alternate" type="text/html" title="Ue4 Class Tutorial" />
-      <published>2017-03-06T00:00:00+00:00</published>
-      <updated>2017-03-06T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/03/06/ue4-class-tutorial</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/06/ue4-class-tutorial/">&lt;p&gt;이 글은 언리얼 엔진 4 교육을 위한 글입니다.&lt;/p&gt;
-
-&lt;h2&gt;강의를 듣는 태도?&lt;/h2&gt;
-
-&lt;p&gt;강사는 강의를 합니다. 아마 목청껏 떠들겁니다. 듣는 사람, 강의자를 위해 실례되는 행동은 삼가주시기 바랍니다. 실습 진행시에는 집중을 위해 잡담은 지양해주세요.&lt;/p&gt;
-
-&lt;h2&gt;게임 엔진을 다루는 태도?&lt;/h2&gt;
-
-&lt;p&gt;일반적인 게임 엔진은 많은 시스템을 구축해 놓고 그 시스템들 안에서 개발하는 방식을 채택합니다. 특히 언리얼 엔진 4 는 많은 시스템들이 존재합니다. 이 시스템들을 현명하게 활용해 게임을 만들어야 합니다.&lt;/p&gt;
-
-&lt;p&gt;간단하게 “현명하게 활용하는 방법” 을 살펴보겠습니다.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;엔진에 존재하는 기능을 활용하라.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;존재하는 기능을 활용하세요. 만약 문제가 있는 기능이라면 사용하지 말아야 겠지만 대부분의 기능들은 검증된 기능일 것입니다.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;안정성이 보장된 기능을 사용하라.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;언리얼 엔진 4는 기능을 공식으로 지원하기 전에 실험 단계를 거칩니다. 공식으로 지원하는 기능만 사용해도 안정성을 보장받을 것 입니다.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;지원하는 문서들을 적극적으로 읽어보라.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;설명이 필요 없네요.&lt;/p&gt;
-
-&lt;h2&gt;이것들은 꼭 알고 있어야 합니다!!&lt;/h2&gt;
-
-&lt;p&gt;언리얼 엔진 4 는 개발 언어를 C++ 과 Blueprint 를 사용합니다. 프로그램의 로직을 직접 짤 수 있어야 하고, C++ 의 문법들을 숙지하고 있어야 합니다. 언리얼 엔진 4 자체에서 C++ 문법을 확장한 부분도 있기 때문에 구분할 필요도 있구요.&lt;/p&gt;
-
-&lt;h2&gt;도움될만한 지식들&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;component base development&lt;/li&gt;
-  &lt;li&gt;
-    &lt;h2&gt;object oriented programming&lt;/h2&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="edu" />
-      
-        <category term="ue4" />
-      
-
-      
-
-      
-        <summary type="html">이 글은 언리얼 엔진 4 교육을 위한 글입니다. 강의를 듣는 태도? 강사는 강의를 합니다. 아마 목청껏 떠들겁니다. 듣는 사람, 강의자를 위해 실례되는 행동은 삼가주시기 바랍니다. 실습 진행시에는 집중을 위해 잡담은 지양해주세요. 게임 엔진을 다루는 태도? 일반적인 게임 엔진은 많은 시스템을 구축해 놓고 그 시스템들 안에서 개발하는 방식을 채택합니다. 특히 언리얼 엔진 4 는 많은 시스템들이 존재합니다. 이 시스템들을 현명하게 활용해 게임을 만들어야 합니다. 간단하게 “현명하게 활용하는 방법” 을 살펴보겠습니다. 엔진에 존재하는 기능을 활용하라. 존재하는 기능을 활용하세요. 만약 문제가 있는 기능이라면 사용하지 말아야 겠지만 대부분의 기능들은 검증된 기능일 것입니다. 안정성이 보장된 기능을 사용하라. 언리얼 엔진 4는 기능을 공식으로 지원하기 전에 실험 단계를 거칩니다. 공식으로 지원하는 기능만 사용해도 안정성을 보장받을 것 입니다. 지원하는 문서들을 적극적으로 읽어보라. 설명이 필요 없네요. 이것들은 꼭 알고 있어야 합니다!! 언리얼 엔진 4 는 개발 언어를 C++ 과 Blueprint 를 사용합니다. 프로그램의 로직을 직접 짤 수 있어야 하고, C++ 의 문법들을 숙지하고 있어야 합니다. 언리얼 엔진 4 자체에서 C++ 문법을 확장한 부분도 있기 때문에 구분할 필요도 있구요. 도움될만한 지식들 component base development object oriented programming</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Ue4 Class Language Guide</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/03/06/ue4-class-language-guide/" rel="alternate" type="text/html" title="Ue4 Class Language Guide" />
-      <published>2017-03-06T00:00:00+00:00</published>
-      <updated>2017-03-06T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/03/06/ue4-class-language-guide</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/06/ue4-class-language-guide/"></content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="edu" />
-      
-        <category term="ue4" />
-      
-
-      
-
-      
-        <summary type="html"></summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Ue4 Class Editor Basic</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/03/06/ue4-class-editor-basic/" rel="alternate" type="text/html" title="Ue4 Class Editor Basic" />
-      <published>2017-03-06T00:00:00+00:00</published>
-      <updated>2017-03-06T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/03/06/ue4-class-editor-basic</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/06/ue4-class-editor-basic/">&lt;p&gt;이 글은 언리얼 엔진 4 교육을 위한 글입니다.&lt;/p&gt;
-
-&lt;h2&gt;에디터 활용하기&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://hrmrzizon.github.io/images/unityandue4.jpg&quot; alt=&quot;Unity 와 UE4&quot; /&gt;&lt;/p&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="edu" />
-      
-        <category term="ue4" />
-      
-
-      
-
-      
-        <summary type="html">이 글은 언리얼 엔진 4 교육을 위한 글입니다. 에디터 활용하기</summary>
       
 
       
@@ -1105,7 +1461,7 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
 
       
         <author>
-            <name>Su-hyeok Kim</name>
+            <name>Su-Hyeok Kim</name>
           
           
         </author>
@@ -1123,97 +1479,6 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
 
       
         <summary type="html">이 글은 강의를 듣는 분들을 위해 작성된 심심풀이 땅콩같은 글임을 알립니다. 절대 논란의 여지가 되고 싶지 않습니다. Unity 로 게임 개발을 시작한지 약 2년이 넘었습니다. 이제 언리얼 엔진 4에 발을 들여놓으려고 합니다. 막 파악하면서 느낀 점을 적어보려고 합니다. 기존 개발을 해오던 분들과 의견이 다를수도 있으니 너그러운 마음으로 읽어주시길 바랍니다. Overview 의 차이 문서를 읽으면서, 예제를 실험해보면서 느낀 점은, 둘의 스케일이 다르다는 것 입니다. Unity 는 비교적 간단하고 심플한 구조를 가진 반면, Unreal Engine 4 는 복잡하나 엔진 차원에서 많은 것을 지원하려 하는 것이 보입니다. 게임 시스템 게임 시스템을 보면, Unity 는 Scene 이란 GameObject 들의 계층 구조의 집합을 정의해놓고 모든 로직이 그 안에서 돌아가게 합니다. GameObject 들은 여러 Component 들을 붙이거나 뗄 수 있습니다. CBD 기반이지요. Unrealengine 에서는 레벨이란 단위안에 지형, 액터등 많은 것들을 가지고 사용자가 직접 로드하게 하거나 자동으로 로드해줍니다. 또한 여러 오브젝트들에 하위 컴포넌트나, Blueprint 스크립트를 붙일 수 있습니다. Unrea Engine 4 For Unity Developers 개발 언어 환경 Unity 는 C#, JavaScript, Boo 이 세 가지 언어로 개발을 할 수 있습니다. 특히 가장 유명한 것은 C# 이겠지요. Mono 프로젝트의 공이 크다고 생각됩니다. 현 세대의 아주 강력한 Miscrosoft 에서 주도하는 언어 C# 을 모든 플랫폼에서 개발을 가능하게 만들고, Unity 에서는 이를 채택해 거의 모든 플랫폼의 개발이 가능해졌지요. 게다가 Mono 프로젝트를 이끌던 Xamarin 회사는 작년에 Miscrosoft 에서 인수했다는 소식이 있었습니다. 하여튼 Unity 는 C# 과 함께 성장할것 같이 보입니다. Unreal Engine 4 은 C++, Blueprint 로 개발이 가능합니다. C++ 은 OOP 언어의 대부분이 가지고 있는 리플렉션의 개념이 없습니다. 쓰더라도 전처리 과정에서만 가능하지요. 하지만 Unreal Engine 4 에서는 시스템을 덧붙여 가능하게 만들었습니다. 또한 코드 타이핑을 하지 않고 GUI 로 프로그래밍이 가능한 BluePrint 라는 강력한 방법도 지원합니다. 가장 놀라운 점은 이 기능들을 자체적으로 만든 것입니다. Unreal Engine 4 의 장점? Unreal Engine 4 의 장점 몇가지를 뽑아보겠습니다. 첫 항목에 규모가 크다는 말을 했었습니다. 전문화된 툴이 정말 많습니다. 시네마틱을 제작하는 시퀀서, 3D 모델, 애니메이션 정보들을 편집 가능한 스켈레톤 시스템, AI 를 위한 비헤이비어 트리 시스템 등 많은 기능들을 지원합니다. 두번째로는 엔진 자체가 오픈 소스이고, 엔진 구현에 관한 문서들이 자세하게 잘 설명되어 있습니다. 오픈 소스인 만큼 엔진 자체에 문제가 생겼을 시 직접 소스코드를 수정해 사용이 가능하고, GitHub 페이지를 사용해 문제를 제기할 수 있어 “공생” 이라는 슬로건에 알맞는 정책입니다. 상세한 문서화는 Unreal Engine 4 를 처음 접하는 개발자도, 개발에 쓰고있는 개발자들에게도 많은 도움을 줍니다. 마지막은 언리얼 데브 그랜트 라는 정책이 있습니다. 이는 Unreal Engine 으로 개발된 가능성 있는 게임들을 신청받아 한화로 약 5백만원에서 5천만원 사이의 지원금을 보조하는 정책입니다. 지원금의 사용은 자유로우며 지적재산권도 개발사가 소유합니다. 아무런 권리도 가져가지 않고 지원하는 것이지요. 마지막으로 Unreal Engine 4 는 특별한 움직임은 보이지 않습니다. 하지만 여태까지 했던 것들만 해도 정말 대단합니다. 약 2,3달 간격의 버젼업은 무릎을 탁 치다 못해 탈골될 지경이지요. 자체적으로 보유한 기술을 따지면.. 엄청난 가치들이 있습니다. Unity 는 2017 버젼과 Unity5 마지막 버젼을 앞에 두고 있습니다. 이전에 릴리즈된 Unity 5.5 버젼에서는 꽤 발전된 모습을 보여주었습니다. 가장 돋보이는 점은 Mono C# 컴파일러 버젼을 Mono 4.4 버젼으로 업그레이드 한 것입니다. 드디어 4버젼부터 가져오던 Mono 프레임워크 문제를 해결하려 하는게 보입니다. 둘다 장단점이 있지만 여태까지 행보를 보면 Unreal Engine 4 가 우세하다고 봅니다. 표면적으로 드러난 기술력, 자본만 보아도 엔진 자체만 보더라도 말이지요. 하지만 앞일은 모르니 조금 더 지켜봐야할 필요는 있습니다.</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Ue4 Class Equipment</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/03/05/ue4-class-equipment/" rel="alternate" type="text/html" title="Ue4 Class Equipment" />
-      <published>2017-03-05T00:00:00+00:00</published>
-      <updated>2017-03-05T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/03/05/ue4-class-equipment</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/05/ue4-class-equipment/">&lt;p&gt;이 글은 언리얼 엔진 4 교육을 위한 글입니다.&lt;/p&gt;
-
-&lt;h2&gt;강의 환경&lt;/h2&gt;
-
-&lt;h3&gt;강의 자료&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://hrmrzizon.github.io&quot;&gt;http://hrmrzizon.github.io&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unrealengine.com/latest/KOR/index.html&quot;&gt;언리얼 엔진 4 웹 문서&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unrealengine.com/latest/KOR/Resources/index.html&quot;&gt;언리얼 엔진 4 에서 지원하는 예제들&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;추천 하드웨어 사양&lt;/h3&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;OS&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;CPU&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;Ram&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;여유 디스크 공간&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;windows 7,8,10&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;Intell 혹은 AMD, 쿼드 코어, 2.5GHz 이상&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;8GB 이상&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;100GB 이상&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;사양 확인하기 : &lt;a href=&quot;http://www.cpuid.com/softwares/cpu-z.html&quot;&gt;CPU-Z 다운로드 페이지&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3&gt;소프트웨어 설치&lt;/h3&gt;
-
-&lt;p&gt;우선 &lt;a href=&quot;https://www.unrealengine.com/ko&quot;&gt;언리얼 엔진 4 공식 홈페이지&lt;/a&gt;에 접속해 전용 런쳐를 다운로드 합니다. 홈페이지 우측 상단에 링크가 있습니다. 런처 설치는 오래 걸리지 않습니다.&lt;/p&gt;
-
-&lt;p&gt;런처 설치가 끝나면 엔진을 설치할 수 있습니다. &lt;strong&gt;그런데 주의할 사항이 있습니다.&lt;/strong&gt; 엔진과 앞으로의 엔진 사용은 꽤 많은 공간을 요구하기 때문에 디스크 여유 공간이 많이 있어야 합니다. 현재 4.15 버젼이 차지하는 디스크 공간은 &lt;strong&gt;21.9GB&lt;/strong&gt; 입니다. 앞으로 디스크 렌더 캐싱, 프로젝트 등 디스크 공간을 요구하는 일이 많아질 것입니다. 또한 빠른 설치를 위해 원활한 네트워크 환경에서 설치를 진행하시길 바랍니다.&lt;/p&gt;
-
-&lt;p&gt;이제 런처에서 엔진 바이너리를 설치합니다. 현재 최신 버젼인 4.15 버젼을 설치해줍니다.&lt;/p&gt;
-
-&lt;p&gt;엔진 설치가 끝나거나 환경이 원활하다면 &lt;a href=&quot;https://www.visualstudio.com/ko/downloads/&quot;&gt;Visual Studio 2015 다운로드 페이지&lt;/a&gt;에서 다운로드 받아 설치합니다. IDE도 필요하지만 대부분 Windows 환경에서 실행하기 때문에 Windows SDK도 설치해주어야 합니다. 역시 많은 디스크 공간을 요구합니다. 또한 원활한 네트워크 환경에서 진행하길 바랍니다.&lt;/p&gt;
-
-&lt;h3&gt;설치하면서 읽어볼 거리&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unrealengine.com/latest/KOR/Engine/Performance/Scalability/ScalabilityAndYou/index.html&quot;&gt;Scalability, 엔진 퀄리티와 개발자&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="edu" />
-      
-        <category term="ue4" />
-      
-
-      
-
-      
-        <summary type="html">이 글은 언리얼 엔진 4 교육을 위한 글입니다. 강의 환경 강의 자료 http://hrmrzizon.github.io 언리얼 엔진 4 웹 문서 언리얼 엔진 4 에서 지원하는 예제들 추천 하드웨어 사양 OS CPU Ram 여유 디스크 공간 windows 7,8,10 Intell 혹은 AMD, 쿼드 코어, 2.5GHz 이상 8GB 이상 100GB 이상 사양 확인하기 : CPU-Z 다운로드 페이지 소프트웨어 설치 우선 언리얼 엔진 4 공식 홈페이지에 접속해 전용 런쳐를 다운로드 합니다. 홈페이지 우측 상단에 링크가 있습니다. 런처 설치는 오래 걸리지 않습니다. 런처 설치가 끝나면 엔진을 설치할 수 있습니다. 그런데 주의할 사항이 있습니다. 엔진과 앞으로의 엔진 사용은 꽤 많은 공간을 요구하기 때문에 디스크 여유 공간이 많이 있어야 합니다. 현재 4.15 버젼이 차지하는 디스크 공간은 21.9GB 입니다. 앞으로 디스크 렌더 캐싱, 프로젝트 등 디스크 공간을 요구하는 일이 많아질 것입니다. 또한 빠른 설치를 위해 원활한 네트워크 환경에서 설치를 진행하시길 바랍니다. 이제 런처에서 엔진 바이너리를 설치합니다. 현재 최신 버젼인 4.15 버젼을 설치해줍니다. 엔진 설치가 끝나거나 환경이 원활하다면 Visual Studio 2015 다운로드 페이지에서 다운로드 받아 설치합니다. IDE도 필요하지만 대부분 Windows 환경에서 실행하기 때문에 Windows SDK도 설치해주어야 합니다. 역시 많은 디스크 공간을 요구합니다. 또한 원활한 네트워크 환경에서 진행하길 바랍니다. 설치하면서 읽어볼 거리 Scalability, 엔진 퀄리티와 개발자</summary>
       
 
       
@@ -1260,7 +1525,7 @@ git remote add origin &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;repository-u
 
       
         <author>
-            <name>Su-hyeok Kim</name>
+            <name>Su-Hyeok Kim</name>
           
           
         </author>
