@@ -1,6 +1,6 @@
 ---
 layout: post
-author: "Su-hyeok Kim"
+author: "Su-Hyeok Kim"
 comments: true
 show: true
 categories:
