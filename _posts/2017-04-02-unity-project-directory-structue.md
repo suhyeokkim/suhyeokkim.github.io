@@ -32,10 +32,6 @@ Library 디렉토리는 위에서 말한 Assets 디렉토리와 ProjectSetting �
 
 위에서도 언급했지만 Assets 디렉토리는 게임의 실질적인 데이터들이 들어가 있는 디렉토리다. 그래서 Unity 에서는 에셋들을 관리하기 위해 Assets 디렉토리 안에서도 데이터를 구분하도록 몇개의 디렉토리 이름을 예약해 놓았다. 예약된 이름들은 무조건 정해진 동작을 하니 정해진 동작과 같은 목적이 아니라면 디렉토리 이름을 다르게 설정해주어야 한다.
 
-또한 최상단에 위치하는 디렉토리 하나만 인식하거나, 모든 하위 디렉토리의 이름들을 인식하는 경우 두가지가 있다. 아래 두 항목은 최상단에 위치하는 디렉토리만 인식하는 경우다.
-
-### Root 에서만 인식되는 이름들
-
 #### "Standard Assets"
 
 Unity 의 예제 프로젝트들을 실행하면 대부분의 프로젝트들은 Standard Assets 디렉토리가 존재한다. 예제마다 항상 보이는 이 디렉토리는 일반적인 에셋과 다른 분류를 위해 만들어진 이름이다. [Unity Compile Order](https://docs.unity3d.com/Manual/ScriptCompileOrderFolders.html) 를 보면 알겠지만 맨 처음 컴파일이 되는 디렉토리는 Standard Assets 다.
@@ -47,10 +43,6 @@ Unity 의 예제 프로젝트들을 실행하면 대부분의 프로젝트들은
 Unity 에서 사용되는 모든 파일들은 변환을 거치거나, 메타 파일을 생성해 Unity 시스템에서 접근을 용이하게 한다. 하지만 몇몇의 경우 Unity 에서 변환을 하면 안되는 경우가 몇몇 있다. Unity 문서에서, iOS 에서는 영상을 재생하려면 원본 파일이 필요하다는 예시가 있었다.
 
 그래서 필요한 디렉토리가 Streaming Assets 다. 이름 자체도 스트리밍을 염두해두고 만든 듯 싶다. 이 디렉토리의 파일을 접근하는 방법은 언어에서 제공하는 API를 사용하거나, [WWW](https://docs.unity3d.com/ScriptReference/WWW.html) 를 통해 접근할 수도 있다. 플랫폼 별로 경로가 다르니 유의하길 바란다.
-
-### Sub-directory 에서도 인식되는 이름들
-
-아래 두 항목은 모든 디렉토리에서 인식되는 이름들이다.
 
 #### "Resources"
 
@@ -78,5 +70,3 @@ Unity 는 Android, PC, macOS 등 왠만한 플랫폼을 지원하는 크로스 �
 - [Unity Compile Order](https://docs.unity3d.com/Manual/ScriptCompileOrderFolders.html)
 - [용일이의 개발,번역 블로그](http://yongil.net/unity/2015/04/23/Unity-Special-Folder-Names-in-your-Assets-Folder.html)
 - [Unity Plugins](https://docs.unity3d.com/Manual/PluginInspector.html)
-
-# Plugins 를 제외한 모든걸 포함하는 예제가 필요함
