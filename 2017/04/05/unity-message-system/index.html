@@ -9,12 +9,12 @@
   
   
   
-  <title>Unity Gameobject Communication</title>
-  <meta name="description" content="Reflection, RTTI SendMessage, BroadcastMessage usage">
+  <title>Unity Message System</title>
+  <meta name="description" content="Reflection, RTTI SendMessage, Invoke example - system callback, animation callback callback optimization, system callback, custom callback 문제점 EventSystem.Excuete UGUI use eventSystem classes message vs event warning when frame 참조 Unity 메시지 시스템 GameDev HowToMessage">
   
 
   <link rel="stylesheet" href="/assets/main.css">
-  <link rel="canonical" href="https://hrmrzizon.github.io/2017/03/31/unity-gameobject-communication/">
+  <link rel="canonical" href="https://hrmrzizon.github.io/2017/04/05/unity-message-system/">
   
   
   <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
@@ -24,10 +24,10 @@
 
   
     <meta property="fb:admins" content="639405536264839">
-    <meta property="og:title" content="Unity Gameobject Communication">
+    <meta property="og:title" content="Unity Message System">
     <meta property="og:site_name" content="Appocrypha">
-    <meta property="og:url" content="https://hrmrzizon.github.io/2017/03/31/unity-gameobject-communication/">
-    <meta property="og:description" content="Reflection, RTTI SendMessage, BroadcastMessage usage">
+    <meta property="og:url" content="https://hrmrzizon.github.io/2017/04/05/unity-message-system/">
+    <meta property="og:description" content="Reflection, RTTI SendMessage, Invoke example - system callback, animation callback callback optimization, system callback, custom callback 문제점 EventSystem.Excuete UGUI use eventSystem classes message vs event warning when frame 참조 Unity 메시지 시스템 GameDev HowToMessage">
     
     
       <meta property="og:image" content="http://hrmrzizon.github.io/images/github_profile_image.jpg">
@@ -35,8 +35,8 @@
   
   <meta name="twitter:card" content="summary">
   
-  <meta name="twitter:title" content="Unity Gameobject Communication">
-  <meta name="twitter:description" content="Reflection, RTTI SendMessage, BroadcastMessage usage">
+  <meta name="twitter:title" content="Unity Message System">
+  <meta name="twitter:description" content="Reflection, RTTI SendMessage, Invoke example - system callback, animation callback callback optimization, system callback, custom callback 문제점 EventSystem.Excuete UGUI use eventSystem classes messa...">
   
   
 
@@ -104,9 +104,9 @@
         <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
   <header class="post-header">
     
-      <h1 class="post-title" itemprop="name headline">Unity Gameobject Communication</h1>
+      <h1 class="post-title" itemprop="name headline">Unity Message System</h1>
     
-    <p class="post-meta"><time datetime="2017-03-31T00:00:00+00:00" itemprop="datePublished">Mar 31, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
+    <p class="post-meta"><time datetime="2017-04-05T00:00:00+00:00" itemprop="datePublished">Apr 5, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
   
   
     
@@ -171,9 +171,22 @@
   <div class="post-content" itemprop="articleBody">
     <ol>
   <li>Reflection, RTTI</li>
-  <li>SendMessage, BroadcastMessage</li>
-  <li>usage</li>
+  <li>SendMessage, Invoke</li>
+  <li>example - system callback, animation callback</li>
+  <li>callback optimization, system callback, custom callback</li>
+  <li>문제점</li>
+  <li>EventSystem.Excuete</li>
+  <li>UGUI use eventSystem classes</li>
+  <li>message vs event</li>
+  <li>warning when frame</li>
 </ol>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="https://docs.unity3d.com/kr/current/Manual/MessagingSystem.html">Unity 메시지 시스템</a></li>
+  <li><a href="http://gamedev.stackexchange.com/questions/120327/how-to-send-an-interface-message">GameDev HowToMessage</a></li>
+</ul>
 
   </div>
 
