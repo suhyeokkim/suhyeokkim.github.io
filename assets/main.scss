@@ -50,7 +50,11 @@ $on-laptop:        800px;
 .right {
   text-align: center;
 }
-
+.center-image
+{
+    margin: 0 auto;
+    display: block;
+}
 
 // Import partials from the `whiteglass` theme.
 @import "whiteglass";
