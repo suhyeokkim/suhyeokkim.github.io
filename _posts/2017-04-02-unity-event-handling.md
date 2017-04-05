@@ -113,13 +113,13 @@ void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneMan
 
 스크립트에서 이벤트 사용은 거의 비슷하다. 런타임 내에서는 이벤트를 등록하거나, 제거할 수 있고 Invoke 메소드를 통해 이벤트를 알려주면 된다. 하지만 UnityEvent 는 스크립팅보다는 Hierarchy 시스템 내에서 빛을 발한다. UGUI 의 Button 컴포넌트를 아래 그림이 있다. 한번 살펴보자.
 
-![inspector](/images/eventhandling-inspector.png)
+![inspector](/images/eventhandling-inspector.png){: .center-image }
 
 일반적으로 버튼은 "눌렸을 때, 무언가 동작을 한다." 라고 생각을 할것이다. 그래서 동작을 이어주는 부분이 _OnClick()_ 이라고 쓰여있는 부분이다. _OnClick()_ 에 두개의 블록이 있다. 블록은 아래 +, - 버튼을 통해 없에거나 만들 수 있다. 그리고 각 블록의 역할은 게임 오브젝트의 컴포넌트의 메소드 하나를 연결하는 역할을 한다. 블록은 연결할 메소드의 갯수만큼 늘리고 줄이면 된다.
 
 설정하는 방법은 간단하다. Hierarchy 내에서 하나의 게임오브젝트를 선택하고, 게임 오브젝트가 가지고 있는 컴포넌트 중의 메소드를 하나 선택한다. 그리고 파라미터가 있으면 간단하게 설정해주면 된다. 아래 그림과 같이 말이다.
 
-![inspector](/images/eventhandling-inspector-select-method.png)
+![inspector](/images/eventhandling-inspector-select-method.png){: .center-image }
 
 이렇게 메소드를 등록하면된다. 그런데 UnityEvent 에 등록할 수 있는 메소드의 제한이 있다. 우선 static 함수가 아니여야 하며, 무조건 public 으로 접근제한자가 설정되어 있어야 한다. static 함수가 아니여야 하는건 실제 컴포넌트의 메소드를 호출한다는 컨셉인것 같고, 접근제한자가 public 이여야 하는건 스크립트의 유연함을 위해 그런듯 하다.
 
@@ -139,7 +139,9 @@ void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneMan
 
 게임 로직도 UnityEvent 로 구성하면 만들때는 쉽지만 UnityEvent 는 가독성이 상당히 안좋기 때문에 복잡한 게임 로직을 구성하면 나중에는 손댈수 없는 스파게티 코드도 아닌 덩어리가 만들어질 것이다. 하지만 간단한 게임 로직이나, 프로토타이핑에는 매우 적합하다. 그리고 개인적으로 제일 좋은 것은 이벤트를 연결하는 코드를 관리하지 않아서 좋다.
 
-간단한 예제를 만들어 보았다. Unity 에서 보통 처음으로 보게되는 예제 Roll-a-ball 을 C# event 와 UnityEvent 를 사용해 만들어 보았다.
+런타임 퍼포먼스에 대해에서는 이 글을 참고하라 : [Event Performance: C# vs UnityEvent(영문)](http://jacksondunstan.com/articles/3335)
+
+위에서 말한 내용을 예제에서 확인하면 편리할 것이다. 아래 Github 링크를 올려놓았으니 확인해보길 바란다.
 
 링크 : [Extended-Roll-a-Ball](https://github.com/hrmrzizon/Extended-Roll-a-Ball)
 
