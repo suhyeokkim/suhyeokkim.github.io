@@ -44,6 +44,13 @@ $on-laptop:        800px;
 }
 
 
+.center {
+  text-align: center;
+}
+.right {
+  text-align: center;
+}
+
 
 // Import partials from the `whiteglass` theme.
 @import "whiteglass";
