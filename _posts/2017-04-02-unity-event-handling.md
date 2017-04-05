@@ -121,7 +121,7 @@ void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneMan
 
 ![inspector](/images/eventhandling-inspector-select-method.png){: .center-image }
 
-이렇게 메소드를 등록하면된다. 그런데 UnityEvent 에 등록할 수 있는 메소드의 제한이 있다. 우선 static 함수가 아니여야 하며, 무조건 public 으로 접근제한자가 설정되어 있어야 한다. static 함수가 아니여야 하는건 실제 컴포넌트의 메소드를 호출한다는 컨셉인것 같고, 접근제한자가 public 이여야 하는건 스크립트의 유연함을 위해 그런듯 하다.
+이렇게 메소드를 등록하면된다. 그런데 UnityEvent 에 등록할 수 있는 메소드의 제한이 있다. 타겟 게임 오브젝트와 자신의 게임 오브젝트의 관계가 고정되어야 하고, static 함수가 아니여야 하며, 무조건 public 으로 접근제한자가 설정되어 있어야 한다. static 함수가 아니여야 하는건 실제 컴포넌트의 메소드를 호출한다는 컨셉인것 같고, 접근제한자가 public 이여야 하는건 스크립트의 유연함을 위해 그런듯 하다.
 
 그런데 사용하다보면 조금 의문이 드는점이 있다. [UnityEvent](https://docs.unity3d.com/ScriptReference/Events.UnityEvent.html) 에서 정의된 _AddListener/RemoveListener_ 와 인스펙터에서 설정해준 정보들이 다르게 취급되는 것처럼 보인다.
 
@@ -135,7 +135,39 @@ void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneMan
 
 ## 실제 사용 사례 및 장단점
 
-보통 빠르게 게임 로직을 작업해야 할때나, UI 로직을 구성할 때 가장 많이 쓰인다. UGUI 의 많은 위젯들도 UnityEvent 를 사용하고 심지어 UI 전용 이벤트를 처리해주는 EventTrigger 라는 컴포넌트도 있을 정도로 UnityEvent 를 많이 활용한다.
+C# Delegate 문법은 정말 무궁무진하게 쓰인다. 특히 일시적인 루틴이 아닌 비동기 처리가 필요할 때 유용하게 쓸 수 있다. 아래 예시를 보자.
+
+{% highlight c# lineos %}
+
+int GetObjectCount()
+{
+  ..
+
+  // 무조건 한번에 값을 반환해주어야 함.
+}
+
+void GetObjectCount(Action<int> getCount)
+{
+  ..
+
+  // 실행시에 대리자를 호출할 수도 있고, 일정 시간이 흐른뒤에 대리자를 호출할 수도 있다.
+}
+
+{% endhighlight %}
+
+Action 은 C# 라이브러리에서 미리 정해놓은 대리자 형식이다.([Action 링크](https://msdn.microsoft.com/ko-kr/library/018hxwa8.aspx))
+
+가장 흔하게 대리자를 볼 수 있는 소스는 로그인 플랫폼 API 에 가장 많이 붙어있다. 대부분 네트워크 통신을 하기 때문에 당연히 비동기 처리에 대한 답이 필요하고, 가장 편한 수단으로 대리자를 뽑은 것이다.
+
+{% highlight c# lineos %}
+
+public void Login(Action<bool> loginSuccess);
+
+{% endhighlight %}
+
+위의 메소드가 대표적인 예시다.
+
+빨리 게임 로직을 작업해야 할때나, UI 로직을 구성할 때 가장 많이 쓰인다. UGUI 의 많은 위젯들도 UnityEvent 를 사용하고 심지어 UI 전용 이벤트를 처리해주는 EventTrigger 라는 컴포넌트도 있을 정도로 UnityEvent 를 많이 활용한다.
 
 게임 로직도 UnityEvent 로 구성하면 만들때는 쉽지만 UnityEvent 는 가독성이 상당히 안좋기 때문에 복잡한 게임 로직을 구성하면 나중에는 손댈수 없는 스파게티 코드도 아닌 덩어리가 만들어질 것이다. 하지만 간단한 게임 로직이나, 프로토타이핑에는 매우 적합하다. 그리고 개인적으로 제일 좋은 것은 이벤트를 연결하는 코드를 관리하지 않아서 좋다.
 
