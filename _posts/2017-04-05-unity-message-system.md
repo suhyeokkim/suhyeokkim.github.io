@@ -20,5 +20,6 @@ categories:
 
 ## 참조
 
-- [Unity 메시지 시스템](https://docs.unity3d.com/kr/current/Manual/MessagingSystem.html)
 - [GameDev HowToMessage](http://gamedev.stackexchange.com/questions/120327/how-to-send-an-interface-message)
+- [Unity 메시지 시스템](https://docs.unity3d.com/kr/current/Manual/MessagingSystem.html)
+- [Unity EventSystem](https://docs.unity3d.com/kr/current/Manual/EventSystem.html)

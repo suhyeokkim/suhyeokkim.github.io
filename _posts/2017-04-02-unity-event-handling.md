@@ -167,7 +167,7 @@ public void Login(Action<bool> loginSuccess);
 
 위의 메소드가 대표적인 예시다.
 
-빨리 게임 로직을 작업해야 할때나, UI 로직을 구성할 때 가장 많이 쓰인다. UGUI 의 많은 위젯들도 UnityEvent 를 사용하고 심지어 UI 전용 이벤트를 처리해주는 EventTrigger 라는 컴포넌트도 있을 정도로 UnityEvent 를 많이 활용한다.
+UnityEvent 빨리 게임 로직을 작업해야 할때나, UI 로직을 구성할 때 가장 많이 쓰인다. UGUI 의 많은 위젯들도 UnityEvent 를 사용하고 심지어 UI 전용 이벤트를 처리해주는 EventTrigger 라는 컴포넌트도 있을 정도로 UnityEvent 를 많이 활용한다.
 
 게임 로직도 UnityEvent 로 구성하면 만들때는 쉽지만 UnityEvent 는 가독성이 상당히 안좋기 때문에 복잡한 게임 로직을 구성하면 나중에는 손댈수 없는 스파게티 코드도 아닌 덩어리가 만들어질 것이다. 하지만 간단한 게임 로직이나, 프로토타이핑에는 매우 적합하다. 그리고 개인적으로 제일 좋은 것은 이벤트를 연결하는 코드를 관리하지 않아서 좋다.
 
