@@ -2,7 +2,7 @@
 layout: post
 author: "Su-Hyeok Kim"
 comments: true
-show: false
+show: true
 categories:
   - unity
   - c#
