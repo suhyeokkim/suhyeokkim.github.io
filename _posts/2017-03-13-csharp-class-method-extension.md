@@ -4,7 +4,6 @@ author: "Su-Hyeok Kim"
 comments: true
 show: true
 categories:
-    - csharp
     - c#
 ---
 
@@ -14,7 +13,7 @@ unirx 를 살펴보다 모르는 문법이 나와서 기록해둔다. [MSDN 확�
 
 C# 3.0 문법부터 사용자가 기존에 정의된 클래스에 메소드를 확장 가능하게 되었다. obj-c 의 카테고리와 조금 비슷한것 같다. 자세한 사항은 코드와 함께 보자.
 
-{% highlight csharp %}
+{% highlight c# %}
 using System.Linq;
 using System.Text;
 using System;
@@ -37,7 +36,7 @@ namespace CustomExtensions
 
 선언 방식은 위와 같다. 반드시 static class 에 static method 로 선언해주어야 하며, 첫번째 파라미터는 확장할 타겟 클래스의 인스턴스와 함께 앞에 this 키워드를 사용해주면 된다. 필요한 파라미터가 있다면 그 뒤에다 쭉 써주면 된다. 다만 외부에서 호출해주는 것이기 때문에 한정자의 제한을 받는다.
 
-{% highlight csharp %}
+{% highlight c# %}
 namespace Extension_Methods_Simple
 {
     //Import the extension method namespace.

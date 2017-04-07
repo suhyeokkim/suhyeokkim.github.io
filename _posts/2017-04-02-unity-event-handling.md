@@ -2,11 +2,10 @@
 layout: post
 author: "Su-Hyeok Kim"
 comments: true
-show: false
+show: true
 categories:
   - unity
   - c#
-  - csharp
   - analysis
 ---
 
@@ -67,12 +66,15 @@ void LogAwake()
 C# 에서 event 키워드는 대리자(Delgate) 선언에 같이 쓸 수 있는 키워드로, 선언된 대리자(Delgate)의 접근을 제한하는 역할을 한다. 근데 "접근을 제한할려면 접근 키워드를 쓰지 왜 event 라는 다른 키워드를 쓰는 것인가?" 라는 생각이 들 수도 있다. 역시 아래 예제를 보면서 설명하겠다.
 
 {% highlight c# lineos %}
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
+
 //
 // 씬 로드 event 를 이용한 예제다.
 //
 
 // 대리자 이벤트 변수
-public event Action<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode> onLoad;
+public event UnityAction<Scene, LoadSceneMode> onLoad;
 
 void Awake()
 {
@@ -97,9 +99,9 @@ void OnDestroy()
   SceneManager.sceneLoaded -= onLoad;
 }
 
-void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
+void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 {
-  Debug.Log(string.Format("{0}, {1}", scene.name, mode.ToString());
+  Debug.Log(string.Format("{0}, {1}", scene.name, mode.ToString()));
 }
 {% endhighlight %}
 
