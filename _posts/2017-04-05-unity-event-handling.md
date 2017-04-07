@@ -162,12 +162,32 @@ Action 은 C# 라이브러리에서 미리 정해놓은 대리자 형식이다.(
 가장 흔하게 대리자를 볼 수 있는 소스는 로그인 플랫폼 API 에 가장 많이 붙어있다. 대부분 네트워크 통신을 하기 때문에 당연히 비동기 처리에 대한 답이 필요하고, 가장 편한 수단으로 대리자를 뽑은 것이다.
 
 {% highlight c# lineos %}
+using System;
 
-public void Login(Action<bool> loginSuccess);
+private Action<bool> loginSuccess;
 
+public void Login(Action<bool> loginSuccess)
+{
+  this.loginSuccess = loginSuccess;
+
+  Debug.Log("Login");
+
+  StartCoroutine("getGoogle");
+}
+
+private IEnumerator getGoogle()
+{
+  WWW googleConnection = new WWW("https://www.google.com");
+
+  yield return googleConnection;
+
+  Debug.Log("getGoogle");
+
+  if (loginSuccess != null) loginSuccess(string.IsNullOrEmpty(googleConnection.error));
+}
 {% endhighlight %}
 
-위의 메소드가 대표적인 예시다.
+위의 Login 메소드가 대표적인 예시다.
 
 UnityEvent 빨리 게임 로직을 작업해야 할때나, UI 로직을 구성할 때 가장 많이 쓰인다. UGUI 의 많은 위젯들도 UnityEvent 를 사용하고 심지어 UI 전용 이벤트를 처리해주는 EventTrigger 라는 컴포넌트도 있을 정도로 UnityEvent 를 많이 활용한다.
 
