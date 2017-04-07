@@ -5,7 +5,6 @@ comments: true
 show: false
 categories:
     - mono
-    - csharp
     - c#
     - gc
     - analysis

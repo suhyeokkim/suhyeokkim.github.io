@@ -6,7 +6,6 @@ show: true
 categories:
   - unity
   - c#
-  - csharp
   - analysis
 ---
 
