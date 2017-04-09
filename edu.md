@@ -9,8 +9,8 @@ permalink: /edu/
 - 1 Day : [Project structure]({{ site.baseurl }}{% post_url 2017-04-02-unity-project-directory-structue %})
 - 2 Day : [Event handling]({{ site.baseurl }}{% post_url 2017-04-05-unity-event-handling %})
 - 3 Day : [Message system]({{ site.baseurl }}{% post_url 2017-04-07-unity-message-system %})
-- 4 Day : ?? <!--[Scriptable Object]({{ site.baseurl }}{% post_url 2017-03-31-unity-scriptable-object %})-->
-- 5 Day : ?? <!--[Useful attributes and properties]({{ site.baseurl }}{% post_url 2017-03-31-useful-attributes-and-properties %})-->
+- 4 Day : ?? <!--[Scriptable Object]({{ site.baseurl }}{% post_url 2017-04-09-using-scriptable-object %})-->
+- 5 Day : ?? <!--[Customize attributes and Inspector]({{ site.baseurl }}{% post_url 2017-04-09-customize-attributes-and-inspector %})-->
 - 6 Day : ?? <!--[MVC, MVP, MVVM]({{ site.baseurl }}{% post_url 2017-03-31-useful-attributes-and-properties %})-->
 - 7 Day : ?? <!--[Garbage Collection]({{ site.baseurl }}{% post_url 2017-03-31-garbage-collection-in-unity %})-->
 - 8 Day : ?? <!--[3D Drawing pipeline]({{ site.baseurl }}{% post_url 2017-03-31-unity-3d-drawing-pipeline %})-->
