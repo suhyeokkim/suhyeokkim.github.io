@@ -11,10 +11,9 @@ permalink: /edu/
 - 3 Day : [Message system]({{ site.baseurl }}{% post_url 2017-04-07-unity-message-system %})
 - 4 Day : ?? <!--[Scriptable Object]({{ site.baseurl }}{% post_url 2017-04-09-using-scriptable-object %})-->
 - 5 Day : ?? <!--[Customize attributes and Inspector]({{ site.baseurl }}{% post_url 2017-04-09-customize-attributes-and-inspector %})-->
-- 6 Day : ?? <!--[MVC, MVP, MVVM]({{ site.baseurl }}{% post_url 2017-03-31-useful-attributes-and-properties %})-->
-- 7 Day : ?? <!--[Garbage Collection]({{ site.baseurl }}{% post_url 2017-03-31-garbage-collection-in-unity %})-->
-- 8 Day : ?? <!--[3D Drawing pipeline]({{ site.baseurl }}{% post_url 2017-03-31-unity-3d-drawing-pipeline %})-->
-- 9 Day : ?? <!--[Texture compression]({{ site.baseurl }}{% post_url 2017-03-31-using-texture-compression-in-unity %})-->
+- 6 Day : ?? <!--[Garbage Collection]({{ site.baseurl }}{% post_url 2017-03-31-garbage-collection-in-unity %})-->
+- 7 Day : ?? <!--[3D Drawing pipeline]({{ site.baseurl }}{% post_url 2017-03-31-unity-3d-drawing-pipeline %})-->
+- 8 Day : ?? <!--[Texture compression]({{ site.baseurl }}{% post_url 2017-03-31-using-texture-compression-in-unity %})-->
 
 ## Examples
 

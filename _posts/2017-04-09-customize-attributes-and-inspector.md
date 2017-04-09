@@ -5,7 +5,7 @@ comments: true
 show: true
 categories:
   - unity
-  - analysis
+  - try
 ---
 
 ## 클래스, 변수에 태그를 붙이다 : Attribute
