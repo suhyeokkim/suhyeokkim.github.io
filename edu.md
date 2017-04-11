@@ -9,7 +9,7 @@ permalink: /edu/
 - 1 Day : [Project structure]({{ site.baseurl }}{% post_url 2017-04-02-unity-project-directory-structue %})
 - 2 Day : [Event handling]({{ site.baseurl }}{% post_url 2017-04-05-unity-event-handling %})
 - 3 Day : [Message system]({{ site.baseurl }}{% post_url 2017-04-07-unity-message-system %})
-- 4 Day : ?? <!--[Scriptable Object]({{ site.baseurl }}{% post_url 2017-04-09-using-scriptable-object %})-->
+- 4 Day : [Scriptable Object]({{ site.baseurl }}{% post_url 2017-04-09-using-scriptable-object %})
 - 5 Day : ?? <!--[Customize attributes and Inspector]({{ site.baseurl }}{% post_url 2017-04-09-customize-attributes-and-inspector %})-->
 - 6 Day : ?? <!--[Garbage Collection]({{ site.baseurl }}{% post_url 2017-03-31-garbage-collection-in-unity %})-->
 - 7 Day : ?? <!--[3D Drawing pipeline]({{ site.baseurl }}{% post_url 2017-03-31-unity-3d-drawing-pipeline %})-->
