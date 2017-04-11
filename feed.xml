@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-04-07T09:47:15+00:00</updated>
+  <updated>2017-04-11T11:23:41+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -24,6 +24,176 @@
     </author>
   
 
+  
+  
+    <entry>
+      
+      <title type="html">Using Scriptable Object</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/04/09/using-scriptable-object/" rel="alternate" type="text/html" title="Using Scriptable Object" />
+      <published>2017-04-09T00:00:00+00:00</published>
+      <updated>2017-04-09T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/04/09/using-scriptable-object</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/04/09/using-scriptable-object/">&lt;p&gt;2년전 Unity 로 모바일 게임 개발을 시작했었다. 학생 시절 간단하게 게임을 만든적은 있었지만 Unity 로 게임을 만들어본 적은 한번도 없었기에 매우 어려운 도전이였다. 그래서 Unity 시스템에 대해 간단히 알고 개발을 시작했었는데 당시에는 ScriptableObject 의 기능을 모르고 있던터라 단순히 Prefab 만으로 데이터를 저장하고 있었다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/subwaysurfer.png&quot; alt=&quot;Subway suffer&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;당시 만든 게임은 3D 러닝 게임이였는데, 서브웨이 서퍼과 비슷한 방식의 게임이였다. 핵심은 어떻게 맵을 계속 나타나게 하느냐 였는데, 나는 단순하게 플레이어의 위치에 따라 맵을 계속 이어붙였다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/map_example_0.png&quot; alt=&quot;runtime map&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Map 은 Prefab 단위로 구성되어 있었는데, Map Prefab 에는 플레이어가 지나갈 길의 정보, 3D 메쉬 정보가 있었다. 그리고 맵 종류별로 풀링을 하여 활용했었다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/map_example_1.png&quot; alt=&quot;map pooling&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;여기서 한가지 아쉬운게 있다면 Map Prefab 별로 모두 길 정보를 가지고 있는게 아쉬웠다. 프리팹은 보이는 정보만 가지고 길 정보는 따로 존재해  참조하는 방식이 조금 더 나았을 것이다. 또한 종류 별로 반복되는 길 정보가 많았기 때문에 더욱 아쉬웠다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/map_example_2.png&quot; alt=&quot;map refer to road data&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;위와 같이 길 정보는 따로 존재하고 맵이 길 정보를 참조하는 방식으로 말이다. 하지만 위와 같은 방식을 고안하더라도 실제로 구현할 방법을 몰랐기 때문에 방치했었다. 하지만 지금은 독립적으로 존재하는 데이터 에셋을 만드는 방법을 알고 있다. 그건 바로 ScriptableObject 라는 에셋 타입이다.&lt;/p&gt;
+
+&lt;h2&gt;정적인 에셋 타입 : ScriptableObject&lt;/h2&gt;
+
+&lt;p&gt;ScriptableObject 는 Inspector 에 존재하는 데이터 에셋의 종류 중 하나다. Prefabrication 처럼 그 자체를 복사할 수 없고, Hierarchy 에서 참조해서 데이터를 참조할 수는 있다. 이름에 걸맞게 스크립트에서 ScriptableObject 라는 클래스를 상속받아 사용가능하며 MonoBehaviour 를 상속받는 스크립트처럼 Serialize 할 데이터를 지정해 저장할 수 있다. 시작할 때 언급한 길 정보를 ScriptableObject 로 직접 만들어 보았다.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c#&quot; data-lang=&quot;c#&quot;&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;UnityEngine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;*&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;RoadDataOjbect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cs&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;*/&lt;/span&gt;
+
+&lt;span class=&quot;na&quot;&gt;[CreateAssetMenu(fileName = &quot;RoadData&quot;, menuName = &quot;Scriptable/RoadData&quot;)]&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;RoadDataOjbect&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ScriptableObject&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SerializeField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Vector3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;roadPositionArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;roadPositionArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Vector3&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;GetPositionAt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;idx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;roadPositionArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;idx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;위의 구현을 보면 보통 사용하는 MonoBehaviour 를 사용한 컴포넌트 스크립팅 방식과 크게 차이가 없어 보인다. 데이터 직렬화를 이용해 멤버 변수를 초기화하는 방식은 같다. 하지만 ScriptableObject 는 상속받은 객체의 직렬화 데이터만 가지고 독립적으로 존재하는 애셋이기 때문에 취급과 여러 사용방법은 조금 다른면이 있다.&lt;/p&gt;
+
+&lt;p&gt;가장 다른 점 하나를 뽑자면 클래스 선언위의 &lt;a href=&quot;https://docs.unity3d.com/ScriptReference/CreateAssetMenuAttribute.html&quot;&gt;CreateAssetMenu&lt;/a&gt; 라는 속성이다. MonoBehaviour 를 활용한 스크립트는 컴포넌트로 취급되기 때문에 GameObject 에 붙이기만 하면 자연스럽게 사용할 수 있다. 하지만 ScriptableObject 는 독립적으로 존재하기 때문에 생성하는 코드를 만들어 주어야 한다. 그래서 필요한 코드가 &lt;a href=&quot;https://docs.unity3d.com/ScriptReference/CreateAssetMenuAttribute.html&quot;&gt;CreateAssetMenu&lt;/a&gt; 속성이다. 저 속성을 붙이면 아래 그림처럼 메뉴에 만드는 코드가 추가된다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/make_scriptableobject.png&quot; alt=&quot;make scriptableObject&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;위의 그림처럼 메뉴를 선택하면 아래 그림과 같이 스크립트를 만들때와 동일하게 이름을 설정하고 파일을 만들 수 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/make_scriptableobject_inspector.png&quot; alt=&quot;make scriptableObject inspector&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;이렇게 말이다. &lt;a href=&quot;https://github.com/hrmrzizon/UnityExample&quot;&gt;UnityExample&lt;/a&gt; 에 이 코드를 적용시킨 예제가 있으니 살펴보길 바란다.&lt;/p&gt;
+
+&lt;h2&gt;쓰임새 및 장단점&lt;/h2&gt;
+
+&lt;p&gt;ScriptableObject 는 보통 위와같이 단순히 데이터만 가지고 있는 용도로 많이 쓰인다. 대표적으로 상점의 품목 데이터나, 위에서 예시로 들은 길 데이터와 같이 말이다. 또한 프로젝트 내에서 에셋들을 이어주는 중간 연결체로도 사용이 가능하다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/set_scriptableobject.png&quot; alt=&quot;set of asset or data&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;에셋의 집합 역할을 해주는 중간 연결체는 에셋 번들을 사용하면 유용하게 사용할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;장점 : 프리팹과 데이터를 분리할 수 있다. 에디터 코드까지 사용자가 직접 만들어야 한다.
+단점 : 에디터 코드까지 사용자가 직접 만들어야 한다.&lt;/p&gt;
+
+&lt;h2&gt;참조&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/kr/current/Manual/script-Serialization.html&quot;&gt;Untiy Serialize&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/kr/current/Manual/class-ScriptableObject.html&quot;&gt;Unity ScriptableObject&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://blog.naver.com/PostView.nhn?blogId=hammerimpact&amp;amp;logNo=220770261760&quot;&gt;네이버 블로그&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://unity3d.com/kr/learn/tutorials/modules/beginner/live-training-archive/scriptable-objects&quot;&gt;Unity ScriptableObject Guideline&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="unity" />
+      
+        <category term="try" />
+      
+
+      
+
+      
+        <summary type="html">2년전 Unity 로 모바일 게임 개발을 시작했었다. 학생 시절 간단하게 게임을 만든적은 있었지만 Unity 로 게임을 만들어본 적은 한번도 없었기에 매우 어려운 도전이였다. 그래서 Unity 시스템에 대해 간단히 알고 개발을 시작했었는데 당시에는 ScriptableObject 의 기능을 모르고 있던터라 단순히 Prefab 만으로 데이터를 저장하고 있었다. 당시 만든 게임은 3D 러닝 게임이였는데, 서브웨이 서퍼과 비슷한 방식의 게임이였다. 핵심은 어떻게 맵을 계속 나타나게 하느냐 였는데, 나는 단순하게 플레이어의 위치에 따라 맵을 계속 이어붙였다. Map 은 Prefab 단위로 구성되어 있었는데, Map Prefab 에는 플레이어가 지나갈 길의 정보, 3D 메쉬 정보가 있었다. 그리고 맵 종류별로 풀링을 하여 활용했었다. 여기서 한가지 아쉬운게 있다면 Map Prefab 별로 모두 길 정보를 가지고 있는게 아쉬웠다. 프리팹은 보이는 정보만 가지고 길 정보는 따로 존재해 참조하는 방식이 조금 더 나았을 것이다. 또한 종류 별로 반복되는 길 정보가 많았기 때문에 더욱 아쉬웠다. 위와 같이 길 정보는 따로 존재하고 맵이 길 정보를 참조하는 방식으로 말이다. 하지만 위와 같은 방식을 고안하더라도 실제로 구현할 방법을 몰랐기 때문에 방치했었다. 하지만 지금은 독립적으로 존재하는 데이터 에셋을 만드는 방법을 알고 있다. 그건 바로 ScriptableObject 라는 에셋 타입이다. 정적인 에셋 타입 : ScriptableObject ScriptableObject 는 Inspector 에 존재하는 데이터 에셋의 종류 중 하나다. Prefabrication 처럼 그 자체를 복사할 수 없고, Hierarchy 에서 참조해서 데이터를 참조할 수는 있다. 이름에 걸맞게 스크립트에서 ScriptableObject 라는 클래스를 상속받아 사용가능하며 MonoBehaviour 를 상속받는 스크립트처럼 Serialize 할 데이터를 지정해 저장할 수 있다. 시작할 때 언급한 길 정보를 ScriptableObject 로 직접 만들어 보았다. using UnityEngine; /\* RoadDataOjbect.cs \*/ [CreateAssetMenu(fileName = &quot;RoadData&quot;, menuName = &quot;Scriptable/RoadData&quot;)] public class RoadDataOjbect : ScriptableObject { [SerializeField] private Vector3[] roadPositionArray; public int length { get { return roadPositionArray.Length; } } public Vector3 GetPositionAt(int idx) { return roadPositionArray[idx]; } } 위의 구현을 보면 보통 사용하는 MonoBehaviour 를 사용한 컴포넌트 스크립팅 방식과 크게 차이가 없어 보인다. 데이터 직렬화를 이용해 멤버 변수를 초기화하는 방식은 같다. 하지만 ScriptableObject 는 상속받은 객체의 직렬화 데이터만 가지고 독립적으로 존재하는 애셋이기 때문에 취급과 여러 사용방법은 조금 다른면이 있다. 가장 다른 점 하나를 뽑자면 클래스 선언위의 CreateAssetMenu 라는 속성이다. MonoBehaviour 를 활용한 스크립트는 컴포넌트로 취급되기 때문에 GameObject 에 붙이기만 하면 자연스럽게 사용할 수 있다. 하지만 ScriptableObject 는 독립적으로 존재하기 때문에 생성하는 코드를 만들어 주어야 한다. 그래서 필요한 코드가 CreateAssetMenu 속성이다. 저 속성을 붙이면 아래 그림처럼 메뉴에 만드는 코드가 추가된다. 위의 그림처럼 메뉴를 선택하면 아래 그림과 같이 스크립트를 만들때와 동일하게 이름을 설정하고 파일을 만들 수 있다. 이렇게 말이다. UnityExample 에 이 코드를 적용시킨 예제가 있으니 살펴보길 바란다. 쓰임새 및 장단점 ScriptableObject 는 보통 위와같이 단순히 데이터만 가지고 있는 용도로 많이 쓰인다. 대표적으로 상점의 품목 데이터나, 위에서 예시로 들은 길 데이터와 같이 말이다. 또한 프로젝트 내에서 에셋들을 이어주는 중간 연결체로도 사용이 가능하다. 에셋의 집합 역할을 해주는 중간 연결체는 에셋 번들을 사용하면 유용하게 사용할 수 있다. 장점 : 프리팹과 데이터를 분리할 수 있다. 에디터 코드까지 사용자가 직접 만들어야 한다. 단점 : 에디터 코드까지 사용자가 직접 만들어야 한다. 참조 Untiy Serialize Unity ScriptableObject 네이버 블로그 Unity ScriptableObject Guideline</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Customize Attributes And Inspector</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/04/09/customize-attributes-and-inspector/" rel="alternate" type="text/html" title="Customize Attributes And Inspector" />
+      <published>2017-04-09T00:00:00+00:00</published>
+      <updated>2017-04-09T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/04/09/customize-attributes-and-inspector</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/04/09/customize-attributes-and-inspector/">&lt;h2&gt;클래스, 변수에 태그를 붙이다 : Attribute&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;c# attribute explain&lt;/li&gt;
+  &lt;li&gt;unity attribute explain&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;CustomAttribute 로 인스펙터 바꾸기&lt;/h2&gt;
+
+&lt;p&gt;PropertyAttribute
+PropertyDrawer&lt;/p&gt;
+
+&lt;h2&gt;다양한 용도의 Attribute&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.tallior.com/unity-attributes/&quot;&gt;Attribute&lt;/a&gt;&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="unity" />
+      
+        <category term="try" />
+      
+
+      
+
+      
+        <summary type="html">클래스, 변수에 태그를 붙이다 : Attribute c# attribute explain unity attribute explain CustomAttribute 로 인스펙터 바꾸기 PropertyAttribute PropertyDrawer 다양한 용도의 Attribute Attribute</summary>
+      
+
+      
+      
+    </entry>
+  
   
   
     <entry>
@@ -76,7 +246,7 @@
 
 &lt;h4&gt;3. OOP 를 망친다.&lt;/h4&gt;
 
-&lt;p&gt;접근 제한자에 상관없이 호출해주기 때문에 객체 캡슐화에 안좋은 영향을 미친다. OOP(객체지향프로그래밍) 에서는 접근 제한자를 통해 외부에 노출시킬 메소드, 안에서 숨겨야할 메소드를 설정한다. 하지만 Unity 메시징 방식은 접근 제한자를 무시하기 때문에 OOP 원칙에 따라 프로그래밍을 할 프로그래머에게 모호한 선택을 요구한다.&lt;/p&gt;
+&lt;p&gt;접근 제한자에 상관없이 호출해주기 때문에 객체 캡슐화에 안좋은 영향을 미친다. OOP(객체지향프로그래밍) 에서는 접근 제한자를 통해 외부에 노출시킬 메소드, 안에서 숨겨야할 메소드를 설정한다. 하지만 Unity 메시징 방식은 접근 제한자를 무시하기 때문에 프로그래머에게 모호한 선택을 요구한다.&lt;/p&gt;
 
 &lt;h4&gt;4. 방치될 가능성?&lt;/h4&gt;
 
@@ -164,7 +334,7 @@
       
 
       
-        <summary type="html">이름으로 메소드를 호출하다. SendMessage Unity 런타임 시스템에서는 Unity 자체의 캐시 시스템을 이용하여 컴포넌트의 메소드를 문자열로 찾아 호출해주는 기능을 가지고 있다. 그중 하나는 GameObject 와 Component 클래스에 존재하는 SendMessage 라는 메소드다. 아래와 같이 사용을 할 수 있다. void OnEnable() { SendMessage(&quot;DoSomething&quot;); } void DoSomething() { Debug.Log(&quot;Do something!&quot;); } OnEnable 에서 해당 컴포넌트의 DoSomething 이라는 메소드를 찾아 호출하는 SendMessage 메소드를 호출하고, 아마 DoSomething 메소드가 호출되면서 로그가 출력될 것이다. Unity 에서 메세징 방식의 대표적인 사용사례는 컴포넌트 스크립팅을 할 때 항상 볼 수 있는 Start, Update 등 MonoBehaviour 의 여러 메시지 콜백들이다. 저 메시지 콜백들을 통해 스크립트 컴포넌트는 여러 상태를 알 수 있다. 또한 AnimationClip 을 사용할때 메세지 이벤트를 넣어서 사용할 수 있다. 애니메이션의 특정 프레임에 메시지 이벤트를 만들어 같은 게임오브젝트에 붙어있는 스크립트들에게 메시지를 던져준다. UnityExample 프로젝트의 MessageScene 의 ShakeCube 를 확인하라. 메시지 방식의 사실, 장단점 지금도 많은 사람들이 SendMessage 는 “매우 느리다” 라는 생각을 하며 사용한다. 하지만 “매우 느리다” 의 근거가 될만한 이유는 C# Reflection 기능을 “실시간” 으로 사용하는 것에 있다. 이를 반박하자면 GameObject 가 생성될 시에 각 컴포넌트별로 C# 리플렉션 기능을 사용해 메소드들의 위치와 이름을 함께 저장하여 가지고 있는다. 그리고 오브젝트가 파괴될 때까지 이 캐시 데이터를 저장해놓고 쓴다. 위의 문단의 내용이 사실이라면 “매우 느리다” 의 근거는 없다. Unity 시스템에서 사용하는 기능이 그렇게 느릴리는 없다. (유니티가 당신에게 알려주지 않는 것들 : 43 ~ 47쪽) 언제나 장점이 있으면 단점도 있다. 이 메시징 방식은 타입에 상관없이 문자열 하나로 메소드 호출이 가능하다는(Typeless call) 강력한 장점을 가지고 있다. 하지만 단점도 고려하고 사용해야 한다. 1. 빈번한 호출은 피한다. 문자열 탐색에 대한 비용이 있으니 매 프레임마다 호출해주거나 빈번히 사용이 일어날 때는 사용을 지양해야 한다. 2. 생성시에 부하가 발생한다. 컴포넌트 성성 타이밍에 C# Reflection 기능을 사용해 메소드 데이터를 생성한다. 이 때 부하가 발생한다. 퍼포먼스가 필요한 게임에서는 GameObject 의 생성은 되도록 피하고, 모든 오브젝트를 가장 처음에 로드 후 재활용해서 사용한다. 3. OOP 를 망친다. 접근 제한자에 상관없이 호출해주기 때문에 객체 캡슐화에 안좋은 영향을 미친다. OOP(객체지향프로그래밍) 에서는 접근 제한자를 통해 외부에 노출시킬 메소드, 안에서 숨겨야할 메소드를 설정한다. 하지만 Unity 메시징 방식은 접근 제한자를 무시하기 때문에 OOP 원칙에 따라 프로그래밍을 할 프로그래머에게 모호한 선택을 요구한다. 4. 방치될 가능성? 레거시 시스템이 될 가능성이 있다. UGUI 가 4.6 버젼에서 추가되면서 Unity 에서는 UnityEngine.Events 라는 기능도 추가되었다. 이 네임스페이스 안에는 UnityEvent 에 대한 구현도 있고, 현재 메시지 방식을 대체할 수 있는 EventSystem 이라는 시스템의 구현도 되어 있다. UGUI 에서는 UnityEngine.Events 안의 기능들을 적극 사용해 구현을 했다. 이를 통해 알 수 있는 점은 현재 기능에 대한 최적화는 가능성이 있으나, 더 이상의 기능 추가는 기대하기 어렵다. 즉 Animation 컴포넌트와 같이 기능 확장이 멈추어 새로 생기는 시스템과는 점점 멀어질 가능성이 높다. 메시징 방식을 사용할 때는 위 항목들을 명심하고 사용하길 바란다. 그래서 언제 사용하면 되나요? 간단하다. 생성 및 초기화 같이 시작과 끝에서 호출되거나 정말 쓸 수 밖에 없는 경우(애니메이션 이벤트) 에 사용한다. 혹은 성능이 필요 없는 UI에 쓰기도 한다. 매 프레임마다 호출되는 곳이 아닌이상 써도 무관한 경우가 많다. 위와 같은 조건이 갖추어지면 UnityEvent 와 용도가 겹치는 부분이 있다. 둘다 직접 메소드 호출을 하는게 아닌 원격으로 해주는 기능이라 쓰임새가 겹친다. 하지만 둘은 성질 자체가 달라서 용도도 다르게 사용할 수 있다. UnityEvent 는 에디터에서 직접 컴포넌트를 지정해주어야 하고, 런타임에서는 변경이 불가능하기 때문에 고정된 컴포넌트에서만 사용한다. 하지만 그외의 경우 스크립트 내에서 프리팹을 복사할 때는 UnityEvent 를 사용할 수 없다. 결국 C# Delegate 문법을 사용하거나 SendMessage 기능을 사용해야 하는데 이 경우에는 상황에 따라 적절하게 쓰면 된다. 분류   Unity Messaging   C# Delegate 속도   비교적 느림   비교적 빠름 코딩   한번에 메소드 호출이 가능함   직접 메소드를 이어주고 호출해주어야함           매 프레임마다 호출되거나 자주 호출이 되는 경우에는 C# Delegate 문법을, 성능이 필요없는 부분(생성,파괴)에서 호출할 때는 SendMessage 를 사용하면 된다. 참조 Unity 메시지 시스템 GameDev HowToMessage 유니티가 당신에게 알려주지 않는 것들</summary>
+        <summary type="html">이름으로 메소드를 호출하다. SendMessage Unity 런타임 시스템에서는 Unity 자체의 캐시 시스템을 이용하여 컴포넌트의 메소드를 문자열로 찾아 호출해주는 기능을 가지고 있다. 그중 하나는 GameObject 와 Component 클래스에 존재하는 SendMessage 라는 메소드다. 아래와 같이 사용을 할 수 있다. void OnEnable() { SendMessage(&quot;DoSomething&quot;); } void DoSomething() { Debug.Log(&quot;Do something!&quot;); } OnEnable 에서 해당 컴포넌트의 DoSomething 이라는 메소드를 찾아 호출하는 SendMessage 메소드를 호출하고, 아마 DoSomething 메소드가 호출되면서 로그가 출력될 것이다. Unity 에서 메세징 방식의 대표적인 사용사례는 컴포넌트 스크립팅을 할 때 항상 볼 수 있는 Start, Update 등 MonoBehaviour 의 여러 메시지 콜백들이다. 저 메시지 콜백들을 통해 스크립트 컴포넌트는 여러 상태를 알 수 있다. 또한 AnimationClip 을 사용할때 메세지 이벤트를 넣어서 사용할 수 있다. 애니메이션의 특정 프레임에 메시지 이벤트를 만들어 같은 게임오브젝트에 붙어있는 스크립트들에게 메시지를 던져준다. UnityExample 프로젝트의 MessageScene 의 ShakeCube 를 확인하라. 메시지 방식의 사실, 장단점 지금도 많은 사람들이 SendMessage 는 “매우 느리다” 라는 생각을 하며 사용한다. 하지만 “매우 느리다” 의 근거가 될만한 이유는 C# Reflection 기능을 “실시간” 으로 사용하는 것에 있다. 이를 반박하자면 GameObject 가 생성될 시에 각 컴포넌트별로 C# 리플렉션 기능을 사용해 메소드들의 위치와 이름을 함께 저장하여 가지고 있는다. 그리고 오브젝트가 파괴될 때까지 이 캐시 데이터를 저장해놓고 쓴다. 위의 문단의 내용이 사실이라면 “매우 느리다” 의 근거는 없다. Unity 시스템에서 사용하는 기능이 그렇게 느릴리는 없다. (유니티가 당신에게 알려주지 않는 것들 : 43 ~ 47쪽) 언제나 장점이 있으면 단점도 있다. 이 메시징 방식은 타입에 상관없이 문자열 하나로 메소드 호출이 가능하다는(Typeless call) 강력한 장점을 가지고 있다. 하지만 단점도 고려하고 사용해야 한다. 1. 빈번한 호출은 피한다. 문자열 탐색에 대한 비용이 있으니 매 프레임마다 호출해주거나 빈번히 사용이 일어날 때는 사용을 지양해야 한다. 2. 생성시에 부하가 발생한다. 컴포넌트 성성 타이밍에 C# Reflection 기능을 사용해 메소드 데이터를 생성한다. 이 때 부하가 발생한다. 퍼포먼스가 필요한 게임에서는 GameObject 의 생성은 되도록 피하고, 모든 오브젝트를 가장 처음에 로드 후 재활용해서 사용한다. 3. OOP 를 망친다. 접근 제한자에 상관없이 호출해주기 때문에 객체 캡슐화에 안좋은 영향을 미친다. OOP(객체지향프로그래밍) 에서는 접근 제한자를 통해 외부에 노출시킬 메소드, 안에서 숨겨야할 메소드를 설정한다. 하지만 Unity 메시징 방식은 접근 제한자를 무시하기 때문에 프로그래머에게 모호한 선택을 요구한다. 4. 방치될 가능성? 레거시 시스템이 될 가능성이 있다. UGUI 가 4.6 버젼에서 추가되면서 Unity 에서는 UnityEngine.Events 라는 기능도 추가되었다. 이 네임스페이스 안에는 UnityEvent 에 대한 구현도 있고, 현재 메시지 방식을 대체할 수 있는 EventSystem 이라는 시스템의 구현도 되어 있다. UGUI 에서는 UnityEngine.Events 안의 기능들을 적극 사용해 구현을 했다. 이를 통해 알 수 있는 점은 현재 기능에 대한 최적화는 가능성이 있으나, 더 이상의 기능 추가는 기대하기 어렵다. 즉 Animation 컴포넌트와 같이 기능 확장이 멈추어 새로 생기는 시스템과는 점점 멀어질 가능성이 높다. 메시징 방식을 사용할 때는 위 항목들을 명심하고 사용하길 바란다. 그래서 언제 사용하면 되나요? 간단하다. 생성 및 초기화 같이 시작과 끝에서 호출되거나 정말 쓸 수 밖에 없는 경우(애니메이션 이벤트) 에 사용한다. 혹은 성능이 필요 없는 UI에 쓰기도 한다. 매 프레임마다 호출되는 곳이 아닌이상 써도 무관한 경우가 많다. 위와 같은 조건이 갖추어지면 UnityEvent 와 용도가 겹치는 부분이 있다. 둘다 직접 메소드 호출을 하는게 아닌 원격으로 해주는 기능이라 쓰임새가 겹친다. 하지만 둘은 성질 자체가 달라서 용도도 다르게 사용할 수 있다. UnityEvent 는 에디터에서 직접 컴포넌트를 지정해주어야 하고, 런타임에서는 변경이 불가능하기 때문에 고정된 컴포넌트에서만 사용한다. 하지만 그외의 경우 스크립트 내에서 프리팹을 복사할 때는 UnityEvent 를 사용할 수 없다. 결국 C# Delegate 문법을 사용하거나 SendMessage 기능을 사용해야 하는데 이 경우에는 상황에 따라 적절하게 쓰면 된다. 분류   Unity Messaging   C# Delegate 속도   비교적 느림   비교적 빠름 코딩   한번에 메소드 호출이 가능함   직접 메소드를 이어주고 호출해주어야함           매 프레임마다 호출되거나 자주 호출이 되는 경우에는 C# Delegate 문법을, 성능이 필요없는 부분(생성,파괴)에서 호출할 때는 SendMessage 를 사용하면 된다. 참조 Unity 메시지 시스템 GameDev HowToMessage 유니티가 당신에게 알려주지 않는 것들</summary>
       
 
       
@@ -602,104 +772,6 @@
 
       
         <summary type="html">texture compression introduce usage</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Useful Attributes And Properties</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/03/31/useful-attributes-and-properties/" rel="alternate" type="text/html" title="Useful Attributes And Properties" />
-      <published>2017-03-31T00:00:00+00:00</published>
-      <updated>2017-03-31T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/03/31/useful-attributes-and-properties</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/31/useful-attributes-and-properties/">&lt;ol&gt;
-  &lt;li&gt;c# attribute explain&lt;/li&gt;
-  &lt;li&gt;unity attribute explain&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://www.tallior.com/unity-attributes/&quot;&gt;Attribute&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;AnimationCurve&lt;/p&gt;
-
-&lt;p&gt;PropertyAttribute
-PropertyDrawer&lt;/p&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="unity" />
-      
-        <category term="analysis" />
-      
-
-      
-
-      
-        <summary type="html">c# attribute explain unity attribute explain Attribute AnimationCurve PropertyAttribute PropertyDrawer</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Unity Scriptable Object</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/03/31/unity-scriptable-object/" rel="alternate" type="text/html" title="Unity Scriptable Object" />
-      <published>2017-03-31T00:00:00+00:00</published>
-      <updated>2017-03-31T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/03/31/unity-scriptable-object</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/03/31/unity-scriptable-object/">&lt;ol&gt;
-  &lt;li&gt;declare scriptable object&lt;/li&gt;
-  &lt;li&gt;make scriptable object code, editor&lt;/li&gt;
-  &lt;li&gt;usage&lt;/li&gt;
-&lt;/ol&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="unity" />
-      
-        <category term="analysis" />
-      
-
-      
-
-      
-        <summary type="html">declare scriptable object make scriptable object code, editor usage</summary>
       
 
       

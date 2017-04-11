@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Using Scriptable Object</title>
+  <meta name="description" content="2년전 Unity 로 모바일 게임 개발을 시작했었다. 학생 시절 간단하게 게임을 만든적은 있었지만 Unity 로 게임을 만들어본 적은 한번도 없었기에 매우 어려운 도전이였다. 그래서 Unity 시스템에 대해 간단히 알고 개발을 시작했었는데 당시에는 ScriptableObject 의 기능을 모르고 있던터라 단순히 Prefab 만으로 데이터를 저장하고 있었다. 당시 만든 게임은 3D 러닝 게임이였는데, 서브웨이 서퍼과 비슷한 방식의 게임이였다. 핵심은 어떻게 맵을 계속 나타나게 하느냐 였는데, 나는 단순하게 플레이어의 위치에 따라 맵을 계속 이어붙였다. Map 은 Prefab 단위로 구성되어 있었는데, Map Prefab 에는 플레이어가 지나갈 길의 정보, 3D 메쉬 정보가 있었다. 그리고 맵 종류별로 풀링을 하여 활용했었다. 여기서 한가지 아쉬운게 있다면 Map Prefab 별로 모두 길 정보를 가지고 있는게 아쉬웠다. 프리팹은 보이는 정보만 가지고 길 정보는 따로 존재해 참조하는 방식이 조금 더 나았을 것이다. 또한 종류 별로 반복되는 길 정보가 많았기 때문에 더욱 아쉬웠다. 위와 같이 길 정보는 따로 존재하고 맵이 길 정보를 참조하는 방식으로 말이다. 하지만 위와 같은 방식을 고안하더라도 실제로 구현할 방법을 몰랐기 때문에 방치했었다. 하지만 지금은 독립적으로 존재하는 데이터 에셋을 만드는 방법을 알고 있다. 그건 바로 ScriptableObject 라는 에셋 타입이다. 정적인 에셋 타입 : ScriptableObject ScriptableObject 는 Inspector 에 존재하는 데이터 에셋의 종류 중 하나다. Prefabrication 처럼 그 자체를 복사할 수 없고, Hierarchy 에서 참조해서 데이터를 참조할 수는 있다. 이름에 걸맞게 스크립트에서 ScriptableObject 라는 클래스를 상속받아 사용가능하며 MonoBehaviour 를 상속받는 스크립트처럼 Serialize 할 데이터를 지정해 저장할 수 있다. 시작할 때 언급한 길 정보를 ScriptableObject 로 직접 만들어 보았다. using UnityEngine; /\* RoadDataOjbect.cs \*/ [CreateAssetMenu(fileName = &quot;RoadData&quot;, menuName = &quot;Scriptable/RoadData&quot;)] public class RoadDataOjbect : ScriptableObject { [SerializeField] private Vector3[] roadPositionArray; public int length { get { return roadPositionArray.Length; } } public Vector3 GetPositionAt(int idx) { return roadPositionArray[idx]; } } 위의 구현을 보면 보통 사용하는 MonoBehaviour 를 사용한 컴포넌트 스크립팅 방식과 크게 차이가 없어 보인다. 데이터 직렬화를 이용해 멤버 변수를 초기화하는 방식은 같다. 하지만 ScriptableObject 는 상속받은 객체의 직렬화 데이터만 가지고 독립적으로 존재하는 애셋이기 때문에 취급과 여러 사용방법은 조금 다른면이 있다. 가장 다른 점 하나를 뽑자면 클래스 선언위의 CreateAssetMenu 라는 속성이다. MonoBehaviour 를 활용한 스크립트는 컴포넌트로 취급되기 때문에 GameObject 에 붙이기만 하면 자연스럽게 사용할 수 있다. 하지만 ScriptableObject 는 독립적으로 존재하기 때문에 생성하는 코드를 만들어 주어야 한다. 그래서 필요한 코드가 CreateAssetMenu 속성이다. 저 속성을 붙이면 아래 그림처럼 메뉴에 만드는 코드가 추가된다. 위의 그림처럼 메뉴를 선택하면 아래 그림과 같이 스크립트를 만들때와 동일하게 이름을 설정하고 파일을 만들 수 있다. 이렇게 말이다. UnityExample 에 이 코드를 적용시킨 예제가 있으니 살펴보길 바란다. 쓰임새 및 장단점 ScriptableObject 는 보통 위와같이 단순히 데이터만 가지고 있는 용도로 많이 쓰인다. 대표적으로 상점의 품목 데이터나, 위에서 예시로 들은 길 데이터와 같이 말이다. 또한 프로젝트 내에서 에셋들을 이어주는 중간 연결체로도 사용이 가능하다. 에셋의 집합 역할을 해주는 중간 연결체는 에셋 번들을 사용하면 유용하게 사용할 수 있다. 장점 : 프리팹과 데이터를 분리할 수 있다. 에디터 코드까지 사용자가 직접 만들어야 한다. 단점 : 에디터 코드까지 사용자가 직접 만들어야 한다. 참조 Untiy Serialize Unity ScriptableObject 네이버 블로그 Unity ScriptableObject Guideline">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://hrmrzizon.github.io/2017/04/09/using-scriptable-object/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
+
+  <meta name="google-site-verification" content="f8AsB97UC1pp_K4EwkRaJYJZVC0P4j36RK_TGOPPGAU" />
+
+
+  
+    <meta property="fb:admins" content="639405536264839">
+    <meta property="og:title" content="Using Scriptable Object">
+    <meta property="og:site_name" content="Appocrypha">
+    <meta property="og:url" content="https://hrmrzizon.github.io/2017/04/09/using-scriptable-object/">
+    <meta property="og:description" content="2년전 Unity 로 모바일 게임 개발을 시작했었다. 학생 시절 간단하게 게임을 만든적은 있었지만 Unity 로 게임을 만들어본 적은 한번도 없었기에 매우 어려운 도전이였다. 그래서 Unity 시스템에 대해 간단히 알고 개발을 시작했었는데 당시에는 ScriptableObject 의 기능을 모르고 있던터라 단순히 Prefab 만으로 데이터를 저장하고 있었다. 당시 만든 게임은 3D 러닝 게임이였는데, 서브웨이 서퍼과 비슷한 방식의 게임이였다. 핵심은 어떻게 맵을 계속 나타나게 하느냐 였는데, 나는 단순하게 플레이어의 위치에 따라 맵을 계속 이어붙였다. Map 은 Prefab 단위로 구성되어 있었는데, Map Prefab 에는 플레이어가 지나갈 길의 정보, 3D 메쉬 정보가 있었다. 그리고 맵 종류별로 풀링을 하여 활용했었다. 여기서 한가지 아쉬운게 있다면 Map Prefab 별로 모두 길 정보를 가지고 있는게 아쉬웠다. 프리팹은 보이는 정보만 가지고 길 정보는 따로 존재해 참조하는 방식이 조금 더 나았을 것이다. 또한 종류 별로 반복되는 길 정보가 많았기 때문에 더욱 아쉬웠다. 위와 같이 길 정보는 따로 존재하고 맵이 길 정보를 참조하는 방식으로 말이다. 하지만 위와 같은 방식을 고안하더라도 실제로 구현할 방법을 몰랐기 때문에 방치했었다. 하지만 지금은 독립적으로 존재하는 데이터 에셋을 만드는 방법을 알고 있다. 그건 바로 ScriptableObject 라는 에셋 타입이다. 정적인 에셋 타입 : ScriptableObject ScriptableObject 는 Inspector 에 존재하는 데이터 에셋의 종류 중 하나다. Prefabrication 처럼 그 자체를 복사할 수 없고, Hierarchy 에서 참조해서 데이터를 참조할 수는 있다. 이름에 걸맞게 스크립트에서 ScriptableObject 라는 클래스를 상속받아 사용가능하며 MonoBehaviour 를 상속받는 스크립트처럼 Serialize 할 데이터를 지정해 저장할 수 있다. 시작할 때 언급한 길 정보를 ScriptableObject 로 직접 만들어 보았다. using UnityEngine; /\* RoadDataOjbect.cs \*/ [CreateAssetMenu(fileName = &quot;RoadData&quot;, menuName = &quot;Scriptable/RoadData&quot;)] public class RoadDataOjbect : ScriptableObject { [SerializeField] private Vector3[] roadPositionArray; public int length { get { return roadPositionArray.Length; } } public Vector3 GetPositionAt(int idx) { return roadPositionArray[idx]; } } 위의 구현을 보면 보통 사용하는 MonoBehaviour 를 사용한 컴포넌트 스크립팅 방식과 크게 차이가 없어 보인다. 데이터 직렬화를 이용해 멤버 변수를 초기화하는 방식은 같다. 하지만 ScriptableObject 는 상속받은 객체의 직렬화 데이터만 가지고 독립적으로 존재하는 애셋이기 때문에 취급과 여러 사용방법은 조금 다른면이 있다. 가장 다른 점 하나를 뽑자면 클래스 선언위의 CreateAssetMenu 라는 속성이다. MonoBehaviour 를 활용한 스크립트는 컴포넌트로 취급되기 때문에 GameObject 에 붙이기만 하면 자연스럽게 사용할 수 있다. 하지만 ScriptableObject 는 독립적으로 존재하기 때문에 생성하는 코드를 만들어 주어야 한다. 그래서 필요한 코드가 CreateAssetMenu 속성이다. 저 속성을 붙이면 아래 그림처럼 메뉴에 만드는 코드가 추가된다. 위의 그림처럼 메뉴를 선택하면 아래 그림과 같이 스크립트를 만들때와 동일하게 이름을 설정하고 파일을 만들 수 있다. 이렇게 말이다. UnityExample 에 이 코드를 적용시킨 예제가 있으니 살펴보길 바란다. 쓰임새 및 장단점 ScriptableObject 는 보통 위와같이 단순히 데이터만 가지고 있는 용도로 많이 쓰인다. 대표적으로 상점의 품목 데이터나, 위에서 예시로 들은 길 데이터와 같이 말이다. 또한 프로젝트 내에서 에셋들을 이어주는 중간 연결체로도 사용이 가능하다. 에셋의 집합 역할을 해주는 중간 연결체는 에셋 번들을 사용하면 유용하게 사용할 수 있다. 장점 : 프리팹과 데이터를 분리할 수 있다. 에디터 코드까지 사용자가 직접 만들어야 한다. 단점 : 에디터 코드까지 사용자가 직접 만들어야 한다. 참조 Untiy Serialize Unity ScriptableObject 네이버 블로그 Unity ScriptableObject Guideline">
+    
+    
+      <meta property="og:image" content="http://hrmrzizon.github.io/images/github_profile_image.jpg">
+    
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Using Scriptable Object">
+  <meta name="twitter:description" content="2년전 Unity 로 모바일 게임 개발을 시작했었다. 학생 시절 간단하게 게임을 만든적은 있었지만 Unity 로 게임을 만들어본 적은 한번도 없었기에 매우 어려운 도전이였다. 그래서 Unity 시스템에 대해 간단히 알고 개발을 시작했었는데 당시에는 ScriptableObject 의 기능을 모르고 있던터라 단순히 Prefab 만으로 데이터를 저장하고 있...">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Appocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="/edu">Edu</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Using Scriptable Object</h1>
+    
+    <p class="post-meta"><time datetime="2017-04-09T00:00:00+00:00" itemprop="datePublished">Apr 9, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/try/">try</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>2년전 Unity 로 모바일 게임 개발을 시작했었다. 학생 시절 간단하게 게임을 만든적은 있었지만 Unity 로 게임을 만들어본 적은 한번도 없었기에 매우 어려운 도전이였다. 그래서 Unity 시스템에 대해 간단히 알고 개발을 시작했었는데 당시에는 ScriptableObject 의 기능을 모르고 있던터라 단순히 Prefab 만으로 데이터를 저장하고 있었다.</p>
+
+<p><img src="/images/subwaysurfer.png" alt="Subway suffer" class="center-image" /></p>
+
+<p>당시 만든 게임은 3D 러닝 게임이였는데, 서브웨이 서퍼과 비슷한 방식의 게임이였다. 핵심은 어떻게 맵을 계속 나타나게 하느냐 였는데, 나는 단순하게 플레이어의 위치에 따라 맵을 계속 이어붙였다.</p>
+
+<p><img src="/images/map_example_0.png" alt="runtime map" class="center-image" /></p>
+
+<p>Map 은 Prefab 단위로 구성되어 있었는데, Map Prefab 에는 플레이어가 지나갈 길의 정보, 3D 메쉬 정보가 있었다. 그리고 맵 종류별로 풀링을 하여 활용했었다.</p>
+
+<p><img src="/images/map_example_1.png" alt="map pooling" class="center-image" /></p>
+
+<p>여기서 한가지 아쉬운게 있다면 Map Prefab 별로 모두 길 정보를 가지고 있는게 아쉬웠다. 프리팹은 보이는 정보만 가지고 길 정보는 따로 존재해  참조하는 방식이 조금 더 나았을 것이다. 또한 종류 별로 반복되는 길 정보가 많았기 때문에 더욱 아쉬웠다.</p>
+
+<p><img src="/images/map_example_2.png" alt="map refer to road data" class="center-image" /></p>
+
+<p>위와 같이 길 정보는 따로 존재하고 맵이 길 정보를 참조하는 방식으로 말이다. 하지만 위와 같은 방식을 고안하더라도 실제로 구현할 방법을 몰랐기 때문에 방치했었다. 하지만 지금은 독립적으로 존재하는 데이터 에셋을 만드는 방법을 알고 있다. 그건 바로 ScriptableObject 라는 에셋 타입이다.</p>
+
+<h2>정적인 에셋 타입 : ScriptableObject</h2>
+
+<p>ScriptableObject 는 Inspector 에 존재하는 데이터 에셋의 종류 중 하나다. Prefabrication 처럼 그 자체를 복사할 수 없고, Hierarchy 에서 참조해서 데이터를 참조할 수는 있다. 이름에 걸맞게 스크립트에서 ScriptableObject 라는 클래스를 상속받아 사용가능하며 MonoBehaviour 를 상속받는 스크립트처럼 Serialize 할 데이터를 지정해 저장할 수 있다. 시작할 때 언급한 길 정보를 ScriptableObject 로 직접 만들어 보았다.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+
+<span class="p">/</span><span class="err">\</span><span class="p">*</span>
+  <span class="n">RoadDataOjbect</span><span class="p">.</span><span class="n">cs</span>
+<span class="err">\</span><span class="p">*/</span>
+
+<span class="na">[CreateAssetMenu(fileName = "RoadData", menuName = "Scriptable/RoadData")]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">RoadDataOjbect</span> <span class="p">:</span> <span class="n">ScriptableObject</span>
+<span class="p">{</span>
+  <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span>
+  <span class="k">private</span> <span class="n">Vector3</span><span class="p">[]</span> <span class="n">roadPositionArray</span><span class="p">;</span>
+
+  <span class="k">public</span> <span class="kt">int</span> <span class="n">length</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">roadPositionArray</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+  <span class="k">public</span> <span class="n">Vector3</span> <span class="nf">GetPositionAt</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">return</span> <span class="n">roadPositionArray</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>위의 구현을 보면 보통 사용하는 MonoBehaviour 를 사용한 컴포넌트 스크립팅 방식과 크게 차이가 없어 보인다. 데이터 직렬화를 이용해 멤버 변수를 초기화하는 방식은 같다. 하지만 ScriptableObject 는 상속받은 객체의 직렬화 데이터만 가지고 독립적으로 존재하는 애셋이기 때문에 취급과 여러 사용방법은 조금 다른면이 있다.</p>
+
+<p>가장 다른 점 하나를 뽑자면 클래스 선언위의 <a href="https://docs.unity3d.com/ScriptReference/CreateAssetMenuAttribute.html">CreateAssetMenu</a> 라는 속성이다. MonoBehaviour 를 활용한 스크립트는 컴포넌트로 취급되기 때문에 GameObject 에 붙이기만 하면 자연스럽게 사용할 수 있다. 하지만 ScriptableObject 는 독립적으로 존재하기 때문에 생성하는 코드를 만들어 주어야 한다. 그래서 필요한 코드가 <a href="https://docs.unity3d.com/ScriptReference/CreateAssetMenuAttribute.html">CreateAssetMenu</a> 속성이다. 저 속성을 붙이면 아래 그림처럼 메뉴에 만드는 코드가 추가된다.</p>
+
+<p><img src="/images/make_scriptableobject.png" alt="make scriptableObject" class="center-image" /></p>
+
+<p>위의 그림처럼 메뉴를 선택하면 아래 그림과 같이 스크립트를 만들때와 동일하게 이름을 설정하고 파일을 만들 수 있다.</p>
+
+<p><img src="/images/make_scriptableobject_inspector.png" alt="make scriptableObject inspector" class="center-image" /></p>
+
+<p>이렇게 말이다. <a href="https://github.com/hrmrzizon/UnityExample">UnityExample</a> 에 이 코드를 적용시킨 예제가 있으니 살펴보길 바란다.</p>
+
+<h2>쓰임새 및 장단점</h2>
+
+<p>ScriptableObject 는 보통 위와같이 단순히 데이터만 가지고 있는 용도로 많이 쓰인다. 대표적으로 상점의 품목 데이터나, 위에서 예시로 들은 길 데이터와 같이 말이다. 또한 프로젝트 내에서 에셋들을 이어주는 중간 연결체로도 사용이 가능하다.</p>
+
+<p><img src="/images/set_scriptableobject.png" alt="set of asset or data" class="center-image" /></p>
+
+<p>에셋의 집합 역할을 해주는 중간 연결체는 에셋 번들을 사용하면 유용하게 사용할 수 있다.</p>
+
+<p>장점 : 프리팹과 데이터를 분리할 수 있다. 에디터 코드까지 사용자가 직접 만들어야 한다.
+단점 : 에디터 코드까지 사용자가 직접 만들어야 한다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="https://docs.unity3d.com/kr/current/Manual/script-Serialization.html">Untiy Serialize</a></li>
+  <li><a href="https://docs.unity3d.com/kr/current/Manual/class-ScriptableObject.html">Unity ScriptableObject</a></li>
+  <li><a href="http://blog.naver.com/PostView.nhn?blogId=hammerimpact&amp;logNo=220770261760">네이버 블로그</a></li>
+  <li><a href="https://unity3d.com/kr/learn/tutorials/modules/beginner/live-training-archive/scriptable-objects">Unity ScriptableObject Guideline</a></li>
+</ul>
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://zizon.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy; Su-Hyeok Kim - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
