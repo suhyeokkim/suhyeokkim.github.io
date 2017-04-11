@@ -2,7 +2,7 @@
 layout: post
 author: "Su-Hyeok Kim"
 comments: true
-show: true
+show: false
 categories:
   - unity
   - try
