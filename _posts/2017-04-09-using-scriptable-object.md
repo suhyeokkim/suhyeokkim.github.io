@@ -72,6 +72,12 @@ ScriptableObject 는 보통 위와같이 단순히 데이터만 가지고 있는
 
 ![set of asset or data](/images/set_scriptableobject.png){: .center-image }
 
+-----------
+
+내용 추가 필요
+
+-----------
+
 ## 참조
 
 - [Untiy Serialize](https://docs.unity3d.com/kr/current/Manual/script-Serialization.html)
