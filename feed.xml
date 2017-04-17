@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-04-17T07:40:53+00:00</updated>
+  <updated>2017-04-17T08:07:44+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -91,7 +91,7 @@
 
 &lt;p&gt;Unity 는 C# 의 기본 자료형과 Unity 에서 지원하는 자료형들의 변수를 Inspector 에서 에디팅할 수 있게 지원한다. 아래 그림과 같이 말이다.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/unity_support_insepctor.png&quot; alt=&quot;Inspector&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/unity_support_inspector.png&quot; alt=&quot;Inspector&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;위 그림의 SomeScript 클래스는 아마 아래와 같을 것이다.&lt;/p&gt;
 
