@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Unity Attributes</title>
+  <meta name="description" content="클래스, 변수에 태그를 붙이다 : Attribute C# 문법은 클래스, 구조체, 열거형, 멤버 변수, 메소드등 여러 타입에 표시를 하는 기능을 제공한다. 또한 일부 C# 에서 제공하는 기능 중에 정해준 표시를 붙이면 작동하는 기능들도 있다. 이 표시들을 C# 문법에서는 Attribute 라고 칭한다. 그리고 이 Attribute 를 사용하여 Unity 에서는 많은 기능들을 제공한다. 아래 우리가 가장 많이 볼만한 Attribute 를 사용한 예제가 있다. // Unity 시스템에 데이터를 직렬화해 멤버변수 초기값을 지정한다. [UnityEngine.SerializeField] public int limitCount; // 직렬화를 못하게 한다. [System.NonSerailized] public int gameCount; 위의 예제에서 Unity 의 변수 직렬화를 다룰 수 있는 Attribute 를 사용한 예제를 볼 수 있다. 원래 Unity 스크립팅 시스템에서는 따로 멤버 직렬화에 대한 Attribute 를 지정하지 않으면 접근 제한자(public, protected, private) 에 따라 직렬화를 할지 말지 결정했다. 하지만 접근 제한자로만 Unity 에서는 멤버 변수 직렬화를 Attribute 문법을 사용해 Unity 전용 Attribute 를 만들어 제어를 할 수 있도록 해두었다. 클래스 멤버 변수 직렬화를 제어하는 Attribute 는 세개가 있다. UnityEngine.SerializeField 와 UnityEngine.HideInInspector 와 System.NonSerailized 이 세개다. UnityEngine.SerializeField 는 클래스 멤버 변수의 데이터를 직렬화 해주어 인스턴스가 생성되었을 떄 Unity 시스템에서 직렬화한 데이터로 초기화 시켜주는 Attribute 이고, UnityEngine.HideInInspector 는 이전에 직렬화된 데이터와의 링크를 끊어 일시적으로 직렬화를 사용한 초기화를 막고 Inspector 에서도 안보이게 해준다. System.NonSerailized 는 해당 멤버 변수의 직렬화를 아예 막는 Attribute 다. SerializeField   HideInInspector   NonSerailized   변수 직렬화를 해주는 Attribute   직렬화된 데이터를 숨기는 Attribute   변수 직렬화를 막는 Attribute               위 세개의 Attribute 들로 Unity 직렬화 시스템을 제어할 수 있다. UnityEngine.SerializeField 는 직렬화된 데이터가 필요할 때, System.NonSerailized 는 직렬화된 데이터가 전혀 필요 없을 때, UnityEngine.HideInInspector 는 개발 도중에 잠시 직렬화된 데이터와 연결을 끊을 때 사용한다. 필자는 확실한 것을 지향하기 때문에 UnityEngine.HideInInspector 를 잘 사용하진 않는다. 링크를 타고 들어가면 나오지만 정확한 행동의 정의되지 않았다. 단지 숨기기만 하는건지, 직렬화된 데이터를 없에는건지 설명이 명확하게 되어있지 않다. 또한 현재쓰는 Unity 5.5.2 버젼으로 테스트를 해보면 UnityEngine.HideInInspector 가 붙은 직렬화 데이터가 초기화 되는 경우가 있다. Unity 는 위 예제에서 본것처럼 여러 기능들을 Attribute 를 통해 제공한다. 제공하는 기능 중에 유용하게 쓰일만한 기능들을 한번 살펴보자. PropertyAttribute 로 변수의 인스펙터 바꾸기 Unity 는 C# 의 기본 자료형과 Unity 에서 지원하는 자료형들의 변수를 Inspector 에서 에디팅할 수 있게 지원한다. 아래 그림과 같이 말이다. 위 그림의 SomeScript 클래스는 아마 아래와 같을 것이다. public class SomeScript : MonoBehaviour { [SerializeField] private float someNumber; [SerializeField] private Color someColor; [SerializeField] private Vector3 someVector; [SerializeField] private AnimationCurve someCurve; } 변수 인스펙터 제어하기 SpaceAttribute HeaderAttribute RangeAttribute TooltipAttribute TextAreaAttribute 마지막 Unity 는 다양한 Attribute 를 통해 여러 기능들을 지원한다. 여러 Attribute 를 살펴보면 지원하는 여러가지 기능들에 대해 알 수 있다. Unity Attribute 정리 글 을 보면 여러가지의 Attribute 를 정리해 놓은 것을 볼 수 있다. 참조 C# Attribute Usage Unity Custom Attribute PropertyDrawer 번역 네이버 블로그 Set of Unity Attribute">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://hrmrzizon.github.io/2017/04/12/unity-attributes/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
+
+  <meta name="google-site-verification" content="f8AsB97UC1pp_K4EwkRaJYJZVC0P4j36RK_TGOPPGAU" />
+
+
+  
+    <meta property="fb:admins" content="639405536264839">
+    <meta property="og:title" content="Unity Attributes">
+    <meta property="og:site_name" content="Appocrypha">
+    <meta property="og:url" content="https://hrmrzizon.github.io/2017/04/12/unity-attributes/">
+    <meta property="og:description" content="클래스, 변수에 태그를 붙이다 : Attribute C# 문법은 클래스, 구조체, 열거형, 멤버 변수, 메소드등 여러 타입에 표시를 하는 기능을 제공한다. 또한 일부 C# 에서 제공하는 기능 중에 정해준 표시를 붙이면 작동하는 기능들도 있다. 이 표시들을 C# 문법에서는 Attribute 라고 칭한다. 그리고 이 Attribute 를 사용하여 Unity 에서는 많은 기능들을 제공한다. 아래 우리가 가장 많이 볼만한 Attribute 를 사용한 예제가 있다. // Unity 시스템에 데이터를 직렬화해 멤버변수 초기값을 지정한다. [UnityEngine.SerializeField] public int limitCount; // 직렬화를 못하게 한다. [System.NonSerailized] public int gameCount; 위의 예제에서 Unity 의 변수 직렬화를 다룰 수 있는 Attribute 를 사용한 예제를 볼 수 있다. 원래 Unity 스크립팅 시스템에서는 따로 멤버 직렬화에 대한 Attribute 를 지정하지 않으면 접근 제한자(public, protected, private) 에 따라 직렬화를 할지 말지 결정했다. 하지만 접근 제한자로만 Unity 에서는 멤버 변수 직렬화를 Attribute 문법을 사용해 Unity 전용 Attribute 를 만들어 제어를 할 수 있도록 해두었다. 클래스 멤버 변수 직렬화를 제어하는 Attribute 는 세개가 있다. UnityEngine.SerializeField 와 UnityEngine.HideInInspector 와 System.NonSerailized 이 세개다. UnityEngine.SerializeField 는 클래스 멤버 변수의 데이터를 직렬화 해주어 인스턴스가 생성되었을 떄 Unity 시스템에서 직렬화한 데이터로 초기화 시켜주는 Attribute 이고, UnityEngine.HideInInspector 는 이전에 직렬화된 데이터와의 링크를 끊어 일시적으로 직렬화를 사용한 초기화를 막고 Inspector 에서도 안보이게 해준다. System.NonSerailized 는 해당 멤버 변수의 직렬화를 아예 막는 Attribute 다. SerializeField   HideInInspector   NonSerailized   변수 직렬화를 해주는 Attribute   직렬화된 데이터를 숨기는 Attribute   변수 직렬화를 막는 Attribute               위 세개의 Attribute 들로 Unity 직렬화 시스템을 제어할 수 있다. UnityEngine.SerializeField 는 직렬화된 데이터가 필요할 때, System.NonSerailized 는 직렬화된 데이터가 전혀 필요 없을 때, UnityEngine.HideInInspector 는 개발 도중에 잠시 직렬화된 데이터와 연결을 끊을 때 사용한다. 필자는 확실한 것을 지향하기 때문에 UnityEngine.HideInInspector 를 잘 사용하진 않는다. 링크를 타고 들어가면 나오지만 정확한 행동의 정의되지 않았다. 단지 숨기기만 하는건지, 직렬화된 데이터를 없에는건지 설명이 명확하게 되어있지 않다. 또한 현재쓰는 Unity 5.5.2 버젼으로 테스트를 해보면 UnityEngine.HideInInspector 가 붙은 직렬화 데이터가 초기화 되는 경우가 있다. Unity 는 위 예제에서 본것처럼 여러 기능들을 Attribute 를 통해 제공한다. 제공하는 기능 중에 유용하게 쓰일만한 기능들을 한번 살펴보자. PropertyAttribute 로 변수의 인스펙터 바꾸기 Unity 는 C# 의 기본 자료형과 Unity 에서 지원하는 자료형들의 변수를 Inspector 에서 에디팅할 수 있게 지원한다. 아래 그림과 같이 말이다. 위 그림의 SomeScript 클래스는 아마 아래와 같을 것이다. public class SomeScript : MonoBehaviour { [SerializeField] private float someNumber; [SerializeField] private Color someColor; [SerializeField] private Vector3 someVector; [SerializeField] private AnimationCurve someCurve; } 변수 인스펙터 제어하기 SpaceAttribute HeaderAttribute RangeAttribute TooltipAttribute TextAreaAttribute 마지막 Unity 는 다양한 Attribute 를 통해 여러 기능들을 지원한다. 여러 Attribute 를 살펴보면 지원하는 여러가지 기능들에 대해 알 수 있다. Unity Attribute 정리 글 을 보면 여러가지의 Attribute 를 정리해 놓은 것을 볼 수 있다. 참조 C# Attribute Usage Unity Custom Attribute PropertyDrawer 번역 네이버 블로그 Set of Unity Attribute">
+    
+    
+      <meta property="og:image" content="http://hrmrzizon.github.io/images/github_profile_image.jpg">
+    
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Unity Attributes">
+  <meta name="twitter:description" content="클래스, 변수에 태그를 붙이다 : Attribute C# 문법은 클래스, 구조체, 열거형, 멤버 변수, 메소드등 여러 타입에 표시를 하는 기능을 제공한다. 또한 일부 C# 에서 제공하는 기능 중에 정해준 표시를 붙이면 작동하는 기능들도 있다. 이 표시들을 C# 문법에서는 Attribute 라고 칭한다. 그리고 이 Attribute 를 사용하여 Unit...">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Appocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="/edu">Edu</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Unity Attributes</h1>
+    
+    <p class="post-meta"><time datetime="2017-04-12T00:00:00+00:00" itemprop="datePublished">Apr 12, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/try/">try</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <h2>클래스, 변수에 태그를 붙이다 : Attribute</h2>
+
+<p>C# 문법은 클래스, 구조체, 열거형, 멤버 변수, 메소드등 여러 타입에 표시를 하는 기능을 제공한다. 또한 일부 C# 에서 제공하는 기능 중에 정해준 표시를 붙이면 작동하는 기능들도 있다. 이 표시들을 C# 문법에서는 <strong>Attribute</strong> 라고 칭한다. 그리고 이 <strong>Attribute</strong> 를 사용하여 Unity 에서는 많은 기능들을 제공한다. 아래 우리가 가장 많이 볼만한 <strong>Attribute</strong> 를 사용한 예제가 있다.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="c1">// Unity 시스템에 데이터를 직렬화해 멤버변수 초기값을 지정한다.
+</span><span class="na">[UnityEngine.SerializeField]</span>
+<span class="k">public</span> <span class="kt">int</span> <span class="n">limitCount</span><span class="p">;</span>
+
+<span class="c1">// 직렬화를 못하게 한다.
+</span><span class="na">[System.NonSerailized]</span>
+<span class="k">public</span> <span class="kt">int</span> <span class="n">gameCount</span><span class="p">;</span></code></pre></figure>
+
+<p>위의 예제에서 Unity 의 변수 직렬화를 다룰 수 있는 <strong>Attribute</strong> 를 사용한 예제를 볼 수 있다. 원래 Unity 스크립팅 시스템에서는 따로 멤버 직렬화에 대한 <strong>Attribute</strong> 를 지정하지 않으면 접근 제한자(public, protected, private) 에 따라 직렬화를 할지 말지 결정했다. 하지만 접근 제한자로만 Unity 에서는 멤버 변수 직렬화를 <strong>Attribute</strong> 문법을 사용해 Unity 전용 <strong>Attribute</strong> 를 만들어 제어를 할 수 있도록 해두었다.</p>
+
+<p>클래스 멤버 변수 직렬화를 제어하는 <strong>Attribute</strong> 는 세개가 있다. <strong>UnityEngine.SerializeField</strong> 와 <strong>UnityEngine.HideInInspector</strong> 와 <strong>System.NonSerailized</strong> 이 세개다. <strong>UnityEngine.SerializeField</strong> 는 클래스 멤버 변수의 데이터를 직렬화 해주어 인스턴스가 생성되었을 떄 Unity 시스템에서 직렬화한 데이터로 초기화 시켜주는 <strong>Attribute</strong> 이고, <strong>UnityEngine.HideInInspector</strong> 는 이전에 직렬화된 데이터와의 링크를 끊어 일시적으로 직렬화를 사용한 초기화를 막고 Inspector 에서도 안보이게 해준다. <strong>System.NonSerailized</strong> 는 해당 멤버 변수의 직렬화를 아예 막는 <strong>Attribute</strong> 다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">SerializeField</th>
+      <th style="text-align: center"> </th>
+      <th style="text-align: center">HideInInspector</th>
+      <th style="text-align: center"> </th>
+      <th style="text-align: center">NonSerailized</th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">변수 직렬화를 해주는 <strong>Attribute</strong></td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">직렬화된 데이터를 숨기는 <strong>Attribute</strong></td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">변수 직렬화를 막는 <strong>Attribute</strong></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>위 세개의 <strong>Attribute</strong> 들로 Unity 직렬화 시스템을 제어할 수 있다. <strong>UnityEngine.SerializeField</strong> 는 직렬화된 데이터가 필요할 때, <strong>System.NonSerailized</strong> 는 직렬화된 데이터가 전혀 필요 없을 때, <strong>UnityEngine.HideInInspector</strong> 는 개발 도중에 잠시 직렬화된 데이터와 연결을 끊을 때 사용한다.</p>
+
+<p>필자는 확실한 것을 지향하기 때문에 <a href="https://docs.unity3d.com/kr/current/ScriptReference/HideInInspector.html"><strong>UnityEngine.HideInInspector</strong></a> 를 잘 사용하진 않는다. 링크를 타고 들어가면 나오지만 정확한 행동의 정의되지 않았다. 단지 숨기기만 하는건지, 직렬화된 데이터를 없에는건지 설명이 명확하게 되어있지 않다. 또한 현재쓰는 Unity 5.5.2 버젼으로 테스트를 해보면 <strong>UnityEngine.HideInInspector</strong> 가 붙은 직렬화 데이터가 초기화 되는 경우가 있다.</p>
+
+<p>Unity 는 위 예제에서 본것처럼 여러 기능들을 <strong>Attribute</strong> 를 통해 제공한다. 제공하는 기능 중에 유용하게 쓰일만한 기능들을 한번 살펴보자.</p>
+
+<h2>PropertyAttribute 로 변수의 인스펙터 바꾸기</h2>
+
+<p>Unity 는 C# 의 기본 자료형과 Unity 에서 지원하는 자료형들의 변수를 Inspector 에서 에디팅할 수 있게 지원한다. 아래 그림과 같이 말이다.</p>
+
+<p><img src="/images/unity_support_insepctor.png" alt="Inspector" class="center-image" /></p>
+
+<p>위 그림의 SomeScript 클래스는 아마 아래와 같을 것이다.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">public</span> <span class="k">class</span> <span class="nc">SomeScript</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span>
+    <span class="k">private</span> <span class="kt">float</span> <span class="n">someNumber</span><span class="p">;</span>
+
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span>
+    <span class="k">private</span> <span class="n">Color</span> <span class="n">someColor</span><span class="p">;</span>
+
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span>
+    <span class="k">private</span> <span class="n">Vector3</span> <span class="n">someVector</span><span class="p">;</span>
+
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span>
+    <span class="k">private</span> <span class="n">AnimationCurve</span> <span class="n">someCurve</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<h2>변수 인스펙터 제어하기</h2>
+
+<p>SpaceAttribute
+HeaderAttribute
+RangeAttribute
+TooltipAttribute
+TextAreaAttribute</p>
+
+<h2>마지막</h2>
+
+<p>Unity 는 다양한 <strong>Attribute</strong> 를 통해 여러 기능들을 지원한다. 여러 <strong>Attribute</strong> 를 살펴보면 지원하는 여러가지 기능들에 대해 알 수 있다.</p>
+
+<p><a href="http://www.tallior.com/unity-attributes/">Unity Attribute 정리 글</a> 을 보면 여러가지의 <strong>Attribute</strong> 를 정리해 놓은 것을 볼 수 있다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="https://msdn.microsoft.com/ko-kr/library/mt653982.aspx">C# Attribute Usage</a></li>
+  <li><a href="https://docs.unity3d.com/ScriptReference/PropertyDrawer.html">Unity Custom Attribute</a></li>
+  <li><a href="http://blog.naver.com/PostView.nhn?blogId=hammerimpact&amp;logNo=220775187161&amp;redirect=Dlog&amp;widgetTypeCall=true">PropertyDrawer 번역 네이버 블로그</a></li>
+  <li><a href="http://www.tallior.com/unity-attributes/">Set of Unity Attribute</a></li>
+</ul>
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://zizon.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy; Su-Hyeok Kim - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
