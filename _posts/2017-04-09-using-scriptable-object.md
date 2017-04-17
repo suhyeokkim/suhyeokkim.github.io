@@ -20,7 +20,7 @@ Map 은 Prefab 단위로 구성되어 있었는데, Map Prefab 에는 플레이�
 
 ![map pooling](/images/map_example_1.png){: .center-image }
 
-여기서 한가지 아쉬운게 있다면 Map Prefab 별로 모두 길 정보를 가지고 있는게 아쉬웠다. 프리팹은 보이는 정보만 가지고 길 정보는 따로 존재해  참조하는 방식이 조금 더 나았을 것이다. 또한 종류 별로 반복되는 길 정보가 많았기 때문에 더욱 아쉬웠다.
+여기서 한가지 아쉬운게 있다면 Map Prefab 별로 모두 길 정보를 가지고 있는게 아쉬웠다. 프리팹은 보이는 정보만 가지고 길 정보는 따로 존재해  참조하는 방식이 조금 더 나았을 것이다. 종류 별로 반복되는 길 정보가 많았기 때문에 더욱 아쉬웠다.
 
 ![map refer to road data](/images/map_example_2.png){: .center-image }
 
