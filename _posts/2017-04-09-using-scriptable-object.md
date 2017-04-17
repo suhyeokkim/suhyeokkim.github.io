@@ -2,7 +2,7 @@
 layout: post
 author: "Su-Hyeok Kim"
 comments: true
-show: false
+show: true
 categories:
   - unity
   - try
@@ -28,35 +28,31 @@ Map 은 Prefab 단위로 구성되어 있었는데, Map Prefab 에는 플레이�
 
 ## 정적인 에셋 타입 : ScriptableObject
 
-ScriptableObject 는 Inspector 에 존재하는 데이터 에셋의 종류 중 하나다. Prefabrication 처럼 그 자체를 복사할 수 없고, Hierarchy 에서 참조해서 데이터를 참조할 수는 있다. 이름에 걸맞게 스크립트에서 ScriptableObject 라는 클래스를 상속받아 사용가능하며 MonoBehaviour 를 상속받는 스크립트처럼 Serialize 할 데이터를 지정해 저장할 수 있다. 시작할 때 언급한 길 정보를 ScriptableObject 로 직접 만들어 보았다.
+ScriptableObject 는 Inspector 에 존재하는 데이터 에셋의 종류 중 하나다. Prefab 처럼 그 자체를 복사할 수 없고, 단지 독립적으로 존재한다. 그래서 ScriptableObject 를 참조해서 데이터에 접근할 수 있다. 이름처럼 스크립트에서 ScriptableObject 라는 클래스를 상속받아 활용하며 데이터 직렬화를 지원하기 때문에 컴포넌트 스크립팅 처럼 데이터를 저장하여 사용가능하다. 시작할 때 언급한 길 정보를 ScriptableObject 로 직접 만들어 보았다.
 
 {% highlight c# lineos %}
-
 using UnityEngine;
 
-/\*
-  RoadDataOjbect.cs
-\*/
-
-[CreateAssetMenu(fileName = "RoadData", menuName = "Scriptable/RoadData")]
+[CreateAssetMenu(fileName = "RoadData", menuName = "Examples/RoadData")]
 public class RoadDataOjbect : ScriptableObject
 {
   [SerializeField]
   private Vector3[] roadPositionArray;
 
-  public int length { get { return roadPositionArray.Length; } }
+  public int Length { get { return roadPositionArray.Length; } }
 
   public Vector3 GetPositionAt(int idx)
   {
     return roadPositionArray[idx];
   }
 }
-
 {% endhighlight %}
 
-위의 구현을 보면 보통 사용하는 MonoBehaviour 를 사용한 컴포넌트 스크립팅 방식과 크게 차이가 없어 보인다. 데이터 직렬화를 이용해 멤버 변수를 초기화하는 방식은 같다. 하지만 ScriptableObject 는 상속받은 객체의 직렬화 데이터만 가지고 독립적으로 존재하는 애셋이기 때문에 취급과 여러 사용방법은 조금 다른면이 있다.
+위의 구현을 보면 필요한 데이터(위에서는 위치정보)를 저장하기만 한다. 스크립팅 방식은 저장할 데이터를 선언만 해주고, 그 데이터를 관리하는 코드만 짜주면 된다. 컴포넌트 스크립팅과 조금 다른점은 직접 행동하는 개체가 아니기 때문에 실제 게임 로직은 제외해서 코딩을 하게 된다.
 
-가장 다른 점 하나를 뽑자면 클래스 선언위의 [CreateAssetMenu](https://docs.unity3d.com/ScriptReference/CreateAssetMenuAttribute.html) 라는 속성이다. MonoBehaviour 를 활용한 스크립트는 컴포넌트로 취급되기 때문에 GameObject 에 붙이기만 하면 자연스럽게 사용할 수 있다. 하지만 ScriptableObject 는 독립적으로 존재하기 때문에 생성하는 코드를 만들어 주어야 한다. 그래서 필요한 코드가 [CreateAssetMenu](https://docs.unity3d.com/ScriptReference/CreateAssetMenuAttribute.html) 속성이다. 저 속성을 붙이면 아래 그림처럼 메뉴에 만드는 코드가 추가된다.
+하지만 ScriptableObject 의 의의는 스크립팅 방식이 아니라, 독립적으로 존재하는 것에 의미를 더 부여한다. 정확히 정의하자면 "독립적으로 존재하는 데이터의 집합 에셋" 이라고 할 수 있다. 그래서 독립적으로 존재하기 위해 파일로 직접 만들어주는 코드가 필요하다.
+
+그 코드가 클래스 선언위의 [CreateAssetMenu](https://docs.unity3d.com/ScriptReference/CreateAssetMenuAttribute.html) 라는 속성이다. MonoBehaviour 를 활용한 스크립트는 컴포넌트로 취급되기 때문에 GameObject 에 붙이기만 하면 자연스럽게 사용할 수 있다. 하지만 ScriptableObject 는 독립적으로 존재하기 때문에 생성하는 코드를 만들어 주어야 한다. 저 속성을 붙이면 아래 그림처럼 메뉴에 만드는 코드가 추가된다.
 
 ![make scriptableObject](/images/make_scriptableobject.png){: .center-image }
 
@@ -64,18 +60,13 @@ public class RoadDataOjbect : ScriptableObject
 
 ![make scriptableObject inspector](/images/make_scriptableobject_inspector.png){: .center-image }
 
-이렇게 말이다. [UnityExample](https://github.com/hrmrzizon/UnityExample) 에 이 코드를 적용시킨 예제가 있으니 살펴보길 바란다.
-
-## 쓰임새 및 장단점
-
-ScriptableObject 는 보통 위와같이 단순히 데이터만 가지고 있는 용도로 많이 쓰인다. 대표적으로 상점의 품목 데이터나, 위에서 예시로 들은 길 데이터와 같이 말이다. 또한 프로젝트 내에서 에셋들을 이어주는 중간 연결체로도 사용이 가능하다.
+위 예제에서는 ScriptableObject 를 단순히 데이터 자체만 저장하는 용도로 쓰는 예시를 보여주었다. 단순 데이터 저장 방식으로도 많이 쓰이지만 이를 프로젝트 내의 에셋을 연결시켜주는 용도로도 사용할 수 있다. 아래 그림처럼 말이다.
 
 ![set of asset or data](/images/set_scriptableobject.png){: .center-image }
 
-에셋의 집합 역할을 해주는 중간 연결체는 에셋 번들을 사용하면 유용하게 사용할 수 있다.
+ScriptableObject 에 단순 데이터, 관련된 애셋들을 묶어 관리하면 조금더 효율적으로 관리할 수 있다.
 
-장점 : 프리팹과 데이터를 분리할 수 있다. 에디터 코드까지 사용자가 직접 만들어야 한다.
-단점 : 에디터 코드까지 사용자가 직접 만들어야 한다.
+[UnityExample](https://github.com/hrmrzizon/UnityExample) 에 위에서 나온 예들을 적용시킨 예제가 있으니 살펴보길 바란다.
 
 ## 참조
 
