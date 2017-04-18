@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-04-17T08:21:27+00:00</updated>
+  <updated>2017-04-18T12:36:30+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -24,6 +24,50 @@
     </author>
   
 
+  
+  
+    <entry>
+      
+      <title type="html">Marshall Vs Serialize</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/04/18/marshall-vs-serialize/" rel="alternate" type="text/html" title="Marshall Vs Serialize" />
+      <published>2017-04-18T00:00:00+00:00</published>
+      <updated>2017-04-18T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/04/18/marshall-vs-serialize</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/04/18/marshall-vs-serialize/">&lt;p&gt;&lt;a href=&quot;http://starblood.tistory.com/entry/Marshalling-vs-Serialization-%EB%A7%88%EC%83%AC%EB%A7%81-%EA%B3%BC-%EC%8B%9C%EB%A6%AC%EC%96%BC%EB%9D%BC%EC%9D%B4%EC%A6%88-%EC%9D%98-%EC%B0%A8%EC%9D%B4&quot;&gt;Tistory&lt;/a&gt;
+&lt;a href=&quot;http://stackoverflow.com/questions/770474/what-is-the-difference-between-serialization-and-marshaling&quot;&gt;Stackoverflow Serialization vs Marshalling&lt;/a&gt;
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Marshalling_(computer_science)&quot;&gt;Marshalling in wikipedia&lt;/a&gt;&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="common" />
+      
+        <category term="analysis" />
+      
+
+      
+
+      
+        <summary type="html">Tistory Stackoverflow Serialization vs Marshalling Marshalling in wikipedia</summary>
+      
+
+      
+      
+    </entry>
+  
   
   
     <entry>
