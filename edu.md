@@ -11,8 +11,8 @@ permalink: /edu/
 - 2 Day : [Event handling]({{ site.baseurl }}{% post_url 2017-04-05-unity-event-handling %})
 - 3 Day : [Message system]({{ site.baseurl }}{% post_url 2017-04-07-unity-message-system %})
 - 4 Day : [Scriptable Object]({{ site.baseurl }}{% post_url 2017-04-09-using-scriptable-object %})
-- 5 Day : [Unity Serialization]({{ site.baseurl }}{% post_url 2017-04-18-unity-serialization %})
-- 6 Day : ?? <!--[Unity Attributes]({{ site.baseurl }}{% post_url 2017-04-12-unity-attributes-and-customize-property %})-->
+- 5 Day : [Usage of Attributes]({{ site.baseurl }}{% post_url 2017-04-12-usage-of-attributes %})
+- 6 Day : ?? <!--[Unity Coroutine]({{ site.baseurl }}{% post_url 2017-04-19-usage-of-coroutine %})-->
 - 7 Day : ?? <!--[Garbage Collection]({{ site.baseurl }}{% post_url 2017-03-31-garbage-collection-in-unity %})-->
 
 ## Examples
