@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-04-19T09:29:07+00:00</updated>
+  <updated>2017-04-19T09:38:16+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -81,13 +81,13 @@
   
     <entry>
       
-      <title type="html">Usage Of Attributes</title>
+      <title type="html">Usage Of Attributes In Unity</title>
       
-      <link href="https://hrmrzizon.github.io/2017/04/12/usage-of-attributes/" rel="alternate" type="text/html" title="Usage Of Attributes" />
+      <link href="https://hrmrzizon.github.io/2017/04/12/usage-of-attributes-in-unity/" rel="alternate" type="text/html" title="Usage Of Attributes In Unity" />
       <published>2017-04-12T00:00:00+00:00</published>
       <updated>2017-04-12T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/04/12/usage-of-attributes</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/04/12/usage-of-attributes/">&lt;p&gt;C# 문법은 클래스, 구조체, 열거형, 멤버 변수, 메소드등 여러 타입에 표시를 하는 기능을 제공한다. 이 표시들을 C# 문법에서는 &lt;strong&gt;Attribute&lt;/strong&gt;(속성) 라고 칭한다. 그리고 이 속성을 사용하여 Unity 에서는 많은 기능들을 제공한다. 아래 우리가 가장 많이 볼만한 속성을 사용한 예제가 있다.
+      <id>https://hrmrzizon.github.io/2017/04/12/usage-of-attributes-in-unity</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/04/12/usage-of-attributes-in-unity/">&lt;p&gt;C# 문법은 클래스, 구조체, 열거형, 멤버 변수, 메소드등 여러 타입에 표시를 하는 기능을 제공한다. 이 표시들을 C# 문법에서는 &lt;strong&gt;Attribute&lt;/strong&gt;(속성) 라고 칭한다. 그리고 이 속성을 사용하여 Unity 에서는 많은 기능들을 제공한다. 아래 우리가 가장 많이 볼만한 속성을 사용한 예제가 있다.
 &lt;!-- more --&gt;&lt;/p&gt;
 
 &lt;h2&gt;Property 직렬화 제어&lt;/h2&gt;
