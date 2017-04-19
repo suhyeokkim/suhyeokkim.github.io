@@ -103,96 +103,22 @@
       <div class="wrapper">
         <div class="home">
 
-  <h1 class="page-heading">Blog Archive</h1>
-
   
 
   
 
-  <ul class="post-archives">
+  <ul class="post-list">
     
-    
-    
-    
-        
-        
+      
+      
 
-        <li>
-          <span class="post-meta">Apr 19, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/try/">try</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</span>
-
-          <h2>
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2017/04/19/custom-property-drawer-tooltip/">Custom Property Drawer Tooltip</a>
-          </h2>
-        </li>
-      
-    
-    
-    
-    
-        
-        
+          </h1>
 
-        <li>
-          <span class="post-meta">Apr 12, 2017 • 
+          <p class="post-meta">Apr 19, 2017 • 
   
   
     
@@ -209,10 +135,6 @@
   
     
       <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
     
   
     
@@ -246,27 +168,39 @@
   
     
   
-    
-  
-    
-  
 
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>CustomPropertyDrawer 를 사용할 때 필드에 설정한 <strong>Tooltip</strong> 정보가 전달이 안될 때가 있다. 이때는 아래와 같이 하면 된다.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnGUI</span><span class="p">(</span><span class="n">Rect</span> <span class="n">position</span><span class="p">,</span> <span class="n">SerializedProperty</span> <span class="n">property</span><span class="p">,</span> <span class="n">GUIContent</span> <span class="n">label</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">GUIContent</span> <span class="n">content</span> <span class="p">=</span> <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">BeginProperty</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">property</span><span class="p">);</span>
+
+    <span class="c1">// label 대신 content 를 에디터 코드에 넣어줌.
 </span>
+    <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">EndProperty</span><span class="p">();</span>
+<span class="p">}</span></code></pre></figure>
 
-          <h2>
+<p>OnGUI 를 통해 넘어오는 <strong>label</strong> 파라미터에는 단지 텍스트만 들어가있어 조금 더 살펴보니 위의 방법처럼 해당 프로퍼티의 <strong>GUIContent</strong> 를 가져오는 방법이 있었다. 저 반환된 <strong>GUIContent</strong> 는 어디에서도 사용가능하니 유용하게 쓰일듯하다.</p>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2017/04/12/usage-of-attributes/">Usage Of Attributes</a>
-          </h2>
-        </li>
-      
-    
-    
-    
-    
-        
-        
+          </h1>
 
-        <li>
-          <span class="post-meta">Apr 9, 2017 • 
+          <p class="post-meta">Apr 12, 2017 • 
   
   
     
@@ -283,10 +217,6 @@
   
     
       <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
     
   
     
@@ -320,25 +250,33 @@
   
     
   
-    
-  
-    
-  
 
-</span>
+</p>
+        </header>
 
-          <h2>
-            <a class="post-link" href="/2017/04/09/using-scriptable-object/">Using Scriptable Object</a>
-          </h2>
-        </li>
+        <div class="post-content">
+          <p>C# 문법은 클래스, 구조체, 열거형, 멤버 변수, 메소드등 여러 타입에 표시를 하는 기능을 제공한다. 또한 일부 C# 에서 제공하는 기능 중에 정해준 표시를 붙이면 작동하는 기능들도 있다. 이 표시들을 C# 문법에서는 <strong>Attribute</strong>(속성) 라고 칭한다. 그리고 이 속성을 사용하여 Unity 에서는 많은 기능들을 제공한다. 아래 우리가 가장 많이 볼만한 속성을 사용한 예제가 있다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/04/12/usage-of-attributes/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
       
-    
-    
-        
-        
+      
 
-        <li>
-          <span class="post-meta">Apr 7, 2017 • 
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/04/09/using-scriptable-object/">Using Scriptable Object</a>
+          </h1>
+
+          <p class="post-meta">Apr 9, 2017 • 
   
   
     
@@ -359,6 +297,94 @@
   
     
   
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/try/">try</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>2년전 Unity 로 모바일 게임 개발을 시작했었다. 학생 시절 간단하게 게임을 만든적은 있었지만 Unity 로 게임을 만들어본 적은 한번도 없었기에 매우 어려운 도전이였다. 그래서 Unity 시스템에 대해 간단히 알고 개발을 시작했었는데 당시에는 ScriptableObject 의 기능을 모르고 있던터라 단순히 Prefab 만으로 데이터를 저장하고 있었다.</p>
+
+<p><img src="/images/subwaysurfer.png" alt="Subway suffer" class="center-image" /></p>
+
+<p>당시 만든 게임은 3D 러닝 게임이였는데, 서브웨이 서퍼과 비슷한 방식의 게임이였다. 핵심은 어떻게 맵을 계속 나타나게 하느냐 였는데, 나는 단순하게 플레이어의 위치에 따라 맵을 계속 이어붙였다.</p>
+
+<p><img src="/images/map_example_0.png" alt="runtime map" class="center-image" /></p>
+
+<p>Map 은 Prefab 단위로 구성되어 있었는데, Map Prefab 에는 플레이어가 지나갈 길의 정보, 3D 메쉬 정보가 있었다. 그리고 맵 종류별로 풀링을 하여 활용했었다.</p>
+
+<p><img src="/images/map_example_1.png" alt="map pooling" class="center-image" /></p>
+
+<p>여기서 한가지 아쉬운게 있다면 Map Prefab 별로 모두 길 정보를 가지고 있는게 아쉬웠다. 프리팹은 보이는 정보만 가지고 길 정보는 따로 존재해  참조하는 방식이 조금 더 나았을 것이다. 종류 별로 반복되는 길 정보가 많았기 때문에 더욱 아쉬웠다.</p>
+
+<p><img src="/images/map_example_2.png" alt="map refer to road data" class="center-image" /></p>
+
+<p>위와 같이 길 정보는 따로 존재하고 맵이 길 정보를 참조하는 방식으로 말이다. 하지만 위와 같은 방식을 고안하더라도 실제로 구현할 방법을 몰랐기 때문에 방치했었다. 하지만 지금은 독립적으로 존재하는 데이터 에셋을 만드는 방법을 알고 있다. 그건 바로 ScriptableObject 라는 에셋 타입이다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/04/09/using-scriptable-object/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/04/07/unity-message-system/">Unity Message System</a>
+          </h1>
+
+          <p class="post-meta">Apr 7, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
     
   
     
@@ -392,10 +418,6 @@
       <a href="/categories/mono/">mono</a>,
     
   
-    
-  
-    
-  
 
   
   
@@ -417,10 +439,6 @@
   
     
       <a href="/categories/c/">c#</a>,
-    
-  
-    
-  
     
   
     
@@ -450,128 +468,49 @@
   
     
   
-    
-  
-    
-  
 
-</span>
+</p>
+        </header>
 
-          <h2>
-            <a class="post-link" href="/2017/04/07/unity-message-system/">Unity Message System</a>
-          </h2>
-        </li>
+        <div class="post-content">
+          <h2>이름으로 메소드를 호출하다. SendMessage</h2>
+
+<p>Unity 런타임 시스템에서는 Unity 자체의 캐시 시스템을 이용하여 컴포넌트의 메소드를 문자열로 찾아 호출해주는 기능을 가지고 있다. 그중 하나는 <strong>GameObject</strong> 와 <a href="https://docs.unity3d.com/ScriptReference/Component.html"><strong>Component</strong></a> 클래스에 존재하는 <a href="https://docs.unity3d.com/kr/current/ScriptReference/GameObject.SendMessage.html"><strong>SendMessage</strong></a> 라는 메소드다. 아래와 같이 사용을 할 수 있다.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">void</span> <span class="nf">OnEnable</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="nf">SendMessage</span><span class="p">(</span><span class="s">"DoSomething"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">void</span> <span class="nf">DoSomething</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Do something!"</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>OnEnable 에서 해당 컴포넌트의 DoSomething 이라는 메소드를 찾아 호출하는 SendMessage 메소드를 호출하고, 아마 DoSomething 메소드가 호출되면서 로그가 출력될 것이다.</p>
+
+<p>Unity 에서 메세징 방식의 대표적인 사용사례는 컴포넌트 스크립팅을 할 때 항상 볼 수 있는 Start, Update 등 <a href="https://docs.unity3d.com/ScriptReference/MonoBehaviour.html">MonoBehaviour</a> 의 여러 메시지 콜백들이다. 저 메시지 콜백들을 통해 스크립트 컴포넌트는 여러 상태를 알 수 있다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/04/07/unity-message-system/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
       
-    
-    
-    
-    
-        
-        
+      
 
-        <li>
-          <span class="post-meta">Apr 5, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/c/">c#</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/analysis/">analysis</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</span>
-
-          <h2>
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2017/04/05/unity-event-handling/">Unity Event Handling</a>
-          </h2>
-        </li>
-      
-    
-    
-        
-        
+          </h1>
 
-        <li>
-          <span class="post-meta">Apr 2, 2017 • 
+          <p class="post-meta">Apr 5, 2017 • 
   
   
     
@@ -596,135 +535,6 @@
   
     
   
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/try/">try</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</span>
-
-          <h2>
-            <a class="post-link" href="/2017/04/02/unity-project-directory-structue/">Unity Project Directory Structue</a>
-          </h2>
-        </li>
-      
-    
-    
-    
-    
-    
-    
-        
-        
-
-        <li>
-          <span class="post-meta">Mar 13, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/c/">c#</a>
-    
-  
-    
-  
-    
-  
-    
-  
-
-</span>
-
-          <h2>
-            <a class="post-link" href="/2017/03/13/csharp-class-method-extension/">Csharp Class Method Extension</a>
-          </h2>
-        </li>
-      
-    
-    
-    
-    
-    
-    
-    
-    
-        
-        
-
-        <li>
-          <span class="post-meta">Mar 12, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
 
   
   
@@ -743,23 +553,15 @@
     
   
     
-      <a href="/categories/texture-compression/">texture_compression</a>,
-    
   
     
-  
-    
-  
+      <a href="/categories/c/">c#</a>,
     
   
     
   
 
   
-  
-    
-  
-    
   
     
   
@@ -784,320 +586,34 @@
     
   
 
-</span>
+</p>
+        </header>
 
-          <h2>
-            <a class="post-link" href="/2017/03/12/unity-texture-compression-2-erricsson-texture-compression/">Unity Texture Compression 2 Erricsson Texture Compression</a>
-          </h2>
-        </li>
-      
-    
-    
+        <div class="post-content">
+          <p>Unity 에서 객체간의 이벤트를 처리하는 방법들을 써본다. c# 에서 지원하는 delegate, event 와 UnityEvent 를 알아볼 것이다.</p>
+
+
+        </div>
+
         
+          <p class="post-continue">
+            <a href="/2017/04/05/unity-event-handling/">Read on &rarr;</a>
+          </p>
         
-
-        <li>
-          <span class="post-meta">Mar 11, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/texture-compression/">texture_compression</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/analysis/">analysis</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</span>
-
-          <h2>
-            <a class="post-link" href="/2017/03/11/unity-texture-compression-1-start/">Unity Texture Compression 1 Start</a>
-          </h2>
-        </li>
-      
-    
-    
-        
-        
-
-        <li>
-          <span class="post-meta">Mar 8, 2017 • 
-  
-  
-    
-      <a href="/categories/jekyll/">jekyll</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-      <a href="/categories/makeblog/">makeblog</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/try/">try</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</span>
-
-          <h2>
-            <a class="post-link" href="/2017/03/08/make-jekyll+github-blog-1/">Make Jekyll+github Blog 1</a>
-          </h2>
-        </li>
-      
-    
-    
-        
-        
-
-        <li>
-          <span class="post-meta">Mar 5, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/edu/">edu</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/ue4/">ue4</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/analysis/">analysis</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</span>
-
-          <h2>
-            <a class="post-link" href="/2017/03/05/ue4-vs-unity5/">Ue4 Vs Unity5</a>
-          </h2>
-        </li>
-      
-    
-    
+      </li>
     
   </ul>
+
+  
+  <div class="pagination">
+    
+      <a class="previous" href="/posts/2/">&laquo; Older</a>
+    
+
+    
+  </div>
+
+
 
 </div>
 
