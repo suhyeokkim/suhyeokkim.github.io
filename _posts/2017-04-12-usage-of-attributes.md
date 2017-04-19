@@ -7,8 +7,11 @@ categories:
   - try
 ---
 
-C# 문법은 클래스, 구조체, 열거형, 멤버 변수, 메소드등 여러 타입에 표시를 하는 기능을 제공한다. 또한 일부 C# 에서 제공하는 기능 중에 정해준 표시를 붙이면 작동하는 기능들도 있다. 이 표시들을 C# 문법에서는 __Attribute__(속성) 라고 칭한다. 그리고 이 속성을 사용하여 Unity 에서는 많은 기능들을 제공한다. 아래 우리가 가장 많이 볼만한 속성을 사용한 예제가 있다.
+C# 문법은 클래스, 구조체, 열거형, 멤버 변수, 메소드등 여러 타입에 표시를 하는 기능을 제공한다. 이 표시들을 C# 문법에서는 __Attribute__(속성) 라고 칭한다. 그리고 이 속성을 사용하여 Unity 에서는 많은 기능들을 제공한다. 아래 우리가 가장 많이 볼만한 속성을 사용한 예제가 있다.
 <!-- more -->
+
+## Property 직렬화 제어
+
 {% highlight c# lineos %}
 // Unity 시스템에 데이터를 직렬화해 멤버변수 초기값을 지정한다.
 [UnityEngine.SerializeField]
@@ -19,7 +22,7 @@ public int limitCount;
 public int gameCount;
 {% endhighlight %}
 
-위의 예제에서 Unity 의 변수 직렬화를 다룰 수 있는 속성을 사용한 예제를 볼 수 있다. 원래 Unity 스크립팅 시스템에서는 따로 멤버 직렬화에 대한 속성을 지정하지 않으면 접근 제한자(public, protected, private) 에 따라 직렬화를 할지 말지 결정했다. 하지만 접근 제한자로만 Unity 에서는 멤버 변수 직렬화를 __Attribute__ 문법을 사용해 Unity 전용 속성을 만들어 제어를 할 수 있도록 해두었다.
+Unity 스크립팅 시스템은 따로 멤버 직렬화에 대한 속성을 지정하지 않으면 접근 제한자(public, protected, private) 에 따라 직렬화를 할지 말지 결정한다. 하지만 접근 제한자로만 사용하기에는 부족한 부분이 있다 그래서 Unity 에서는 멤버 변수 직렬화를 __Attribute__ 문법을 사용해 Unity 전용 속성을 만들어 제어를 할 수 있도록 해두었다.
 
 클래스 멤버 변수 직렬화를 제어하는 속성은 세개가 있다. __UnityEngine.SerializeField__ 와 __UnityEngine.HideInInspector__ 와 __System.NonSerailized__ 이 세개다. __UnityEngine.SerializeField__ 는 클래스 멤버 변수의 데이터를 직렬화 해주어 인스턴스가 생성되었을 떄 Unity 시스템에서 직렬화한 데이터로 초기화 시켜주는 속성이고, __UnityEngine.HideInInspector__ 는 이전에 직렬화된 데이터와의 링크를 끊어 일시적으로 직렬화를 사용한 초기화를 막고 Inspector 에서도 안보이게 해준다. __System.NonSerailized__ 는 해당 멤버 변수의 직렬화를 아예 막는 속성이다.
 
