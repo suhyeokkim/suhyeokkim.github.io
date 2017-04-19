@@ -11,9 +11,9 @@ permalink: /edu/
 - 2 Day : [Event handling]({{ site.baseurl }}{% post_url 2017-04-05-unity-event-handling %})
 - 3 Day : [Message system]({{ site.baseurl }}{% post_url 2017-04-07-unity-message-system %})
 - 4 Day : [Scriptable Object]({{ site.baseurl }}{% post_url 2017-04-09-using-scriptable-object %})
-- 5 Day : ?? <!--[Unity Attributes]({{ site.baseurl }}{% post_url 2017-04-12-unity-attributes %}) -->
-- 6 Day : ?? <!--[Garbage Collection]({{ site.baseurl }}{% post_url 2017-03-31-garbage-collection-in-unity %})-->
-- 7 Day : ?? <!--[Texture compression]({{ site.baseurl }}{% post_url 2017-03-31-unity-3d-drawing-pipeline %})-->
+- 5 Day : [Usage of Attributes]({{ site.baseurl }}{% post_url 2017-04-12-usage-of-attributes %})
+- 6 Day : ?? <!--[Unity Coroutine]({{ site.baseurl }}{% post_url 2017-04-19-usage-of-coroutine %})-->
+- 7 Day : ?? <!--[Garbage Collection]({{ site.baseurl }}{% post_url 2017-03-31-garbage-collection-in-unity %})-->
 
 ## Examples
 
@@ -22,12 +22,8 @@ permalink: /edu/
 
 <!--
 
-후보들
-
-1. 유니티 에디터 만들기
-  - 부수 자료 : 실제 에디터 로드맵이 있어야함
-2. 애니메이션 시스템
-3. low level Mesh, rig and animation, voxel game, editor
-4. UGUI 시스템 살펴보기
+-1. 유니티 에디터 만들기 : 실제 에디터 제작 로드맵이 있어야함
+0. low level Mesh, rig and animation, voxel game, editor
+1. Coroutine, IEnumerator Pattern, Custom Yield Instruction
 
 -->

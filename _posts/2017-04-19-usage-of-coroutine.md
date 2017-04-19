@@ -5,8 +5,5 @@ comments: true
 show: false
 categories:
   - unity
-  - analysis
+  - try
 ---
-
-1. texture compression introduce
-2. usage
