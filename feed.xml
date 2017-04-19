@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-04-19T04:38:26+00:00</updated>
+  <updated>2017-04-19T07:37:38+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -34,7 +34,11 @@
       <published>2017-04-19T00:00:00+00:00</published>
       <updated>2017-04-19T00:00:00+00:00</updated>
       <id>https://hrmrzizon.github.io/2017/04/19/usage-of-coroutine</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/04/19/usage-of-coroutine/"></content>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/04/19/usage-of-coroutine/">&lt;!--
+  유니티의 기본적인 코루틴 사용법?
+  IEnumerator 는 무엇인가? 코루틴은 어떻게 실행되는 거지?
+  CustomYieldInstruction
+ --&gt;</content>
 
       
       
@@ -76,7 +80,13 @@
       <published>2017-04-18T00:00:00+00:00</published>
       <updated>2017-04-18T00:00:00+00:00</updated>
       <id>https://hrmrzizon.github.io/2017/04/18/marshall-vs-serialize</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/04/18/marshall-vs-serialize/">&lt;p&gt;&lt;a href=&quot;http://starblood.tistory.com/entry/Marshalling-vs-Serialization-%EB%A7%88%EC%83%AC%EB%A7%81-%EA%B3%BC-%EC%8B%9C%EB%A6%AC%EC%96%BC%EB%9D%BC%EC%9D%B4%EC%A6%88-%EC%9D%98-%EC%B0%A8%EC%9D%B4&quot;&gt;Tistory&lt;/a&gt;
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/04/18/marshall-vs-serialize/">&lt;!--
+  Unity 예를 들면서 Serialization 설명
+  COM 등 여러 기술들을 예로 들면서 Marshalling 설명
+  용어의 근소한 차이 설명
+--&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://starblood.tistory.com/entry/Marshalling-vs-Serialization-%EB%A7%88%EC%83%AC%EB%A7%81-%EA%B3%BC-%EC%8B%9C%EB%A6%AC%EC%96%BC%EB%9D%BC%EC%9D%B4%EC%A6%88-%EC%9D%98-%EC%B0%A8%EC%9D%B4&quot;&gt;Tistory&lt;/a&gt;
 &lt;a href=&quot;http://stackoverflow.com/questions/770474/what-is-the-difference-between-serialization-and-marshaling&quot;&gt;Stackoverflow Serialization vs Marshalling&lt;/a&gt;
 &lt;a href=&quot;https://en.wikipedia.org/wiki/Marshalling_(computer_science)&quot;&gt;Marshalling in wikipedia&lt;/a&gt;&lt;/p&gt;</content>
 
