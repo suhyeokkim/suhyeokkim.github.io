@@ -2,14 +2,13 @@
 layout: post
 author: "Su-Hyeok Kim"
 comments: true
-show: true
 categories:
   - unity
   - try
 ---
 
 C# 문법은 클래스, 구조체, 열거형, 멤버 변수, 메소드등 여러 타입에 표시를 하는 기능을 제공한다. 또한 일부 C# 에서 제공하는 기능 중에 정해준 표시를 붙이면 작동하는 기능들도 있다. 이 표시들을 C# 문법에서는 __Attribute__(속성) 라고 칭한다. 그리고 이 속성을 사용하여 Unity 에서는 많은 기능들을 제공한다. 아래 우리가 가장 많이 볼만한 속성을 사용한 예제가 있다.
-
+<!-- more -->
 {% highlight c# lineos %}
 // Unity 시스템에 데이터를 직렬화해 멤버변수 초기값을 지정한다.
 [UnityEngine.SerializeField]

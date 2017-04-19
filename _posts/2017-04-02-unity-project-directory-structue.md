@@ -2,7 +2,6 @@
 layout: post
 author: "Su-Hyeok Kim"
 comments: true
-show: true
 categories:
   - unity
   - try
@@ -11,7 +10,7 @@ categories:
 Unity 프로젝트는 여러 종류의 데이터를 디렉토리로 판단해 컴파일 한다. 반대로 이 디렉토리 구조를 통해 Unity 의 컴파일 시스템을 알아볼 수도 있다. 디렉토리 구조 자체는 간단하나 숨겨진 뜻은 조금 복잡하다. 그러니 한번 알아보기로 하자.
 
 \* 이글은  _Unity Personal 5.5.2f_ 기준으로 쓰여져 있습니다.
-
+<!-- more -->
 ## Unity 프로젝트 구조
 
 일반적인 Unity 프로젝트 디렉토리 구조는 아래와 같다.

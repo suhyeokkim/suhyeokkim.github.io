@@ -2,7 +2,6 @@
 layout: post
 author: "Su-Hyeok Kim"
 comments: true
-show: true
 categories:
     - unity
     - texture_compression
@@ -16,7 +15,7 @@ categories:
 ## 2\. ETC(Erricsson Texture Compression)
 
 처음 알아볼 압축 방식은 ETC(Erricsson Texture Comperssion) 이다. Jacob Ström[^1], Tomas Akenine-Möller 두 사람이 학부 실저에 고안해낸 PACKMAN(2004) 을 더 발전시켜 iPACKMAN(2005) 이라는 학명으로 SIGGRAPH 라는 유명한 컨퍼런스에 등장했다. 이 후 iPACKMAN 의 공식 명칭이 Errcisson Texture Compression(ETC1) 으로 되어 쓰이게 된다. ETC 를 알아보기 전, 먼저 고안된 PACKMAN 을 알아보기로 하자.
-
+<!-- more -->
 #### (1) PACKMAN?
 
 PACKMAN 은 블록 방식의 텍스쳐 압축 기법으로, 직사각형 픽셀 그룹을 만들어 압축한다. RGB 채널이 각각 8bit인 픽셀 8개를(2*4=8) 총 32bit로 압축시킨다. 압축을 안할 시 192bit 이니 1/6 의 공간을 차지하게 압축한다.

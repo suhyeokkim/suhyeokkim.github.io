@@ -2,7 +2,6 @@
 layout: post
 author: "Su-Hyeok Kim"
 comments: true
-show: true
 categories:
     - c#
 ---
@@ -12,7 +11,7 @@ unirx 를 살펴보다 모르는 문법이 나와서 기록해둔다. [MSDN 확�
 ## C# 클래스 확장 메서드
 
 C# 3.0 문법부터 사용자가 기존에 정의된 클래스에 메소드를 확장 가능하게 되었다. obj-c 의 카테고리와 조금 비슷한것 같다. 자세한 사항은 코드와 함께 보자.
-
+<!-- more -->
 {% highlight c# %}
 using System.Linq;
 using System.Text;

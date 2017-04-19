@@ -2,7 +2,6 @@
 layout: post
 author: "Su-hyeok Kim"
 comments: true
-show: true
 categories:
   - jekyll
   - makeblog

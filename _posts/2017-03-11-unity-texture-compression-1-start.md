@@ -2,7 +2,6 @@
 layout: post
 author: "Su-Hyeok Kim"
 comments: true
-show: true
 categories:
     - unity
     - texture_compression
@@ -10,7 +9,7 @@ categories:
 ---
 
 Unity 로 게임을 개발하던 도중 텍스쳐 압축에 호기심이 생겨 공부하기 + 호기심을 풀기 위해 텍스쳐 압축에 대해 알아보기로 하였다.
-
+<!-- more -->
 ## 1\. 텍스쳐 압축(Texture Compression)이란?
 
 #### 1) 뜻

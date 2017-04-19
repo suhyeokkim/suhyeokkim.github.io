@@ -2,7 +2,6 @@
 layout: post
 author: "Su-Hyeok Kim"
 comments: true
-show: true
 categories:
   - unity
   - c#
@@ -10,7 +9,7 @@ categories:
 ---
 
 Unity 에서 객체간의 이벤트를 처리하는 방법들을 써본다. c# 에서 지원하는 delegate, event 와 UnityEvent 를 알아볼 것이다.
-
+<!-- more -->
 ## C# Delegate, Event
 
 #### 행동을 대신하다. Delegate

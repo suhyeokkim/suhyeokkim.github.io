@@ -2,7 +2,6 @@
 layout: post
 author: "Su-Hyeok Kim"
 comments: true
-show: true
 categories:
     - jekyll
     - makeblog
@@ -15,7 +14,7 @@ categories:
 ## 개요
 
 원리는 간단하다. GitHub 에서 jekyll 로 만들어진 블로그 백엔드 서비스(BaaS)를 지원하고, 사용자는 일정한 형식으로 레포지토리를 구성하면 블로그가 짠! 하고 나타난다.
-
+<!-- more -->
 ## GitHub 에서 작업할 것들
 
 순서는 아래와 같다.

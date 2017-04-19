@@ -12,8 +12,8 @@ permalink: /edu/
 - 3 Day : [Message system]({{ site.baseurl }}{% post_url 2017-04-07-unity-message-system %})
 - 4 Day : [Scriptable Object]({{ site.baseurl }}{% post_url 2017-04-09-using-scriptable-object %})
 - 5 Day : [Usage of Attributes]({{ site.baseurl }}{% post_url 2017-04-12-usage-of-attributes %})
-- 6 Day : ?? <!--[Unity Coroutine]({{ site.baseurl }}{% post_url 2017-04-19-usage-of-coroutine %})-->
-- 7 Day : ?? <!--[Garbage Collection]({{ site.baseurl }}{% post_url 2017-03-31-garbage-collection-in-unity %})-->
+- 6 Day : ?? <!--[Unity Coroutine]-->
+- 7 Day : ?? <!--[Garbage Collection]-->
 
 ## Examples
 

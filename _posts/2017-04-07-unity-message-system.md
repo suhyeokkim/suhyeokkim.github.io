@@ -2,7 +2,6 @@
 layout: post
 author: "Su-Hyeok Kim"
 comments: true
-show: true
 categories:
   - unity
   - mono
@@ -31,7 +30,7 @@ void DoSomething()
 OnEnable 에서 해당 컴포넌트의 DoSomething 이라는 메소드를 찾아 호출하는 SendMessage 메소드를 호출하고, 아마 DoSomething 메소드가 호출되면서 로그가 출력될 것이다.
 
 Unity 에서 메세징 방식의 대표적인 사용사례는 컴포넌트 스크립팅을 할 때 항상 볼 수 있는 Start, Update 등 [MonoBehaviour](https://docs.unity3d.com/ScriptReference/MonoBehaviour.html) 의 여러 메시지 콜백들이다. 저 메시지 콜백들을 통해 스크립트 컴포넌트는 여러 상태를 알 수 있다.
-
+<!-- more -->
 또한 __AnimationClip__ 을 사용할때 메세지 이벤트를 넣어서 사용할 수 있다. 애니메이션의 특정 프레임에 메시지 이벤트를 만들어 같은 게임오브젝트에 붙어있는 스크립트들에게 메시지를 던져준다. [UnityExample](https://github.com/hrmrzizon/UnityExample) 프로젝트의 MessageScene 의 ShakeCube 를 확인하라.
 
 ## 메시지 방식의 사실, 장단점
