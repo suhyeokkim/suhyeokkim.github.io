@@ -6,6 +6,7 @@ rvm:
 before_install:
   - gem update --system
   - gem update --remote bundler
+  - chmod a+x "./tl/after_success.sh"
 install:
   - bundle install --jobs=3 --retry=3 --path=${BUNDLE_PATH:-vendor/bundle}
 before_script:
@@ -21,4 +22,4 @@ after_success:
 branches:
   only:
     - source
-    - post*
+    - /post.*/
