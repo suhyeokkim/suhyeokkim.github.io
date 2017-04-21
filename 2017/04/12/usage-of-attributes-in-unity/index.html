@@ -171,12 +171,12 @@
 <span class="k">public</span> <span class="kt">int</span> <span class="n">limitCount</span><span class="p">;</span>
 
 <span class="c1">// 직렬화를 못하게 한다.
-</span><span class="na">[System.NonSerailized]</span>
+</span><span class="na">[System.NonSerialized]</span>
 <span class="k">public</span> <span class="kt">int</span> <span class="n">gameCount</span><span class="p">;</span></code></pre></figure>
 
 <p>Unity 스크립팅 시스템은 따로 멤버 직렬화에 대한 속성을 지정하지 않으면 접근 제한자(public, protected, private) 에 따라 직렬화를 할지 말지 결정한다. 하지만 접근 제한자로만 사용하기에는 부족한 부분이 있다 그래서 Unity 에서는 멤버 변수 직렬화를 <strong>Attribute</strong> 문법을 사용해 Unity 전용 속성을 만들어 제어를 할 수 있도록 해두었다.</p>
 
-<p>클래스 멤버 변수 직렬화를 제어하는 속성은 세개가 있다. <strong>UnityEngine.SerializeField</strong> 와 <strong>UnityEngine.HideInInspector</strong> 와 <strong>System.NonSerailized</strong> 이 세개다. <strong>UnityEngine.SerializeField</strong> 는 클래스 멤버 변수의 데이터를 직렬화 해주어 인스턴스가 생성되었을 떄 Unity 시스템에서 직렬화한 데이터로 초기화 시켜주는 속성이고, <strong>UnityEngine.HideInInspector</strong> 는 이전에 직렬화된 데이터와의 링크를 끊어 일시적으로 직렬화를 사용한 초기화를 막고 Inspector 에서도 안보이게 해준다. <strong>System.NonSerailized</strong> 는 해당 멤버 변수의 직렬화를 아예 막는 속성이다.</p>
+<p>클래스 멤버 변수 직렬화를 제어하는 속성은 세개가 있다. <strong>UnityEngine.SerializeField</strong> 와 <strong>UnityEngine.HideInInspector</strong> 와 <strong>System.NonSerialized</strong> 이 세개다. <strong>UnityEngine.SerializeField</strong> 는 클래스 멤버 변수의 데이터를 직렬화 해주어 인스턴스가 생성되었을 떄 Unity 시스템에서 직렬화한 데이터로 초기화 시켜주는 속성이고, <strong>UnityEngine.HideInInspector</strong> 는 이전에 직렬화된 데이터와의 링크를 끊어 일시적으로 직렬화를 사용한 초기화를 막고 Inspector 에서도 안보이게 해준다. <strong>System.NonSerialized</strong> 는 해당 멤버 변수의 직렬화를 아예 막는 속성이다.</p>
 
 <table>
   <thead>
@@ -185,7 +185,7 @@
       <th style="text-align: center"> </th>
       <th style="text-align: center">HideInInspector</th>
       <th style="text-align: center"> </th>
-      <th style="text-align: center">NonSerailized</th>
+      <th style="text-align: center">NonSerialized</th>
       <th> </th>
     </tr>
   </thead>
@@ -209,7 +209,7 @@
   </tbody>
 </table>
 
-<p>위 세개의 속성들로 Unity 직렬화 시스템을 제어할 수 있다. <strong>UnityEngine.SerializeField</strong> 는 직렬화된 데이터가 필요할 때, <strong>System.NonSerailized</strong> 는 직렬화된 데이터가 전혀 필요 없을 때, <strong>UnityEngine.HideInInspector</strong> 는 개발 도중에 잠시 직렬화된 데이터와 연결을 끊을 때 사용한다.</p>
+<p>위 세개의 속성들로 Unity 직렬화 시스템을 제어할 수 있다. <strong>UnityEngine.SerializeField</strong> 는 직렬화된 데이터가 필요할 때, <strong>System.NonSerialized</strong> 는 직렬화된 데이터가 전혀 필요 없을 때, <strong>UnityEngine.HideInInspector</strong> 는 개발 도중에 잠시 직렬화된 데이터와 연결을 끊을 때 사용한다.</p>
 
 <p>필자는 확실한 것을 지향하기 때문에 <a href="https://docs.unity3d.com/kr/current/ScriptReference/HideInInspector.html"><strong>UnityEngine.HideInInspector</strong></a> 를 잘 사용하진 않는다. 링크를 타고 들어가면 나오지만 정확한 행동의 정의되지 않았다. 단지 숨기기만 하는건지, 직렬화된 데이터를 없에는건지 설명이 명확하게 되어있지 않다. 또한 현재쓰는 Unity 5.5.2 버젼으로 테스트를 해보면 <strong>UnityEngine.HideInInspector</strong> 가 붙은 직렬화 데이터가 초기화 되는 경우가 있다.</p>
 
@@ -268,7 +268,7 @@
 
 <h4>클래스를 사용하여 커스터마이징하기</h4>
 
-<p>보통 클래스나 구조체를 사용해 자료를 저장하는 경우는 꽤 많다. 그리고 데이터\가 많아지면 많아질 수록 넣어야할 변수는 많아지고 Inspector 창은 혼란의 도가니에 빠지게 된다. 아래와 같이 말이다.</p>
+<p>보통 클래스나 구조체를 사용해 자료를 저장하는 경우는 꽤 많다. 그리고 데이터가 많아지면 많아질 수록 넣어야할 변수는 많아지고 Inspector 창은 혼란의 도가니에 빠지게 된다. 아래와 같이 말이다.</p>
 
 <p><img src="/images/unity_support_inspector_3.png" alt="Inspector" class="center-image" /></p>
 
