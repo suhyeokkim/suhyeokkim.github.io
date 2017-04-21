@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-04-21T06:07:08+00:00</updated>
+  <updated>2017-04-21T06:11:03+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -215,9 +215,11 @@
 &lt;h2&gt;참조&lt;/h2&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/kr/current/Manual/Coroutines.html&quot;&gt;Unity 코루틴 메뉴얼&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/kr/current/Manual/Coroutines.html&quot;&gt;Unity 코루틴 메뉴얼&lt;/a&gt;
+&amp;lt;!–&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/system.collections.ienumerator.aspx&quot;&gt;MSDN : IEnumerator&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/65zzykke.aspx&quot;&gt;MSDN : 반복기 사용&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/65zzykke.aspx&quot;&gt;MSDN : 반복기 사용&lt;/a&gt;
+–&amp;gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/ScriptReference/Coroutine.html&quot;&gt;Unity Coroutine ref&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/ScriptReference/CustomYieldInstruction.html&quot;&gt;Unity CustomYieldInstruction ref&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/ScriptReference/YieldInstruction.html&quot;&gt;Unity YieldInstruction ref&lt;/a&gt;&lt;/li&gt;
