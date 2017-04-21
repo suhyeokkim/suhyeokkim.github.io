@@ -18,20 +18,20 @@ C# 문법은 클래스, 구조체, 열거형, 멤버 변수, 메소드등 여러
 public int limitCount;
 
 // 직렬화를 못하게 한다.
-[System.NonSerailized]
+[System.NonSerialized]
 public int gameCount;
 {% endhighlight %}
 
 Unity 스크립팅 시스템은 따로 멤버 직렬화에 대한 속성을 지정하지 않으면 접근 제한자(public, protected, private) 에 따라 직렬화를 할지 말지 결정한다. 하지만 접근 제한자로만 사용하기에는 부족한 부분이 있다 그래서 Unity 에서는 멤버 변수 직렬화를 __Attribute__ 문법을 사용해 Unity 전용 속성을 만들어 제어를 할 수 있도록 해두었다.
 
-클래스 멤버 변수 직렬화를 제어하는 속성은 세개가 있다. __UnityEngine.SerializeField__ 와 __UnityEngine.HideInInspector__ 와 __System.NonSerailized__ 이 세개다. __UnityEngine.SerializeField__ 는 클래스 멤버 변수의 데이터를 직렬화 해주어 인스턴스가 생성되었을 떄 Unity 시스템에서 직렬화한 데이터로 초기화 시켜주는 속성이고, __UnityEngine.HideInInspector__ 는 이전에 직렬화된 데이터와의 링크를 끊어 일시적으로 직렬화를 사용한 초기화를 막고 Inspector 에서도 안보이게 해준다. __System.NonSerailized__ 는 해당 멤버 변수의 직렬화를 아예 막는 속성이다.
+클래스 멤버 변수 직렬화를 제어하는 속성은 세개가 있다. __UnityEngine.SerializeField__ 와 __UnityEngine.HideInInspector__ 와 __System.NonSerialized__ 이 세개다. __UnityEngine.SerializeField__ 는 클래스 멤버 변수의 데이터를 직렬화 해주어 인스턴스가 생성되었을 떄 Unity 시스템에서 직렬화한 데이터로 초기화 시켜주는 속성이고, __UnityEngine.HideInInspector__ 는 이전에 직렬화된 데이터와의 링크를 끊어 일시적으로 직렬화를 사용한 초기화를 막고 Inspector 에서도 안보이게 해준다. __System.NonSerialized__ 는 해당 멤버 변수의 직렬화를 아예 막는 속성이다.
 
-| SerializeField | | HideInInspector | | NonSerailized |
+| SerializeField | | HideInInspector | | NonSerialized |
 | :------: | :------: | :------: | :------: | :------: |
 | 변수 직렬화를 해주는 __Attribute__ | | 직렬화된 데이터를 숨기는 __Attribute__ | | 변수 직렬화를 막는 __Attribute__ |
 | | | | | | |
 
-위 세개의 속성들로 Unity 직렬화 시스템을 제어할 수 있다. __UnityEngine.SerializeField__ 는 직렬화된 데이터가 필요할 때, __System.NonSerailized__ 는 직렬화된 데이터가 전혀 필요 없을 때, __UnityEngine.HideInInspector__ 는 개발 도중에 잠시 직렬화된 데이터와 연결을 끊을 때 사용한다.
+위 세개의 속성들로 Unity 직렬화 시스템을 제어할 수 있다. __UnityEngine.SerializeField__ 는 직렬화된 데이터가 필요할 때, __System.NonSerialized__ 는 직렬화된 데이터가 전혀 필요 없을 때, __UnityEngine.HideInInspector__ 는 개발 도중에 잠시 직렬화된 데이터와 연결을 끊을 때 사용한다.
 
 필자는 확실한 것을 지향하기 때문에 [__UnityEngine.HideInInspector__](https://docs.unity3d.com/kr/current/ScriptReference/HideInInspector.html) 를 잘 사용하진 않는다. 링크를 타고 들어가면 나오지만 정확한 행동의 정의되지 않았다. 단지 숨기기만 하는건지, 직렬화된 데이터를 없에는건지 설명이 명확하게 되어있지 않다. 또한 현재쓰는 Unity 5.5.2 버젼으로 테스트를 해보면 __UnityEngine.HideInInspector__ 가 붙은 직렬화 데이터가 초기화 되는 경우가 있다.
 
@@ -98,7 +98,7 @@ public class SomeDataObject { ... }
 
 #### 클래스를 사용하여 커스터마이징하기
 
-보통 클래스나 구조체를 사용해 자료를 저장하는 경우는 꽤 많다. 그리고 데이터\가 많아지면 많아질 수록 넣어야할 변수는 많아지고 Inspector 창은 혼란의 도가니에 빠지게 된다. 아래와 같이 말이다.
+보통 클래스나 구조체를 사용해 자료를 저장하는 경우는 꽤 많다. 그리고 데이터가 많아지면 많아질 수록 넣어야할 변수는 많아지고 Inspector 창은 혼란의 도가니에 빠지게 된다. 아래와 같이 말이다.
 
 ![Inspector](/images/unity_support_inspector_3.png){: .center-image }
 
