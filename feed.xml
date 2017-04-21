@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-04-21T06:05:50+00:00</updated>
+  <updated>2017-04-21T06:07:08+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -184,7 +184,7 @@
 
 &lt;h2&gt;CustomYieldInstruction 를 사용해서 커스터마이징하기&lt;/h2&gt;
 
-&lt;p&gt;&lt;strong&gt;CustomYieldInstruction&lt;/strong&gt; 을 통해 기다리는 기능을 상당히 간단하게 구현이 가능하다. &lt;strong&gt;CustomYieldInstruction&lt;/strong&gt; 는 &lt;em&gt;keepWaiting&lt;/em&gt; 이라는 abstract 프로퍼티를 통해 값이 &lt;em&gt;false&lt;/em&gt; 일 때는 기다리고, &lt;em&gt;true&lt;/em&gt; 일 때는 넘어가는 간단한 IEnumerator 구현체다. 즉 &lt;strong&gt;CustomYieldInstruction&lt;/strong&gt; 을 상속받아 &lt;em&gt;keepWaiting&lt;/em&gt; 프로퍼티만 구현하면 끝이다. 아래 transform 의 scale 을 검사해서 일정 값을 초과하게 되면 다음으로 넘어가는 기능을 아래 예제에 첨부했다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;CustomYieldInstruction&lt;/strong&gt; 을 통해 기다리는 기능을 상당히 간단하게 구현이 가능하다. &lt;strong&gt;CustomYieldInstruction&lt;/strong&gt; 는 &lt;em&gt;keepWaiting&lt;/em&gt; 이라는 abstract 프로퍼티를 통해 값이 &lt;em&gt;false&lt;/em&gt; 일 때는 기다리고, &lt;em&gt;true&lt;/em&gt; 일 때는 넘어가는 간단한 &lt;strong&gt;IEnumerator&lt;/strong&gt; 구현체다. 즉 &lt;strong&gt;CustomYieldInstruction&lt;/strong&gt; 을 상속받아 &lt;em&gt;keepWaiting&lt;/em&gt; 프로퍼티만 구현하면 끝이다. 아래 transform 의 scale 을 검사해서 일정 값을 초과하게 되면 다음으로 넘어가는 기능을 아래 예제에 첨부했다.&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c#&quot; data-lang=&quot;c#&quot;&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ScaleOverYieldInstruction&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CustomYieldInstruction&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;

@@ -336,7 +336,7 @@
 
 <h2>CustomYieldInstruction 를 사용해서 커스터마이징하기</h2>
 
-<p><strong>CustomYieldInstruction</strong> 을 통해 기다리는 기능을 상당히 간단하게 구현이 가능하다. <strong>CustomYieldInstruction</strong> 는 <em>keepWaiting</em> 이라는 abstract 프로퍼티를 통해 값이 <em>false</em> 일 때는 기다리고, <em>true</em> 일 때는 넘어가는 간단한 IEnumerator 구현체다. 즉 <strong>CustomYieldInstruction</strong> 을 상속받아 <em>keepWaiting</em> 프로퍼티만 구현하면 끝이다. 아래 transform 의 scale 을 검사해서 일정 값을 초과하게 되면 다음으로 넘어가는 기능을 아래 예제에 첨부했다.</p>
+<p><strong>CustomYieldInstruction</strong> 을 통해 기다리는 기능을 상당히 간단하게 구현이 가능하다. <strong>CustomYieldInstruction</strong> 는 <em>keepWaiting</em> 이라는 abstract 프로퍼티를 통해 값이 <em>false</em> 일 때는 기다리고, <em>true</em> 일 때는 넘어가는 간단한 <strong>IEnumerator</strong> 구현체다. 즉 <strong>CustomYieldInstruction</strong> 을 상속받아 <em>keepWaiting</em> 프로퍼티만 구현하면 끝이다. 아래 transform 의 scale 을 검사해서 일정 값을 초과하게 되면 다음으로 넘어가는 기능을 아래 예제에 첨부했다.</p>
 
 <figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">public</span> <span class="k">class</span> <span class="nc">ScaleOverYieldInstruction</span> <span class="p">:</span> <span class="n">CustomYieldInstruction</span>
 <span class="p">{</span>
