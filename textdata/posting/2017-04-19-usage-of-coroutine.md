@@ -103,28 +103,56 @@ void Update ()
 
 그리고 코루틴을 멈추는 방법 중 두가지가 더 있는데, 하나는 MonoBehaviour 인스턴스에서 실행한 코루틴을 전부 멈추는 방법, 나머지 하나는 __StartCoroutine__ 이 반환한 객체 __Coroutine__ 을 사용하여 실행한 코루틴 하나를 멈추는 방법이다. __Coroutine__ 객체는 단지 코루틴을 실행했을 때, 실행한 코루틴을 멈추기 위해 사용하는 객체다. 그리고 이 __Coroutine__ 객체를 이용해 코루틴을 멈추는게 가장 좋은 듯 하다. __IEnumerator__ 객체를 통하여 멈추는 방식은 중간에 _yield return_ 으로 반환한 객체를 확인 가능하고 직접 제어가 가능하기 때문에 꼭 참조해야할 일이 아니면 __Coroutine__ 객체를 사용하는게 안전할 것이다.
 
-## 반복을 정의하는 interface : IEnumerator
+## C# 반복기(Iterator Block) 의 이해
 
+반복기 문법은 단순 데이터를 가져오기 위한 반복자 패턴의 코드 자체로 구현을 위한 문법이다. 아래 C# 예제를 보자.
 
+{% highlight c# lineos %}
+public System.Collections.IEnumerator GetEnumerator()
+{
+    yield return "With an iterator, ";
+    yield return "more than one ";
+    yield return "value can be returned";
+    yield return ".";
+}
 
-- CustomYieldInstruction
-- IEnumerator
+static void Main()
+{
+    foreach (string element in GetEnumerator())
+        System.Console.Write(element);
+}
+// Output : With an iterator, more than one value can be returned.
+{% endhighlight %}
+
+위 예제는 문자열들을 가지고 있는 IEnumerator 를 반환하는 함수를 사용해 내용을 출력한 코드다.
+
+{% highlight c# lineos %}
+public interface IEnumerator
+{
+    object Current { get; }
+
+    bool MoveNext();
+    void Reset();
+}
+{% endhighlight %}
+
+위의 IEnumerator 의 선언 코드를 보면 다음 항목으로 이동하고 이동이 가능한지 반환하는 MoveNext, 반복자의 상태를 처음으로 되돌리는 Reset, 현재 
+
+## CustomYieldInstruction 를 사용해서 커스터마이징하기
 
 <!--
-ok  //  유니티의 기본적인 코루틴 사용법? StopCoroutine:Coroutine
-  C# 에서의 코드 블록 지원?
-  코드에서 사용되는 IEnumerator 의 구조
-  CustomYieldInstruction : keepwaiting 을 씀, Update 다 된 이후, LateUpdate 하기 전에 체크함
-  IEnumerator 를 직접 구현한 코루틴 사용
-  실 사용 사례? : 틱 사용하기, 시간 체크하기, WWW 체크하기
-  장단점?
+ok  유니티의 기본적인 코루틴 사용법? StopCoroutine:Coroutine
+??  C# 에서의 코드 블록 지원, 코드에서 사용되는 IEnumerator 의 구조
+??  CustomYieldInstruction : keepwaiting 을 씀, Update 다 된 이후, LateUpdate 하기 전에 체크함, 구현 클래스 예시 WaitUntil, WaitWhile
+??  실 사용 사례? : 틱 사용하기, 시간 체크하기, WWW 체크하기
+??  장단점?
 -->
 
 ## 참조
 
 - [Unity 코루틴 메뉴얼](https://docs.unity3d.com/kr/current/Manual/Coroutines.html)
-- [Unity Coroutine ref](https://docs.unity3d.com/ScriptReference/Coroutine.html)
-- [Unity YieldInstruction ref](https://docs.unity3d.com/ScriptReference/YieldInstruction.html)
 - [MSDN : IEnumerator](https://msdn.microsoft.com/ko-kr/library/system.collections.ienumerator.aspx)
 - [MSDN : 반복기 사용](https://msdn.microsoft.com/ko-kr/library/65zzykke.aspx)
-- [CustomYieldInstruction](https://docs.unity3d.com/ScriptReference/CustomYieldInstruction.html)
+- [Unity Coroutine ref](https://docs.unity3d.com/ScriptReference/Coroutine.html)
+- [Unity CustomYieldInstruction ref](https://docs.unity3d.com/ScriptReference/CustomYieldInstruction.html)
+- [Unity YieldInstruction ref](https://docs.unity3d.com/ScriptReference/YieldInstruction.html)
