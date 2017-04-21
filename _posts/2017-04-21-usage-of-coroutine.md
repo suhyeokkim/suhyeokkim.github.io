@@ -149,7 +149,7 @@ IEnumerator Wait(int num)
 
 위 콜백이 실행되는 그림을 살펴보면 Game Logic 레이어에서 대부분 멈춰준다. 이 타이밍은 _Update_ 가 호출된 후, _LateUpdate_ 가 호출되기 전인데 누군가는 이 시점 말고 다른 시점에 코루틴을 멈추고 싶을 수도 있다. 그래서 Unity 에서는 다른 두 타이밍에 기다림을 멈추는 기능이 있다. __WaitForFixedUpdate__ 과 __WaitForEndOfFrame__ 인데,  __WaitForFixedUpdate__ 는 _FixedUpdate_ 들이 호출된 후 타이밍에 멈춰주는 기능으로써 물리 기반 기능과 같은 타이밍을 공유하고 싶을 때 사용하면 된다. __WaitForEndOfFrame__ 은 한 프레임의 모든 처리가 끝난 후까지 기다려주는 기능으로써 무언가 후처리를 할 때 사용해주면 된다.
 
-또한 사용자가 멈추고 싶은 타이밍에 멈추는 경우도 필요할 것이다. 그래서 두가지 논리적인 조건이 충족할 때 멈춰주는 기능도 있다. __WaitUntil__ 과 __WaitWhile__ 인데, 단순하게 _Func<bool>_ 델리게이트만 받아 참이냐, 거짓이냐에 따라서 기다림을 제어한다. __WaitUntil__ 은 델리게이트가 반환하는 값이 _false_ 일 때 다음으로 넘어가고, __WaitWhile__ 델리게이트가 반환하는 값이 _true_ 일 때 다음으로 넘어가기 된다.
+또한 사용자가 멈추고 싶은 타이밍에 멈추는 경우도 필요할 것이다. 그래서 두가지 논리적인 조건이 충족할 때 멈춰주는 기능도 있다. __WaitUntil__ 과 __WaitWhile__ 인데, 단순하게 _Func\<bool\>_ 델리게이트만 받아 참이냐, 거짓이냐에 따라서 기다림을 제어한다. __WaitUntil__ 은 델리게이트가 반환하는 값이 _false_ 일 때 다음으로 넘어가고, __WaitWhile__ 델리게이트가 반환하는 값이 _true_ 일 때 다음으로 넘어가기 된다.
 
 마지막으로 프로토콜로 통신하는 기능을 사용할 때 사용하는 __WWW__ 라는 특수한 제어 객체가 있다. 이는 보통 _http_ 통신을 해서 무언가 받아올 때 사용한다. 아래 예제가 대표적인 예시다.
 
@@ -168,7 +168,7 @@ IEnumerator getGoogle()
 
 ## CustomYieldInstruction 를 사용해서 커스터마이징하기
 
-__CustomYieldInstruction__ 을 통해 기다리는 기능을 상당히 간단하게 구현이 가능하다. __CustomYieldInstruction__ 는 _keepWaiting_ 이라는 abstract 프로퍼티를 통해 값이 _false_ 일 때는 기다리고, _true_ 일 때는 넘어가는 간단한 IEnumerator 구현체다. 즉 __CustomYieldInstruction__ 을 상속받아 _keepWaiting_ 프로퍼티만 구현하면 끝이다. 아래 transform 의 scale 을 검사해서 일정 값을 초과하게 되면 다음으로 넘어가는 기능을 아래 예제에 첨부했다.
+__CustomYieldInstruction__ 을 통해 기다리는 기능을 상당히 간단하게 구현이 가능하다. __CustomYieldInstruction__ 는 _keepWaiting_ 이라는 abstract 프로퍼티를 통해 값이 _false_ 일 때는 기다리고, _true_ 일 때는 넘어가는 간단한 __IEnumerator__ 구현체다. 즉 __CustomYieldInstruction__ 을 상속받아 _keepWaiting_ 프로퍼티만 구현하면 끝이다. 아래 transform 의 scale 을 검사해서 일정 값을 초과하게 되면 다음으로 넘어가는 기능을 아래 예제에 첨부했다.
 
 {% highlight c# lineos %}
 public class ScaleOverYieldInstruction : CustomYieldInstruction
@@ -201,8 +201,10 @@ public class ScaleOverYieldInstruction : CustomYieldInstruction
 ## 참조
 
 - [Unity 코루틴 메뉴얼](https://docs.unity3d.com/kr/current/Manual/Coroutines.html)
+<!--
 - [MSDN : IEnumerator](https://msdn.microsoft.com/ko-kr/library/system.collections.ienumerator.aspx)
 - [MSDN : 반복기 사용](https://msdn.microsoft.com/ko-kr/library/65zzykke.aspx)
+-->
 - [Unity Coroutine ref](https://docs.unity3d.com/ScriptReference/Coroutine.html)
 - [Unity CustomYieldInstruction ref](https://docs.unity3d.com/ScriptReference/CustomYieldInstruction.html)
 - [Unity YieldInstruction ref](https://docs.unity3d.com/ScriptReference/YieldInstruction.html)
