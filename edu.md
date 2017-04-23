@@ -13,7 +13,7 @@ permalink: /edu/
 - 4 Day : [Scriptable Object]({{ site.baseurl }}{% post_url 2017-04-09-using-scriptable-object %})
 - 5 Day : [Usage of Attributes]({{ site.baseurl }}{% post_url 2017-04-12-usage-of-attributes-in-unity %})
 - 6 Day : [Unity Coroutine]({{ site.baseurl }}{% post_url 2017-04-21-usage-of-coroutine %})
-- 7 Day : Garbage Collection in Unity <!--[Garbage Collection]-->
+- 7 Day : [Garbage Collector in Unity]({{ site.baseurl }}{% post_url 2017-04-23-garbage-collector-in-unity %})
 
 <!--From 8 Day To End Day : [Make 3D game origin]-->
 <!--(low level Mesh, rig and animation, voxel game, editor)
