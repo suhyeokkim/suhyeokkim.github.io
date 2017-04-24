@@ -39,9 +39,9 @@ NSString* s = [[NSString alloc] init];  // NSString 오브젝트 생성 레퍼�
 
 reference-couting 이란 객체를 참조하는 횟수를 세서 참조 횟수가 0이 되면 할당을 해제하는 방식이다. 위의 예제에서는 첫줄에 오브젝트를 생성할 때 ref-count 를 1 올려주고, 사용이 끝난 후에는 __release__ 메소드를 사용해 ref-count 를 1 낮추어 메모리를 해제하는 것을 보여준다.
 
-하지만 reference-couting 은 조금 불편하다. 사용자가 직접 카운트를 관리해야하는 것은 결국 메모리 관리 전략을 직접 짜는것이기 때문이다. 그 후 1990년 대 후반에 등장한 언어들은 전부 garbage-collector 개념을 차용했는데 대표적인 언어가 위에서도 언급한 JAVA 와 C# 이다. 현재 두 언어 모두 Generational GC 방식을 사용한다. 세대별로 사용하는 메모리를 나누어 관리하는 방식인데, 우리는 이 방식d을 알아보기 전에 garbage-collector 의 기본적인 개념부터 살펴볼 것이다.
+하지만 reference-couting 은 조금 불편하다. 사용자가 직접 카운트를 관리해야하는 것은 결국 메모리 관리 전략을 직접 짜는것이기 때문이다. 그 후 1990년 대 후반에 등장한 언어들은 전부 garbage-collector 개념을 차용했는데 대표적인 언어가 위에서도 언급한 JAVA 와 C# 이다. 현재 두 언어 모두 Generational GC 방식을 사용한다. 세대별로 사용하는 메모리를 나누어 관리하는 방식인데, 우리는 이 방식을 알아보기 전에 garbage-collector 의 기본적인 개념부터 살펴볼 것이다.
 
-## mark and sweep
+## Mark and Sweep
 
 mark and sweep 은 garbage-collector 방식 중에 시초가 되는 방식이며, 가장 간단한 개념이다. 이름만 살펴보면 표시하고(mark) 쓸어담기(sweep) 로 알 수 있는데 조금 더 풀어보면, 사용하는 메모리를 표시하고(mark) 메모리가 부족하거나 안쓰는 메모리를 없에야 할 때 표시가 해제된 메모리 영역을 쓸어담아(sweep) 청소하는 방식이라 할 수 있다. 그림으로 표현하자면
 
@@ -55,9 +55,9 @@ mark and sweep 은 garbage-collector 방식 중에 시초가 되는 방식이며
 
 ![mark and sweep 2](/images/mark_and_sweep_2.png){: .center-image }
 
-garbage-collector 에서 원하는 때가 되어 
+garbage-collector 가 메모리들을 정리할 때가 되어 사용되지 않는 메모리들을 전부 쓸어서(sweep) 정리한다. 이것이 mark and sweep 의 개념이다.
 
-##
+## Generational GC : 세대 단위 가비지 컬렉터
 
 <!--
    가비지 컬렉션 개요?
