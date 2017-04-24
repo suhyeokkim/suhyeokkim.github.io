@@ -39,7 +39,12 @@ NSString* s = [[NSString alloc] init];  // NSString 오브젝트 생성 레퍼�
 
 reference-couting 이란 객체를 참조하는 횟수를 세서 참조 횟수가 0이 되면 할당을 해제하는 방식이다. 위의 예제에서는 첫줄에 오브젝트를 생성할 때 ref-count 를 1 올려주고, 사용이 끝난 후에는 __release__ 메소드를 사용해 ref-count 를 1 낮추어 메모리를 해제하는 것을 보여준다.
 
-하지만 reference-couting 은 조금 불편하다. 사용자가 직접 카운트를 관리해야하는 것은 결국 메모리 관리 전략을 직접 짜는것이기 때문이다. 그 후 1990년 대 후반에 등장한 언어들은 전부 garbage-collector 개념을 차용했는데 대표적인 언어가 위에서도 언급한 JAVA 와 C# 이다. 현재 두 언어 모두 Generational GC 방식을 사용한다. 세대별로 사용하는 메모리를 나누어 관리하는 방식인데, 우리는 이 방식을 알아보기 전에 garbage-collector 의 기본적인 개념부터 살펴볼 것이다.
+하지만 reference-couting 은 조금 불편하다. 사용자가 직접 카운트를 관리해야하는 것은 결국 메모리 관리 전략을 직접 짜는것이기 때문이다. 그 후 1990년 대 후반에 등장한 언어들은 전부 garbage-collector 개념을 차용했는데 대표적인 언어가 위에서도 언급한 JAVA 와 C# 이다. 그 이후에도 많은 고수준 언어들이 GC 개념을 차용했다. 그 중 우리는 Unity 에서 쓰이는 garbage-collector 의 개념에 대해서 알아볼 것이다.
+
+## Mono-runtime 에서의 garbage-collector
+
+Unity 는 여러 언어를 지원하기 위해
+현재 Mono 4.X 버젼에서는 _SGen_ 이라는 이름을 가진 garbage-collector 알고리즘을 사용한다. 하지만 Unity 5.x 버젼에서는 Mono-runtime 의 버젼이 낮아 이전에 쓰던 _Boehm_ garbage-collector 알고리즘을 사용한다.
 
 ## Mark and Sweep
 
@@ -57,27 +62,45 @@ mark and sweep 은 garbage-collector 방식 중에 시초가 되는 방식이며
 
 garbage-collector 가 메모리들을 정리할 때가 되어 사용되지 않는 메모리들을 전부 쓸어서(sweep) 정리한다. 이것이 mark and sweep 의 개념이다.
 
+## Boehm
+
 ## Generational GC : 세대 단위 가비지 컬렉터
 
+## SGen
+
+## Unity 스크립팅에서 실질적인 가비지 컬렉션 원인
+
+### ToString(), ToArray() 등의 컨테이너 컨버팅 메소드
+
+대안 : 참조 방식으로 데이터 가져오는 메소드가 가끔있음
+
+### string + 연산자 사용
+
+대안(string.Format, StringBulider)
+
+### 언박싱,박싱
+
+대안(Generic 사용)
+
 <!--
-   가비지 컬렉션 개요?
+ok  가비지 컬렉션 개요?
 
-   혼자서 관리하기
-   REF-Count 방식
-   mark-sweep(-compact) 방식
-   Generational 방식
+ok  혼자서 관리하기
+ok  REF-Count 방식
 
-   Mono-Runtime 설명
+~~  Mono-Runtime 설명
 
-   Mono Boehm 가비지 컬렉션 작동 원리
-   Mono SGen 가비지 컬렉션 작동 원리
+~~  mark-sweep(-compact) 방식
+xx  Mono Boehm 가비지 컬렉션 작동 원리
+xx  Generational 방식
+xx  Mono SGen 가비지 컬렉션 작동 원리
 
-   실질적인 가비지 컬렉션 원인
-    - ToString(), ToArray() 등의 컨테이너 컨버팅 메소드 : 대안(참조 방식 가져오는게 있음)
-    - string + operator : 대안(string.Format, StringBulider)
-    - 언박싱,박싱(유니티 코루틴에서 언박싱 발생) : 대안(Generic 사용)
+~~  Unity 스크립팅의 실질적인 가비지 컬렉션 원인
+~~    - ToString(), ToArray() 등의 컨테이너 컨버팅 메소드 : 대안(참조 방식 가져오는게 있음)
+~~    - string + operator : 대안(string.Format, StringBulider)
+~~    - 언박싱,박싱(유니티 코루틴에서 언박싱 발생) : 대안(Generic 사용)
 
-  IDisposable, using keyword
+xx  IDisposable, using keyword
 -->
 
 ## 참조
@@ -86,13 +109,17 @@ garbage-collector 가 메모리들을 정리할 때가 되어 사용되지 않�
 - [참조 횟수 계산 방식](https://ko.wikipedia.org/wiki/%EC%B0%B8%EC%A1%B0_%ED%9A%9F%EC%88%98_%EA%B3%84%EC%82%B0_%EB%B0%A9%EC%8B%9D)
 - [MSDN : 가비지 수집기 기본 및 성능 힌트](https://msdn.microsoft.com/ko-kr/library/ms973837.aspx)
 - [C# GC](http://ronniej.sfuh.tk/c-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC-%EC%A3%BC%EA%B8%B0-%EC%8A%A4%EC%BD%94%ED%94%84-%EA%B0%80%EB%B9%84%EC%A7%80-%EC%BB%AC%EB%A0%89%EC%85%98-lifetime-scope-garbage-collection/)
-- [NAVER D2 : JAVA garbage collector](http://d2.naver.com/helloworld/1329)
+- [Mono support languages](http://www.mono-project.com/docs/about-mono/languages/)
+
 - [Boehm garbage collector](https://en.wikipedia.org/wiki/Boehm_garbage_collector)
 - [Boehm-Demers-Weiser GC in C/C++](https://github.com/ivmai/bdwgc)
 - [Mono GC](http://www.mono-project.com/docs/advanced/garbage-collector/sgen/)
 - [Mono working with SGen](http://www.mono-project.com/docs/advanced/garbage-collector/sgen/working-with-sgen/)
-- [Wikipedia : Reification](https://en.wikipedia.org/wiki/Reification_(computer_science))
+- [SGen](https://schani.wordpress.com/2010/12/20/sgen/)
+
+- [NAVER D2 : JAVA garbage collector](http://d2.naver.com/helloworld/1329)
 - [Wikipedia : C#](https://en.wikipedia.org/wiki/C_Sharp_(programming_language))
+- [Wikipedia : Reification](https://en.wikipedia.org/wiki/Reification_(computer_science))
 
 ## 참조 문서 다운로드 링크
 
