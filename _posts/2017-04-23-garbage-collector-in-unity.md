@@ -93,6 +93,8 @@ garbage-collector 가 메모리들을 정리할 때가 되어 사용되지 않�
 - [Mono working with SGen](http://www.mono-project.com/docs/advanced/garbage-collector/sgen/working-with-sgen/)
 - [Wikipedia : Reification](https://en.wikipedia.org/wiki/Reification_(computer_science))
 - [Wikipedia : C#](https://en.wikipedia.org/wiki/C_Sharp_(programming_language))
+- [SGen](https://schani.wordpress.com/2010/12/20/sgen/)
+- [SGen write barrier](https://schani.wordpress.com/2012/12/18/sgen-write-barrier/)
 
 ## 참조 문서 다운로드 링크
 
