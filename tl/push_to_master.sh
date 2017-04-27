@@ -1,4 +1,3 @@
-echo "$TRAVIS_BRANCH"
 if [ "$TRAVIS_BRANCH" == "source" ]
 then
   cd _site
