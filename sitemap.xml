@@ -53,6 +53,10 @@
 <lastmod>2017-04-21T00:00:00+00:00</lastmod>
 </url>
 <url>
+<loc>https://hrmrzizon.github.io/2017/04/23/garbage-collector-in-unity/</loc>
+<lastmod>2017-04-23T00:00:00+00:00</lastmod>
+</url>
+<url>
 <loc>https://hrmrzizon.github.io/about/</loc>
 </url>
 <url>
@@ -93,6 +97,9 @@
 </url>
 <url>
 <loc>https://hrmrzizon.github.io/categories/mono/</loc>
+</url>
+<url>
+<loc>https://hrmrzizon.github.io/categories/gc/</loc>
 </url>
 <url>
 <loc>https://hrmrzizon.github.io/posts/2/</loc>
