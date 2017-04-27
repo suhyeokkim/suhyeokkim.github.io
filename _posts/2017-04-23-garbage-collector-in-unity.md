@@ -53,66 +53,73 @@ Mono 2.8 이하 버젼에서는 _Boehm-Demers-Weiser_(이하 _Boehm_) 라는 이
 
 보다시피 GC 항목에는 _Include Boehm_ 이라고 쓰여 있다. 이 구버젼의 Mono 는 언제부터 유지되었는지 정확한 날짜는 모르겠다. 하지만 Unity 3.X 버젼부터 계속 유지되어온 것같다. 안정성 문제를 따져보면 Mono 2.8 이 릴리즈 된지는 7년이 지나고 있다. 개선이 된지 한참이 지났을텐데 왜 패치를 안하는지는 모르겠다. 이는 일부 사용자들에게 꽤나 많은 원성을 그전부터 계~속 받고 있었다.([SCRIPTING: GARBAGE COLLECTION SGEN-GC](https://feedback.unity3d.com/suggestions/scripting-garbage-collection-sg) : 2010년에 올라온 글이다.)
 
-그나마 다행인 것은 최근 Unity 에서는 Mono 버젼업을 하겠다는 의지를 보였다. Unity 5.5 버젼에서는 Mono 컴파일러 버젼업을 했으며, 당장은 아니지만 이전에 Mono 업데이트를 하겠다는 글이 올라왔었다.([joins-the-net-foundation](http://blogs.unity3d.com/2016/04/01/unity-joins-the-net-foundation/)) 하지만 가장 최근에 릴리즈된 5.6 버젼에서는 Mono-runtime 자체는 그대로 구버젼을 쓰고 있다.
+그나마 다행인 것은 최근 Unity 에서는 Mono 버젼업을 하겠다는 의지를 보였다. Unity 5.5 버젼에서는 Mono 컴파일러 버젼업을 했으며, 당장은 아니지만 이전에 Mono 업데이트를 하겠다는 글이 올라왔었다.([joins-the-net-foundation](http://blogs.unity3d.com/2016/04/01/unity-joins-the-net-foundation/)) 하지만 가장 최근에 릴리즈된 5.6 버젼에서는 Mono-runtime 자체는 그대로 구버젼을 쓰고 있다. 일단은 기다려 보자.
 
-## SGen 에서 쓰이는 garbage-collector 알고리즘
+현재 Unity 에서 쓰이는 Mono-runtime 에 대해서 알아보았다. 아래에서는 언제가 될지 모르는 Mono 프레임워크 업데이트에 대비해 _SGen_ 의 간단한 동작방식과 쓰이는 여러 알고리즘에 대해서 알아볼것이다.
 
-Simple Generational GC 개념에서는 전통적으로 많이 쓰이는 3개의 알고리즘을 사용한다. 각각의 개념에 대해서 간단하게 알아보자.
+## SGen 에서 쓰이는 GC 알고리즘
 
-<!--
-    mark-and-sweep
-    copying
-    coloring
-    generational : nursery, major heap
--->
+SGen 에서는 전통적으로 많이 쓰이는 여러 알고리즘을 사용한다. 대부분 대중적으로 많이 알려진 알고리즘을 채용해 알아두면 꽤 많은 도움이 될것이다.
 
-### Mark-and-Sweep
+### _mark-and-sweep_ GC
 
-mark-and-sweep 은 GC 알고리즘 중에서도 시초가 되는 알고리즘이며, 가장 간단한 GC 방법이다. 이름만 살펴보면 표시하고(mark) 쓸어담기(sweep) 로 알 수 있는데 조금 더 풀어보면, 메모리가 부족하거나 안쓰는 메모리를 없에야 할 때 사용하는 메모리를 표시하고(mark) 표시가 해제된 메모리 영역을 쓸어담아(sweep) 청소하는 방식이라 할 수 있다. 그림으로 표현하자면
+_mark-and-sweep_ 은 GC 알고리즘 중에서도 시초가 되는 알고리즘이며, 가장 간단한 GC 방법이다. 이름만 살펴보면 표시하고(_mark_) 쓸어담기(_sweep_) 로 알 수 있는데 조금 더 풀어보면, 메모리가 부족하거나 안쓰는 메모리를 없에야 할 때 사용하는 메모리를 표시하고(_mark_) 표시가 해제된 메모리 영역을 쓸어담아(_sweep_) 청소하는 방식이라 할 수 있다. 그림으로 표현하자면
 
 ![mark and sweep 0](/images/mark_and_sweep_0.png){: .center-image }
 
-어플리케이션 메모리에서 새롭게 오브젝트가 생성 되었을 때의 상태를 표시했다. 상자들에 붙어 있는 초록색 번개는 사용중인 오브젝트를 표시(mark)한 것이다. 보통은 오브젝트 한개당 1bit 를 사용한다.
+어플리케이션 메모리에서 새롭게 오브젝트가 생성 되었을 때의 상태를 표시했다. 상자들에 붙어 있는 초록색 번개는 사용중인 오브젝트를 표시(_mark_)한 것이다. 보통은 오브젝트 한개당 1bit 를 사용한다.
 
 ![mark and sweep 1](/images/mark_and_sweep_1.png){: .center-image }
 
-꽤 시간이 GC 가 쓸기(sweep) 행동을 하여 사용되지 않는 오브젝트를 청소하려 했으나 아무것도 없어 그냥 넘어가고, Object2 가 더 이상 참조되지 않아 Object2 를 사용되지 않는다고 표시(mark) 하였다.
+꽤 시간이 GC 가 쓸기(_sweep_) 행동을 하여 사용되지 않는 오브젝트를 청소하려 했으나 아무것도 없어 그냥 넘어가고, Object2 가 더 이상 참조되지 않아 Object2 를 사용되지 않는다고 표시(_mark_) 하였다.
 
 ![mark and sweep 2](/images/mark_and_sweep_2.png){: .center-image }
 
-GC 가 메모리들을 정리할 때가 되어 사용되지 않는 메모리들을 전부 쓸어서(sweep) 정리한다. 이것이 mark-and-sweep 의 개념이다. _Boehm_ GC 은 이 mark-and-sweep 을 기본 개념으로 채용하는 알고리즘이다. 또한 가장 오래된 알고리즘으로써 개량된 여러 버젼의 알고리즘이 꽤 많이 존재한다.([mark-and-compact](https://en.wikipedia.org/wiki/Mark-compact_algorithm))
+GC 가 메모리들을 정리할 때가 되어 사용되지 않는 메모리들을(_unreachable_) 전부 쓸어서(_sweep_) 정리한다. 이것이 _mark-and-sweep_ 의 개념이다. _Boehm_ GC 은 이 _mark-and-sweep_ 을 기본 개념으로 채용하는 알고리즘이다.
 
-### Copying
+기본적인 _mark-and-sweep_ 은 두가지 문제를 가지고 있다. _sweep_ 단계에서 모든 개체들을 추적하여 체크해야 하는것이 있고, 메모리 단편화에([Wiki : Memory Fragmentation](https://en.wikipedia.org/wiki/Fragmentation_%28computing%29)) 대한 대책이 없다. 첫번째 문제는 _Generation GC_ 에서 확인하고, 두번째 메모리 단편화에 대한 문제에 대해 알아보자. 아래 그림을 보면된다.
 
-<!--
-Copying
+| ![fragmentation](/images/fragmentation.png) |
+| :-----: |
+| [출처 : brewmp developer site](https://developer.brewmp.com/resources/tech-guides/memory-and-heap-technology-guide/high-level-architecture/memory-fragmentation) |
+| |
 
-Traditional mark-and-sweep has two main weaknesses. First, it needs to visit all objects, including the unreachable ones. Second, it can suffer from memory fragmentation like a malloc/free allocator.
+위 그림은 1,2,3,4 숫자 순서대로 실행되는 그림인데, 저 순서대로 진행되어 중간중간에 16kb 가 비게 되어 메모리가 조각난다면(fragmentation), 16kb 보다 더 큰 메모리를 한꺼번에 할당할 때 문제가 생긴다. 그래서 상용에서 쓰이는 GC 가 _mark-and-sweep_ 을 사용했을 때에 대비한 많은 해결책이 있는데,  단점을 보완한 개량된 여러 버젼의 알고리즘이 꽤 많이 존재한다. _mark-and-sweep_ 자체를 개량한 [_mark-and-compact_](https://en.wikipedia.org/wiki/Mark-compact_algorithm) 알고리즘이 _mark-and-sweep_ 과 가까운 알고리즘이다. 하지만 _SGen_ 은 다른 알고리즘을 사용했다.
 
-A copying collector addresses both problems by copying all reachable objects to a new memory region, allocating them linearly one after the other. The old memory region can then be discarded wholesale. The classic copying collector is the so calle  “semi-space” algorithm where the heap is divided into two halves. Allocation is done linearly from one half until it is full, at which point the collector copies the reachable objects to the second half. Allocation proceeds from there and at the next collection the now empty first half is used as the copying destination, the so-called “to-space”.
+### _Copying_ GC
 
-Since with a copying collector objects change their addresses it is obvious that the collector also has to update all the references to the objects that it moves. In Mono this is not always possible because we cannot in all cases unambiguously identify whether a value in memory (usually on the stack) is really a reference or just a number that points to an object by coincidence. I will discuss how we deal with this problem in a later installment of this series.
--->
+한글로는 객체 이동 기법이라 하고, 영어로는 "_Copying_" 이라고 한다. _mark-and-sweep_ 에서 중간 중간 비는 메모리 파편화(fragmentation)를 메커니즘을 바꾸어 해결한 케이스인데 자세한 사항은 아래 그림을 보자.
 
-### Coloring
+| ![copying](/images/copying_garbage_collection.svg){: .center-image } |
+| :-----: |
+| [출처 : memorymanagement.org](http://www.memorymanagement.org/) |
+| |
 
-<!--
-Coloring
+위 그림에서는 3단계를 나누어 _Copying_ GC 를 설명하고 있는데, 쓰레기 수집(collection) 전에 이미 흰색으로 마크된 닿을 수 없는(unreachable), 버려진 메모리와 현재 사용중인 메모리가 한 공간에 존재한다. 또한 첫번째 그림에는 없지만 현재 실제로 사용하는 메모리가 있는 공간 외에도 같은 크기의 크기를 가진 공간이 하나 더 존재한다. 두번째 그림을 보면 이해가 갈것이다. 쓰레기 수집(collection) 을 하게 되면, 사용하던 메모리들이 존재하던 공간말고 다른 공간에 사용하던 메모리들만 복사한다. 이때 버려진(unreachable, dead) 메모리들은 복사하지 않는다. 복사 과정이 끝나면 기존에 있던 메모리 정보들은 싹다 지운다. 다음 쓰레기 수집(collection) 과정에서 싹다 지워버린 공간(남겨진 공간)으로 복사 후 쓰던 공간을 지우는 것을 반복한다. 이렇게 복사(copying)하고, 지우고 하는 과정이 무한 반복되는 방법이 _Copying_ GC 알고리즘이다.
 
-The collection process can be thought of as a coloring game. At the start of the collection all objects start out as white. First the collector goes through all the roots and marks those gray, signifying that they are reachable but their contents have not been processed yet. Each gray object is then scanned for further references. The objects found during that scanning are also colored gray if they are still white. When the collector has finished scanning a gray object it paints it black, meaning that object is reachable and fully processed. This is repeated until there are no gray objects left, at which point all white objects are known not to be reachable and can be disposed of whereas all black objects must be considered reachable.
+### _Generational_ GC
 
-One of the central data structures in this process, then, is the “gray set”, i.e. the set of all gray objects. In SGen it is implemented as a stack.
--->
+위에서 GC 알고리즘 2가지에 대해서 알아 보았는데, 두 방법들이 메모리를 직접 관리하는 방법에 대한 것이라면, _Generational_ GC 의 접근 방법은 조금 다르다. 일반적인 메모리의 생명 주기는 아주 짧게 있다가 사라지거나, 아주 오랜 기간 동안 쓰인다. 그래서 힙을 두개 이상의 세대(_Generational_)로 나누어 다른 방식으로 관리하는 "_generational hypothesis_"(세대 별 가설) 을 사용하는 것이 _Generational_ GC 의 기본적인 접근 방식이다.
 
-### Generational GC
+세대 별 가설은 구현된 플랫폼, 언어 별로 다 다르다. 하지만 여러 사례들을 보고 전체적으로 살펴보면 크게 다를 바는 없다.(물론 세부 구현은 다르겠지만) 이 글에서는 _SGen_ 만 살펴보도록 하겠다. _SGen_ 의 전체 이름은 _Simple Generational_ GC 다. 세대 구성이 간단하다는 뜻을 가지고 있는데, 이름과 같이 아주 여러개의 세대를 가지고 있는게 아니라 딱 2개의 세대로만 분리한다. 하나는 _Nursery_ 이고, 나머지 하나는 _Major Heap_ 이다. 우선 _Nursery_ 부터 알아보자.
 
-<!--
-Generational garbage collection
+_Nursery_ 는 아기방, 보육원 이런 늬앙스를 가지고 있는데 뜻과 같이 처음 생겨나는 메모리 개체가 생성되는 세대다. _Nursery_ 의 전략은 빠르게 사라지는 메모리들을 수집하고, 유지되는 메모리 개체들을 상위 세대에 빠르게 올리는 목적이라 쓰레기 수집(GC)의 빈도가 높다. 메모리 개체가 일정 기간 동안 혹은 일정 GC 횟수가 지나고 살아 남아 있다면 상위 세대로 승진(_promote_) 시킨다. 바로 _Major Heap_ 으로 말이다. 참고로 두 세대의 용도가 다르므로 _Nursery_ 와 _Major Heap_ 은 수집 알고리즘이 조금 다르다.
 
-It is observed that for most workloads the majority of objects either die very quickly or live for a very long period of time. One can take advantage of this so-called “generational hypothesis” by dividing the heap into two or more “generations” that are collected at different frequencies.
+아래에 간단하게 _SGen_ 의 동작 방식을 그림으로 살펴보자.([Working with SGen](http://www.mono-project.com/docs/advanced/garbage-collector/sgen/working-with-sgen/))
 
-Objects begin their lives in the first generation, also referred to as the “nursery”. If they manage to stick around long enough they get “promoted” to the second generation, etc. Since all objects are born in the nursery it grows very quickly and needs to be collected often. If the generational hypothesis holds only a small fraction of those objects will make it to the next generation so it needs to be collected less frequently. Also, it is expected that while only a small fraction of the objects in the nursery will survive a collection, the percentage will be higher for older generations, so a collection algorithm that is better suited to high survival rates can be used for those. Some collectors go so far as to give objects “tenure” at some point, making them immortal so they don’t burden the collection anymore.
--->
+![SGen hypothesis 1](http://www.mono-project.com/archived/images/1/15/SGenSpaces.png)
+
+가장 처음 응용 프로그램이 실행 되었을 때다. 가장 처음에는 사용하는 메모리 공간이 없으므로 모든 공간들이 비어 있다.
+
+![SGen hypothesis 2](http://www.mono-project.com/archived/images/4/43/SgenNurseryAlloc.png)
+
+실행한지 시간이 조금 지나게 되어 _Nursery_ 에 새로운 개체들이 점점 늘어난다.
+
+![SGen hypothesis 3](http://www.mono-project.com/archived/images/5/58/SgenEvacuation.png)
+
+어떤 규칙이나, 혹은 _Nursery_ 의 공간이 거의 가득 찼을 때, 쓰레기 수집을 하고 몇번의 쓰레기 수집에서 살아남은 메모리 개체들을 _Nursery_ 에서 _Major Heap_ 으로 승진시킨다. 옆의 _Large Object Space_ 는 지정된 크기(기본값은 8000바이트)를 초과하는 큰 메모리 개체들을 관리하는 공간이다.
+
+_SGen_ 에서 쓰이는 GC 알고리즘들에 대해 간단히 알아보았다. 자세히 알아보지 않는 이유는 어차피 몰라도 코드를 짤때도 몇가지 사항들만 조심한다면 크게 문제될 것은 없다. 하지만 프로그래머로써의 최소한의 상식들을 위해 알아보았다. 한가지 상식을 위해 덧붙이자면 _Boehm_ 은 _mark-and-sweep_ 을 기본 개념으로 차용한다. 아래 항목들에서는 실제 스크립팅에서 억울하게 버려지는 메모리를 발생시키는 코드들에 대해서 알아볼 것이다.
 
 ## Unity 스크립팅에서 실질적인 가비지 컬렉션 원인 및 대안
 
@@ -186,9 +193,9 @@ object o = (object)i;  // explicit boxing
 - [SGen](https://schani.wordpress.com/2010/12/20/sgen/)
 - [Unity feedback : SCRIPTING: GARBAGE COLLECTION SGEN-GC](https://feedback.unity3d.com/suggestions/scripting-garbage-collection-sg)
 - [Benchmark Boehm vs SGen using GraphDB ](http://www.schrankmonster.de/2010/09/01/taking-the-new-and-shiny-mono-simple-generational-garbage-collector-mono-sgen-for-a-walk/)
+- [Copying garbage collection](http://www.cs.cornell.edu/courses/cs312/2003fa/lectures/sec24.htm)
 - [NAVER D2 : JAVA garbage collector](http://d2.naver.com/helloworld/1329)
 - [Wikipedia : C#](https://en.wikipedia.org/wiki/C_Sharp_%28programming_language%29)
-- [Wikipedia : Reification](https://en.wikipedia.org/wiki/Reification_%28computer_science%29)
 - [MSDN : boxing and unboxing](https://msdn.microsoft.com/ko-kr/library/yz2be5wk.aspx)
 
 ## 참조 문서 다운로드 링크
