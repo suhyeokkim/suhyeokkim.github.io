@@ -30,11 +30,10 @@ exclude:
   - spec
   - textdata
   - tl
-  - "*-hidelevel-*"
 
 # Social media
-facebook_app_id: 639405536264839
-facebook_image: http://hrmrzizon.github.io/images/github_profile_image.jpg
+# facebook_app_id:
+# facebook_image:
 google_analytics: UA-93000374-1
 
 # Plugins
@@ -63,7 +62,7 @@ kramdown:
   smart_quotes: lsquo,rsquo,ldquo,rdquo
   toc_levels: 1..6
 
-# jekyll-archives
+# Jekyll archives
 jekyll-archives:
   enabled:
     - categories

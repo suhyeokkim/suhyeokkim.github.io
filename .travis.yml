@@ -3,20 +3,27 @@ sudo: false
 cache: bundler
 rvm:
   - 2.3.3
+
 before_install:
   - gem update --system
   - gem update --remote bundler
-  - chmod -R a+x "./tl"
+  - chmod -R a+x "./tl" # for shell script execute
+
 install:
   - bundle install --jobs=3 --retry=3 --path=${BUNDLE_PATH:-vendor/bundle}
+
 before_script:
   - git config --global user.name "$(git --no-pager show --no-patch --format='%an')"
   - git config --global user.email "$(git --no-pager show --no-patch --format='%ae')"
+
 script:
   - "./tl/build_script.sh"
+
 after_success:
   - "./tl/push_to_master.sh"
+
+# this blog build when source branch(for deployment) and posting branch(just check validation)
 branches:
   only:
     - source
-    - /post.*/
+    - /post-.*/

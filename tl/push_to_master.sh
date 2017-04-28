@@ -1,3 +1,10 @@
+# Travis-ci support may environment variable
+# see this for explaination(https://docs.travis-ci.com/user/environment-variables/)
+# I use token for github authorize
+# you can use password or api token
+# see this for explaination(https://docs.travis-ci.com/user/private-dependencies/)
+
+# deployment execute when branch is "source"
 if [ "$TRAVIS_BRANCH" == "source" ]
 then
   cd _site
