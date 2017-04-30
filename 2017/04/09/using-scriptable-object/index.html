@@ -23,16 +23,6 @@
 
 
   
-    <meta property="fb:admins" content="639405536264839">
-    <meta property="og:title" content="Using Scriptable Object">
-    <meta property="og:site_name" content="Appocrypha">
-    <meta property="og:url" content="https://hrmrzizon.github.io/2017/04/09/using-scriptable-object/">
-    <meta property="og:description" content="2년전 Unity 로 모바일 게임 개발을 시작했었다. 학생 시절 간단하게 게임을 만든적은 있었지만 Unity 로 게임을 만들어본 적은 한번도 없었기에 매우 어려운 도전이였다. 그래서 Unity 시스템에 대해 간단히 알고 개발을 시작했었는데 당시에는 ScriptableObject 의 기능을 모르고 있던터라 단순히 Prefab 만으로 데이터를 저장하고 있었다. 당시 만든 게임은 3D 러닝 게임이였는데, 서브웨이 서퍼과 비슷한 방식의 게임이였다. 핵심은 어떻게 맵을 계속 나타나게 하느냐 였는데, 나는 단순하게 플레이어의 위치에 따라 맵을 계속 이어붙였다. Map 은 Prefab 단위로 구성되어 있었는데, Map Prefab 에는 플레이어가 지나갈 길의 정보, 3D 메쉬 정보가 있었다. 그리고 맵 종류별로 풀링을 하여 활용했었다. 여기서 한가지 아쉬운게 있다면 Map Prefab 별로 모두 길 정보를 가지고 있는게 아쉬웠다. 프리팹은 보이는 정보만 가지고 길 정보는 따로 존재해 참조하는 방식이 조금 더 나았을 것이다. 종류 별로 반복되는 길 정보가 많았기 때문에 더욱 아쉬웠다. 위와 같이 길 정보는 따로 존재하고 맵이 길 정보를 참조하는 방식으로 말이다. 하지만 위와 같은 방식을 고안하더라도 실제로 구현할 방법을 몰랐기 때문에 방치했었다. 하지만 지금은 독립적으로 존재하는 데이터 에셋을 만드는 방법을 알고 있다. 그건 바로 ScriptableObject 라는 에셋 타입이다.">
-    
-    
-      <meta property="og:image" content="http://hrmrzizon.github.io/images/github_profile_image.jpg">
-    
-  
   <meta name="twitter:card" content="summary">
   
   <meta name="twitter:title" content="Using Scriptable Object">

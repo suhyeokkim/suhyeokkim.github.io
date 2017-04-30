@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-04-30T06:01:37+00:00</updated>
+  <updated>2017-04-30T10:06:13+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -185,6 +185,110 @@ branches:
 
       
         <summary type="html">Travis-CI : Continuous Intergration 다른 Github Repository 를 살펴보면서 많은 곳에서 Travis-CI 를 사용하고 있어 한번 시도해 보았다. 블로그를 만들기 이전부터 CI 에 대한 소식은 많이 들었지만 직접 사용해보는 것은 처음이였다. 약간 삽질을 했지만 영어만 읽을 줄 안다면 필요 없는 삽질이였다. 삽질할 때는 몰랐지만 Travis-CI 에서 제공하는 웹 문서들이 꽤 친절하게 되어있어 잘 읽고 따라하면 문제없이 세팅을 할 수 있을것이다. 물론 영어다.(Documentation) Travis-ci 는 Github 과 연동하여 사용할 수 있는 CI 서비스다. Jenkins씨 처럼 직접 사용환경을 만드는게 아니기 때문에 상당히 편하다. 또한 Travis-ci 는 빌드스크립트를 사용해서 빌드를 해주기 때문에 처음 사용하기엔 약간 불편하지만 “스크립트” 이기 때문에 강력한 범용성을 가진다. 현재 이 블로그에서는 Travis-ci 를 통해 유효성을 검증한 후에 실제 서비스하는 브랜치로 방법이 Travis-ci 빌드스크립트에 적용되어 있다. whiteglass 에 기본적으로 되어 있어 처음에는 의아했는데 꽤 괜찮은 아디이어여서 현재도 쓰고 있는 방법이다. Travis-ci 를 연동하고 활용하는 방법에 대해서 알아보자.</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Usage Of Enumerator</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/04/28/usage-of-enumerator/" rel="alternate" type="text/html" title="Usage Of Enumerator" />
+      <published>2017-04-28T00:00:00+00:00</published>
+      <updated>2017-04-28T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/04/28/usage-of-enumerator</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/04/28/usage-of-enumerator/">&lt;p&gt;C# 언어에는 IEnumerator 를 사용한 몇몇의 기능들이 존재한다. List 같은 컨테이너부터 코드로 반복기를 만들어 제어하는 기능 등 여러가지를 제공하는데 그것들에 대하여 한번 알아보자.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;h2&gt;&lt;strong&gt;IEnumerator&lt;/strong&gt; 가 무엇인가요?&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;IEnumerator&lt;/strong&gt; 는 단순한 반복의 개념을 인터페이스로 정의해놓은 것이다. 아래 코드에 정의를 가져왔다.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c#&quot; data-lang=&quot;c#&quot;&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IEnumerator&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Current&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;MoveNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Reset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;단순한 인터페이스다. 총 세가지 종류의 필드와 메소드가 있는데, &lt;em&gt;Current&lt;/em&gt; 는 반복을 하는 중 현재 가리키는 항목을 가리키는 필드다. &lt;em&gt;MoveNext&lt;/em&gt; 는 다음 항목으로 이동하는 메소드인데, 다음 항목으로 더 이상 이동할 수 없으면 false 를 반환한다. &lt;em&gt;Reset&lt;/em&gt; 은 계속 반복하던 것을 초기값으로 설정하는 메소드이다. 이렇게 설명만 나열해 놓으면 이해하기 어려우니 가장 접하기 쉬운 예제를 하나 보자. 아마 본적이 있을 수도 있다.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c#&quot; data-lang=&quot;c#&quot;&gt;&lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;integerList&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;();&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;integerList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;integerList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;integerList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;integerList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;IEnumerator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;enumerator&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;integerList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetEnumerator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;enumerator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;MoveNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;WriteLine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;enumerator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Current&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;\\n&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;위 예제는 &lt;em&gt;int&lt;/em&gt; 값을 연속적으로 가지고 있는 &lt;em&gt;integerList&lt;/em&gt; 에서 __IEnumerator&lt;int&gt;__ 를 생성해 _integerList_ 의 값을 순서대로 화면에 찍는 코드다. 우리가 주목할 부분은 새롭게 __IEnumerator&lt;int&gt;__ 를 생성하는 코드부터다. 생성 후 enumerator 의 _MoveNext_ 다음 항목으로 가는 메소드를 호출한다. 이때 다음으로 이동하지 못하면 루프를 탈출한다. 그 다음 _Console.WriteLine_ 함수에 _enumerator.Current_ 의 값을 넣어주어 화면에 출력한다.&lt;/int&gt;&lt;/int&gt;&lt;/p&gt;
+
+&lt;p&gt;이렇게 &lt;strong&gt;IEnumerator&lt;/strong&gt; 는 세가지 필드와 메소드로 컨테이너의 반복을 보여주었다. C# 에서 지원하는 대부분의 컨테이너는 &lt;strong&gt;IEnumerator&lt;/strong&gt; 의 서브클래스를 지원하여 반복해서 데이터들을 참조할 수 있게 해준다.&lt;/p&gt;
+
+&lt;p&gt;하지만 여기서 &lt;strong&gt;IEnumerator&lt;/strong&gt; 의 활용이 끝나는 것은 아니다. C# 은 단순한 데이터의 반복을 코드로도 지원하기 위해 반복기라는 개념을 구현해 놓았다.&lt;/p&gt;
+
+&lt;h2&gt;반복기는 또 뭔가요?&lt;/h2&gt;
+
+&lt;p&gt;위에서는 구현되어 있는 컨테이너에서 &lt;strong&gt;IEnumerator&lt;/strong&gt; 객체를 가져와서 사용했다면, 이번에는 코드로 반복하는 개념을 만들어 볼 수도 있다. 아래 코드를 보자.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c#&quot; data-lang=&quot;c#&quot;&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Collections&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IEnumerator&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;GetEnumerator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;++)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;yield&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;PrintNumbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;IEnumerator&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;enumerator&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;GetEnumerator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;enumerator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;MoveNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;WriteLine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;enumerator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Current&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;\\n&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;이 코드를 돌려보면 아마 0 부터 9까지 출력되는 모습을 볼 수 있을 것이다. 처음 보는 키워드에 당황할 수도 있지만 당황하지 말고 천천히 살펴보자. 일단 출력하는 코드는 위쪽에 있는 예제와 같다. 우선 반복은 똑같이 한다는 것을 알 수 있다. 하지만 처음 보는 키워드는 당최 이해하기 조금 힘들다. &lt;em&gt;return&lt;/em&gt; 키워드는 반환값을 메소드 밖으로 반환하고 메소드를 종료하는 것에 보통 쓰이는데 저기 쓰여 있는 &lt;em&gt;yield return i&lt;/em&gt; 는 메소드를 종료하는 것처럼 보이지는 않는다. 결과값는 0 부터 9 까지 출력되고 &lt;em&gt;yield return i&lt;/em&gt; 는 0 부터 9 까지의 값을 반환하니 말이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/csharp_iterator_run.png&quot; alt=&quot;Iterator Run Diagram&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;위 그림에 반복기가 &lt;em&gt;MoveNext&lt;/em&gt; 를 호출했을 때 하는 행동에 대해서 나와있다. &lt;em&gt;MoveNext&lt;/em&gt; 메소드를 호출하면 &lt;em&gt;yield return&lt;/em&gt; 구문이 나오거나 코드가 끝날 때까지 실행한다. &lt;em&gt;yield return&lt;/em&gt; 구문이 나와서 뭔가 반환하면 그 값을 &lt;strong&gt;IEnumerator&lt;/strong&gt;.&lt;em&gt;Current&lt;/em&gt; 에 넣는다. 그리고 true 를 반환하고 끝낸다. &lt;em&gt;yield return&lt;/em&gt; 구문이 안나오고, 코드가 끝이나면 false 를 반환하고 끝난다. 결국 반복기의 제어는 &lt;em&gt;MoveNext&lt;/em&gt; 에 달려있는 셈이다. 그리고 &lt;strong&gt;IEnumerator&lt;/strong&gt;.&lt;em&gt;Reset&lt;/em&gt; 은 반복기에서는 지원이 안된다.&lt;/p&gt;
+
+&lt;h2&gt;참조&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/system.collections.ienumerator.aspx&quot;&gt;MSDN : IEnumerator 인터페이스&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/65zzykke.aspx&quot;&gt;MSDN : 반복기 사용&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="c#" />
+      
+
+      
+
+      
+        <summary type="html">C# 언어에는 IEnumerator 를 사용한 몇몇의 기능들이 존재한다. List 같은 컨테이너부터 코드로 반복기를 만들어 제어하는 기능 등 여러가지를 제공하는데 그것들에 대하여 한번 알아보자.</summary>
       
 
       
