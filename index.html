@@ -115,94 +115,6 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
-            <a class="post-link" href="/2017/04/28/using-travis-ci/">Using Travis Ci</a>
-          </h1>
-
-          <p class="post-meta">Apr 28, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/makeblog/">makeblog</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/try/">try</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <h2>Travis-CI : Continuous Intergration</h2>
-
-<p>다른 Github Repository 를 살펴보면서 많은 곳에서 Travis-CI 를 사용하고 있어 한번 시도해 보았다. 블로그를 만들기 이전부터 CI 에 대한 소식은 많이 들었지만 직접 사용해보는 것은 처음이였다. 약간 삽질을 했지만 영어만 읽을 줄 안다면 필요 없는 삽질이였다. 삽질할 때는 몰랐지만 Travis-CI 에서 제공하는 웹 문서들이 꽤 친절하게 되어있어 잘 읽고 따라하면 문제없이 세팅을 할 수 있을것이다. 물론 영어다.(<a href="https://docs.travis-ci.com/">Documentation</a>)</p>
-
-<p>Travis-ci 는 Github 과 연동하여 사용할 수 있는 CI 서비스다. Jenkins씨 처럼 직접 사용환경을 만드는게 아니기 때문에 상당히 편하다. 또한 Travis-ci 는 빌드스크립트를 사용해서 빌드를 해주기 때문에 처음 사용하기엔 약간 불편하지만 “스크립트” 이기 때문에 강력한 범용성을 가진다.</p>
-
-<p>현재 이 블로그에서는 Travis-ci 를 통해 유효성을 검증한 후에 실제 서비스하는 브랜치로 방법이 Travis-ci 빌드스크립트에 적용되어 있다. <a href="https://github.com/yous/whiteglass">whiteglass</a> 에 기본적으로 되어 있어 처음에는 의아했는데 꽤 괜찮은 아디이어여서 현재도 쓰고 있는 방법이다.</p>
-
-<p>Travis-ci 를 연동하고 활용하는 방법에 대해서 알아보자.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/04/28/using-travis-ci/">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
             <a class="post-link" href="/2017/04/23/garbage-collector-in-unity/">Garbage Collector In Unity</a>
           </h1>
 
@@ -1092,6 +1004,117 @@
         
           <p class="post-continue">
             <a href="/2017/03/13/csharp-class-method-extension/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/03/12/unity-texture-compression-3-erricson-texture-compression-2/">Unity Texture Compression 3 Erricson Texture Compression 2</a>
+          </h1>
+
+          <p class="post-meta">Mar 12, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/texture-compression/">texture_compression</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/analysis/">analysis</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>모든 내용은 전부 Jacob Ström 홈페이지의 자료등을 참고했습니다.(<a href="http://www.jacobstrom.com/output.html">http://www.jacobstrom.com/output.html</a>)</p>
+
+<h2>3. ETC2</h2>
+
+<p>ETC2 는 ETC 에서 블록의 모드를 더 추가해 다양한 방식으로 표현할 수 있는 텍스쳐 압축 방식이다. 다른 압축 방식들에서는 잉여 공간을 활용해 다른 데이터의 표현 수단으로 사용한 것을 보고, 고안해낸 사람은 ETC 에서도 같은 방식으로 잉여 공간을 찾아 활용할 계획을 한것 같다. 남는 공간은 없었지만 유효하지 않은(invalid) 비트 공간을 활용해 노말 모드, 동차(difference) 모드 외에도 세가지의 표현 방식을 추가했다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/03/12/unity-texture-compression-3-erricson-texture-compression-2/">Read on &rarr;</a>
           </p>
         
       </li>
