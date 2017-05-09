@@ -9,9 +9,9 @@ categories:
 
 
 <!--
-  make simple 3d rendring source
-  - mesh construction(verices, indecies, uv)
-  - rig, animate
+  texture compression
+  forward lighting, deffered lighting
+  batching, drawcall, setpass
 -->
 
 # 참조
