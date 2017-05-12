@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-05-12T04:12:41+00:00</updated>
+  <updated>2017-05-12T04:20:30+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -46,15 +46,15 @@
 
 &lt;p&gt;우선 외부 파일을 세팅하기전에 Unity 프로젝트에서 간단한 세팅을 해주어야 한다. 우선 상위 메뉴의 Edit -&amp;gt; ProjectSettings -&amp;gt; Editor 를 선택해 Inspector 창을 보자. 아래 방법을 따라하면 된다.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/unity-edit-ps-editor.png&quot; alt=&quot;Unity Go to editor&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/unity-edit-ps-editor.png&quot; alt=&quot;Unity Go to editor&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;그러면 여러 설정이 뜨는데 여기서 두가지면 살펴보면 된다. 첫번째는 Version control 이라는 항목이다. 이 항목은 VCS 을 설정하거나 Unity 에서 .meta 파일을 사용해 데이터를 저장하는 두가지의 큰 방식으로 나뉘는데 Unity Personal 에서는 VCS 를 설정하는 것은 사용할 수 없다. 그러므로 Personal 라이센스 사용자는 결국 두가지 방식 중 하나만 고르면 된다. .meta 파일을 숨김파일로 지정하느냐 일반 파일로 지정하느냐의 차이인데 Git 에서는 숨김 파일은 취급하지 않기 때문에 Visible Meta Files 옵션을 사용한다.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/unity_editor_version_control.png&quot; alt=&quot;Unity VCS Setting&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/unity_editor_version_control.png&quot; alt=&quot;Unity VCS Setting&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;두번째는 Asset Serialization 이라는 항목이다. 이 옵션은 Unity 프로젝트에서 Unity 에서 직접 지정하는 확장자가 붙은 파일들을 어떻게 취급하냐를 설정하는 옵션이다. Unity 프로젝트에서는 두가지 방식으로 파일을 취급할 수 있는데 하나는 텍스트 형식으로 취급하는 것과 하나는 바이너리 형식으로 취급하는 것이다. 옵션의 선택지를 보면 총 3가지 인데 맨처음 Mixed 는 Unity 에서 파일마다 지정한 방식대로 텍스트냐 바이너리냐를 따라가는 것이고 나머지 두개(Force Text, Force Binary)는 무조건 한가지 방식으로 모든 파일들을 통일하는 것이다. 여러 용도로 텍스트를 사용하므로 Force Text 옵션을 사용한다.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/unity_editor_asset_serialization.png&quot; alt=&quot;Unity Asset Serialization&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/unity_editor_asset_serialization.png&quot; alt=&quot;Unity Asset Serialization&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;여기까지 Unity 프로젝트에서 설정해주어야 하는 것들은 끝이다. 다음은 외부에서 설정해주어야 하는 것들을 살펴보자.&lt;/p&gt;
 
@@ -119,7 +119,7 @@ Temp/*
 
 &lt;p&gt;LFS 의 설정방법은 매우 단순하다. &lt;a href=&quot;https://git-lfs.github.com/&quot;&gt;링크&lt;/a&gt;에서 설치파일을 받아서 설치를 완료하면 알아서 설정을 해준다. 굉장히 편하다. ‘git config –system –list’ 명령어로 lfs 가 설정된 것을 확인할 수 있다.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/gitconfigsystem.png&quot; alt=&quot;Git config for lfs&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/gitconfigsystem.png&quot; alt=&quot;Git config for lfs&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;여기까지 두가지 옵션을 설정하는 방법에 대해서 알아보았다. UnityYAMLMerge 와 LFS 설정이 되어 있으면 &lt;a href=&quot;https://gist.github.com/nemotoo/b8a1c3a0f1225bb9231979f389fd4f3f&quot;&gt;.gitattributes&lt;/a&gt; 와 &lt;a href=&quot;https://www.gitignore.io&quot;&gt;.gitignore&lt;/a&gt; 파일만 Git 시스템에 넣어주면 앞으로 편하게 설정이 가능하다. 파일을 구할 수 있는 링크를 이름에 넣어놓았으니 직접 받아서 가져가면 된다.&lt;/p&gt;
 
