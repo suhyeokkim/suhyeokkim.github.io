@@ -4,6 +4,7 @@ author: "Su-Hyeok Kim"
 comments: true
 categories:
   - gpu
+  - rendering
   - try
 ---
 
