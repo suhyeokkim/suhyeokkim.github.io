@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-05-12T04:09:38+00:00</updated>
+  <updated>2017-05-12T04:12:41+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -79,13 +79,13 @@ Temp/*
 
 &lt;p&gt;위 예시들은 Unity 프로젝트에서 Git 리모트 레포지토리에 보내면 안되는 부모 디렉토리 이름들이다. Library 디렉토리는 프로젝트의 캐시 데이터로써 프로젝트를 실행하려면 Unity 에서 계산을 해서 만드는 파일이지만 굳이 없어도 알아서 만들어지기에 꼭 필요는 없는 파일이다. 자세한 사항은 &lt;a href=&quot;/2017/04/02/unity-project-directory-structue/&quot;&gt;링크&lt;/a&gt;에서 확인하라. * 의 뜻은 앞에 적어도 한개 이상의 아무 글자가 있어야 한다는 뜻이다. 즉 Library 디렉토리의 하위의 파일들을 포함한다는 뜻이고, .gitignore 파일안에 있으니 하위의 파일들을 전부 제외한다는 뜻이다.&lt;/p&gt;
 
-&lt;p&gt;이런 여러 패턴들을 저장해 쓸데없는 파일들을 스테이징 영역에 들어갈 후보에서 제외해 편하게 스테이징 작업을 할 수 있게 해준다. 거의 모든 프로젝트에서 메타파일들을 제외하기 위해 쓴다. 그만큼 굉장히 유용한 옵션이다.&lt;/p&gt;
+&lt;p&gt;이런 여러 패턴들을 저장해 쓸데없는 파일들을 스테이징 영역에 들어갈 후보에서 제외해 편하게 스테이징 작업을 할 수 있게 해준다. 거의 모든 프로젝트에서 메타파일들을 제외하기 위해 쓴다. 그만큼 굉장히 유용한 옵션이다. 그리고 굳이 하나하나 패턴을 추가해줄 필요 없이 자동으로 패턴을 가져올 수 있는 사이트가 있다. 바로 &lt;a href=&quot;https://www.gitignore.io/&quot;&gt;https://www.gitignore.io/&lt;/a&gt; 다. 여러 플랫폼을 설정해줄 수 있으니 사용하는 것에 따라 다르게 설정해주면 된다.&lt;/p&gt;
 
 &lt;h2&gt;디렉토리별 속성 지정 : .gitattributes&lt;/h2&gt;
 
 &lt;p&gt;Git 시스템은 텍스트 파일을 기준으로 만들어져 있다고 위에서 설명했었다. 그래서 파일을 병합(merge)를 할때나 비교(diff) 할 때 바이너리 파일이면 문제가 있다고도 말했다. .gitattributes 는 디렉토리나 파일 단위로 Git 에서 설정한 것과 다른 설정을 할수도 있다. 파일이 위치하는 디렉토리부터 병합 도구(mergetool)과 비교 도구(difftool) 을 확장자별로 설정할 수도 있고, 파일의 유형을 설정해서 Git 시스템이 다르게 동작하게도 할 수 있다. 즉 디렉토리별로 설정을 하는 방법이라 보면 될듯하다.&lt;/p&gt;
 
-&lt;p&gt;갑자기 .gitattributes 에 대해 설명을 하는 이유는 .gitattributes 에 Unity 에서 사용하는 전용 파일이나 용량이 큰 텍스쳐, 사운드, 영상 파일을 따로 효율적으로 관리할 수 있기 때문이다. &lt;a href=&quot;https://gist.github.com/nemotoo/b8a1c3a0f1225bb9231979f389fd4f3f&quot;&gt;링크&lt;/a&gt; 에 쓰여있는 내용을 조금 잘라서 확인해보자.&lt;/p&gt;
+&lt;p&gt;갑자기 .gitattributes 에 대해 설명을 하는 이유는 .gitattributes 에 Unity 에서 사용하는 전용 파일이나 용량이 큰 텍스쳐, 사운드, 영상 파일을 따로 효율적으로 관리할 수 있기 때문이다. &lt;a href=&quot;https://gist.github.com/nemotoo/b8a1c3a0f1225bb9231979f389fd4f3f&quot;&gt;링크&lt;/a&gt; 에 쓰여있는 내용을 조금 잘라서 확인해보자. 실제 파일로도 직접 사용하면 된다.&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;…&lt;/p&gt;
@@ -121,9 +121,13 @@ Temp/*
 
 &lt;p&gt;&lt;img src=&quot;/images/gitconfigsystem.png&quot; alt=&quot;Git config for lfs&quot; /&gt;&lt;/p&gt;
 
+&lt;p&gt;여기까지 두가지 옵션을 설정하는 방법에 대해서 알아보았다. UnityYAMLMerge 와 LFS 설정이 되어 있으면 &lt;a href=&quot;https://gist.github.com/nemotoo/b8a1c3a0f1225bb9231979f389fd4f3f&quot;&gt;.gitattributes&lt;/a&gt; 와 &lt;a href=&quot;https://www.gitignore.io&quot;&gt;.gitignore&lt;/a&gt; 파일만 Git 시스템에 넣어주면 앞으로 편하게 설정이 가능하다. 파일을 구할 수 있는 링크를 이름에 넣어놓았으니 직접 받아서 가져가면 된다.&lt;/p&gt;
+
 &lt;h2&gt;참조&lt;/h2&gt;
 
 &lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.gitignore.io&quot;&gt;www.gitignore.io&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/nemotoo/b8a1c3a0f1225bb9231979f389fd4f3f&quot;&gt;Gist : Unity .gitattributes&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://git-lfs.github.com/&quot;&gt;Git-lfs&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/Manual/SmartMerge.html&quot;&gt;Unity ref : SmartMerge&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://git-scm.com/book/ko/v2/Git%EB%A7%9E%EC%B6%A4-Git-Attributes&quot;&gt;git-scm : .gitattributes&lt;/a&gt;&lt;/li&gt;
