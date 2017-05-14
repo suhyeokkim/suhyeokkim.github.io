@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Appocrypha</title>
+  <meta name="description" content="store limitless knowledges">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://hrmrzizon.github.io/posts/2/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
+
+  <meta name="google-site-verification" content="f8AsB97UC1pp_K4EwkRaJYJZVC0P4j36RK_TGOPPGAU" />
+
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Appocrypha">
+  <meta name="twitter:description" content="store limitless knowledges">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Appocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="/edu">Edu</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="home">
+
+  
+
+  
+
+  <ul class="post-list">
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/04/07/unity-message-system/">Unity Message System</a>
+          </h1>
+
+          <p class="post-meta">Apr 7, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/mono/">mono</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/c/">c#</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/try/">try</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <h2>이름으로 메소드를 호출하다. SendMessage</h2>
+
+<p>Unity 런타임 시스템에서는 Unity 자체의 캐시 시스템을 이용하여 컴포넌트의 메소드를 문자열로 찾아 호출해주는 기능을 가지고 있다. 그중 하나는 <strong>GameObject</strong> 와 <a href="https://docs.unity3d.com/ScriptReference/Component.html"><strong>Component</strong></a> 클래스에 존재하는 <a href="https://docs.unity3d.com/kr/current/ScriptReference/GameObject.SendMessage.html"><strong>SendMessage</strong></a> 라는 메소드다. 아래와 같이 사용을 할 수 있다.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">void</span> <span class="nf">OnEnable</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="nf">SendMessage</span><span class="p">(</span><span class="s">"DoSomething"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">void</span> <span class="nf">DoSomething</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Do something!"</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>OnEnable 에서 해당 컴포넌트의 DoSomething 이라는 메소드를 찾아 호출하는 SendMessage 메소드를 호출하고, 아마 DoSomething 메소드가 호출되면서 로그가 출력될 것이다.</p>
+
+<p>Unity 에서 메세징 방식의 대표적인 사용사례는 컴포넌트 스크립팅을 할 때 항상 볼 수 있는 Start, Update 등 <a href="https://docs.unity3d.com/ScriptReference/MonoBehaviour.html">MonoBehaviour</a> 의 여러 메시지 콜백들이다. 저 메시지 콜백들을 통해 스크립트 컴포넌트는 여러 상태를 알 수 있다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/04/07/unity-message-system/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/04/05/unity-event-handling/">Unity Event Handling</a>
+          </h1>
+
+          <p class="post-meta">Apr 5, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/c/">c#</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/analysis/">analysis</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>Unity 에서 객체간의 이벤트를 처리하는 방법들을 써본다. c# 에서 지원하는 delegate, event 와 UnityEvent 를 알아볼 것이다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/04/05/unity-event-handling/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/04/02/unity-project-directory-structue/">Unity Project Directory Structue</a>
+          </h1>
+
+          <p class="post-meta">Apr 2, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/try/">try</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>Unity 프로젝트는 여러 종류의 데이터를 디렉토리로 판단해 컴파일 한다. 반대로 이 디렉토리 구조를 통해 Unity 의 컴파일 시스템을 알아볼 수도 있다. 디렉토리 구조 자체는 간단하나 숨겨진 뜻은 조금 복잡하다. 그러니 한번 알아보기로 하자.</p>
+
+<p>* 이글은  <em>Unity Personal 5.5.2f</em> 기준으로 쓰여져 있습니다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/04/02/unity-project-directory-structue/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/03/13/csharp-class-method-extension/">Csharp Class Method Extension</a>
+          </h1>
+
+          <p class="post-meta">Mar 13, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/c/">c#</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>unirx 를 살펴보다 모르는 문법이 나와서 기록해둔다. <a href="https://msdn.microsoft.com/ko-kr/library/bb383977.aspx">MSDN 확장 메서드 문서</a> 를 참고했다.</p>
+
+<h2>C# 클래스 확장 메서드</h2>
+
+<p>C# 3.0 문법부터 사용자가 기존에 정의된 클래스에 메소드를 확장 가능하게 되었다. obj-c 의 카테고리와 조금 비슷한것 같다. 자세한 사항은 코드와 함께 보자.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/03/13/csharp-class-method-extension/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/03/12/unity-texture-compression-2-erricsson-texture-compression/">Unity Texture Compression 2 Erricsson Texture Compression</a>
+          </h1>
+
+          <p class="post-meta">Mar 12, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/texture-compression/">texture_compression</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/analysis/">analysis</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>모든 내용은 전부 Jacob Ström 홈페이지의 자료등을 참고했습니다.(<a href="http://www.jacobstrom.com/output.html">http://www.jacobstrom.com/output.html</a>)</p>
+
+<hr />
+
+<h2>2. ETC(Erricsson Texture Compression)</h2>
+
+<p>처음 알아볼 압축 방식은 ETC(Erricsson Texture Comperssion) 이다. Jacob Ström<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>, Tomas Akenine-Möller 두 사람이 학부 실저에 고안해낸 PACKMAN(2004) 을 더 발전시켜 iPACKMAN(2005) 이라는 학명으로 SIGGRAPH 라는 유명한 컨퍼런스에 등장했다. 이 후 iPACKMAN 의 공식 명칭이 Errcisson Texture Compression(ETC1) 으로 되어 쓰이게 된다. ETC 를 알아보기 전, 먼저 고안된 PACKMAN 을 알아보기로 하자.</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>이 사람은 추후 ETC2 연구에도 참여하였다.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/03/12/unity-texture-compression-2-erricsson-texture-compression/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/03/11/unity-texture-compression-1-start/">Unity Texture Compression 1 Start</a>
+          </h1>
+
+          <p class="post-meta">Mar 11, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/texture-compression/">texture_compression</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/analysis/">analysis</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>Unity 로 게임을 개발하던 도중 텍스쳐 압축에 호기심이 생겨 공부하기 + 호기심을 풀기 위해 텍스쳐 압축에 대해 알아보기로 하였다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/03/11/unity-texture-compression-1-start/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/03/08/make-jekyll+github-blog-1/">Make Jekyll+github Blog 1</a>
+          </h1>
+
+          <p class="post-meta">Mar 8, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/jekyll/">jekyll</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/makeblog/">makeblog</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/try/">try</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>아는 지인이 좋다고 추천해서 jekyll+github 으로 블로그를 만들게 되었다.
+한글로 된 자료가 그리 많지 않아 직접 기록해보려 한다.</p>
+
+<h2>개요</h2>
+
+<p>원리는 간단하다. GitHub 에서 jekyll 로 만들어진 블로그 백엔드 서비스(BaaS)를 지원하고, 사용자는 일정한 형식으로 레포지토리를 구성하면 블로그가 짠! 하고 나타난다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/03/08/make-jekyll+github-blog-1/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/03/05/ue4-vs-unity5/">Ue4 Vs Unity5</a>
+          </h1>
+
+          <p class="post-meta">Mar 5, 2017 • 
+  
+  
+    
+      <a href="/categories/edu/">edu</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+      <a href="/categories/ue4/">ue4</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/analysis/">analysis</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <h3><em>이 글은 강의를 듣는 분들을 위해 작성된 심심풀이 땅콩같은 글임을 알립니다. <strong>절대</strong> 논란의 여지가 되고 싶지 않습니다.</em></h3>
+
+<p>Unity 로 게임 개발을 시작한지 약 2년이 넘었습니다. 이제 언리얼 엔진 4에 발을 들여놓으려고 합니다. 막 파악하면서 느낀 점을 적어보려고 합니다. 기존 개발을 해오던 분들과 의견이 다를수도 있으니 너그러운 마음으로 읽어주시길 바랍니다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/03/05/ue4-vs-unity5/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="pagination">
+    
+
+    
+      <a class="next" href="/">Newer &raquo;</a>
+    
+  </div>
+
+
+
+</div>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy; Su-Hyeok Kim - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
