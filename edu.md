@@ -18,7 +18,7 @@ permalink: /edu/
 ### 3D Basics in Unity
 
 - Step 1 : [Handling vertices and indices]({{ site.baseurl }}{% post_url 2017-05-14-handling-vertices-and-indices-in-unity %})
-- Step 2 : Mesh components
+- Step 2 : [Mesh components]({{ site.baseurl }}{% post_url 2017-05-14-mesh-components-in-unity %})
 - Step 3 : Handling uv and material
 - Step 4 : Handling rig and animate
 
