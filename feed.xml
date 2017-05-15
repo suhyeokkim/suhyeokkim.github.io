@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-05-15T06:53:18+00:00</updated>
+  <updated>2017-05-15T07:21:52+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -44,7 +44,7 @@
 
 &lt;p&gt;쉐이더는 다양한 방식으로 색을 입힐 수 있는데 일반적으로 쓰는 방법은 그림을 하나 가져다가 폴리곤에 그려주는 것이다. 이 그림은  텍스쳐라고 칭한다. 텍스쳐를 그릴 때는 항상 일정한 기준이 필요하다. 무턱대고 텍스쳐의 아무곳이나 그릴순 없지 않은가? 그래서 폴리곤의 정점과 상응되는 텍스쳐의 2차원 좌표가 필요하다. 이를 UV 좌표(Position) 이라고 한다. “U” 와 “V” 가 텍스쳐의 가로, 세로 위치를 나타내는 말이라 UV 좌표라고 한다.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/texturemapping.png&quot; alt=&quot;Texture mapping&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/texturemapping.png&quot; alt=&quot;Texture mapping&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;위 그림에서 UV 좌표와 폴리곤을 구성하는 정점들이 나온 모습을 볼 수 있는데, 우리가 주목할것은 왼쪽 그림이다. 삼각형이 그려져 있는데 실제로 가지고 있는 데이터는 삼각형들의 각 꼭지점을 좌표로 가지고 있다. 그리고 각 UV 좌표들은 폴리곤을 구성하는 정점들과 매칭되어 오른쪽 아래의 결과가 그려진다.&lt;/p&gt;
 
@@ -72,7 +72,7 @@
 
 &lt;p&gt;이제 &lt;strong&gt;Material&lt;/strong&gt; 하나만 남았다. 단어의 뜻은 “재료, 원료” 이런 뜻인데 색을 입히기 위한 재료라고 생각하면 편하다. 설정된 쉐이더와 쉐이더에서 필요한 여러 데이터들을 가지고 있는 Unity 의 애셋이다. 파일로도 존재할 수 있고, 런타임에서 생성해서 가지고 있을 수도 있다.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/mesh_and_materials.png&quot; alt=&quot;mesh and materials&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/mesh_and_materials.png&quot; alt=&quot;mesh and materials&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/hrmrzizon/3DBasicExample&quot;&gt;3DBasicExample&lt;/a&gt; 의 edu/mat 브랜치에 우리가 봐야할 소스들이 있다. 씬안에 MeshToolTest2 스크립트가 붙어있을 텐데 해당 스크립트안으로 들어가면 썰렁하게 한줄이 있을것이다.&lt;/p&gt;
 
@@ -136,17 +136,13 @@
 
 &lt;p&gt;이렇게 UV 좌표를 설정해주면 &lt;strong&gt;Mesh&lt;/strong&gt; 를 건드리는 일은 끝났다. 이제 &lt;strong&gt;Material&lt;/strong&gt; 에셋을 만들거나 런타임에 직접 생성해주어 &lt;strong&gt;MeshRenderer&lt;/strong&gt; 컴포넌트에 넣어주면 된다. 우선 만들어진 &lt;strong&gt;Material&lt;/strong&gt; 에셋을 &lt;strong&gt;MeshRenderer&lt;/strong&gt; 컴포넌트에 넣어보자. 실행시에 &lt;strong&gt;MeshRenderer&lt;/strong&gt; 컴포넌트가 생성되는데 이 안에 &lt;em&gt;materials&lt;/em&gt; 라는 항목이 있다. 한개가 비어있는 배열이 나올텐데, 비어있는 곳에다가 넣어주면 정상적으로 출력이 될것이다.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/empty_material.png&quot; alt=&quot;empty material&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/empty_material.png&quot; alt=&quot;empty material&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;정상적으로 출력이 되었으면 직접 &lt;strong&gt;Material&lt;/strong&gt; 을 만들어 넣어보자. Assset -&amp;gt; Create -&amp;gt; Material 메뉴를 사용하면 만들 수 있다. 또는 inspector 창에서 우클릭 후 Create -&amp;gt; Material 메뉴를 사용하라.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/create_material.png&quot; alt=&quot;Create material&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/create_material.png&quot; alt=&quot;Create material&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;이제 만들면 새로운 &lt;strong&gt;Material&lt;/strong&gt; 이 우리를 기다린다. 위에서 했던 방법으로 직접 넣어보자. 같은 방식으로 넣어주면 똑같이 나올것이다. 이렇게 &lt;strong&gt;Material&lt;/strong&gt; 을 적용하는 방법에 대해 알아보았다. 이제 UV 좌표가 뜻하는 위치를 눈으로 확인 가능하다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Cube&lt;/em&gt; 게임 오브젝트에 있는 &lt;strong&gt;MeshRenderer&lt;/strong&gt; 에 이름이 &lt;em&gt;TexColorLighting&lt;/em&gt; 인 &lt;strong&gt;Material&lt;/strong&gt; 을 넣어주어 UV 좌표가 뜻하는 위치를 다시한번 알아보자.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/cube_btn_texture.png&quot; alt=&quot;Cube&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;이제 만들면 새로운 &lt;strong&gt;Material&lt;/strong&gt; 이 우리를 기다린다. 위에서 했던 방법으로 직접 넣어보자. 같은 방식으로 넣어주면 똑같이 나올것이다. 이렇게 &lt;strong&gt;Material&lt;/strong&gt; 을 적용하는 방법에 대해 알아보았다. 이제 UV 좌표가 뜻하는 위치를 눈으로 확인 가능하다. UV 좌표를 조작하면서 어떤식으로 동작하는지 확인하는 것도 좋은 방법일 것이다.&lt;/p&gt;
 
 &lt;h2&gt;참조&lt;/h2&gt;
 
