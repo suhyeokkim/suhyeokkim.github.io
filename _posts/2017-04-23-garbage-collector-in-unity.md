@@ -23,9 +23,9 @@ void* pt = malloc(10);
 free(pt);
 {% endhighlight %}
 
-위처럼 시스템에 메모리를 요청해 직접 가져오고, 사용을 끝낸 메모리 공간들을 반환하는 시스템은 소프트웨어의 빠른 개발과 안정성을 방해한다. 메모리를 직접 관리해야 하기 때문에 메모리 관리 코드를 일일히 만들어 주어야 한다. 게다가 잘못 사용하게 되면 프로그램의 크래쉬를 유발하기까지 한다.
+위처럼 시스템에 메모리를 요청해 직접 가져오고, 사용을 끝낸 메모리 공간들을 반환하는 관리 방식은 소프트웨어의 빠른 개발을 방해한다. 메모리를 직접 관리해야 하기 때문에 메모리 관리 코드를 일일히 만들어 주어야 한다. 게다가 잘못 사용하게 되면 프로그램의 크래쉬를 유발하기까지 한다.
 
-이러한 특징 때문에 많은 언어에서는 자동으로 메모리를 관리하는 여러가지 시스템이 있었는데, 직접 관리해주는 방식에서 간단하게 변형된 메모리 관리 방식이 있다. 바로 reference-couting 방식이다.
+이러한 특징 때문에 많은 언어에서는 자동으로 메모리를 관리하는 여러가지 시스템이 있었는데, 직접 관리해주는 방식보다 조금 간단하게 변형된 메모리 관리 방식이 있다. 바로 reference-couting 방식이다.
 
 필자가 사용해본 언어에서 reference-couting 을 쓴 언어는 iOS 를 개발할 때 objective-c 를 사용해서 개발했었는데, 언어 자체에서 최상위 객체를 reference-couting 방식을 사용해 구현해 놓아서 당연히 reference-couting 방식을 사용해 개발을 해야했었다. 아래 objective-c 예제가 있다.
 
@@ -53,7 +53,7 @@ Mono 2.8 이하 버젼에서는 _Boehm-Demers-Weiser_(이하 _Boehm_) 라는 이
 
 보다시피 GC 항목에는 _Include Boehm_ 이라고 쓰여 있다. 이 구버젼의 Mono 는 언제부터 유지되었는지 정확한 날짜는 모르겠다. 하지만 Unity 3.X 버젼부터 계속 유지되어온 것같다. 안정성 문제를 따져보면 Mono 2.8 이 릴리즈 된지는 7년이 지나고 있다. 개선이 된지 한참이 지났을텐데 왜 패치를 안하는지는 모르겠다. 이는 일부 사용자들에게 꽤나 많은 원성을 그전부터 계~속 받고 있었다.([SCRIPTING: GARBAGE COLLECTION SGEN-GC](https://feedback.unity3d.com/suggestions/scripting-garbage-collection-sg) : 2010년에 올라온 글이다.)
 
-그나마 다행인 것은 최근 Unity 에서는 Mono 버젼업을 하겠다는 의지를 보였다. Unity 5.5 버젼에서는 Mono 컴파일러 버젼업을 했으며, 당장은 아니지만 이전에 Mono 업데이트를 하겠다는 글이 올라왔었다.([joins-the-net-foundation](http://blogs.unity3d.com/2016/04/01/unity-joins-the-net-foundation/)) 하지만 가장 최근에 릴리즈된 5.6 버젼에서는 Mono-runtime 자체는 그대로 구버젼을 쓰고 있다. 일단은 기다려 보자.
+그나마 다행인 것은 최근 Unity 에서는 Mono 버젼업을 하겠다는 의지를 보였다. Unity 5.5 버젼에서는 Mono 컴파일러 버젼업을 했으며, 당장은 아니지만 이전에 Mono 업데이트를 하겠다는 글이 올라왔었다.([joins-the-net-foundation](http://blogs.unity3d.com/2016/04/01/unity-joins-the-net-foundation/)) 하지만 가장 최근에 릴리즈된 5.6 버젼에서는 Mono-runtime 자체는 그대로 구버젼을 쓰고 있다. 아직은 기다려야 할듯하다.
 
 현재 Unity 에서 쓰이는 Mono-runtime 에 대해서 알아보았다. 아래에서는 언제가 될지 모르는 Mono 프레임워크 업데이트에 대비해 _SGen_ 의 간단한 동작방식과 쓰이는 여러 알고리즘에 대해서 알아볼것이다.
 
@@ -198,7 +198,9 @@ object o = (object)i;  // explicit boxing
 - [Wikipedia : C#](https://en.wikipedia.org/wiki/C_Sharp_%28programming_language%29)
 - [MSDN : boxing and unboxing](https://msdn.microsoft.com/ko-kr/library/yz2be5wk.aspx)
 
+<!--
 ## 참조 문서 다운로드 링크
 
 - [Boehm Tutorial - PPT 다운로드 링크](http://www.research.ibm.com/ismm04/slides/boehm-tutorial.ppt)
 - [Bounding Space Usage of Conservative Garbage Collectors](https://pdfs.semanticscholar.org/b5de/c18f67406975f98a2e20dfb362d4e0542a91.pdf)
+-->
