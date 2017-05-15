@@ -1,0 +1,115 @@
+---
+layout: post
+author: "Su-Hyeok Kim"
+comments: true
+categories:
+  - unity
+  - rendering
+  - try
+---
+
+[Handling vertices and indices]({{ site.baseurl }}{% post_url 2017-05-14-handling-vertices-and-indices-in-unity %}) 글에서 Unity 에서 정점과 인덱스를 사용해 물체를 그리는 방벙에 대해서 알아보았다. 그런데 뭔가 설정해야 할것들이 빠진 것처럼 보인다. 실제로 그려지는 모습은 Unity 에서 아무것도 설정이 안되어 있을 때 나오는 분홍색으로 전부 칠해져 있다. 일반적으로 게임에서 나오는 3D 물체들은 전부 색이 칠해져 있거나 그림이 그려져 있다. 거기다가 빛을 받아서 반짝반짝이기도 할때도 있다. 이번 글에서는 3D 오브젝트에 색을 입히거나 그림을 입히는 방법에 대해서 알아보자.
+
+<!-- more -->
+
+폴리곤은 하나의 면으로써 폴리곤 안의 색으로 무언가를 표현해야 한다. 우리가 앞에서 보던 예제처럼 계속 분홍색으로 내버려 둘순 없지 않은가? 색을 직접 입힐만한 수단이 필요한데 이를 위해서는 몇가지 데이터들이 필요하다.
+
+제일 먼저 필요한 것은 폴리곤에 색을 입힐 방법을 컴퓨터에게 알려 주어야 한다. 이 방법은 보통 어떤 형식의 코드로 나타내는데 이를 쉐이더(_Shader_)라고 한다. Unity 는 매우 다양한 색을 입히는 방법 : 쉐이더를 지원한다. 물론 직접 쉐이더 코드를 만들 수도 있지만 전체적인 것들에 대한 이해가 있어야 쉽게 방법을 고안할 수 있으므로 나중에 직접 쉐이더 코드를 만들어 볼 것이다. 이 글에서는 Unity 에서 제공하는 쉐이더를 사용해 폴리곤에 색을 입힐 것이다.
+
+쉐이더는 다양한 방식으로 색을 입힐 수 있는데 일반적으로 쓰는 방법은 그림을 하나 가져다가 폴리곤에 그려주는 것이다. 이 그림은  텍스쳐라고 칭한다. 텍스쳐를 그릴 때는 항상 일정한 기준이 필요하다. 무턱대고 텍스쳐의 아무곳이나 그릴순 없지 않은가? 그래서 폴리곤의 정점과 상응되는 텍스쳐의 2차원 좌표가 필요하다. 이를 UV 좌표(Position) 이라고 한다. "U" 와 "V" 가 텍스쳐의 가로, 세로 위치를 나타내는 말이라 UV 좌표라고 한다.
+
+![Texture mapping](/images/texturemapping.png){: .center-image}
+
+위 그림에서 UV 좌표와 폴리곤을 구성하는 정점들이 나온 모습을 볼 수 있는데, 우리가 주목할것은 왼쪽 그림이다. 삼각형이 그려져 있는데 실제로 가지고 있는 데이터는 삼각형들의 각 꼭지점을 좌표로 가지고 있다. 그리고 각 UV 좌표들은 폴리곤을 구성하는 정점들과 매칭되어 오른쪽 아래의 결과가 그려진다.
+
+폴리곤에 색을 입히는 원리에 대하여 간단하게 알아보았다. 이제 Unity 에서 직접 색을 입히는 방법을 알아보자.
+
+## Mapping object in Unity
+
+위에서 색을 입히기 위해서는 총 3가지가 필요하다고 말했다.
+
+> 1. 쉐이더
+>
+> 2. UV 좌표
+>
+> 3. 텍스쳐 및 기타 정보
+
+Unity 에서는 이 3가지를 취급하기 위해 두가지 분류를 만들어 놓았다. 하나는 전 게시글에서 본 __Mesh__ 클래스고 하나는 __Material__ 이라는 개념이다. __Mesh__ 클래스는 복수의 좌표 데이터를 저장하기 위한 목적으로 사용된다. 그래서 정점, 인덱스와 더불어 UV 좌표도 __Mesh__ 인스턴스 안에 넣는다.
+
+이제 __Material__ 하나만 남았다. 단어의 뜻은 "재료, 원료" 이런 뜻인데 색을 입히기 위한 재료라고 생각하면 편하다. 설정된 쉐이더와 쉐이더에서 필요한 여러 데이터들을 가지고 있는 Unity 의 애셋이다. 파일로도 존재할 수 있고, 런타임에서 생성해서 가지고 있을 수도 있다.
+
+![mesh and materials](/images/mesh_and_materials.png){: .center-image}
+
+[3DBasicExample](https://github.com/hrmrzizon/3DBasicExample) 의 edu/mat 브랜치에 우리가 봐야할 소스들이 있다. 씬안에 MeshToolTest2 스크립트가 붙어있을 텐데 해당 스크립트안으로 들어가면 썰렁하게 한줄이 있을것이다.
+
+``` c#
+public void ModifyMesh(Mesh mesh)
+{
+    MeshTool.AddPlane(mesh);
+}
+```
+
+우리가 볼것은 _MeshTool.AddPlane_ 에 있다. 함수의 정의로 들어가보자.
+
+``` c#
+public static void AddPlane(Mesh mesh)
+{
+    mesh.AddVertices(
+            new Vector3[]
+            {
+                new Vector3(0f, 0f, 0f),
+                new Vector3(1f, 0f, 0f),
+                new Vector3(0f, 0f, 1f),
+                new Vector3(1f, 0f, 1f)
+            }
+        );
+
+    int prevIdxCnt = Convert.ToInt32(mesh.GetIndexCount(0));
+
+    mesh.AddIndices(
+            new int[]
+            {
+                prevIdxCnt + 0, prevIdxCnt + 2, prevIdxCnt + 3,
+                prevIdxCnt + 0, prevIdxCnt + 3, prevIdxCnt + 1
+            }
+        );
+
+    mesh.AddUVs(
+            new Vector2[]
+            {
+                new Vector2(0f, 0f),
+                new Vector2(1f, 0f),
+                new Vector2(0f, 1f),
+                new Vector2(1f, 1f),
+            }
+        );
+}
+```
+
+이 코드는 정점을 다루는 게시물에서 한번 본 예제다. 크게 달라진 내용은 없다. 면을 정의하기 위해 4개의 점을 만들고, 폴리곤을 만들기 위해 인덱스 배열을 만들어 정점의 인덱스를 넣어준다. 아래 UV 좌표를 넣는 부분이 우리가 알아야할 부분이다. 위에서도 계속 언급했지만 UV 좌표 하나는 정점 하나에 맞춰져야 한다. 즉 정점 한개당 UV 좌표 한개가 무조건 있어야 한다. 만약 같은 좌표에 다른 UV 좌표가 필요하면 같은 정점이 여러개가 필요할 것이다.
+
+이해하기 쉽게 주석으로 그림도 만들어 놓았다.
+
+``` c#
+/*
+      (0,1) (0,0,1) 2   3 (1,0,1) (1,1)
+                    * - *
+                    | / |
+                    * - *
+      (0,0) (0,0,0) 0   1 (1,0,0) (1,0)
+*/
+```
+
+이렇게 UV 좌표를 설정해주면 __Mesh__ 를 건드리는 일은 끝났다. 이제 __Material__ 에셋을 만들거나 런타임에 직접 생성해주어 __MeshRenderer__ 컴포넌트에 넣어주면 된다. 우선 만들어진 __Material__ 에셋을 __MeshRenderer__ 컴포넌트에 넣어보자. 실행시에 __MeshRenderer__ 컴포넌트가 생성되는데 이 안에 _materials_ 라는 항목이 있다. 한개가 비어있는 배열이 나올텐데, 비어있는 곳에다가 넣어주면 정상적으로 출력이 될것이다.
+
+![empty material](/images/empty_material.png){: .center-image}
+
+정상적으로 출력이 되었으면 직접 __Material__ 을 만들어 넣어보자. Assset -> Create -> Material 메뉴를 사용하면 만들 수 있다. 또는 inspector 창에서 우클릭 후 Create -> Material 메뉴를 사용하라.
+
+![Create material](/images/create_material.png){: .center-image}
+
+이제 만들면 새로운 __Material__ 이 우리를 기다린다. 위에서 했던 방법으로 직접 넣어보자. 같은 방식으로 넣어주면 똑같이 나올것이다. 이렇게 __Material__ 을 적용하는 방법에 대해 알아보았다. 이제 UV 좌표가 뜻하는 위치를 눈으로 확인 가능하다. UV 좌표를 조작하면서 어떤식으로 동작하는지 확인하는 것도 좋은 방법일 것이다.
+
+## 참조
+
+- [Wikipedia : UV Mapping](https://en.wikipedia.org/wiki/UV_mapping)

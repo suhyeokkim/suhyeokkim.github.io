@@ -18,7 +18,7 @@ permalink: /edu/
 ### 3D Basics in Unity
 
 - Step 1 : [Handling vertices and indices]({{ site.baseurl }}{% post_url 2017-05-14-handling-vertices-and-indices-in-unity %})
-- Step 2 : Handling uv and material
+- Step 2 : [Handling uv and material]({{ site.baseurl }}{% post_url 2017-05-15-handling-uv-and-material-in-unity %})
 - Step 3 : Handling rig and animate
 - Step 4 : Simple rendering pipeline of unity
 - Step 5 : Simple shader programming by cg
