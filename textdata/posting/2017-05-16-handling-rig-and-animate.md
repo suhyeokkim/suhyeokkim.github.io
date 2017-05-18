@@ -17,13 +17,20 @@ categories:
 
 ## Unity 에서 직접 리깅, 스키닝하기
 
-<!--
-리깅 설명하기 : 메쉬에 정점이 움직이는 방법을 기술해야함.
-그 기준은 Unity Transform 으로 정해주어야 함.
-또한 값을 넣어줄때마다 변환 행렬이 필요함. mesh.bindposes 임. bone 마다 매칭해서 넣어주어야함.
+일반적으로 저장된 메쉬에 _Rigging_, 뼈를 위치시키고 기타 설정을 하는 작업을 먼저한다. 그리고 뼈를 전부 위치시킨 다음 정점들과 뼈 사이의 가중치를 주는 _Skinning_ 작업을 한다. 우리도 이 순서에 맞게 작업을 할 것이다. [3DBasicExample](https://github.com/hrmrzizon/3DBasicExample) 의 _edu/skin_ 브랜치로 이동하면 미리 되어 있는것을 확인할 수 있다.
 
-Mesh.bones
-Mesh.bindposes
+이전에 __Mesh__ 인스턴스를 활용해서 화면에 그릴려면 __MeshFilter__ 컴포넌트와 __MeshRenderer__ 컴포넌트가 필요했다. 그런데 이번에 필요한 컴포넌트는 조금 다르다. 그대로 __MeshFilter__ 와 __MeshRenderer__ 를 그린다면 리깅과 스키닝이 적용이 안된채로 그려진다. 물론 가만히 있는 용도로는 상관없겠지만 리깅과 스키닝이 적용된 결과를 보고싶으면 __SkinnedMeshRenderer__ 라는 컴포넌트를 사용해야한다. __MeshRenderer__ 처럼 다른 부수적인 컴포넌트는 필요없다. __SkinnedMeshRenderer__ 안에 모든 정보를 다 넣기 때문에 __SkinnedMeshRenderer__ 컴포넌트 하나만 있으면 된다.
+
+_Rigging_ 작업은 _Mesh_ 복잡도와 뼈의 갯수에 따라 시간이 비례한다. 그래서 복잡한 모델을 작업할때는 _Rigging_ 하는데 시간이 꽤 많이든다. 하지만 우리는 간단한 마인크래프트 케릭터를 가지고 할 것이기 때문에 그다지 오래 걸리지 않을 것이다. __GameObject__ 를 적당한 좌표, 적당한 __Transform__ 간의 위치에 놓은 다음에 _SkinnedMeshRenderer.bones_ 배열에 등록해준다. 이 과정은 어렵지 않기 때문에 생략하도록 하겠다.
+
+<!--
+Mesh.bindposes 설명해야함
+Bone 을 움직이면 이제 알아서 움직임
+-->
+
+<!--
+스키닝 : 정점마다 뼈들의 가중치를 설정해서 뼈가 움직이는 그대로 움직인다는것을 말해주어야함..
+스키닝 다하면 이제 뼈따라서 움직임, Unity Transform 들을 직접 움직여주어도 따라서 움직이는 것을 볼 수 있음.
 -->
 
 ## MeshRenderer vs SkinnedMeshRenderer
@@ -37,13 +44,6 @@ __SkinnedMeshRenderer__ 는 모든것이 집약된 컴포넌트로 모든 데이
 ![PlayerSetting - Rendering](/images/playersetting_rendering.png)
 
 여기 메뉴에서 주목할 부분은 바로 _GPU Skinning_ 이다. 보통 메쉬의 정보들은 GPU 가 가지고 있는 메모리에 들어가게 된다. 그리고 GPU 는 자기가 가지고 있는 메모리를 참조해서 렌더링을 한다. _GPU Skinning_ 기능을 안킨 상태에서는 정점을 움직일때마다 GPU 의 메모리에 복사작업을 계속해야하는데, _GPU Skinning_ 을 키게 되면 GPU 안에서 직접 움직이게 되므로 GPU 의 성능이 꽤나 준수하다면 성능 향상을 기대할 수 있다. 저사양의 모바일 기기를 타겟으로 한다면 벤치마킹을 직접 해보는 것을 추천한다. 또한 _GPU Skinning_ 은 Graphics API 의 버젼이 조금 높아야 지원한다. DX11, OpenGL ES 3.0 그리고 XBox360 이상에서만 지원한다고 한다. 기능을 사용할 떼는 타겟 디바이스를 유의깊게 살펴보길 바란다.
-
-<!--
-그냥 움직이기
-일반 lerp 를 이용한 animating
-AnimationCurve 를 활용한 animating
-AnimationClip 을 활용한 animating
--->
 
 # 참조
 
