@@ -105,6 +105,120 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2017/04/19/custom-property-drawer-tooltip/">Custom Property Drawer Tooltip</a>
+          </h1>
+
+          <p class="post-meta">Apr 19, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/try/">try</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>CustomPropertyDrawer 를 사용할 때 필드에 설정한 <strong>Tooltip</strong> 정보가 전달이 안될 때가 있다. 이때는 아래와 같이 하면 된다.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnGUI</span><span class="p">(</span><span class="n">Rect</span> <span class="n">position</span><span class="p">,</span> <span class="n">SerializedProperty</span> <span class="n">property</span><span class="p">,</span> <span class="n">GUIContent</span> <span class="n">label</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">GUIContent</span> <span class="n">content</span> <span class="p">=</span> <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">BeginProperty</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">property</span><span class="p">);</span>
+
+    <span class="c1">// label 대신 content 를 에디터 코드에 넣어줌.
+</span>
+    <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">EndProperty</span><span class="p">();</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>OnGUI 를 통해 넘어오는 <strong>label</strong> 파라미터에는 단지 텍스트만 들어가있어 조금 더 살펴보니 위의 방법처럼 해당 프로퍼티의 <strong>GUIContent</strong> 를 가져오는 방법이 있었다. 저 반환된 <strong>GUIContent</strong> 는 어디에서도 사용가능하니 유용하게 쓰일듯하다.</p>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2017/04/12/usage-of-attributes-in-unity/">Usage Of Attributes In Unity</a>
           </h1>
 
@@ -145,6 +259,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -160,6 +278,10 @@
   
     
       <a href="/categories/try/">try</a>
+    
+  
+    
+  
     
   
     
@@ -245,6 +367,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -260,6 +386,10 @@
   
     
       <a href="/categories/try/">try</a>
+    
+  
+    
+  
     
   
     
@@ -361,6 +491,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -384,6 +518,10 @@
   
     
       <a href="/categories/mono/">mono</a>,
+    
+  
+    
+  
     
   
     
@@ -435,6 +573,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -450,6 +592,10 @@
   
     
       <a href="/categories/try/">try</a>
+    
+  
+    
+  
     
   
     
@@ -551,6 +697,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -588,6 +738,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -597,6 +751,10 @@
   
     
       <a href="/categories/analysis/">analysis</a>
+    
+  
+    
+  
     
   
     
@@ -688,6 +846,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -703,6 +865,10 @@
   
     
       <a href="/categories/try/">try</a>
+    
+  
+    
+  
     
   
     
@@ -790,6 +956,10 @@
   
     
   
+    
+  
+    
+  
 
 </p>
         </header>
@@ -857,6 +1027,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -894,6 +1068,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -903,6 +1081,10 @@
   
     
       <a href="/categories/analysis/">analysis</a>
+    
+  
+    
+  
     
   
     
@@ -1007,6 +1189,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -1044,6 +1230,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -1053,6 +1243,10 @@
   
     
       <a href="/categories/analysis/">analysis</a>
+    
+  
+    
+  
     
   
     
@@ -1144,6 +1338,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -1157,6 +1355,10 @@
   
     
       <a href="/categories/makeblog/">makeblog</a>,
+    
+  
+    
+  
     
   
     
@@ -1218,6 +1420,10 @@
   
     
   
+    
+  
+    
+  
 
 </p>
         </header>
@@ -1240,149 +1446,12 @@
         
       </li>
     
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/03/05/ue4-vs-unity5/">Ue4 Vs Unity5</a>
-          </h1>
-
-          <p class="post-meta">Mar 5, 2017 • 
-  
-  
-    
-      <a href="/categories/edu/">edu</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-      <a href="/categories/ue4/">ue4</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/analysis/">analysis</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <h3><em>이 글은 강의를 듣는 분들을 위해 작성된 심심풀이 땅콩같은 글임을 알립니다. <strong>절대</strong> 논란의 여지가 되고 싶지 않습니다.</em></h3>
-
-<p>Unity 로 게임 개발을 시작한지 약 2년이 넘었습니다. 이제 언리얼 엔진 4에 발을 들여놓으려고 합니다. 막 파악하면서 느낀 점을 적어보려고 합니다. 기존 개발을 해오던 분들과 의견이 다를수도 있으니 너그러운 마음으로 읽어주시길 바랍니다.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/03/05/ue4-vs-unity5/">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
   </ul>
 
   
   <div class="pagination">
+    
+      <a class="previous" href="/posts/3/">&laquo; Older</a>
     
 
     
