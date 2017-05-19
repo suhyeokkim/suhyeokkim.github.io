@@ -8,4 +8,4 @@ rm -r _site/*
 bundle exec jekyll build
 
 # for coveralls
-bundle exec rake
+# bundle exec rake

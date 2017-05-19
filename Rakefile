@@ -1,7 +1,7 @@
-require 'coveralls/rake/task'
+# require 'coveralls/rake/task'
 
-task :default => :test
+# task :default => :test
 
-Coveralls::RakeTask.new
-task :default => [:spec, 'coveralls:push']
-task :test => [:spec, 'coveralls:push']
+# Coveralls::RakeTask.new
+# task :default => [:spec, 'coveralls:push']
+# task :test => [:spec, 'coveralls:push']
