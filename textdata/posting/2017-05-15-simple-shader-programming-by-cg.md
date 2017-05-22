@@ -4,25 +4,32 @@ author: "Su-Hyeok Kim"
 comments: true
 categories:
   - unity
+  - shader
+  - rendering
+  - cg
   - try
 ---
 
-[Handling rigging and skinning]({{ site.baseurl }}{% post_url 2017-05-19-handling-rig-and-skinning %}) 글 에서 케릭터의 뼈를 심고 그 뼈를 따라 정점을 움직이게 하는 방법에 대해서 알아보았다. 이번 글에서는 Unity 에서 간단하게 _Shader_ 를 다뤄볼 예정이다.
+이전에 쓴 글([handling uvs and material]({{ site.baseurl }}{% post_url 2017-05-15-handling-uv-and-material-in-unity %}))에서 쉐이더에 대한 언급을 한적이 있다. 간단하게 전체적인 의미와 역할에 대해서 설명했었다. 이 글에서는 조금 더 자세하게 알아보고 CG 를 이용해서 직접 다루는 방법에 대해서 알아보겠다.
 
-우선 _Shader_ 에 대해 말하기 전에, 알아야 할것들이 있다. 바로 일반적으로 알려진 _Rendering Pipeline_ 이다. _Rendering Pipeline_ 이란 한 프레임별로 실제 렌더링이 이루어지는 과정 자체를 말하며, 각 과정별로 소프트웨어와 하드웨어의 동작이 섞여있어 정확하게 알려면 꽤 많은 시간을 투자해야한다. 우선은 우리가 건드려야할 부분의 간단한 설명만 해보겠다.
-
-![pipeline](/images/Graphics3D_Pipe.png)
+Unity 는 여러 쉐이더 언어를 지원한다. 
 
 <!--
-  렌더링 파이프라인 간단하게 설명
-  forward, deffered rendering
+  쉐이더는 뭐시당가?
 
-  버텍스 쉐이더, 프레그먼트 쉐이더 설명
-  지오메트리, 픽셀 쉐이더 설명
-  번외 : OnRenderTexture, rendertexture
+  shaderlab? cg? hlsl?
 
   CG, hlsl, glsl
   CG 를 이용해서 쉐이더 직접 만져보기
-   - 버텍스 쉐이더 : 라이팅
-   - 픽셀 쉐이더 : 블러, 텍스쳐
+   - 표면 쉐이더 : 기본 버텍스 라이팅(diffuse vs specular)
+   - 버텍스 쉐이더 & 픽셀 쉐이더 : 색, 텍스쳐, 블러
+
+  번외 : OnRenderTexture, rendertexture
 -->
+
+## 참조
+
+ - [Unity ref : shader references](https://docs.unity3d.com/kr/current/Manual/SL-Reference.html)
+ - [Unity forum : hlsl? cg? shaderlab?](https://forum.unity3d.com/threads/hlsl-cg-shaderlab.4300/)
+ - [Unity forum : CG Toolkit is legacy](https://forum.unity3d.com/threads/cg-toolkit-legacy.238181/)
+ - [NVidia developer : CG Toolkit](https://developer.nvidia.com/cg-toolkit)
