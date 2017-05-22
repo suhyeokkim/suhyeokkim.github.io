@@ -8,7 +8,7 @@ categories:
 ---
 
 <!--
-  대형 플랫폼에서 기본으로 지원하는 레퍼런스 읽기(RTFM)
   검색하고 찾는 법(한글, 영어)
+  대형 플랫폼에서 기본으로 지원하는 레퍼런스 읽기(RTFM)
   limitless curiosity, learning
 -->
