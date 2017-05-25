@@ -89,6 +89,12 @@ LFS 의 설정방법은 매우 단순하다. [링크](https://git-lfs.github.com
 
 ![Git config for lfs](/images/gitconfigsystem.png){: .center-image }
 
+여기까지 세팅하면 lfs 자체의 세팅은 간단하게 끝이 난다. 하지만 계속 사용하다 보면 상당히 귀찮은게 한가지 있다. 아래 그림을 보자.
+
+![OpenSSH - authorize](/images/openssh_re-authorize.png)
+
+lfs 가 설정되어 있고, lfs 필터를 사용하는 파일이 존재하면 파일마다 서명을 하는지는 모르겠지만 저 창이 뜨면서 계~속 비밀번호를 치라고 한다. 굉장히 귀찮다. 그래서 Github 에서는 사용자들을 위한 Credential-Manager 를 사용하라고 권고한다. 여러 방법이 있지만 가장 좋은 방법은 OS 자체에서 제공하는 방법을 사용하는 것이다. Windows 사용자들은 이 [링크](https://help.github.com/articles/caching-your-github-password-in-git/)를 OSX 나 리눅스 사용자들은 이 [링크](https://help.github.com/articles/updating-credentials-from-the-osx-keychain/)를 확인하면 된다.
+
 여기까지 두가지 옵션을 설정하는 방법에 대해서 알아보았다. UnityYAMLMerge 와 LFS 설정이 되어 있으면 [.gitattributes](https://gist.github.com/nemotoo/b8a1c3a0f1225bb9231979f389fd4f3f) 와 [.gitignore](https://www.gitignore.io) 파일만 Git 시스템에 넣어주면 앞으로 편하게 설정이 가능하다. 파일을 구할 수 있는 링크를 이름에 넣어놓았으니 직접 받아서 가져가면 된다.
 
 ## 참조
