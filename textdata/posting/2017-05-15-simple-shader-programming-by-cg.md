@@ -20,25 +20,72 @@ categories:
 
 이렇게 우리에게 다가오는 것은 꽤 많은 게임들의 발전인데, 다만 우리가 이 게임들의 기술에 접근하려면 꽤 많은 지식과 발상의 전환이 필요하다. 쉐이더만 하더라도 쉐이더 코드는 컴파일되어 GPU 에서 실행된다. CPU 에서 실행되는 일반적인 코드와 조금 다른 점은 CPU 에서 처리되는 것은 멀티스레딩을 하지 않는 이상 상당히 선형적인 코드를 짜게 되고 GPU 에서 돌아가는 쉐이더 코드를 짤 때는 병렬(parallel) 환경에서 돌아가게 짜야한다. 쉐이더 코드를 짤 때 첫번째로 겪게되는 어려움은 이것이다. 쉐이더까지 건드리게되면 경험이 어느정도 있는 상태일텐데, 개념을 조금 깨부수고 아예 병렬적으로 코드를 짜야하니 적응하는 것에 시간이 꽤나 소모된다.
 
-우선 Unity 에서 가능한 것들이 꽤 있으니 입문용으로 몇가지 시도해보자.
+Unity 에서 Shader 를 직접 만들어 사용하는 것에 대하여 알아보자.
 
 <!-- more -->
 
 Unity 는 여러 메인 스트림의 쉐이더 언어를 통해 쉐이더 코딩이 가능하다. 각각 언어마다 큰 차이는 없다. DirectX 와 OpenGL 에서 각각 지원하는 HLSL, GLSL 은 C 기반의 언어이고, Unity 에서 가장 많이 쓰이는 CG 는 NVidia 에서 MS 와 협력하여 만들어졌기 때문에 HLSL 과 비슷할 수 밖에 없다.([Cg & HLSL FAQ](https://web.archive.org/web/20120824051248/http://www.fusionindustries.com/default.asp?page=cg-hlsl-faq)) 또한 쓰이는 문법도 많은 편은 아니라 한가지를 익혀두면 나머지를 사용하는데 크게 불편함은 없을 것이다. 물론 Unity 에서 쓰이는 쉐이더는 ShaderLab 을 기반으로 코딩해야 하기 때문에 네이티브 CG, HLSL, GLSL 과 전체적인 개괄은 다르다. 더 궁금한 사람은 Unity 본사 엔지니어 Aras 가 답변한 [질문 링크](https://forum.unity3d.com/threads/hlsl-cg-shaderlab.4300/) 를 보면 된다.
 
+Unity 의 기본적인 쉐이더 코딩은 ShaderLab 이라는 언어를 사용한다. 아래 예제를 살펴보자.
+
+```
+Shader "Custom/TextureColor" {
+	Properties {
+		_Color ("Color", Color) = (1,1,1,1)
+		_MainTex ("Albedo (RGB)", 2D) = "white" {}
+	}
+	SubShader {
+		Tags { "RenderType"="Opaque" }
+		LOD 200
+		Lighting On
+
+		Material {
+			Diffuse[_Color]
+		}
+
+		Pass {
+			SetTexture[_MainTex] { combine texture }
+		}
+	}
+
+	FallBack "Diffuse"
+}
+
+```
+
 <!--
-  쉐이더는 뭐시당가?
-  vertex shader, fragment shader(pixel shader)
-  GPGPU -> computeshader
+    ShaderLab 과 CG 에서 CG 를 사용하는 명확한 이유가 없음. 이거 존나 좆같음.
+    아주 로지컬한 논리가 필요해
+-->
 
-  shaderlab? cg? hlsl?
+[세이더 기초](http://jinhomang.tistory.com/43)
 
-  CG, hlsl, glsl
-  CG 를 이용해서 쉐이더 직접 만져보기
-   - 표면 쉐이더 : 기본 버텍스 라이팅(diffuse vs specular)
-   - 버텍스 쉐이더 & 픽셀 쉐이더 : 색, 텍스쳐, 블러
+[ShaderLab references](http://chulin28ho.tistory.com/159)
 
-  번외 : OnRenderTexture, rendertexture
+하지만 오직 ShaderLab 만 사용해서 Shader 코딩을 하는 것은 한계가 있다. 기존에 있는 기능들만 지원하고 많은 것들을 통제하기 힘들다. 결국 모든 것을 바꾸려면 CG 나 HLSL 을 사용해야한다. 그래서 우리는 CG 를 통해서 Unity 에서 쉐이더 코딩을 할 것이다. 이유는 간단하다. 많은 쉐이더들이 CG 를 사용했기 때문이다. CG 는 두가지 종류로 쉐이더 코딩을 지원한다. 하나는 표면 쉐이더(surface shader) 를 통한 코딩이고, 하나는 정점 쉐이더(vertex shader) 또는 픽셀 쉐이더(pixel shader) 의 조합으로 사용된다.
+
+
+<!--
+oo  쉐이더는 뭐시당가?
+oo  vertex shader, fragment shader(pixel shader)
+oo  GPGPU -> computeshader
+
+oo  shaderlab? cg? hlsl?
+
+xx  ShaderLab basic example
+
+xx  CG 를 이용해서 쉐이더 직접 만져보기
+xx   - 표면 쉐이더 : 기본 버텍스 라이팅(diffuse vs specular)
+xx   - 버텍스 쉐이더 & 픽셀 쉐이더 : 색, 텍스쳐, 블러
+
+xx  번외 : OnRenderTexture, rendertexture
+
+예제 필요한 것
+  Shaderlab 예제
+  - Unity 사이트에 있는 것.
+  CG 예제
+  - sufrace
+  - vert/frag
 -->
 
 ## 참조
@@ -48,3 +95,6 @@ Unity 는 여러 메인 스트림의 쉐이더 언어를 통해 쉐이더 코딩
  - [Unity forum : hlsl? cg? shaderlab?](https://forum.unity3d.com/threads/hlsl-cg-shaderlab.4300/)
  - [Unity forum : CG Toolkit is legacy](https://forum.unity3d.com/threads/cg-toolkit-legacy.238181/)
  - [NVidia developer : CG Toolkit](https://developer.nvidia.com/cg-toolkit)
+ - [Unity tutorial : Shader tutorial](https://unity3d.com/kr/learn/tutorials/topics/graphics/gentle-introduction-shaders)
+ - [Shaderlab Ref](http://chulin28ho.tistory.com/159)
+ - [Optimize shader](http://shimans.tistory.com/41)
