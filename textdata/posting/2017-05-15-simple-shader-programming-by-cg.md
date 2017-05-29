@@ -7,6 +7,7 @@ categories:
   - shader
   - rendering
   - cg
+  - shaderlab
   - try
 ---
 
@@ -73,15 +74,10 @@ Shader "Custom/NewSurfaceShader" {
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
-		LOD 200
 
 		CGPROGRAM
-		// Physically based Standard lighting model, and enable shadows on all light types
 		#pragma surface surf Standard fullforwardshadows
-
-		// Use shader model 3.0 target, to get nicer looking lighting
-		#pragma target 3.0
-pler2D _MainTex;
+    sampler2D _MainTex;
 
 		struct Input {
 			float2 uv_MainTex;
@@ -106,10 +102,39 @@ pler2D _MainTex;
 }
 ```
 
-ShdaderLab 에 비하면 코드가 상당히 길다. 새롭게 변수를 세팅해 주어야 하기도 하고 몇가지 세팅을 해주어야 하기 때문이기도 하다. 이 코드에서는 라이팅을 Unity Standard 의 PBR 라이팅 모델을 사용하고 있다. 아래 surf 코드에서 값을 계산하거나 참조
-해서 반환해야 할 값을 넣어준다. 하지만 이 게시글에서 라이팅은 언급하지 않을 것이니 간단하게 보고만 넘어가자.
+ShdaderLab 에 비하면 코드가 상당히 길다. 새롭게 변수를 세팅해 주어야 하기도 하고 몇가지 세팅을 해주어야 하기 때문이기도 하다. 이 코드에서는 라이팅을 Unity Standard 의 PBR 라이팅 모델을 사용하고 있다. 몇가지 살펴보면, 처음과 마지막을 CGPROGRAM 과 ENDCG 로 감싸준다. 그리고 바로 아래에 C 계열에서 많이 쓰이는 _pragma_ 전처리 키워드를 사용하여 뭔가 정의하고 있는데 바로 표면 쉐이더 함수의 정의를 써주는 곳이다.
 
-다음은 정점/픽셀 쉐이더를 조합한 쉐이더다. 아주 기본적인 쉐이더로써 대부분의 Graphics API 에서 지원하는 방식과 상이하다. 다만 표면 쉐이더에 비해서는 해줘야할 것들이 상당히 많다. 라이팅은 직접 메쉬에서 데이터를 가져와서 계산해야한다. 또한 작성해야할 쉐이더 코드자체도 두개이기 때문에 할 일이 꽤 많다. 아래의 예제는 색과 텍스쳐를 입히는 예제다.
+```
+#pragma surface surf Standard fullforwardshadows
+```
+
+surface 는 표면 쉐이더 함수를 정의한다는 것을, surf 는 코드에 정의되어 있는 함수의 이름을, Standard 는 라이팅 모델을 뜻한다. Unity Standard 쉐이더의 PBR 을 모델이다. 그리고 fullforwardshadows 는 그림자에 대한 옵션이다. 메터리얼의 인자에 들어가는 텍스쳐 등 설정값을 변수로 정의해준다. 변수 이름을 위에 Properties 에 정의와 똑같이 써주면 알아서 Unity 에서는 이 값을들을 접근하게 해준다. 반드시 똑같이 써주어야 작동한다.
+
+```
+struct Input {
+	float2 uv_MainTex;
+};
+```
+
+사이에 Input 구조체가 있다. 이 구조체에는 단순히 uv_MainTex 라는 변수한개만 있다. 단순하게 이름을 풀이해보면 MainTex 텍스쳐의 uv 좌표를 뜻한다. 이 변수 이름 역시 반드시 맞춰주어야 한다. 앞에는 uv 가 붙어야 하며, 그 다음 존재하는 텍스쳐 이름을 붙여주어야 한다.
+
+```
+void surf (Input IN, inout SurfaceOutputStandard o) {
+	// Albedo comes from a texture tinted by color
+	fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+	o.Albedo = c.rgb;
+	// Metallic and smoothness come from slider variables
+	o.Metallic = _Metallic;
+	o.Smoothness = _Glossiness;
+	o.Alpha = c.a;
+}
+```
+
+이제 남은것은 surf 함수만 남아있다. 이는 표면 쉐이더에서 어떻게 정보를 처리하느냐를 적어주는 곳이다. Input 구조체는 위에서 정의해 주었고, _SurfaceOutputStandard_ 는 Standard 라이팅 모델에서 이미 정의된 구조체이다. 이 구조체의 값을 넣어주는 것으로 쉐이더 연산을 정의한다. 안의 코드를 풀어보자면, 가장 처음에 _tex2D_ 라는 함수로 _\_MainTex_ 라는 텍스쳐와 _IN.uv\_MainTex_ uv 좌표를 이용해 색을 가져온다. 그리고 _\_Color_ 변수를 가져온 색에 각각에 rgba 별로 곱연산을 해준다. 그렇게 계산된 fixed4 자료형 _c_ 의 데이터를 스탠다드 라이팅 모델 인자의 Albedo 변수에는 rgb 값을, Alpha 변수에는 a 값을 넘겨준다. 나머지는 입력된 데이터 그대로 넣어준다.
+
+간단하게 표면 쉐이더 코드에 대해서 살펴보았다. 한가지 짚고 넘어가야 될것은 표면 쉐이더는 Unity 에서 자동으로 원래의 개념으로 컴파일 해주는 일종의  위 예제에서 본 Standard 라이팅 모델 말고도 미리 정의되어 있는 다른 라이팅 모델을 사용할 수도 있고 직접 라이팅 모델을 정의해서 사용할 수도 있다. 이 글에서는 라이팅 모델에 대해서 자세한 것은 다루지 않겠다. 자세한 사항에 대해서는 [Unity 표면 쉐이더 레퍼런스](https://docs.unity3d.com/kr/current/Manual/SL-SurfaceShaders.html) 를 참조하라.
+
+다음으로 살펴볼 쉐이더는 정점/픽셀 쉐이더를 조합한 쉐이더다. CG 를 사용하는 가장 낮은 단계의 쉐이더이며 실질적으로 돌아가는 쉐이더다. 그만큼 해야할 것도 많고 신경써야 할것도 많다. 특히 라이팅을 세팅할 때는 꽤나 코드가 길어지고 복잡해진다. 하지만 그만큼 세세하게 조정이 가능하다. 그래서 보통은 특수효과에 많이 쓰이며 최적화를 위한 쉐이딩을 할때도 쓰인다. 또한 여러 다른 쉐이더를 사용할 때에도 쓰인다. 아래 예제를 살펴보자.
 
 ```
 Shader "Custom/ColorTextureCG" {
@@ -119,7 +144,6 @@ Shader "Custom/ColorTextureCG" {
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
-		LOD 200
 
 		Pass {
 			CGPROGRAM
@@ -136,8 +160,8 @@ Shader "Custom/ColorTextureCG" {
 
 			struct v2f
 			{
-				float2 uv : TEXCOORD0;
 				float4 vertex : SV_POSITION;
+        float2 uv : TEXCOORD0;
 			};
 
 			v2f vert (appdata v)
@@ -164,32 +188,45 @@ Shader "Custom/ColorTextureCG" {
 }
 ```
 
+위 예제는 색과 텍스쳐를 입혀주는 쉐이더로 아주 간단한 코드로 이루어져 있다. 한번 살펴보자. 그리고 CG 에서는 픽셀 쉐이더의 픽셀을 _fragment_ 라고 칭한다.
 
-<!-- Standard asset : blur -->
+역시나 CGPROGRAM 과 ENDCG 로 감싸져 있으며 가장 처음에는 _pragma_ 구문이 등장한다. 표면 쉐이더에서는 함수와 라이팅 모델을 설정하는데 쓰였는데, 여기서도 정점/픽셀 쉐이더 함수를 설정해주는데 쓰인다. 정점 쉐이더는 vertex 오른쪽에 함수 이름을 넘겨주고, 픽셀 쉐이더는 fragment 오른쪽에 함수 이름을 넘겨준다. 말 그리고 표면 쉐이더가 내부의 동작 원리를 알기 힘든것과는 다르게 정점/픽셀 쉐이더는 보이는 코드와 같이 똑같이 동작한다. 정점/픽셀 별로 처리하는 과정이 다르며 예제에 써준 코드 그대로 실행된다는 뜻이다.
 
-<!--
-oo  쉐이더는 뭐시당가?
-oo  vertex shader, fragment shader(pixel shader)
-oo  GPGPU -> computeshader
+_pragma_ 구문 아래에 표면 쉐이더 코드에서는 못보던 것이 있다. 바로 C 프로그래밍을 했을 떄 보던 _include_ 키워드다. 우리가 보는것과 같이 해당 위치에 _UnityCG.cginc_ 라는 이름을 가진 파일의 내용을 넣어주는 역할을 하는데, 이 _UnityCG.cginc_ 라는 파일에는 Unity 에서 제공하는 파일로 Unity 상에서 필요한 데이터들을 접근하고 데이터을 변환해주는 함수들이 들어있다. 정점이 _UnityCG.cginc_ 파일은 필수적으로 넣어주어야 한다.
 
-oo  shaderlab? cg? hlsl?
+이제 직접 정점 쉐이더와 픽셀 쉐이더를 계산하는 부분들이 남았다. _vert_ 함수를 보면 _appdata_ 라는 구조체 변수를 인자로 받아서 _v2f_ 구조체 데이터를 반환하는 간단한 함수로 보인다. 이 함수의 코드를 보자.
 
-xx  ShaderLab basic example
+```
+v2f vert (appdata v)
+{
+	v2f o;
+	o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+	o.uv = v.uv;
+	return o;
+}
+```
 
-xx  CG 를 이용해서 쉐이더 직접 만져보기
-xx   - 표면 쉐이더 : 기본 버텍스 라이팅(diffuse vs specular)
-xx   - 버텍스 쉐이더 & 픽셀 쉐이더 : 색, 텍스쳐, 블러
+첫번째 줄은 실제 Unity 의 위치와 _Mesh_ 에 저장되어 있던 로컬 정점 위치를 계산하여 정점의 실제 위치를 계산하여 넣어주는 줄이다. 실제로는 행렬 변환을 통해 위치값을 변경한다. 이 줄을 빼버리면 (0,0,0) 을 기준으로 모델이 출력될 것이다. 두번째 줄에서는 UV 좌표값을 그대로 넣어준다. 이 UV 좌표는 픽셀 쉐이더에서 사용한다.
 
-xx  번외 : OnRenderTexture, rendertexture
+내부적으로 복잡한 처리가 끝나고 다음으로 픽셀 쉐이더 단계로 넘어간다. 등록된 함수가 호출되며 위의 _frag_ 함수가 호출되는데 여기서 텍스쳐와 UV 좌표로 폴리곤에 색을 입혀준다. 내용을 보자.
 
-예제 필요한 것
-  Shaderlab 예제
-  - Unity 사이트에 있는 것.
-  CG 예제
-  - sufrace
-  - vert/frag
-  - OnRenderTexture blur
--->
+```
+fixed4 frag (v2f i) : SV_Target
+{
+	fixed4 col = tex2D(_MainTex, i.uv);
+	return col * _Color;
+}
+```
+
+_frag_ 함수의 타입이 지정된 첫줄에 마지막에 쓰여있는 _SV\_TARGET_ 은 어떤 곳에 픽셀 쉐이딩의 결과를 저장하는지에 대한 선언이다. Render Target 이라고 한다. _SV\_TARGET_ 을 기본으로 쓰는데 이는 한곳에 모든 데이터를 쓴다는 선언이다. 여러곳에 데이터를 기록하면 Multiple Render Target 이라고 칭하게 되는 기술을 쓰는 것이다. 문법에 더 궁금한 사람은 [Semantics](https://docs.unity3d.com/Manual/SL-ShaderSemantics.html) 를 보라. MRT 에 대해 궁금한 사람은 [Wiki: MRT](https://en.wikipedia.org/wiki/Multiple_Render_Targets) 를 보라.
+
+이제 내용을 보면 tex2D 함수에 _\_MainTex_ 텍스쳐와 _i.uv_ 데이터를 넣어주어 추출된 색을 _col_ 변수에 저장한다. 이 안에는 RGBA 데이터가 들어있다. 그리고 _col_ 변수와 _\_Color_ 변수를 _col_ 변수에 곱하여 실제 출력되는 픽셀 색을 반환한다. 반환된 색은 이제 실제로 보이게 된다.
+
+자세한 사항은 [Unity 정점/픽셀 쉐이더 레퍼런스](https://docs.unity3d.com/kr/current/Manual/SL-ShaderPrograms.html) 를 참조하면 된다.
+
+여기까지 텍스쳐와 색을 입히는 정점/픽셀 쉐이더에 대해서 알아보았다. 아주 기본적인 것들만 다루었기에 코드는 단순하다. 여기에 여러 효과들과 여러 기법들이 많이 들어가면 들어갈수록 복잡해질 것이다. 게다가 여러 플랫폼을 지원하기 위해 여러개의 SubShader 와 Pass 를 넣게되면 엄~청 긴 코드가 나올 것이다.
+
+그리고 번외로 Unity 컴포넌트 안에서 픽셀을 직접 만져서 바꿀 수 있는 기능이 있다. [링크](https://docs.unity3d.com/kr/current/ScriptReference/MonoBehaviour.OnRenderImage.html)를 참조하라. 이 기능을 통해 Standard Asset 에 꽤 많은 효과들을 지원하는 기능들이 있다.
 
 ## 참조
 
@@ -200,5 +237,5 @@ xx  번외 : OnRenderTexture, rendertexture
  - [NVidia developer : CG Toolkit](https://developer.nvidia.com/cg-toolkit)
  - [Unity tutorial : Shader tutorial](https://unity3d.com/kr/learn/tutorials/topics/graphics/gentle-introduction-shaders)
  - [Shaderlab Ref](http://chulin28ho.tistory.com/159)
- - [Optimize shader](http://shimans.tistory.com/41)
  - [세이더 기초](http://jinhomang.tistory.com/43)
+ - [Unity wikibooks : cg programming](https://en.wikibooks.org/wiki/Cg_Programming/Unity)
