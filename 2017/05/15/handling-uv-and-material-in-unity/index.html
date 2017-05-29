@@ -10,7 +10,7 @@
   
   
   <title>Handling Uv And Material In Unity</title>
-  <meta name="description" content="Handling vertices and indices 글에서 Unity 에서 정점과 인덱스를 사용해 물체를 그리는 방벙에 대해서 알아보았다. 그런데 뭔가 설정해야 할것들이 빠진 것처럼 보인다. 실제로 그려지는 모습은 Unity 에서 아무것도 설정이 안되어 있을 때 나오는 분홍색으로 전부 칠해져 있다. 일반적으로 게임에서 나오는 3D 물체들은 전부 색이 칠해져 있거나 그림이 그려져 있다. 거기다가 빛을 받아서 반짝반짝이기도 할때도 있다. 이번 글에서는 3D 오브젝트에 색을 입히거나 그림을 입히는 방법에 대해서 알아보자.">
+  <meta name="description" content="Handling vertices and indices 글에서 Unity 에서 정점과 인덱스를 사용해 물체를 그리는 방법에 대해서 알아보았다. 그런데 뭔가 설정해야 할것들이 빠진 것처럼 보인다. 실제로 그려지는 모습은 Unity 에서 아무것도 설정이 안되어 있을 때 나오는 분홍색으로 전부 칠해져 있다. 일반적으로 게임에서 나오는 3D 물체들은 전부 색이 칠해져 있거나 그림이 그려져 있다. 거기다가 빛을 받아서 반짝반짝이기도 할때도 있다. 이번 글에서는 3D 오브젝트에 색을 입히거나 그림을 입히는 방법에 대해서 알아보자.">
   
 
   <link rel="stylesheet" href="/assets/main.css">
@@ -26,7 +26,7 @@
   <meta name="twitter:card" content="summary">
   
   <meta name="twitter:title" content="Handling Uv And Material In Unity">
-  <meta name="twitter:description" content="Handling vertices and indices 글에서 Unity 에서 정점과 인덱스를 사용해 물체를 그리는 방벙에 대해서 알아보았다. 그런데 뭔가 설정해야 할것들이 빠진 것처럼 보인다. 실제로 그려지는 모습은 Unity 에서 아무것도 설정이 안되어 있을 때 나오는 분홍색으로 전부 칠해져 있다. 일반적으로 게임에서 나오는 3D 물체들은 전부 색이...">
+  <meta name="twitter:description" content="Handling vertices and indices 글에서 Unity 에서 정점과 인덱스를 사용해 물체를 그리는 방법에 대해서 알아보았다. 그런데 뭔가 설정해야 할것들이 빠진 것처럼 보인다. 실제로 그려지는 모습은 Unity 에서 아무것도 설정이 안되어 있을 때 나오는 분홍색으로 전부 칠해져 있다. 일반적으로 게임에서 나오는 3D 물체들은 전부 색이...">
   
   
 
@@ -137,6 +137,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -172,6 +178,12 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
+    
+  
     
   
     
@@ -219,12 +231,18 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
 </p>
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <p><a href="/2017/05/14/handling-vertices-and-indices-in-unity/">Handling vertices and indices</a> 글에서 Unity 에서 정점과 인덱스를 사용해 물체를 그리는 방벙에 대해서 알아보았다. 그런데 뭔가 설정해야 할것들이 빠진 것처럼 보인다. 실제로 그려지는 모습은 Unity 에서 아무것도 설정이 안되어 있을 때 나오는 분홍색으로 전부 칠해져 있다. 일반적으로 게임에서 나오는 3D 물체들은 전부 색이 칠해져 있거나 그림이 그려져 있다. 거기다가 빛을 받아서 반짝반짝이기도 할때도 있다. 이번 글에서는 3D 오브젝트에 색을 입히거나 그림을 입히는 방법에 대해서 알아보자.</p>
+    <p><a href="/2017/05/14/handling-vertices-and-indices-in-unity/">Handling vertices and indices</a> 글에서 Unity 에서 정점과 인덱스를 사용해 물체를 그리는 방법에 대해서 알아보았다. 그런데 뭔가 설정해야 할것들이 빠진 것처럼 보인다. 실제로 그려지는 모습은 Unity 에서 아무것도 설정이 안되어 있을 때 나오는 분홍색으로 전부 칠해져 있다. 일반적으로 게임에서 나오는 3D 물체들은 전부 색이 칠해져 있거나 그림이 그려져 있다. 거기다가 빛을 받아서 반짝반짝이기도 할때도 있다. 이번 글에서는 3D 오브젝트에 색을 입히거나 그림을 입히는 방법에 대해서 알아보자.</p>
 
 <!-- more -->
 
@@ -232,7 +250,7 @@
 
 <p>제일 먼저 필요한 것은 폴리곤에 색을 입힐 방법을 컴퓨터에게 알려 주어야 한다. 이 방법은 보통 어떤 형식의 코드로 나타내는데 이를 쉐이더(<em>Shader</em>)라고 한다. Unity 는 매우 다양한 색을 입히는 방법 : 쉐이더를 지원한다. 물론 직접 쉐이더 코드를 만들 수도 있지만 전체적인 것들에 대한 이해가 있어야 쉽게 방법을 고안할 수 있으므로 나중에 직접 쉐이더 코드를 만들어 볼 것이다. 이 글에서는 Unity 에서 제공하는 쉐이더를 사용해 폴리곤에 색을 입힐 것이다.</p>
 
-<p>쉐이더는 다양한 방식으로 색을 입힐 수 있는데 일반적으로 쓰는 방법은 그림을 하나 가져다가 폴리곤에 그려주는 것이다. 이 그림은  텍스쳐라고 칭한다. 텍스쳐를 그릴 때는 항상 일정한 기준이 필요하다. 무턱대고 텍스쳐의 아무곳이나 그릴순 없지 않은가? 그래서 폴리곤의 정점과 상응되는 텍스쳐의 2차원 좌표가 필요하다. 이를 UV 좌표(Position) 이라고 한다. “U” 와 “V” 가 텍스쳐의 가로, 세로 위치를 나타내는 말이라 UV 좌표라고 한다.</p>
+<p>쉐이더는 다양한 방식으로 색을 입힐 수 있는데 일반적으로 쓰는 방법은 그림을 하나 가져다가 폴리곤에 그려주는 것이다. 이 그림은 텍스쳐라고 칭한다. 텍스쳐를 그릴 때는 항상 일정한 기준이 필요하다. 무턱대고 텍스쳐의 아무곳이나 그릴순 없지 않은가? 그래서 폴리곤의 정점과 상응되는 텍스쳐의 2차원 좌표가 필요하다. 이를 UV 좌표(Position) 이라고 한다. “U” 와 “V” 가 텍스쳐의 가로, 세로 위치를 나타내는 말이라 UV 좌표라고 한다.</p>
 
 <p><img src="/images/texturemapping.png" alt="Texture mapping" class="center-image" /></p>
 
@@ -264,65 +282,43 @@
 
 <p><img src="/images/mesh_and_materials.png" alt="mesh and materials" class="center-image" /></p>
 
-<p><a href="https://github.com/hrmrzizon/3DBasicExample">3DBasicExample</a> 의 edu/mat 브랜치에 우리가 봐야할 소스들이 있다. 씬안에 MeshToolTest2 스크립트가 붙어있을 텐데 해당 스크립트안으로 들어가면 썰렁하게 한줄이 있을것이다.</p>
-
-<div class="language-c# highlighter-rouge"><pre class="highlight"><code><span class="k">public</span> <span class="k">void</span> <span class="nf">ModifyMesh</span><span class="p">(</span><span class="n">Mesh</span> <span class="n">mesh</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">MeshTool</span><span class="p">.</span><span class="nf">AddPlane</span><span class="p">(</span><span class="n">mesh</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre>
-</div>
-
-<p>우리가 볼것은 <em>MeshTool.AddPlane</em> 에 있다. 함수의 정의로 들어가보자.</p>
+<p><a href="https://github.com/hrmrzizon/3DBasicExample">3DBasicExample</a> 의 edu/mat 브랜치에 우리가 봐야할 소스들이 있다. 씬안에 MeshToolTest2 스크립트가 붙어있을 텐데 uv 를 설정해주는 라인이 있을것이다.</p>
 
 <div class="language-c# highlighter-rouge"><pre class="highlight"><code><span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">AddPlane</span><span class="p">(</span><span class="n">Mesh</span> <span class="n">mesh</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">mesh</span><span class="p">.</span><span class="nf">AddVertices</span><span class="p">(</span>
-            <span class="k">new</span> <span class="n">Vector3</span><span class="p">[]</span>
-            <span class="p">{</span>
-                <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span>
-                <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">1f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span>
-                <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">1f</span><span class="p">),</span>
-                <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">1f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">1f</span><span class="p">)</span>
-            <span class="p">}</span>
-        <span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">isCube</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="p">...</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="cm">/*
 
-    <span class="kt">int</span> <span class="n">prevIdxCnt</span> <span class="p">=</span> <span class="n">Convert</span><span class="p">.</span><span class="nf">ToInt32</span><span class="p">(</span><span class="n">mesh</span><span class="p">.</span><span class="nf">GetIndexCount</span><span class="p">(</span><span class="m">0</span><span class="p">));</span>
+                  (0,1)       (1,1)
+                (0,0,1) 2   3 (1,0,1)
+                        * - *
+                        | / |
+                        * - *
+                (0,0,0) 0   1 (1,0,0)
+                  (0,0)       (1,0)
 
-    <span class="n">mesh</span><span class="p">.</span><span class="nf">AddIndices</span><span class="p">(</span>
-            <span class="k">new</span> <span class="kt">int</span><span class="p">[]</span>
-            <span class="p">{</span>
-                <span class="n">prevIdxCnt</span> <span class="p">+</span> <span class="m">0</span><span class="p">,</span> <span class="n">prevIdxCnt</span> <span class="p">+</span> <span class="m">2</span><span class="p">,</span> <span class="n">prevIdxCnt</span> <span class="p">+</span> <span class="m">3</span><span class="p">,</span>
-                <span class="n">prevIdxCnt</span> <span class="p">+</span> <span class="m">0</span><span class="p">,</span> <span class="n">prevIdxCnt</span> <span class="p">+</span> <span class="m">3</span><span class="p">,</span> <span class="n">prevIdxCnt</span> <span class="p">+</span> <span class="m">1</span>
-            <span class="p">}</span>
-        <span class="p">);</span>
+            */</span>
 
-    <span class="n">mesh</span><span class="p">.</span><span class="nf">AddUVs</span><span class="p">(</span>
-            <span class="k">new</span> <span class="n">Vector2</span><span class="p">[]</span>
-            <span class="p">{</span>
-                <span class="k">new</span> <span class="nf">Vector2</span><span class="p">(</span><span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span>
-                <span class="k">new</span> <span class="nf">Vector2</span><span class="p">(</span><span class="m">1f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span>
-                <span class="k">new</span> <span class="nf">Vector2</span><span class="p">(</span><span class="m">0f</span><span class="p">,</span> <span class="m">1f</span><span class="p">),</span>
-                <span class="k">new</span> <span class="nf">Vector2</span><span class="p">(</span><span class="m">1f</span><span class="p">,</span> <span class="m">1f</span><span class="p">),</span>
-            <span class="p">}</span>
-        <span class="p">);</span>
+            <span class="p">...</span>
+
+            <span class="n">mesh</span><span class="p">.</span><span class="n">uv</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Vector2</span><span class="p">[]</span>
+                      <span class="p">{</span>
+                          <span class="k">new</span> <span class="nf">Vector2</span><span class="p">(</span><span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span>
+                          <span class="k">new</span> <span class="nf">Vector2</span><span class="p">(</span><span class="m">1f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span>
+                          <span class="k">new</span> <span class="nf">Vector2</span><span class="p">(</span><span class="m">0f</span><span class="p">,</span> <span class="m">1f</span><span class="p">),</span>
+                          <span class="k">new</span> <span class="nf">Vector2</span><span class="p">(</span><span class="m">1f</span><span class="p">,</span> <span class="m">1f</span><span class="p">),</span>
+                      <span class="p">};</span>
+        <span class="p">}</span>
 <span class="p">}</span>
 </code></pre>
 </div>
 
 <p>이 코드는 정점을 다루는 게시물에서 한번 본 예제다. 크게 달라진 내용은 없다. 면을 정의하기 위해 4개의 점을 만들고, 폴리곤을 만들기 위해 인덱스 배열을 만들어 정점의 인덱스를 넣어준다. 아래 UV 좌표를 넣는 부분이 우리가 알아야할 부분이다. 위에서도 계속 언급했지만 UV 좌표 하나는 정점 하나에 맞춰져야 한다. 즉 정점 한개당 UV 좌표 한개가 무조건 있어야 한다. 만약 같은 좌표에 다른 UV 좌표가 필요하면 같은 정점이 여러개가 필요할 것이다.</p>
-
-<p>이해하기 쉽게 주석으로 그림도 만들어 놓았다.</p>
-
-<div class="language-c# highlighter-rouge"><pre class="highlight"><code><span class="cm">/*
-      (0,1) (0,0,1) 2   3 (1,0,1) (1,1)
-                    * - *
-                    | / |
-                    * - *
-      (0,0) (0,0,0) 0   1 (1,0,0) (1,0)
-*/</span>
-</code></pre>
-</div>
 
 <p>이렇게 UV 좌표를 설정해주면 <strong>Mesh</strong> 를 건드리는 일은 끝났다. 이제 <strong>Material</strong> 에셋을 만들거나 런타임에 직접 생성해주어 <strong>MeshRenderer</strong> 컴포넌트에 넣어주면 된다. 우선 만들어진 <strong>Material</strong> 에셋을 <strong>MeshRenderer</strong> 컴포넌트에 넣어보자. 실행시에 <strong>MeshRenderer</strong> 컴포넌트가 생성되는데 이 안에 <em>materials</em> 라는 항목이 있다. 한개가 비어있는 배열이 나올텐데, 비어있는 곳에다가 넣어주면 정상적으로 출력이 될것이다.</p>
 
