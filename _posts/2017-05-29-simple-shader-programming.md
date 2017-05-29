@@ -230,12 +230,12 @@ _frag_ 함수의 타입이 지정된 첫줄에 마지막에 쓰여있는 _SV\_TA
 
 ## 참조
 
- - [Fixed function pipeline](https://www.khronos.org/opengl/wiki/Fixed_Function_Pipeline)
+ - [Khronos : Fixed function pipeline](https://www.khronos.org/opengl/wiki/Fixed_Function_Pipeline)
  - [Unity ref : shader references](https://docs.unity3d.com/kr/current/Manual/SL-Reference.html)
  - [Unity forum : hlsl? cg? shaderlab?](https://forum.unity3d.com/threads/hlsl-cg-shaderlab.4300/)
  - [Unity forum : CG Toolkit is legacy](https://forum.unity3d.com/threads/cg-toolkit-legacy.238181/)
  - [NVidia developer : CG Toolkit](https://developer.nvidia.com/cg-toolkit)
  - [Unity tutorial : Shader tutorial](https://unity3d.com/kr/learn/tutorials/topics/graphics/gentle-introduction-shaders)
- - [Shaderlab Ref](http://chulin28ho.tistory.com/159)
- - [세이더 기초](http://jinhomang.tistory.com/43)
+ - [블로그 : Shaderlab Ref](http://chulin28ho.tistory.com/159)
+ - [블로그 : 세이더 기초](http://jinhomang.tistory.com/43)
  - [Unity wikibooks : cg programming](https://en.wikibooks.org/wiki/Cg_Programming/Unity)

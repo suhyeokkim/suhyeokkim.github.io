@@ -24,17 +24,20 @@ categories:
   forward rendering
   deferred rendering
 
-  screen space ambient occlusion
-  per-vertex ambient occlution
-
   phong reflecton = Ambient Light, Diffuse Light, Specular Reflection
   physics based rendering = reflection + albedo + refraction
     sRGB
     gamma correction
     bdrf vs bsrf vs btdf
+
+  screen space ambient occlusion
+  per-vertex ambient occlution
 -->
 
 ## 참조
 
+ - [GameDev : forward rendering vs deferred rendering](https://gamedevelopment.tutsplus.com/articles/forward-rendering-vs-deferred-rendering--gamedev-12342)
+ - [Wikipedia : Deferred shading](https://en.wikipedia.org/wiki/Deferred_shading)
+ - [LearnOGL : Deferred shading](https://learnopengl.com/#!Advanced-Lighting/Deferred-Shading)
  - [Ambient Light, Diffuse Light, Specular Reflectio](http://celdee.tistory.com/525)
  - [PBR For Artist](http://m.blog.naver.com/blue9954/220404249147)
