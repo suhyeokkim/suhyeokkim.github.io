@@ -26,10 +26,93 @@ Unity 에서 Shader 를 직접 만들어 사용하는 것에 대하여 알아보
 
 Unity 는 여러 메인 스트림의 쉐이더 언어를 통해 쉐이더 코딩이 가능하다. 각각 언어마다 큰 차이는 없다. DirectX 와 OpenGL 에서 각각 지원하는 HLSL, GLSL 은 C 기반의 언어이고, Unity 에서 가장 많이 쓰이는 CG 는 NVidia 에서 MS 와 협력하여 만들어졌기 때문에 HLSL 과 비슷할 수 밖에 없다.([Cg & HLSL FAQ](https://web.archive.org/web/20120824051248/http://www.fusionindustries.com/default.asp?page=cg-hlsl-faq)) 또한 쓰이는 문법도 많은 편은 아니라 한가지를 익혀두면 나머지를 사용하는데 크게 불편함은 없을 것이다. 물론 Unity 에서 쓰이는 쉐이더는 ShaderLab 을 기반으로 코딩해야 하기 때문에 네이티브 CG, HLSL, GLSL 과 전체적인 개괄은 다르다. 더 궁금한 사람은 Unity 본사 엔지니어 Aras 가 답변한 [질문 링크](https://forum.unity3d.com/threads/hlsl-cg-shaderlab.4300/) 를 보면 된다.
 
-Unity 의 기본적인 쉐이더 코딩은 ShaderLab 이라는 언어를 사용한다. 아래 예제를 살펴보자.
+Unity 의 기본적인 쉐이더 코딩은 ShaderLab 이라는 언어를 사용한다. 아래 ShaderLab 으로 되어있는 예제를 살펴보자.
 
 ```
 Shader "Custom/TextureColor" {
+	Properties {
+		_Color ("Color", Color) = (1,1,1,1)
+		_MainTex ("Texture", 2D) = "white" {}
+	}
+	SubShader {
+    Tags { "Queue"="Geometry" "RenderType"="Opaque" }
+
+		Pass {
+      Lighting Off
+
+			constantColor[_Color]
+			SetTexture[_MainTex] { combine texture * constant }
+		}
+	}
+
+  FallBack "Diffuse"
+}
+```
+
+위 예제는 색과 텍스쳐를 인자로 받아 텍스쳐에 색을 입혀서 출력해주는 간단한 예제다. 몇 줄 안되는 코드로 텍스쳐와 색을 입혔다. 언어 자체는 단순하고 간결하다. 다만 우리가 알아야하는 몇가지 문법이 있다. CG 나 HLSL 을 사용해도 결국 인라인, 삽입해서 사용하고 기본은 ShdaderLab 이기 때문에 전체를 감싸는 문법은 반드시 알아야 한다.
+
+가장 첫 줄에 Shader 이름을 적어주면 Unity 에서 매터리얼의 쉐이더를 선택하는 부분에 적어준 이름이 나온다. 그리고 밑부분을 보면 Properties 라는 항목들이 있다. 이 부분은 실제로 매터리얼에 저장하는 정보들을 정의해주는 부분으로 지정된 자료형들만 세팅이 가능하다. 위 코드에는 색과 텍스쳐를 넣어줄 수 있게 해놓았다. 그 다음부터는 실제로 렌더링을 하는 부분에 대한 코드들이다. 다만 조금의 구조가 있어 기본적인 사항은 숙지해야 한다. 기본만 알면 쉽게 코딩이 가능하다.
+
+SubShader 는 Shader 안에 여러개가 존재할 수 있는데 이는 꽤나 타당한 이유가 있다. 렌더링은 결국 빛과 여러 색들을 조합해서 화면에 뿌린다. 그리고 GPU 실제로 색을 그려준다. 그런데 낮은 버젼의 GPU 들은 꽤나 지원하지 않는 것들이 많다. GPU 별로 지원하는 Graphics API 버젼이 다른데 최신 기술을 쓰면 낮은 버젼의 Graphics API 를 지원하는 GPU 들은 해당 쉐이더 코드를 실행하지 못한다. 그래서 SubShader 의 개념을 두어 GPU 가 기능을 지원하지 못할 시 코드 상에서 아래 있는 걸로 한계단씩 내려가게 된다. 문제는 모든 SubShader 를 쓰지 못할때다. 그때는 Fallback 키워드에 적혀있는 쉐이더를 사용하여 그리게 한다. 위 예제 코드에서는 Diffuse 쉐이더를 사용하게 했다. 또한 Tag 를 설정해서 SubShader 를 Material 에서 설정할 수도 있다. Standard 쉐이더가 Tag 로 선택하는 기능을 지원한다.
+
+SubShader 는 전체적인 그리는 방법을 포함하는 개념이고 그 다음 하부로 내려가면 Pass 라는 개념이 있다. 이는 진~~~짜로 렌더링을 하는 구문으로써 이 부분에 그리는 방법을 서술한다. CG 나 HLSL 을 넣어줄 수도 있다. 자세한 문법은 [링크](http://chulin28ho.tistory.com/159)를 참조하라.
+
+특별하게 최적화를 할것이 아니라면 ShdaderLab 을 통해서 코딩을 해도 문제가 없다. 다만 좋은 퀄리티의 게임들은 대부분 쉐이더와 여러가지를 최적화를 시켜 주어야 하기 때문에 ShaderLab 만으로는 무리가 있다.
+
+결국 모든 것을 제어하려면 CG 나 HLSL 을 사용해야한다. 그래서 우리는 CG 를 통해서 Unity 에서 쉐이더 코딩을 할 것이다. CG 는 두가지 종류로 쉐이더 코딩을 지원한다. 하나는 표면 쉐이더(surface shader) 를 통한 코딩이고, 하나는 정점 쉐이더(vertex shader) 와 픽셀 쉐이더(pixel shader) 의 조합으로 사용된다.
+
+표면 쉐이더는 실제로는 없는 개념으로 쉐이더를 컴파일하면서 정점/픽셀 쉐이더로 변환되는 쉐이더 기능이다. 보통은 간단하고 빠르게 정점 라이팅을 코딩할 때 쓰인다. 기존에 존재하는 여러 라이팅 모델들을 지원하며 직접 정점 라이팅을 할 수도 있다. 다만 픽셀/프래그먼트 쉐이딩은 안된다. 그래서 상식적으로 생각하면 디퍼드 렌더링에서는 안되겠지만 디퍼드 렌더링에서도 가능하게 만들어 놓았다. 아래 표면 쉐이더의 예제를 보자. Unity 5.5.2f 버젼에서 기본으로 생성되는 쉐이더다.
+
+```
+Shader "Custom/NewSurfaceShader" {
+	Properties {
+		_Color ("Color", Color) = (1,1,1,1)
+		_MainTex ("Albedo (RGB)", 2D) = "white" {}
+		_Glossiness ("Smoothness", Range(0,1)) = 0.5
+		_Metallic ("Metallic", Range(0,1)) = 0.0
+	}
+	SubShader {
+		Tags { "RenderType"="Opaque" }
+		LOD 200
+
+		CGPROGRAM
+		// Physically based Standard lighting model, and enable shadows on all light types
+		#pragma surface surf Standard fullforwardshadows
+
+		// Use shader model 3.0 target, to get nicer looking lighting
+		#pragma target 3.0
+pler2D _MainTex;
+
+		struct Input {
+			float2 uv_MainTex;
+		};
+
+		half _Glossiness;
+		half _Metallic;
+		fixed4 _Color;
+
+		void surf (Input IN, inout SurfaceOutputStandard o) {
+			// Albedo comes from a texture tinted by color
+			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+			o.Albedo = c.rgb;
+			// Metallic and smoothness come from slider variables
+			o.Metallic = _Metallic;
+			o.Smoothness = _Glossiness;
+			o.Alpha = c.a;
+		}
+		ENDCG
+	}
+	FallBack "Diffuse"
+}
+```
+
+ShdaderLab 에 비하면 코드가 상당히 길다. 새롭게 변수를 세팅해 주어야 하기도 하고 몇가지 세팅을 해주어야 하기 때문이기도 하다. 이 코드에서는 라이팅을 Unity Standard 의 PBR 라이팅 모델을 사용하고 있다. 아래 surf 코드에서 값을 계산하거나 참조
+해서 반환해야 할 값을 넣어준다. 하지만 이 게시글에서 라이팅은 언급하지 않을 것이니 간단하게 보고만 넘어가자.
+
+다음은 정점/픽셀 쉐이더를 조합한 쉐이더다. 아주 기본적인 쉐이더로써 대부분의 Graphics API 에서 지원하는 방식과 상이하다. 다만 표면 쉐이더에 비해서는 해줘야할 것들이 상당히 많다. 라이팅은 직접 메쉬에서 데이터를 가져와서 계산해야한다. 또한 작성해야할 쉐이더 코드자체도 두개이기 때문에 할 일이 꽤 많다. 아래의 예제는 색과 텍스쳐를 입히는 예제다.
+
+```
+Shader "Custom/ColorTextureCG" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
@@ -37,33 +120,52 @@ Shader "Custom/TextureColor" {
 	SubShader {
 		Tags { "RenderType"="Opaque" }
 		LOD 200
-		Lighting On
-
-		Material {
-			Diffuse[_Color]
-		}
 
 		Pass {
-			SetTexture[_MainTex] { combine texture }
+			CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
+
+			#include "UnityCG.cginc"
+
+			struct appdata
+			{
+				float4 vertex : POSITION;
+				float2 uv : TEXCOORD0;
+			};
+
+			struct v2f
+			{
+				float2 uv : TEXCOORD0;
+				float4 vertex : SV_POSITION;
+			};
+
+			v2f vert (appdata v)
+			{
+				v2f o;
+				o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+				o.uv = v.uv;
+				return o;
+			}
+
+			fixed4 _Color;
+			sampler2D _MainTex;
+
+			fixed4 frag (v2f i) : SV_Target
+			{
+				fixed4 col = tex2D(_MainTex, i.uv);
+				return col * _Color;
+			}
+			ENDCG
 		}
 	}
 
 	FallBack "Diffuse"
 }
-
 ```
 
-<!--
-    ShaderLab 과 CG 에서 CG 를 사용하는 명확한 이유가 없음. 이거 존나 좆같음.
-    아주 로지컬한 논리가 필요해
--->
 
-[세이더 기초](http://jinhomang.tistory.com/43)
-
-[ShaderLab references](http://chulin28ho.tistory.com/159)
-
-하지만 오직 ShaderLab 만 사용해서 Shader 코딩을 하는 것은 한계가 있다. 기존에 있는 기능들만 지원하고 많은 것들을 통제하기 힘들다. 결국 모든 것을 바꾸려면 CG 나 HLSL 을 사용해야한다. 그래서 우리는 CG 를 통해서 Unity 에서 쉐이더 코딩을 할 것이다. 이유는 간단하다. 많은 쉐이더들이 CG 를 사용했기 때문이다. CG 는 두가지 종류로 쉐이더 코딩을 지원한다. 하나는 표면 쉐이더(surface shader) 를 통한 코딩이고, 하나는 정점 쉐이더(vertex shader) 또는 픽셀 쉐이더(pixel shader) 의 조합으로 사용된다.
-
+<!-- Standard asset : blur -->
 
 <!--
 oo  쉐이더는 뭐시당가?
@@ -86,6 +188,7 @@ xx  번외 : OnRenderTexture, rendertexture
   CG 예제
   - sufrace
   - vert/frag
+  - OnRenderTexture blur
 -->
 
 ## 참조
@@ -98,3 +201,4 @@ xx  번외 : OnRenderTexture, rendertexture
  - [Unity tutorial : Shader tutorial](https://unity3d.com/kr/learn/tutorials/topics/graphics/gentle-introduction-shaders)
  - [Shaderlab Ref](http://chulin28ho.tistory.com/159)
  - [Optimize shader](http://shimans.tistory.com/41)
+ - [세이더 기초](http://jinhomang.tistory.com/43)
