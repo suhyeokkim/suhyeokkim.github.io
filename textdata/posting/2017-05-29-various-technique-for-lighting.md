@@ -32,6 +32,11 @@ categories:
 
   screen space ambient occlusion
   per-vertex ambient occlution
+
+  global illumination
+
+  shadow mapping
+  raytracing shadow
 -->
 
 ## 참조

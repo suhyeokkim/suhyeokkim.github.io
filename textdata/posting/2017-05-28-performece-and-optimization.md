@@ -9,9 +9,10 @@ categories:
 
 
 <!--
-  texture compression
-  forward lighting, deffered lighting
   batching, drawcall, setpass
+
+  1. 메쉬 한개로 합치기
+  2. 매터리얼 한개로 합치기
 -->
 
 ## 참조
