@@ -20,8 +20,8 @@ permalink: /edu/
 - Step 1 : [Handling vertices and indices]({{ site.baseurl }}{% post_url 2017-05-14-handling-vertices-and-indices-in-unity %})
 - Step 2 : [Handling uv and material]({{ site.baseurl }}{% post_url 2017-05-15-handling-uv-and-material-in-unity %})
 - Step 3 : [Handling rig and animate]({{ site.baseurl }}{% post_url 2017-05-19-handling-rig-and-skinning %})
-- Step 4 : [Simple shader programming by cg]({{ site.baseurl }}{% post_url 2017-05-29-simple-shader-programming %})
-- Step 5 : Various technique for lighting
+- Step 4 : [Simple shader programming]({{ site.baseurl }}{% post_url 2017-05-29-simple-shader-programming %})
+- Step 5 : [Various technique for rendering]({{ site.baseurl }}{% post_url 2017-06-02-various-technique-for-rendering %})
 - Step 6 : Performences and Optimization
 - Step 7 : RenderHell in GPU
 
