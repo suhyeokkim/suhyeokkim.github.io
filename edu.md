@@ -22,7 +22,7 @@ permalink: /edu/
 - Step 3 : [Handling rig and animate]({{ site.baseurl }}{% post_url 2017-05-19-handling-rig-and-skinning %})
 - Step 4 : [Simple shader programming]({{ site.baseurl }}{% post_url 2017-05-29-simple-shader-programming %})
 - Step 5 : [Various technique for rendering]({{ site.baseurl }}{% post_url 2017-06-02-various-technique-for-rendering %})
-- Step 6 : Performences and Optimization
+- Step 6 : [Performences and Optimization]({{ site.baseurl }}{% post_url 2017-06-08-performence-and-optimization %})
 - Step 7 : RenderHell in GPU
 
 ### Commons
