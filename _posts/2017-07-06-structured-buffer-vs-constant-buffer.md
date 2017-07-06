@@ -13,7 +13,9 @@ CG 로 쉐이더 코딩을 하기 위해 여러 소스와 웹페이지를 뒤지
 
 <!-- more -->
 
-_Constant Buffer_ - 이름을 직역하면 상수 버퍼다. 직관적인 느낌은 단순한 고정값 참조를 위한 버퍼인 것 같다.
+## _Constant Buffer_
+
+이름을 직역하면 상수 버퍼다. 직관적인 느낌은 단순한 고정값 참조를 위한 버퍼인 것 같다.
 
 [MSDN : Shader Constants](https://msdn.microsoft.com/ko-kr/library/windows/desktop/bb509581%28v=vs.85%29.aspx) 페이지에서 자세한 정보를 확인할 수 있다. 문서의 내용은 _Shdaer Model 4_ (DirectX10 이 _Shdaer Model 4_ 를 지원함.) 부터 쉐이더에서 쓰이는 상수(쉐이더 코드에서 변화시키지 않는 변수, 이하  _Shader Constants_) 전용 버퍼 리소스를 제공한다고 한다. _Shader Constants_ 의 장점은 변경되지 않는 특징을 사용해 CPU 로 부터 낮은 시간으로 더 많이 업데이트를 받을 수 있다는 장점이 있다. 단점은 빠른만큼 제약조건이 여러개 있다는 것이다. 데이터의 크기는 정해져 있어야 하며 일정 크기를 넘기지 못한다. 그리고 데이터의 레이아웃(데이터를 정의하는데에 한계가 있는 듯하다. 필자는 정확히 모름)과 데이터를 접근할 때 한 쉐이더에서만 접근이 가능하다. 정점 쉐이더면 정점 쉐이더 전용, 프래그먼트 쉐이더면 프래그먼트 전용 상수 버퍼를 쓸 수 있다는 말이다.
 
@@ -38,6 +40,8 @@ cbuffer _CBufferName {
 Unity 에서 제공하는 예제는 단순하게 컬러값을 인스턴스별로 바꾸게 해주는 그리하여 여러개의 메터리얼을 사용하지 않아 쓸데없는 _SetPass_ 를 안하게 해주는 예제다. 이 값들은 쉐이더에서 변경할 필요가 없는 상수 값이므로 _cbuffer_ 를 사용해도 문제가 없다.
 
 하지만 필자는 [Appocrypha : GPU Instancing]({{ site.baseurl }}{% post_url 2017-06-08-performence-and-optimization %}) 글에서 _cbuffer_ 가 추구하는 방향과는 조금 다르게 사용했다. 저 글을 쓸때 한창 스키닝에 대해 관심이 많았기 때문에 _cbuffer_ 를 사용해서 각 뼈들의 위치와 회전 데이터들을 사용했다. 하지만 저 사용용도는 그다지 좋지 않은 생각이였다. 이유는 글의 끝에서 말하겠다.
+
+## _StructuredBuffer_
 
 다음으로 알아볼 것은 _StructuredBuffer_ 다. 이 역시 맨 처음 등장한 것은 _Shader Model 4_ 부터 등장했다. 초기에는 사용 용도가 약간 한정되어 있는 것처럼 나온다. _Shader Model 4_ 에서는 읽기 전용의 버퍼만 지원하고, 버퍼의 종류가 적었다. 또한 사용 용도가 컴퓨터 쉐이더와 픽셀 쉐이더로 한정 되어 있었다고 한다. _Shader Model 5_ 부터는 다양한 변종의 버퍼들을 지원하고, 모든 쉐이더 코드에서 사용이 가능하게 되었다. 이는 쉐이더 코딩의 여러 가능성을 열어 주었다.
 
@@ -65,6 +69,8 @@ v2f vert (uint vertexID : SV_VertexID)
 ```
 
 _Shader Model 5_ 에서는 쓰기도 가능한 _RWStructuredBuffer_ 와 단순한 데이터 한개씩 저장하는 _Buffer_, _RWBuffer_ 등 특이한 다른 컨테이너도 지원해서 꽤나 재미있는 코딩이 가능할 듯 하다.
+
+## 결론?
 
 _StructuredBuffer_ 의 장단점에 대해서는 말하지 않았다. MSDN 에서도 그다지 자세하게 쓰여있지는 않다. 사실 필자도 그다지 관심이 없었다. 그냥 있으면 있는대로 쓰는거지 라는 생각을 당분간 하다가 문득 의문이 들었다. 도대체 무슨 차이길래 다르게 지원하는 것인가에 대한 의문이였다. 그래서 [GameDev : structured buffer vs constant buffer](https://www.gamedev.net/forums/topic/624529-structured-buffers-vs-constant-buffers/) 을 찾아 읽었고 꽤나 흥미로운 사실이였다. [원문 링크](https://www.gamedev.net/forums/topic/624529-structured-buffers-vs-constant-buffers/)
 
