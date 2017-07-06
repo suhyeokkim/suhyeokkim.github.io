@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-07-06T13:39:45+00:00</updated>
+  <updated>2017-07-06T13:47:02+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -165,6 +165,8 @@ v2f vert (uint vertexID : SV_VertexID)
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;em&gt;Shader Model 5&lt;/em&gt; 에서는 쓰기도 가능한 &lt;em&gt;RWStructuredBuffer&lt;/em&gt; 와 단순한 데이터 한개씩 저장하는 &lt;em&gt;Buffer&lt;/em&gt;, &lt;em&gt;RWBuffer&lt;/em&gt; 등 특이한 다른 컨테이너도 지원해서 꽤나 재미있는 코딩이 가능할 듯 하다.&lt;/p&gt;
+
+&lt;h2&gt;결론?&lt;/h2&gt;
 
 &lt;p&gt;&lt;em&gt;StructuredBuffer&lt;/em&gt; 의 장단점에 대해서는 말하지 않았다. MSDN 에서도 그다지 자세하게 쓰여있지는 않다. 사실 필자도 그다지 관심이 없었다. 그냥 있으면 있는대로 쓰는거지 라는 생각을 당분간 하다가 문득 의문이 들었다. 도대체 무슨 차이길래 다르게 지원하는 것인가에 대한 의문이였다. 그래서 &lt;a href=&quot;https://www.gamedev.net/forums/topic/624529-structured-buffers-vs-constant-buffers/&quot;&gt;GameDev : structured buffer vs constant buffer&lt;/a&gt; 을 찾아 읽었고 꽤나 흥미로운 사실이였다. &lt;a href=&quot;https://www.gamedev.net/forums/topic/624529-structured-buffers-vs-constant-buffers/&quot;&gt;원문 링크&lt;/a&gt;&lt;/p&gt;
 

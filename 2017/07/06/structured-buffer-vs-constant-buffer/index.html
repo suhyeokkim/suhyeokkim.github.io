@@ -347,6 +347,8 @@ v2f vert (uint vertexID : SV_VertexID)
 
 <p><em>Shader Model 5</em> 에서는 쓰기도 가능한 <em>RWStructuredBuffer</em> 와 단순한 데이터 한개씩 저장하는 <em>Buffer</em>, <em>RWBuffer</em> 등 특이한 다른 컨테이너도 지원해서 꽤나 재미있는 코딩이 가능할 듯 하다.</p>
 
+<h2>결론?</h2>
+
 <p><em>StructuredBuffer</em> 의 장단점에 대해서는 말하지 않았다. MSDN 에서도 그다지 자세하게 쓰여있지는 않다. 사실 필자도 그다지 관심이 없었다. 그냥 있으면 있는대로 쓰는거지 라는 생각을 당분간 하다가 문득 의문이 들었다. 도대체 무슨 차이길래 다르게 지원하는 것인가에 대한 의문이였다. 그래서 <a href="https://www.gamedev.net/forums/topic/624529-structured-buffers-vs-constant-buffers/">GameDev : structured buffer vs constant buffer</a> 을 찾아 읽었고 꽤나 흥미로운 사실이였다. <a href="https://www.gamedev.net/forums/topic/624529-structured-buffers-vs-constant-buffers/">원문 링크</a></p>
 
 <p>질문글은 <em>cbuffer</em> 와 <em>StructuredBuffer</em> 의 차이점에 대한 데이터가 없어 무슨 차이 인지, 그리고 3가지의 예시를 들어 각각 어떤게 더 알맞는지에 대한 구체적인 글이였다. 글또한 꽤나 잘쓰여져 있지만 질문글 보다 더욱더 봐야할 것은 아래에 달린 답글 2개다. 일반적으로 알기 힘든 사실들을 다루고 있다. 하나의 글은 두 버퍼의 차이에 대하여 써놨으며 하나의 답글은 질문글의 핀트에 맞추어 답글을 써놓았다. 해당 글의 답변 해석은 블로그에 올려놓았다. <a href="/2017/07/06/translate-gamedev-structured-buffer-vs-constant-buffer/">글 링크</a> 에서 보면 된다.</p>
