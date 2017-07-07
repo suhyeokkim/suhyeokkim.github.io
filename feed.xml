@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-07-07T08:13:14+00:00</updated>
+  <updated>2017-07-07T13:19:21+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -24,6 +24,83 @@
     </author>
   
 
+  
+  
+    <entry>
+      
+      <title type="html">Introduce Of Skinning</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/07/07/introduce-of-skinning/" rel="alternate" type="text/html" title="Introduce Of Skinning" />
+      <published>2017-07-07T00:00:00+00:00</published>
+      <updated>2017-07-07T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/07/07/introduce-of-skinning</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/07/07/introduce-of-skinning/">&lt;p&gt;2달전 쯤에 스키닝에 대한 글을 본적이 있다. 그때는 스키닝이 뭔지도 정확히 모르던 시점이였다. Unity 에서는 LBS 라는 방법으로 스키닝을 지원하는데 이 방식보다 나은 방식이 있는데 어찌하여 옛날 방식을 지원하는지에 대한 불만글이였다. 그래서 공부할 것을 찾던 필자는 Unity 에서의 커스텀 스키닝을 구현을 목표로 잡았다. 정리를 위해 하나하나 글을 남겨보도록 하겠다. 이 글에서는 간단히 스키닝의 개념에 대해서 써보도록 하겠다. 이전에 쓴 &lt;a href=&quot;/2017/05/19/handling-rig-and-skinning/&quot;&gt;handling rig and skinning&lt;/a&gt; 에서도 간략하게 다루었지만 기초 지식이 없는 상태에서 급하게 쓴 글이였고, 굉장히 Unity 스러운 글이기에 다시 처음부터 써보겠다.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;일반적으로 3D 물체는 대부분 고정된 정점을 가지고 그대로 그려진다. 물체의 정점들이 한꺼번에 움직이는 방법은 흔하나 정점 하나하나 각자 움직이는 경우는 몇 없다. 모든 정점이 자기만의 기준을 가지고 움직이면 엄청난 계산량을 요구하기 때문이다. 하지만 게임을 만들려면 정점을 움직여서 표현하여 보다 실제적인 움직임을 연출할 수 있을 수도 있다. 극단적인 예를 들면 펄럭이는 옷가지라던가 부서지는 오브젝트가 있겠다. 하지만 방금전에 말한 두가지는 굉장히 극단적인 이야기이고 살아 움직이는 물체를 표현하기 위해 스키닝이라는 기술이 있다. 예를 들면 사람 혹은 동물이 있겠다.&lt;/p&gt;
+
+&lt;p&gt;스키닝이라는 말은 직역하면 &lt;em&gt;“피부를 입히다.”&lt;/em&gt; 라는 뜻이다. 하지만 일반적인 3D 오브젝트는 정해진 정점들을 이어서 삼각형을 만들어 꽤 많은 갯수의 삼각형으로 외형을 표현한다. 이렇게 생각하면 바깥의 피부를 입힌다는 것은 조금 이해가 안될 것이다. 여태까지 엄청나게 많은 이론이 나왔지만 게임에서 쓰이는 3D 모델의 스키닝이라는 용어는 일반적으로 생각하는 뜻이 있다.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;정점의 집합으로 이루어진 3D 물체에서 특정한 위치를 가지고 있는 “뼈” 라는 개념이 있다.&lt;/li&gt;
+  &lt;li&gt;“뼈” 는 일반적은 3D 오브젝트가 가질 수 있는 변환을 할 수 있다. (Translate, Rotation, Scale)&lt;/li&gt;
+  &lt;li&gt;각 정점들은 특정한 “뼈” 를 기준으로 잡아 기준이 되는 “뼈” 의 변환 정보를 각 정점에 적용시켜 뼈가 움직이면 정점도 같이 움직이게 된다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;위에서 설명한 세가지가 적용이 된것이 “스키닝” 이 적용된 3D 물체라고 할 수 있다. 이 간단한 개념이 확장되어 현 시대의 게임에서도 쓰이고 있다. 매우 간단한 이 방법은 약간의 문제가 있다. 관절같은 경우 두개이상의 “뼈” 변환을 참조해야 한다. 어떻게 두개 이상의 “뼈” 변환을 합칠 것인가? 이 문제는 아직까지도 완전히 해결되지 않았고 이 문제를 해결하기 위해 꽤 많은 논문들이 나왔다. 단순히 뼈를 이용하는 방식 뿐만아니라 다양한 방식으로도 말이다. 먼저 가장 널리 알려지고 가장 많이 쓰이는 방법에 대해서 알아보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Linear Blend Skinning&lt;/em&gt; 이라는 방법이 있다. 이 방법은 굉~장히 단순하다. 그만큼 많이 쓰이는 듯 싶다. 논문이 1988년에 나온 기술로.. 조금만 잔머리 굴리면 쓸만한 내용이다. 두개 이상의 뼈의 변환 행렬을 정점 위치를 계산하여 정해진 가중치에 비례해서 값을 섞는다. 이 방식은 보통 값과 값사이의 특정한 위치를 가져올때 쓰이는 방법이다. 이 방식은 수학적으로 생각해보면 울퉁불퉁한 곡선에 해당되는게 아니라 선형적으로 값을 보간하는 방법이므로 &lt;em&gt;Linear Blend Skinning&lt;/em&gt; 이라고 불리는 것이다. Unity 의 스키닝된 메쉬를 그리는 &lt;em&gt;Skinned Mesh Renderer&lt;/em&gt; 컴포넌트가 아직도 LBS 를 사용하고 있다. 하지만 이 방법은 흔히 알려진 문제가 하나 있다. &lt;em&gt;‘Candy Wrapper’&lt;/em&gt; - 한국어로 사탕 껍질 이라고 불리는 현상인데, 아래 그림의 사탕 껍질을 이야기 하는 것이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/candy_wrapper.jpg&quot; alt=&quot;사탕 껍질&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;주목할 것은 안의 사탕이 아니라 양 옆의 꼬여져서 엄청 가늘어진 상태의 껍질이다. LBS 를 사용하면 해당 오브젝트의 관절이 저렇게 표현될 수 있다. 해당 축으로 180도 돌리면 말이다. 아래 그림에 상세하게 나온다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/umbra-ignite-2015-rulon-raymond-the-state-of-skinning-a-dive-into-modern-approaches-to-model-skinning-33-638.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;하여튼 &lt;em&gt;Linear Based Blending&lt;/em&gt; 은 현 시대에서는 그다지 유용한 기술은 아니다. 하지만 많은 곳에서 채택되어 아직도 남아있다. 많은 사람들의 관심이 몰리는 분야는 아니기 때문에 기술 발전 자체는 그다지 빠른편이 아니다. 하지만 30년 전의 기술을 아직도 쓴다는건 그리 좋은 생각은 아닌 것 같다. 이를 위해 10년전에 괜찮은 수 체계를 도입했다. 이는 다음 글에서 설명하겠다.&lt;/p&gt;
+
+&lt;h2&gt;참조&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://simonschreibt.de/gat/renderhell-book1/&quot;&gt;RenderHell&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.fratarcangeli.net/wp-content/uploads/GRAPP.pdf&quot;&gt;Paper : State of the Art in Skinning Techniques for Articulated Deformable Characters&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="unity" />
+      
+        <category term="skinning" />
+      
+        <category term="vertex deformation" />
+      
+        <category term="try" />
+      
+
+      
+
+      
+        <summary type="html">2달전 쯤에 스키닝에 대한 글을 본적이 있다. 그때는 스키닝이 뭔지도 정확히 모르던 시점이였다. Unity 에서는 LBS 라는 방법으로 스키닝을 지원하는데 이 방식보다 나은 방식이 있는데 어찌하여 옛날 방식을 지원하는지에 대한 불만글이였다. 그래서 공부할 것을 찾던 필자는 Unity 에서의 커스텀 스키닝을 구현을 목표로 잡았다. 정리를 위해 하나하나 글을 남겨보도록 하겠다. 이 글에서는 간단히 스키닝의 개념에 대해서 써보도록 하겠다. 이전에 쓴 handling rig and skinning 에서도 간략하게 다루었지만 기초 지식이 없는 상태에서 급하게 쓴 글이였고, 굉장히 Unity 스러운 글이기에 다시 처음부터 써보겠다.</summary>
+      
+
+      
+      
+    </entry>
+  
   
   
     <entry>
@@ -2855,113 +2932,6 @@ xx  C# 에서의 코드 블록 지원, 코드에서 사용되는 IEnumerator 의
 
       
         <summary type="html">C# 문법은 클래스, 구조체, 열거형, 멤버 변수, 메소드등 여러 타입에 표시를 하는 기능을 제공한다. 이 표시들을 C# 문법에서는 Attribute(속성) 라고 칭한다. 그리고 이 속성을 사용하여 Unity 에서는 많은 기능들을 제공한다. 아래 우리가 가장 많이 볼만한 속성을 사용한 예제가 있다.</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Using Scriptable Object</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/04/09/using-scriptable-object/" rel="alternate" type="text/html" title="Using Scriptable Object" />
-      <published>2017-04-09T00:00:00+00:00</published>
-      <updated>2017-04-09T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/04/09/using-scriptable-object</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/04/09/using-scriptable-object/">&lt;p&gt;2년전 Unity 로 모바일 게임 개발을 시작했었다. 학생 시절 간단하게 게임을 만든적은 있었지만 Unity 로 게임을 만들어본 적은 한번도 없었기에 매우 어려운 도전이였다. 그래서 Unity 시스템에 대해 간단히 알고 개발을 시작했었는데 당시에는 ScriptableObject 의 기능을 모르고 있던터라 단순히 Prefab 만으로 데이터를 저장하고 있었다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/subwaysurfer.png&quot; alt=&quot;Subway suffer&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;당시 만든 게임은 3D 러닝 게임이였는데, 서브웨이 서퍼과 비슷한 방식의 게임이였다. 핵심은 어떻게 맵을 계속 나타나게 하느냐 였는데, 나는 단순하게 플레이어의 위치에 따라 맵을 계속 이어붙였다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/map_example_0.png&quot; alt=&quot;runtime map&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Map 은 Prefab 단위로 구성되어 있었는데, Map Prefab 에는 플레이어가 지나갈 길의 정보, 3D 메쉬 정보가 있었다. 그리고 맵 종류별로 풀링을 하여 활용했었다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/map_example_1.png&quot; alt=&quot;map pooling&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;여기서 한가지 아쉬운게 있다면 Map Prefab 별로 모두 길 정보를 가지고 있는게 아쉬웠다. 프리팹은 보이는 정보만 가지고 길 정보는 따로 존재해  참조하는 방식이 조금 더 나았을 것이다. 종류 별로 반복되는 길 정보가 많았기 때문에 더욱 아쉬웠다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/map_example_2.png&quot; alt=&quot;map refer to road data&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;위와 같이 길 정보는 따로 존재하고 맵이 길 정보를 참조하는 방식으로 말이다. 하지만 위와 같은 방식을 고안하더라도 실제로 구현할 방법을 몰랐기 때문에 방치했었다. 하지만 지금은 독립적으로 존재하는 데이터 에셋을 만드는 방법을 알고 있다. 그건 바로 ScriptableObject 라는 에셋 타입이다.
-&lt;!-- more --&gt;&lt;/p&gt;
-&lt;h2&gt;정적인 에셋 타입 : ScriptableObject&lt;/h2&gt;
-
-&lt;p&gt;ScriptableObject 는 Inspector 에 존재하는 데이터 에셋의 종류 중 하나다. Prefab 처럼 그 자체를 복사할 수 없고, 단지 독립적으로 존재한다. 그래서 ScriptableObject 를 참조해서 데이터에 접근할 수 있다. 이름처럼 스크립트에서 ScriptableObject 라는 클래스를 상속받아 활용하며 데이터 직렬화를 지원하기 때문에 컴포넌트 스크립팅 처럼 데이터를 저장하여 사용가능하다. 시작할 때 언급한 길 정보를 ScriptableObject 로 직접 만들어 보았다.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c#&quot; data-lang=&quot;c#&quot;&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;UnityEngine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;na&quot;&gt;[CreateAssetMenu(fileName = &quot;RoadData&quot;, menuName = &quot;Examples/RoadData&quot;)]&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;RoadDataOjbect&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ScriptableObject&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SerializeField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Vector3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;roadPositionArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Length&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;roadPositionArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Vector3&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;GetPositionAt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;idx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;roadPositionArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;idx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;위의 구현을 보면 필요한 데이터(위에서는 위치정보)를 저장하기만 한다. 스크립팅 방식은 저장할 데이터를 선언만 해주고, 그 데이터를 관리하는 코드만 짜주면 된다. 컴포넌트 스크립팅과 조금 다른점은 직접 행동하는 개체가 아니기 때문에 실제 게임 로직은 제외해서 코딩을 하게 된다.&lt;/p&gt;
-
-&lt;p&gt;하지만 ScriptableObject 의 의의는 스크립팅 방식이 아니라, 독립적으로 존재하는 것에 의미를 더 부여한다. 정확히 정의하자면 “독립적으로 존재하는 데이터의 집합 에셋” 이라고 할 수 있다. 그래서 독립적으로 존재하기 위해 파일로 직접 만들어주는 코드가 필요하다.&lt;/p&gt;
-
-&lt;p&gt;그 코드가 클래스 선언위의 &lt;a href=&quot;https://docs.unity3d.com/ScriptReference/CreateAssetMenuAttribute.html&quot;&gt;CreateAssetMenu&lt;/a&gt; 라는 속성이다. MonoBehaviour 를 활용한 스크립트는 컴포넌트로 취급되기 때문에 GameObject 에 붙이기만 하면 자연스럽게 사용할 수 있다. 하지만 ScriptableObject 는 독립적으로 존재하기 때문에 생성하는 코드를 만들어 주어야 한다. 저 속성을 붙이면 아래 그림처럼 메뉴에 만드는 코드가 추가된다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/make_scriptableobject.png&quot; alt=&quot;make scriptableObject&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;위의 그림처럼 메뉴를 선택하면 아래 그림과 같이 스크립트를 만들때와 동일하게 이름을 설정하고 파일을 만들 수 있다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/make_scriptableobject_inspector.png&quot; alt=&quot;make scriptableObject inspector&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;위 예제에서는 ScriptableObject 를 단순히 데이터 자체만 저장하는 용도로 쓰는 예시를 보여주었다. 단순 데이터 저장 방식으로도 많이 쓰이지만 이를 프로젝트 내의 에셋을 연결시켜주는 용도로도 사용할 수 있다. 아래 그림처럼 말이다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/set_scriptableobject.png&quot; alt=&quot;set of asset or data&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;ScriptableObject 에 단순 데이터, 관련된 애셋들을 묶어 관리하면 조금더 효율적으로 관리할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/hrmrzizon/UnityExample&quot;&gt;UnityExample&lt;/a&gt; 에 위에서 나온 예들을 적용시킨 예제가 있으니 살펴보길 바란다.&lt;/p&gt;
-
-&lt;h2&gt;참조&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/kr/current/Manual/script-Serialization.html&quot;&gt;Untiy Serialize&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/kr/current/Manual/class-ScriptableObject.html&quot;&gt;Unity ScriptableObject&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://blog.naver.com/PostView.nhn?blogId=hammerimpact&amp;amp;logNo=220770261760&quot;&gt;네이버 블로그&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://unity3d.com/kr/learn/tutorials/modules/beginner/live-training-archive/scriptable-objects&quot;&gt;Unity ScriptableObject Guideline&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="unity" />
-      
-        <category term="try" />
-      
-
-      
-
-      
-        <summary type="html">2년전 Unity 로 모바일 게임 개발을 시작했었다. 학생 시절 간단하게 게임을 만든적은 있었지만 Unity 로 게임을 만들어본 적은 한번도 없었기에 매우 어려운 도전이였다. 그래서 Unity 시스템에 대해 간단히 알고 개발을 시작했었는데 당시에는 ScriptableObject 의 기능을 모르고 있던터라 단순히 Prefab 만으로 데이터를 저장하고 있었다. 당시 만든 게임은 3D 러닝 게임이였는데, 서브웨이 서퍼과 비슷한 방식의 게임이였다. 핵심은 어떻게 맵을 계속 나타나게 하느냐 였는데, 나는 단순하게 플레이어의 위치에 따라 맵을 계속 이어붙였다. Map 은 Prefab 단위로 구성되어 있었는데, Map Prefab 에는 플레이어가 지나갈 길의 정보, 3D 메쉬 정보가 있었다. 그리고 맵 종류별로 풀링을 하여 활용했었다. 여기서 한가지 아쉬운게 있다면 Map Prefab 별로 모두 길 정보를 가지고 있는게 아쉬웠다. 프리팹은 보이는 정보만 가지고 길 정보는 따로 존재해 참조하는 방식이 조금 더 나았을 것이다. 종류 별로 반복되는 길 정보가 많았기 때문에 더욱 아쉬웠다. 위와 같이 길 정보는 따로 존재하고 맵이 길 정보를 참조하는 방식으로 말이다. 하지만 위와 같은 방식을 고안하더라도 실제로 구현할 방법을 몰랐기 때문에 방치했었다. 하지만 지금은 독립적으로 존재하는 데이터 에셋을 만드는 방법을 알고 있다. 그건 바로 ScriptableObject 라는 에셋 타입이다.</summary>
       
 
       
