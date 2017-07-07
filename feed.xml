@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-07-07T04:50:15+00:00</updated>
+  <updated>2017-07-07T08:13:14+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -173,8 +173,6 @@ v2f vert (uint vertexID : SV_VertexID)
 &lt;p&gt;질문글은 &lt;em&gt;cbuffer&lt;/em&gt; 와 &lt;em&gt;StructuredBuffer&lt;/em&gt; 의 차이점에 대한 데이터가 없어 무슨 차이 인지, 그리고 3가지의 예시를 들어 각각 어떤게 더 알맞는지에 대한 구체적인 글이였다. 글또한 꽤나 잘쓰여져 있지만 질문글 보다 더욱더 봐야할 것은 아래에 달린 답글 2개다. 일반적으로 알기 힘든 사실들을 다루고 있다. 하나의 글은 두 버퍼의 차이에 대하여 써놨으며 하나의 답글은 질문글의 핀트에 맞추어 답글을 써놓았다. 해당 글의 답변 해석은 블로그에 올려놓았다. &lt;a href=&quot;/2017/07/06/translate-gamedev-structured-buffer-vs-constant-buffer/&quot;&gt;글 링크&lt;/a&gt; 에서 보면 된다.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;cbuffer&lt;/em&gt; 는 레지스터를 사용하여 작으나 빠르고, 배열을 각각 다른 스레드에서 전부 다른 인덱스로 접근하면 느려진다. &lt;em&gt;StructuredBuffer&lt;/em&gt; 조금은 느리나 내부적으로 thread-safe 하게 구현되어 있고, 데이터 캐싱을 한다. 또한 크기의 제한이 없어 자유롭게 쓰고, 크기가 입력에 따라서 달라져서 유동적인 데이터에 쓸만하다는 것이다. 위에서 스키닝을 &lt;em&gt;cbuffer&lt;/em&gt; 로 사용한게 문제라고 했었는데, 글을 보면 알겠지만 &lt;em&gt;cbuffer&lt;/em&gt; 에서 각각 다른 인덱스로 접근하면 느려지니 문제인 것이다.&lt;/p&gt;
-
-&lt;p&gt;무심코 지나칠 뻔했다. 누구나 귀차니즘을 가지고 있기 때문이다. 하지만 궁금증이 귀차니즘을 이겼기에 이 지식을 얻어간다. 다른 사람들도 좋은 결과를 얻었으면 좋겠다.&lt;/p&gt;
 
 &lt;h2&gt;참조&lt;/h2&gt;
 
