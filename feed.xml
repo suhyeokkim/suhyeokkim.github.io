@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-07-20T04:58:35+00:00</updated>
+  <updated>2017-07-20T12:19:22+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -59,6 +59,8 @@
 &lt;p&gt;&lt;img src=&quot;/images/umbra-ignite-2015-rulon-raymond-the-state-of-skinning-a-dive-into-modern-approaches-to-model-skinning-33-638.jpg&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;하여튼 &lt;em&gt;Linear Based Blending&lt;/em&gt; 은 현 시대에서는 그다지 유용한 기술은 아니다. 하지만 많은 곳에서 채택되어 아직도 남아있다. 많은 사람들의 관심이 몰리는 분야는 아니기 때문에 기술 발전 자체는 그다지 빠른편이 아니다. 하지만 30년 전의 기술을 아직도 쓴다는건 그리 좋은 생각은 아닌 것 같다. 이를 위해 10년전에 괜찮은 수 체계를 도입했다. 이는 다음 글에서 설명하겠다.&lt;/p&gt;
+
+&lt;p&gt;혹시 &lt;em&gt;Linear Blend Skinning&lt;/em&gt; 의 Unity 구현을 보고 싶으면 &lt;a href=&quot;https://github.com/hrmrzizon/CustomSkinningExample&quot;&gt;GitHub : CustomSkinningExample&lt;/a&gt; 에서 보면 된다.&lt;/p&gt;
 
 &lt;h2&gt;참조&lt;/h2&gt;
 
