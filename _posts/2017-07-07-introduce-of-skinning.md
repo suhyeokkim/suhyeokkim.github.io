@@ -31,7 +31,8 @@ _Linear Blend Skinning_ 이라는 방법이 있다. 이 방법은 굉~장히 단
 
 ![](/images/umbra-ignite-2015-rulon-raymond-the-state-of-skinning-a-dive-into-modern-approaches-to-model-skinning-33-638.jpg){: .center-image}
 
-하여튼 _Linear Based Blending_ 은 현 시대에서는 그다지 유용한 기술은 아니다. 하지만 많은 곳에서 채택되어 아직도 남아있다. 많은 사람들의 관심이 몰리는 분야는 아니기 때문에 기술 발전 자체는 그다지 빠른편이 아니다. 하지만 30년 전의 기술을 아직도 쓴다는건 그리 좋은 생각은 아닌 것 같다. 이를 위해 10년전에 괜찮은 수 체계를 도입했다. 이는 다음 글에서 설명하겠다.
+하여튼 _Linear Based Blending_ 은 현 시대에서는 그다지 유용한 기술은 아니다. 하지만 많은 곳에서 채택되어 아직도 남아있다. 많은 사람들의 관심이 몰리는 분야는 아니기 때문에 기술 발전 자체는 그다지 빠른편이 아니다. 하지만 30년 전의 기술을 아직도 쓴다는건 그리 좋은 생각은 아닌 것 같다. 이를 위해 10년전에 괜찮은 수 체계를 도입했다. 이는 다음 글에서 설명하겠다. 다음 글 : [_dual quaternion skinning_]({{ site.baseurl }}{% post_url 2017-07-20-dual-quaternion-skinning %})
+
 
 혹시 _Linear Blend Skinning_ 의 Unity 구현을 보고 싶으면 [GitHub : CustomSkinningExample](https://github.com/hrmrzizon/CustomSkinningExample) 에서 보면 된다.
 
