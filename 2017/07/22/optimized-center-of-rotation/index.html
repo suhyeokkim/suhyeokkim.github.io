@@ -329,7 +329,7 @@
 
 <p>직접 스키닝을 계산하는 방법도 간단하다. 회전 연산은 기존의 행렬로 계산하던 것을 사원수로 변환 후 회전 연사을 하는 사원수를 <em>blending</em> 하면된다. 위치 이동 연산은 살짝 다른데, <em>linear blending skinning</em> 에서 정점을 계산하는 식을 정점 대신 <em>center of rotation</em> 으로 계산 후에 그 값에다가 <em>blending</em> 된 사원수로 <em>center of rotation</em> 값을 변환시켜 빼주면 위치 이동 값(translate)가 완성된다. 위치 이동 값(translate)는 정점을 회전 연산 후에 값을 더해주기만 하면 된다.</p>
 
-<p><em>optimized center of rotation</em> 을 계산하는 코드와 해당 skinning 방법을 Unity 로 구현해 놓았다. <a href="https://github.com/hrmrzizon/CustomSkinningExample">Github : CustomSkinningExample</a> 에서 확인할 수 있다.</p>
+<p><em>optimized center of rotation</em> 을 계산하는 코드와 해당 skinning 방법을 Unity 로 구현해 놓았다. <a href="https://github.com/hrmrzizon/CustomSkinningExample">Github : CustomSkinningExample</a> 에서 확인할 수 있다. (<em>center of rotation</em> 을 정확하게 논문에 나온대로 계산하는 코드를 짠것은 아닙니다. 그 부분은 이해 해주시고 참고해주길 바랍니다. 또한 자세한 방법을 아시는 분은 댓글 달아주시면 감사하겠습니다.)</p>
 
 <h2>참조</h2>
 
