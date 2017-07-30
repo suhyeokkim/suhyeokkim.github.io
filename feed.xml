@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-07-30T05:04:52+00:00</updated>
+  <updated>2017-07-30T13:39:57+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -24,6 +24,81 @@
     </author>
   
 
+  
+  
+    <entry>
+      
+      <title type="html">Normal Tangent Binormal</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/07/30/normal-tangent-binormal/" rel="alternate" type="text/html" title="Normal Tangent Binormal" />
+      <published>2017-07-30T00:00:00+00:00</published>
+      <updated>2017-07-30T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/07/30/normal-tangent-binormal</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/07/30/normal-tangent-binormal/">&lt;p&gt;Graphics 를 공부하다보면 노말(normal), 탄젠트(tangent), 바이노말(binormal) 를 굉장히 많이보게 된다. 특히 노말이라는 단어는 꽤나 많이 보인다. 보통은 어떤 역할을 하는 벡터앞에 이름을 붙여서 말한다. 아래와 같이 정리된다.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;노말 벡터&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;탄젠트 벡터&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;바이노말 벡터&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;법선 벡터&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;접선 벡터&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;이중법선(또는 종법선)&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;하지만 이게 뭔지, 어디서 나온지에 대해서 설명한건 그다지 많이 본적이 없다. 물론 필자는 인터넷에 있는 레퍼런스만 보고 공부해서 그럴 수도 있다. 그래서 간단하게 지식의 뿌리만 살펴보려고 한다.&lt;/p&gt;
+
+&lt;p&gt;이 세가지는 이름도 무시무시한 &lt;em&gt;미분기하학&lt;/em&gt; 에서 소개되는 &lt;em&gt;“프레네-세레 공식”(Frene-seret formula)&lt;/em&gt; 에서 정의된 것들이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;“프레네-세레 공식”&lt;/em&gt; 은 일반적으로 우리가 알고있는 실수 공간의 곡률이 있는 곡선 &lt;em&gt;r(t)&lt;/em&gt; 에서 유도된다. 중간에 있는 &lt;em&gt;t&lt;/em&gt; 는 시간을 나타내며 이는 이동한 거리, 곡선의 호 &lt;em&gt;s&lt;/em&gt; 로 매개화 시킨다고 한다. 그래서 그 곡선 &lt;em&gt;r(t(s))&lt;/em&gt; 를 미분해서 방향을 나타내는 말들이 우리가 평상시에 많이 들어왔던 노말, 탄젠트, 바이노말인 것이다.&lt;/p&gt;
+
+&lt;p&gt;탄젠트는 곡선 공식을 그대로 미분한 값. 우리가 알고있는 일반적인 순간 가속도를 뜻한다. 이게 결국 방향을 나타내기 때문에 한글로는 비슷하게 접선벡터 라고 하는 듯하다. 그리고 현재 방향의 수직을 나타내는 노말은 탄젠트를 미분한 값을 정규화시켜서 표현한다. 필자는 이 값이 수학적으로 어떤 것을 나타내는지 몰라서 직관적으로 수식을보고 법선벡터인지 모르겠다. 마지막으로 바이노말은 탄젠트와 노말을 외적해서 구한다.&lt;/p&gt;
+
+&lt;p&gt;여기까지는 &lt;em&gt;“프레네-세레 공식”&lt;/em&gt; 을 위한 정의들이다. 사실 &lt;em&gt;“프레네-세레 공식”&lt;/em&gt; 보다는 앞에서 말한 세가지 벡터의 정의가 훨씬 더 많이 알려져 있다. 빛을 나타내기 위한 노말과 탄젠트를 그래픽스 이론에서는 끊임없이 보기 때문이다. &lt;em&gt;“프레네-세레 공식”&lt;/em&gt; 에 대한 자세한건 이 글에서는 쓰지 않겠다. 이 글을 쓴 이유는 우리가 흔히 쓰는 용어의 뿌리를 찾기위함이였다. (자세한 설명은 &lt;a href=&quot;https://ko.wikipedia.org/wiki/%ED%94%84%EB%A0%88%EB%84%A4-%EC%84%B8%EB%A0%88_%EA%B3%B5%EC%8B%9D&quot;&gt;위키피디아 : 프레네-세레 공식&lt;/a&gt;을 참조)&lt;/p&gt;
+
+&lt;h2&gt;참조&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Frenet%E2%80%93Serret_formulas&quot;&gt;Wikipedia : Frene-seret formula&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://ko.wikipedia.org/wiki/%ED%94%84%EB%A0%88%EB%84%A4-%EC%84%B8%EB%A0%88_%EA%B3%B5%EC%8B%9D&quot;&gt;위키피디아 : 프레네-세레 공식&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://gall.dcinside.com/board/view/?id=mathematics&amp;amp;no=134445&quot;&gt;디시인사이드 수학 갤러리&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="math" />
+      
+
+      
+
+      
+        <summary type="html">Graphics 를 공부하다보면 노말(normal), 탄젠트(tangent), 바이노말(binormal) 를 굉장히 많이보게 된다. 특히 노말이라는 단어는 꽤나 많이 보인다. 보통은 어떤 역할을 하는 벡터앞에 이름을 붙여서 말한다. 아래와 같이 정리된다. 노말 벡터 탄젠트 벡터 바이노말 벡터 법선 벡터 접선 벡터 이중법선(또는 종법선) 하지만 이게 뭔지, 어디서 나온지에 대해서 설명한건 그다지 많이 본적이 없다. 물론 필자는 인터넷에 있는 레퍼런스만 보고 공부해서 그럴 수도 있다. 그래서 간단하게 지식의 뿌리만 살펴보려고 한다. 이 세가지는 이름도 무시무시한 미분기하학 에서 소개되는 “프레네-세레 공식”(Frene-seret formula) 에서 정의된 것들이다. “프레네-세레 공식” 은 일반적으로 우리가 알고있는 실수 공간의 곡률이 있는 곡선 r(t) 에서 유도된다. 중간에 있는 t 는 시간을 나타내며 이는 이동한 거리, 곡선의 호 s 로 매개화 시킨다고 한다. 그래서 그 곡선 r(t(s)) 를 미분해서 방향을 나타내는 말들이 우리가 평상시에 많이 들어왔던 노말, 탄젠트, 바이노말인 것이다. 탄젠트는 곡선 공식을 그대로 미분한 값. 우리가 알고있는 일반적인 순간 가속도를 뜻한다. 이게 결국 방향을 나타내기 때문에 한글로는 비슷하게 접선벡터 라고 하는 듯하다. 그리고 현재 방향의 수직을 나타내는 노말은 탄젠트를 미분한 값을 정규화시켜서 표현한다. 필자는 이 값이 수학적으로 어떤 것을 나타내는지 몰라서 직관적으로 수식을보고 법선벡터인지 모르겠다. 마지막으로 바이노말은 탄젠트와 노말을 외적해서 구한다. 여기까지는 “프레네-세레 공식” 을 위한 정의들이다. 사실 “프레네-세레 공식” 보다는 앞에서 말한 세가지 벡터의 정의가 훨씬 더 많이 알려져 있다. 빛을 나타내기 위한 노말과 탄젠트를 그래픽스 이론에서는 끊임없이 보기 때문이다. “프레네-세레 공식” 에 대한 자세한건 이 글에서는 쓰지 않겠다. 이 글을 쓴 이유는 우리가 흔히 쓰는 용어의 뿌리를 찾기위함이였다. (자세한 설명은 위키피디아 : 프레네-세레 공식을 참조) 참조 Wikipedia : Frene-seret formula 위키피디아 : 프레네-세레 공식 디시인사이드 수학 갤러리</summary>
+      
+
+      
+      
+    </entry>
+  
   
   
     <entry>
@@ -2498,249 +2573,6 @@ branches:
 
       
         <summary type="html">C, C++ 을 제외한 C#, Java, Python 등 주류 애플리케이션 언어들은 대부분 메모리 관리를 garbage-collector(이하 GC) 라는 개념을 차용해 메모리를 관리한다. GC 는 특정한 메커니즘을 가지고 어플리케이션에서 사용하는 메모리를 관리해주는 개념이다. GC 는 언어별로, 구현된 사항별로 다르기 때문에 모든 개념이 통용되는 것은 아니지만 대부분 같은 개념에서 출발한다.</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Usage Of Coroutine</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/04/21/usage-of-coroutine/" rel="alternate" type="text/html" title="Usage Of Coroutine" />
-      <published>2017-04-21T00:00:00+00:00</published>
-      <updated>2017-04-21T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/04/21/usage-of-coroutine</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/04/21/usage-of-coroutine/">&lt;p&gt;Unity 는 코루틴이라는 괴상한(?) 코딩 방식을 지원한다. 맨 처음에 발견했을 때는 Synchronize 한 코딩 방식에 익숙해져 있어 상당히 낯설고 적응이 안됐다. 하지만 응용 범위를 늘려가다보니 상당히 편한 코딩 방식이라는 것을 깨닳았다. 한번 코루틴에 대해 알아보자.&lt;/p&gt;
-
-&lt;!-- more --&gt;
-
-&lt;h2&gt;Coroutine 사용하기&lt;/h2&gt;
-
-&lt;p&gt;아래 예제를 보자. 몇초를 기다리는 로직을 코루틴을 사용해 구현했다.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c#&quot; data-lang=&quot;c#&quot;&gt;&lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Awake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;StartCoroutine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Wait3Second&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;IEnumerator&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Wait3Second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Debug&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Start.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;yield&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;WaitForSecond&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Debug&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;After 3 second.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetKeyDown&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;KeyCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Space&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;StopCoroutine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Wait3Second&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;시작 후 3초를 기다리는 간단한 코드다. 이 코드는 시작할 때 로그가 출력되고, 3초가 지난 후에 로그를 출력한다. 그리고 3초가 지가가기 전에 스페이스바를 누르면 실행하던 코루틴을 취소한다. &lt;strong&gt;StartCoroutine&lt;/strong&gt; 으로 코루틴 함수를 실행하면 코드에서 &lt;em&gt;yield return&lt;/em&gt; 구문이 나오기 전까지 실행하다가 &lt;em&gt;yield return&lt;/em&gt; 에서 반환하는 데이터에 따라 기다리기를 끝날때까지 반복한다. 아래 그림을 보면 이해가 쉬울 것 이다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/common_coroutine_execute.png&quot; alt=&quot;coroutine execute&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;코루틴의 동작을 매우 간단하게 표현한 그림이다. 그런데 코루틴은 위 예제에서 호출한 방식 말고도 다른 방식으로 제어가 가능하다. 아래 예제를 살펴보자.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c#&quot; data-lang=&quot;c#&quot;&gt;&lt;span class=&quot;n&quot;&gt;Coroutine&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;coroutine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;IEnumerator&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;enumerator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;IEnumerator&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Wait&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;float&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;startTime&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Wait Start: &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;startTime&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;, number: &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;yield&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;WaitForSeconds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Wait Mid: &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;startTime&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; ~ &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;, number: &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;yield&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;WaitForSeconds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Wait End: &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;startTime&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; ~ &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;, number: &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;yield&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Update&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetKeyDown&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;KeyCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;[Start] \&quot;Wait\&quot; by method call and store enumerator, coroutine&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;enumerator&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Wait&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;++);&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;coroutine&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;StartCoroutine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;enumerator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetKeyDown&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;KeyCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;S&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;[Start] \&quot;Wait\&quot; by method name and store coroutine&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;coroutine&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;StartCoroutine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Wait&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;++);&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetKeyDown&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;KeyCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Z&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;StopCoroutine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;enumerator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;[Stop] \&quot;Wait\&quot; by using enumerator&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetKeyDown&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;KeyCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;StopCoroutine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Wait&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;[Stop] \&quot;Wait\&quot; by using method name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetKeyDown&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;KeyCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;C&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;StopCoroutine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coroutine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;[Stop] \&quot;Wait\&quot; by using coroutine&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetKeyDown&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;KeyCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;V&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;StopAllCoroutines&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;[Stop] all \&quot;Wait\&quot; context&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;위 예제는 A, S 키를 누르면 &lt;em&gt;Wait&lt;/em&gt; 코루틴을 실행시키고, Z,X,C,V 키를 누르면 실행하던 &lt;em&gt;Wait&lt;/em&gt; 코루틴을 멈추는 코드로 되어 있다.&lt;/p&gt;
-
-&lt;p&gt;조금 더 자세하게 설명하자면, 실행한 방식과 멈추는 방식이 비슷한 제어 방법은 두가지가 있다. 하나는 메소드를 실행시켜 나온 &lt;strong&gt;IEnumerator&lt;/strong&gt; 객체를 통하여 실행하고(A키) 멈추는(Z키) 방법, 나머지 하나는 메소드 이름을 통하여 코루틴을 실행시키고(S키) 멈추는(X키) 방법이 있다.&lt;/p&gt;
-
-&lt;p&gt;다만 이름을 통해서 코루틴을 실행하는 방법은 같은 이름의 메소드가 존재할 때는 코드의 위쪽에 있는 것을 실행하고, 이름을 통해 코루틴을 멈추는 방법은 같은 메소드로 호출한 코루틴을 전부 멈추기 때문에 주의하기 바란다.&lt;/p&gt;
-
-&lt;p&gt;그리고 코루틴을 멈추는 방법 중 두가지가 더 있는데, 하나는 MonoBehaviour 인스턴스에서 실행한 코루틴을 전부 멈추는 방법, 나머지 하나는 &lt;strong&gt;StartCoroutine&lt;/strong&gt; 이 반환한 객체 &lt;strong&gt;Coroutine&lt;/strong&gt; 을 사용하여 실행한 코루틴 하나를 멈추는 방법이다. &lt;strong&gt;Coroutine&lt;/strong&gt; 객체는 단지 코루틴을 실행했을 때, 실행한 코루틴을 제어하기 위해 사용하는 객체다. 이 &lt;strong&gt;Coroutine&lt;/strong&gt; 객체를 이용해 코루틴을 멈추는게 가장 좋은 듯 하다. &lt;strong&gt;IEnumerator&lt;/strong&gt; 객체를 통하여 멈추는 방식은 중간에 &lt;em&gt;yield return&lt;/em&gt; 으로 반환한 객체를 확인 가능하고 직접 제어가 가능하기 때문에 꼭 참조해야할 일이 아니면 &lt;strong&gt;Coroutine&lt;/strong&gt; 객체를 사용하는게 안전할 것이다.&lt;/p&gt;
-
-&lt;p&gt;또한 &lt;strong&gt;Coroutine&lt;/strong&gt; 객체는 멈추는 역할 말고도 다른 역할 한가지를 더 수행할 수 있다. 바로 코루틴을 중첩하는 경우에 사용가능한데, 위 예제에 아래 코드를 보자.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c#&quot; data-lang=&quot;c#&quot;&gt;&lt;span class=&quot;n&quot;&gt;IEnumerator&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;Coroutine&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;justWait&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;StartCoroutine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Wait&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-        &lt;span class=&quot;k&quot;&gt;yield&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;justWait&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-        &lt;span class=&quot;n&quot;&gt;transform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;localScale&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;transform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;localScale&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1.1f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;위 코드는 맨 처음 &lt;em&gt;Wait&lt;/em&gt; 메소드를 &lt;strong&gt;StartCoroutine&lt;/strong&gt; 을 사용하여 실행한 후, 반환한 &lt;strong&gt;Coroutine&lt;/strong&gt; 객체를 &lt;em&gt;yield return&lt;/em&gt; 으로 반환해주면 해당 코루틴이 끝날 때까지 기다려준다. 그리고 기다리는 코루틴이 끝나면 크기를 1.1배 늘려주는 루틴을 계속 반복한다. 위와 같이 &lt;strong&gt;WaitForSeconds&lt;/strong&gt; 나, 실행된 코루틴 객체를 넣어주면 해당 루틴이 끝날 때까지 기다려 주기 때문에, 프레임별로 코딩을 하는 방식에서 시간과 여러 타이밍을 생각하는 비동기적 방식의 코딩이 가능하다. 이는 Unity 의 C# 스크립팅에 혁신적인 변화를 주었다. 그리고 Update 의 사용을 적게 해주기 때문에 Update 콜을 적게해주어 아주 조금의 퍼포먼스 향상도 기대할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;하지만 코루틴은 숙달되지 않은 프로그래머가 쓰게되면 그다지 좋은 코딩 방식은 아니다. 코루틴을 처음 접하게 되는 프로그래머는 기존의 프레임별로 실행하던 코드에서 Unity 에서만 쓰이는 코루틴의 개념을 생각하면서 코딩을 해야하기 때문에 상당히 혼란스러울 것이다. 또한 코루틴은 비동기 시스템이기 때문에 Multi Threading 이라 착각하는 경우가 있는데, 단지 Multi tasking 일 뿐이고, 같은 쓰레드에서 실행된다. 아래 그림을 보면 알 수 있을것이다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/unity-callback-order.png&quot; alt=&quot;Unity callback order&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;결국 단일 쓰레드에서 실행되는 시스템이면 코루틴을 쓴다고해서 혁신적인 성능향상을 기대하기는 힘들다. 단지 다른 Update 방식이라 생각하면 될듯하다.&lt;/p&gt;
-
-&lt;h2&gt;Unity 에서 지원하는 코루틴 대기 제어 기능들&lt;/h2&gt;
-
-&lt;p&gt;코루틴을 사용할 때 기다려야 할 때 여러 기능들을 제공한다.&lt;/p&gt;
-
-&lt;p&gt;대표적인 예는 시간을 기다리는 기능들이다. &lt;strong&gt;WaitForSeconds&lt;/strong&gt; 와 &lt;strong&gt;WaitForSecondsRealtime&lt;/strong&gt; 가 있는데 게임 어플리케이션의 시간과 실제 시간을 기다리는 기능이다. 위에서 &lt;strong&gt;WaitForSeconds&lt;/strong&gt; 를 사용했다.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c#&quot; data-lang=&quot;c#&quot;&gt;&lt;span class=&quot;n&quot;&gt;IEnumerator&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Wait&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;float&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;startTime&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Wait Start: &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;startTime&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;, number: &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;yield&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;WaitForSeconds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Wait Mid: &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;startTime&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; ~ &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;, number: &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;yield&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;WaitForSeconds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Wait End: &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;startTime&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; ~ &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;, number: &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;yield&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;위 콜백이 실행되는 그림을 살펴보면 Game Logic 레이어에서 대부분 멈춰준다. 이 타이밍은 &lt;em&gt;Update&lt;/em&gt; 가 호출된 후, &lt;em&gt;LateUpdate&lt;/em&gt; 가 호출되기 전인데 누군가는 이 시점 말고 다른 시점에 코루틴을 멈추고 싶을 수도 있다. 그래서 Unity 에서는 다른 두 타이밍에 기다림을 멈추는 기능이 있다. &lt;strong&gt;WaitForFixedUpdate&lt;/strong&gt; 과 &lt;strong&gt;WaitForEndOfFrame&lt;/strong&gt; 인데,  &lt;strong&gt;WaitForFixedUpdate&lt;/strong&gt; 는 &lt;em&gt;FixedUpdate&lt;/em&gt; 들이 호출된 후 타이밍에 멈춰주는 기능으로써 물리 기반 기능과 같은 타이밍을 공유하고 싶을 때 사용하면 된다. &lt;strong&gt;WaitForEndOfFrame&lt;/strong&gt; 은 한 프레임의 모든 처리가 끝난 후까지 기다려주는 기능으로써 무언가 후처리를 할 때 사용해주면 된다.&lt;/p&gt;
-
-&lt;p&gt;또한 사용자가 멈추고 싶은 타이밍에 멈추는 경우도 필요할 것이다. 그래서 두가지 논리적인 조건이 충족할 때 멈춰주는 기능도 있다. &lt;strong&gt;WaitUntil&lt;/strong&gt; 과 &lt;strong&gt;WaitWhile&lt;/strong&gt; 인데, 단순하게 &lt;em&gt;Func&amp;lt;bool&amp;gt;&lt;/em&gt; 델리게이트만 받아 참이냐, 거짓이냐에 따라서 기다림을 제어한다. &lt;strong&gt;WaitUntil&lt;/strong&gt; 은 델리게이트가 반환하는 값이 &lt;em&gt;false&lt;/em&gt; 일 때 다음으로 넘어가고, &lt;strong&gt;WaitWhile&lt;/strong&gt; 델리게이트가 반환하는 값이 &lt;em&gt;true&lt;/em&gt; 일 때 다음으로 넘어가기 된다.&lt;/p&gt;
-
-&lt;p&gt;마지막으로 프로토콜로 통신하는 기능을 사용할 때 사용하는 &lt;strong&gt;WWW&lt;/strong&gt; 라는 특수한 제어 객체가 있다. 이는 보통 &lt;em&gt;http&lt;/em&gt; 통신을 해서 무언가 받아올 때 사용한다. 아래 예제가 대표적인 예시다.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c#&quot; data-lang=&quot;c#&quot;&gt;&lt;span class=&quot;n&quot;&gt;IEnumerator&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getGoogle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;WWW&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;google&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;WWW&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://www.google.com&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;yield&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;google&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;google&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;보통은 위 예제처럼 &lt;em&gt;http&lt;/em&gt; 통신을 해서 데이터를 가져올 때 사용한다. 로컬 파일 시스템이나 ftp 프로토콜도 가능하다. 자세한 사항은 &lt;a href=&quot;https://docs.unity3d.com/kr/current/ScriptReference/WWW.html&quot;&gt;Unity WWW&lt;/a&gt; 여기서 확인하라.&lt;/p&gt;
-
-&lt;p&gt;이렇게 Unity 에서 기다림을 제어하는 기능에 대해서 알아보았다. 하지만 이 기능들 가지고는 약간 부족한 부분이 있을 것이다. 이를 위해 Unity 에서는 &lt;strong&gt;CustomYieldInstruction&lt;/strong&gt; 이라는 기능을 제공한다.&lt;/p&gt;
-
-&lt;h2&gt;CustomYieldInstruction 를 사용해서 커스터마이징하기&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;CustomYieldInstruction&lt;/strong&gt; 을 통해 기다리는 기능을 상당히 간단하게 구현이 가능하다. &lt;strong&gt;CustomYieldInstruction&lt;/strong&gt; 는 &lt;em&gt;keepWaiting&lt;/em&gt; 이라는 abstract 프로퍼티를 통해 값이 &lt;em&gt;false&lt;/em&gt; 일 때는 기다리고, &lt;em&gt;true&lt;/em&gt; 일 때는 넘어가는 간단한 &lt;strong&gt;IEnumerator&lt;/strong&gt; 구현체다. 즉 &lt;strong&gt;CustomYieldInstruction&lt;/strong&gt; 을 상속받아 &lt;em&gt;keepWaiting&lt;/em&gt; 프로퍼티만 구현하면 끝이다. 아래 transform 의 scale 을 검사해서 일정 값을 초과하게 되면 다음으로 넘어가는 기능을 아래 예제에 첨부했다.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c#&quot; data-lang=&quot;c#&quot;&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ScaleOverYieldInstruction&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CustomYieldInstruction&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Transform&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;transform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Vector3&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;limit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ScaleOverYieldInstruction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Transform&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;transform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Vector3&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;limit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;transform&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;transform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;limit&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;limit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;keepWaiting&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;Vector3&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scale&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;transform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;localScale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;limit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;limit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;limit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;z&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;z&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;구현 자체는 상당히 간단하다. 일반적인 클래스 인스턴스 처럼 생성자에서 초기화를 해주고, &lt;em&gt;keepWaiting&lt;/em&gt; 구현을 한 것이 보인다. 다만 조금 의문이 드는점은 &lt;em&gt;keepWaiting&lt;/em&gt; 은 도대체 언제 호출이 되냐는 것이다.&lt;/p&gt;
-
-&lt;p&gt;사실 위의 소개한 기능중에 CustomYieldInstruction 이용해 구현한 기능이 있다. &lt;strong&gt;WaitUntil&lt;/strong&gt; 과 &lt;strong&gt;WaitWhile&lt;/strong&gt; 이다.
-&lt;a href=&quot;https://docs.unity3d.com/ScriptReference/CustomYieldInstruction.html&quot;&gt;Unity CustomYieldInstruction&lt;/a&gt; 을 보면 Update 가 호출된 후, LateUpdate 를 호출하기 전 즉 타이밍이 적혀있는 그림에서 보았을 떄 GameLogic 레이어에서 체크가 된다는 것을 알 수 있다.&lt;/p&gt;
-
-&lt;h2&gt;참조&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/kr/current/Manual/Coroutines.html&quot;&gt;Unity 코루틴 메뉴얼&lt;/a&gt;
-&amp;lt;!–&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/system.collections.ienumerator.aspx&quot;&gt;MSDN : IEnumerator&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/65zzykke.aspx&quot;&gt;MSDN : 반복기 사용&lt;/a&gt;
-–&amp;gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/ScriptReference/Coroutine.html&quot;&gt;Unity Coroutine ref&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/ScriptReference/CustomYieldInstruction.html&quot;&gt;Unity CustomYieldInstruction ref&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/ScriptReference/YieldInstruction.html&quot;&gt;Unity YieldInstruction ref&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://unityindepth.tistory.com/21&quot;&gt;Unity In Depth 코루틴 글&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/kr/current/ScriptReference/WWW.html&quot;&gt;Unity WWW ref&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;!--
-ok  유니티의 기본적인 코루틴 사용법? StopCoroutine:Coroutine
-ok  장단점?
-ok  구현 클래스 예시 WaitUntil, WaitWhile
-~~  CustomYieldInstruction : keepwaiting 을 씀, Update 다 된 이후, LateUpdate 하기 전에 체크함
-xx  C# 에서의 코드 블록 지원, 코드에서 사용되는 IEnumerator 의 구조
---&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="unity" />
-      
-        <category term="try" />
-      
-        <category term="c#" />
-      
-
-      
-
-      
-        <summary type="html">Unity 는 코루틴이라는 괴상한(?) 코딩 방식을 지원한다. 맨 처음에 발견했을 때는 Synchronize 한 코딩 방식에 익숙해져 있어 상당히 낯설고 적응이 안됐다. 하지만 응용 범위를 늘려가다보니 상당히 편한 코딩 방식이라는 것을 깨닳았다. 한번 코루틴에 대해 알아보자.</summary>
       
 
       
