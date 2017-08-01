@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Darboux Frame</title>
+  <meta name="description" content="여러 공간 법선 벡터(tangent space normal, object space normal)에 대하여 알아보던 도중 모르는 것이 하나있어 정리해볼겸 포스팅해보려 한다. darboux frame 이라는 놈이다.">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://hrmrzizon.github.io/2017/08/01/darboux-frame/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
+
+  <meta name="google-site-verification" content="f8AsB97UC1pp_K4EwkRaJYJZVC0P4j36RK_TGOPPGAU" />
+
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Darboux Frame">
+  <meta name="twitter:description" content="여러 공간 법선 벡터(tangent space normal, object space normal)에 대하여 알아보던 도중 모르는 것이 하나있어 정리해볼겸 포스팅해보려 한다. darboux frame 이라는 놈이다.">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Appocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="/edu">Edu</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Darboux Frame</h1>
+    
+    <p class="post-meta"><time datetime="2017-08-01T00:00:00+00:00" itemprop="datePublished">Aug 1, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/math/">math</a>,
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/study/">study</a>
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>여러 공간 법선 벡터(<em>tangent space normal</em>, <em>object space normal</em>)에 대하여 알아보던 도중 모르는 것이 하나있어 정리해볼겸 포스팅해보려 한다. <em>darboux frame</em> 이라는 놈이다.</p>
+
+<!-- more -->
+
+<p>우선 <em>tangent space normal</em> 과 <em>object space normal</em> 에 대해서 설명해야 한다. 그래픽스에서는 빛을 표현하기 위해 노말벡터를 사용한다. 처음에 나온식은 매우 간단하다.</p>
+
+<blockquote>
+  <p>(빛의 방향 벡터) * (노말 벡터) = (빛이 표현하는 색의 범위(-1~1))</p>
+</blockquote>
+
+<p>위의 벡터곱은 내적을 뜻한다. 이 식의 결과값은 반사광을 표현하는데 쓰인다. 일반적으로 말하는 <em>Specular</em> 를 뜻한다. 하여튼 빛을 표현하는 것은 그래픽스에서는 굉장히 중요한 일이기 때문에 이 노말벡터를 어떻게 관리하는지가 엄청나게 중요하다. 그래서 여러 방법이 있는데 제일 많이 쓰이는건 <em>tangent space normal</em> 이다. 그런데 <em>object space normal</em> 은 갑자기 왜 튀어나왔느냐? 이유는 간단하다. 두개가 가장 비교가 많이 되는 방법이기 때문이다. <em>object space normal</em> 은 굉장히 간단하다. 저장된 메시 데이터의 노말 벡터값이다. 기본 단위가 저장된 한 개체의 메시의 노말이기 때문에 <em>object spoce</em> 라는 접두사가 붙은 것이다. 그래서 그런지 아래 그림에서 나오는 <em>object spoce normal</em> 이 저장된 텍스쳐는 색이 굉장히 다양하다. 하지만 옆에 <em>tangent space normal</em> 이 저장된 텍스쳐는 색이 거의 일정하다. 왜 그럴까? 우선 앞의 <em>object space normal</em> 은 그냥 오브젝트 기준의 좌표계에서의 정점별 노말값을 저장한 데이터다. 하지만 <em>tangent space normal</em> 은 모델에서 추출한 <em>tangent</em> 값을 통해 <em>normal</em> 값을 구하는 방법이다. <a href="/2017/07/30/normal-tangent-binormal/">normal tangent binormal</a> 에서 설명했었다.</p>
+
+<p><img src="https://raw.githubusercontent.com/ssloy/tinyrenderer/gh-pages/img/06b-tangent-space/nm_textures.jpg" alt="tangent-space vs objcet-space" /></p>
+
+<p>그런데 <em>tangent space normal</em> 에서의 <em>tangent</em> 가 뜻하는 것은 표면의 접선 값이다. 이렇게 표면을 기준으로 하는 것을 <a href="https://en.wikipedia.org/wiki/Darboux_frame"><em>darboux frame</em></a> 이라고 한다. 프랑스 사람의 이름이라 한글로 읽으면 <em>다르부-프레임</em> 이다. 위키에서는 <em>“프레네-세레 프레임”</em> 이 표면 기하학에서 적용된 것이라 한다. 그만큼 대부분의 정의들이 <em>“프레네-세레 프레임”</em> 과 매우 비슷하다. 다른 점은 곡선에서 표면으로 확장시켰다는 점이다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="https://github.com/ssloy/tinyrenderer/wiki/Lesson-6bis:-tangent-space-normal-mapping">Github : tinyrenderer Wiki - tangent-space-normal-mapping</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Darboux_frame">Wikipedia : darvoux frame</a></li>
+</ul>
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://zizon.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy; Su-Hyeok Kim - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
