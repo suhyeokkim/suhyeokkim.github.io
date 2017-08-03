@@ -188,6 +188,286 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2017/08/01/using-compute-buffer-in-unity/">Using Compute Buffer In Unity</a>
+          </h1>
+
+          <p class="post-meta">Aug 1, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/gpuinstancing/">gpuinstancing</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/try/">try</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>Unity 에서의 확실한 GPU Instancing 은 <strong>ComputeBuffer</strong> 라는 구현체에서 시작될 것이다. 이 구현체는 <strong>UnityEngine.ComputeBuffer</strong> 라는 Unity 의 구현체이며 하는 역할은 GPU 메모리를 사용하게 해주는 역할을 한다. <strong>ComputeBuffer</strong> 는 <strong>ComputeShader</strong> 와 함께 등장했다. <strong>ComputeShader</strong> 에서 데이터를 읽고 쓰는것을 요구하기 때문에 Unity 는 GPU 메모리를 사용하는 컨테이너로서 <strong>ComputeBuffer</strong> 를 구현해 놓았다. 하지만 이 <strong>ComputeBuffer</strong> 는 <strong>ComputeShader</strong> 뿐만아니라 일반 쉐이더에서도 폭넓게 사용가능하다. 이 말의 뜻은 우리가 생각하는 Unity 에서 지원하는 일반적인 메쉬 데이터를 사용하지 않아도 사용자가 직접 메쉬 데이터를 커스터마이징해서 사용할 수 있다는 이야기이다. 지원하는 플랫폼은 일반적으로 말하는 <em>Shader Model 5.0</em> 이상이다. PC 플랫폼에서는 당연히 사용 가능하다.</p>
+
+<p>사용하는 방법 자체는 어렵지 않다. 스크립트에서 <em>size</em> 와 <em>stride</em> 를 설정해주고, 데이터의 배열을 만들어 GPU 메모리 안에 있는 데이터를 읽거나 쓸 수 있다. 메모리 단위에서 하는것처럼 보이기 때문에 크기와 타입은 맞춰주어야 한다. C# 에서는 <strong>System.Array</strong> 형으로 넣어주니 형태에 주의하기 바란다. 방법은 아래와 같다.</p>
+
+<pre><code class="language-C#">int dataLen = ...;  // length of data
+int[] dataArray = new int[dataLen];
+
+// record data in dataArray..
+
+ComputeShader computeShader = ...;
+ComptueBuffer dataBuffer = new ComputeBuffer(dataLen, sizeof(int));
+dataBuffer.SetData(dataArray);
+
+computeShader.SetBuffer("dataBuffer", dataBuffer);
+</code></pre>
+
+<p>위 코드는 <strong>ComputeShader</strong> 에서 <strong>ComputeBuffer</strong> 를 사용하기 위해 세팅하는 코드다. 가장 맨처음에는 초기에 세팅할 정수 배열을 만들고, 그 다음 <strong>ComputeBuffer</strong> 인스턴스를 생성한다. 생성자에서 넣어주는 인자는 데이터의 길이(<em>length</em>)와 각 데이터별 크기(<em>stride</em>)이다. 그 다음 같은 크기의 배열의 데이터를 GPU 메모리로 쓴다.(<em>write</em>) 그리고 마지막으로 데이터가 세팅된 <strong>ComputeBuffer</strong> 를 <strong>ComputeShader</strong> 에 연결해준다. 이러면 <strong>ComputeShader</strong> 코드에서 <em>dataBuffer</em> 라는 변수명을 가진 변수에 <strong>ComputeBuffer</strong> 가 연결된다. 아래에 <strong>ComputeShader</strong> 코드가 있다.</p>
+
+<pre><code class="language-HLSL">StructuredBuffer&lt;int&gt; dataBuffer;
+
+[numthreads(8,8,1)]
+void Process (uint3 id : SV_DispatchThreadID)
+{
+  ...
+}
+</code></pre>
+
+<p>맨 처음에 있는 <em>dataBuffer</em> 에 연결된다. <a href="{ post_url 2017-07-06-structured-buffer-vs-constant-buffer }">StructuredBuffer vs ConstantBuffer</a> 에서본 <em>StructuredBuffer</em> 타입이 가능하다. 또한 <em>RWStructuredBuffer</em>, <em>ConsumeStructuredBuffer</em>, <em>AppendStructuredBuffer</em> 가능하다. 다른 렌더러 쉐이더 코드에서도 사용가능하다. 그래서 일반적으로 고려되는 파이프라인은 아래와 같다.</p>
+
+<p><img src="/images/data-process-pipeline.png" alt="data process" class="center-image" /></p>
+
+<p>앞의 두가지 <strong>ComputeBuffer</strong> 를 세팅하고 <strong>ComputeShader</strong> 를 실행하는 코드는 대충 보았다, 뒷 부분의 <strong>ComputeBuffer</strong> 를 통해 렌더링을 하는 것은 그다지 어렵지 않다. 중요한 것은 참신하게, 효율적으로 렌더링하는 것이다.</p>
+
+<p><a href="https://github.com/hrmrzizon/CustomSkinningExample">Github : CustomSkinningExample</a> 에서 스키닝의 계산을 <strong>ComputeShader</strong> 로 넘겨서 계산한다. 또한 메시 데이터 전체를 <strong>ComputeBuffer</strong> 로 넘겨서 렌더링하기 때문에 꽤나 괜찮은 예가 될것이다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="https://docs.unity3d.com/ScriptReference/ComputeBuffer.html">Unity Reference : ComptuteBuffer</a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2017/08/01/darboux-frame/">Darboux Frame</a>
           </h1>
 
@@ -1663,148 +1943,6 @@
         
           <p class="post-continue">
             <a href="/2017/06/11/using-gpu-instancing-in-unity/">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/06/08/performence-and-optimization/">Performence And Optimization</a>
-          </h1>
-
-          <p class="post-meta">Jun 8, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/try/">try</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>일반적인 응용 프로그램들은 중간중간에 잠시 멈춰도 원하는 결과를 유저에게 보여주면 상관이 없다. 하지만 게임은 ‘게임중’ 에는 어떤 경우에도 렉을 허용하지 않는다. 그만큼 ‘게임중’ 상태에서 렉을 아예 발생시키지 않는 것이 게임 프로그래머의 중요한 능력중 하나다.</p>
-
-<p>게임은 일반적으로 1초에 60번 이상 업데이트하는 루틴을 유지해야 유저에게 원활한 환경을 제공한다. 여기서 급작스럽게 프레임수가 하락하면 그때 유저들은 순간적으로 끊기거나 부드럽지 않은 경험을 하게된다. 유저들은 그런 것들을 랙으로 통칭한다. 랙이 반복되면 유저들은 게이밍 환경에 불만을 느끼게 된다.</p>
-
-<p>일반적인 랙은 프로그래머의 실수인 경우가 많다. 런타임에서 많은 것을 한꺼번에 처리하는 경우가 대표적이다. 하지만 이는 여러 리팩토링을 거치면 충분히 해결할 수 있다. 경험이 적은 사람들에게 가장 문제가 되는 것은 엔진을 사용하는 방법이 문제가 되는 경우가 많다. 엔진의 자세한 구현 사항을 파악하지 못했기 때문에 한계를 생각하지 않고 코딩하는 경우 말이다. 몇가지 사항들만 주의하며 코딩한다면 꽤 많은 병목들을 피해갈 수 있다.</p>
-
-<p>이제 Unity 엔진을 사용할 때 퍼포먼스에 영향을 끼치는 것들과 해결 방안에 대해서 알아보자.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/06/08/performence-and-optimization/">Read on &rarr;</a>
           </p>
         
       </li>
