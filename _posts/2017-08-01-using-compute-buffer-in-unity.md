@@ -38,11 +38,13 @@ void Process (uint3 id : SV_DispatchThreadID)
 }
 ```
 
-맨 처음에 있는 _dataBuffer_ 에 연결된다. [StructuredBuffer vs ConstantBuffer]({{ site.baseurl }}{ post_url 2017-07-06-structured-buffer-vs-constant-buffer }) 에서본 _StructuredBuffer_ 타입이 가능하다. 또한 _RWStructuredBuffer_, _ConsumeStructuredBuffer_, _AppendStructuredBuffer_ 가능하다. 다른 렌더러 쉐이더 코드에서도 사용가능하다. 일반적으로 고려되는 파이프라인은
+맨 처음에 있는 _dataBuffer_ 에 연결된다. [StructuredBuffer vs ConstantBuffer]({{ site.baseurl }}{ post_url 2017-07-06-structured-buffer-vs-constant-buffer }) 에서본 _StructuredBuffer_ 타입이 가능하다. 또한 _RWStructuredBuffer_, _ConsumeStructuredBuffer_, _AppendStructuredBuffer_ 가능하다. 다른 렌더러 쉐이더 코드에서도 사용가능하다. 그래서 일반적으로 고려되는 파이프라인은 아래와 같다.
 
+![data process](/images/data-process-pipeline.png){: .center-image}
 
+앞의 두가지 __ComputeBuffer__ 를 세팅하고 __ComputeShader__ 를 실행하는 코드는 대충 보았다, 뒷 부분의 __ComputeBuffer__ 를 통해 렌더링을 하는 것은 그다지 어렵지 않다. 중요한 것은 참신하게, 효율적으로 렌더링하는 것이다.
 
-[Github : CustomSkinningExample](https://github.com/hrmrzizon/CustomSkinningExample) 에서 스키닝의 계산을 __ComputeShader__ 로 넘겨서 계산한다. 또한 메시 데이터 전체를 __ComputeBuffer__ 로 넘겨서 계산하기 때문에 꽤나 괜찮은 예가 될것이다.
+[Github : CustomSkinningExample](https://github.com/hrmrzizon/CustomSkinningExample) 에서 스키닝의 계산을 __ComputeShader__ 로 넘겨서 계산한다. 또한 메시 데이터 전체를 __ComputeBuffer__ 로 넘겨서 렌더링하기 때문에 꽤나 괜찮은 예가 될것이다.
 
 ## 참조
 
