@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ko">
-  <generator uri="http://jekyllrb.com" version="3.5.1">Jekyll</generator>
+  <generator uri="http://jekyllrb.com" version="3.5.2">Jekyll</generator>
   
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-08-12T05:09:43+00:00</updated>
+  <updated>2017-08-13T05:10:52+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
