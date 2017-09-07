@@ -6,6 +6,7 @@ permalink: /edu/
 
 ### Introduction of Rendering
 
+ - [Slide 0 : 강의 개요](https://docs.google.com/presentation/d/12864ypOgKxDkegD3_HoCA9r7CPPasMorxUkZetkpLq4/edit?usp=sharing)
  - [Slide 1 : 기초 수 체계 및 변환](https://docs.google.com/presentation/d/1B4pAvR0yvY8DzID1exy3LjGE1rwgfAbB5aL9Y6xCtTg/edit?usp=sharing)
 
 ### Unity Advanced
