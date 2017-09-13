@@ -8,6 +8,7 @@ permalink: /edu/
 
  - [Slide 0 : 강의 개요](https://docs.google.com/presentation/d/12864ypOgKxDkegD3_HoCA9r7CPPasMorxUkZetkpLq4/edit?usp=sharing)
  - [Slide 1 : 기초 수 체계 및 변환](https://docs.google.com/presentation/d/1B4pAvR0yvY8DzID1exy3LjGE1rwgfAbB5aL9Y6xCtTg/edit?usp=sharing)
+ - [Slide 2 : Rendering Pipeline](https://docs.google.com/presentation/d/1tx5duDdeAiJEof_iGwMcBguIZbJ1jwZdRVHgQTQ586c/edit?usp=sharing)
 
 ### Unity Advanced
 
@@ -30,10 +31,6 @@ permalink: /edu/
 - Step 6 : [Performences and Optimization]({{ site.baseurl }}{% post_url 2017-06-08-performence-and-optimization %})
 - Step 7 : RenderHell in GPU
 
-### Commons
-
-- Common knowledge of programmers
-
 <!--From 8 Day To End Day : [Make Unity Editor]-->
 <!--
   Unity editor scripting
@@ -47,6 +44,7 @@ permalink: /edu/
    5 Day : Game data..
    6 Day : ??
 -->
+
 ### Examples
 
 - [3DBasicExample](https://github.com/hrmrzizon/3DBasicExample)
