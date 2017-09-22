@@ -449,7 +449,7 @@
 
 <p>Unity 의 기본적인 쉐이더 코딩은 ShaderLab 이라는 언어를 사용한다. 아래 ShaderLab 으로 되어있는 예제를 살펴보자.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Shader "Custom/TextureColor" {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Shader "Custom/TextureColor" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Texture", 2D) = "white" {}
@@ -467,8 +467,7 @@
 
   FallBack "Diffuse"
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>위 예제는 색과 텍스쳐를 인자로 받아 텍스쳐에 색을 입혀서 출력해주는 간단한 예제다. 몇 줄 안되는 코드로 텍스쳐와 색을 입혔다. 언어 자체는 단순하고 간결하다. 다만 우리가 알아야하는 몇가지 문법이 있다. CG 나 HLSL 을 사용해도 결국 인라인, 삽입해서 사용하고 기본은 ShdaderLab 이기 때문에 전체를 감싸는 문법은 반드시 알아야 한다.</p>
 
@@ -484,7 +483,7 @@
 
 <p>표면 쉐이더는 실제로는 없는 개념으로 쉐이더를 컴파일하면서 정점/픽셀 쉐이더로 변환되는 쉐이더 기능이다. 보통은 간단하고 빠르게 정점 라이팅을 코딩할 때 쓰인다. 기존에 존재하는 여러 라이팅 모델들을 지원하며 직접 정점 라이팅을 할 수도 있다. 다만 픽셀/프래그먼트 쉐이딩은 안된다. 그래서 상식적으로 생각하면 디퍼드 렌더링에서는 안되겠지만 디퍼드 렌더링에서도 가능하게 만들어 놓았다. 아래 표면 쉐이더의 예제를 보자. Unity 5.5.2f 버젼에서 기본으로 생성되는 쉐이더다.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Shader "Custom/NewSurfaceShader" {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Shader "Custom/NewSurfaceShader" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
@@ -519,26 +518,23 @@
 	}
 	FallBack "Diffuse"
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>ShdaderLab 에 비하면 코드가 상당히 길다. 새롭게 변수를 세팅해 주어야 하기도 하고 몇가지 세팅을 해주어야 하기 때문이기도 하다. 이 코드에서는 라이팅을 Unity Standard 의 PBR 라이팅 모델을 사용하고 있다. 몇가지 살펴보면, 처음과 마지막을 CGPROGRAM 과 ENDCG 로 감싸준다. 그리고 바로 아래에 C 계열에서 많이 쓰이는 <em>pragma</em> 전처리 키워드를 사용하여 뭔가 정의하고 있는데 바로 표면 쉐이더 함수의 정의를 써주는 곳이다.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>#pragma surface surf Standard fullforwardshadows
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#pragma surface surf Standard fullforwardshadows
+</code></pre></div></div>
 
 <p>surface 는 표면 쉐이더 함수를 정의한다는 것을, surf 는 코드에 정의되어 있는 함수의 이름을, Standard 는 라이팅 모델을 뜻한다. Unity Standard 쉐이더의 PBR 을 모델이다. 그리고 fullforwardshadows 는 그림자에 대한 옵션이다. 메터리얼의 인자에 들어가는 텍스쳐 등 설정값을 변수로 정의해준다. 변수 이름을 위에 Properties 에 정의와 똑같이 써주면 알아서 Unity 에서는 이 값을들을 접근하게 해준다. 반드시 똑같이 써주어야 작동한다.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>struct Input {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct Input {
 	float2 uv_MainTex;
 };
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>사이에 Input 구조체가 있다. 이 구조체에는 단순히 uv_MainTex 라는 변수한개만 있다. 단순하게 이름을 풀이해보면 MainTex 텍스쳐의 uv 좌표를 뜻한다. 이 변수 이름 역시 반드시 맞춰주어야 한다. 앞에는 uv 가 붙어야 하며, 그 다음 존재하는 텍스쳐 이름을 붙여주어야 한다.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>void surf (Input IN, inout SurfaceOutputStandard o) {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void surf (Input IN, inout SurfaceOutputStandard o) {
 	// Albedo comes from a texture tinted by color
 	fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 	o.Albedo = c.rgb;
@@ -547,8 +543,7 @@
 	o.Smoothness = _Glossiness;
 	o.Alpha = c.a;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>이제 남은것은 surf 함수만 남아있다. 이는 표면 쉐이더에서 어떻게 정보를 처리하느냐를 적어주는 곳이다. Input 구조체는 위에서 정의해 주었고, <em>SurfaceOutputStandard</em> 는 Standard 라이팅 모델에서 이미 정의된 구조체이다. 이 구조체의 값을 넣어주는 것으로 쉐이더 연산을 정의한다. 안의 코드를 풀어보자면, 가장 처음에 <em>tex2D</em> 라는 함수로 <em>_MainTex</em> 라는 텍스쳐와 <em>IN.uv_MainTex</em> uv 좌표를 이용해 색을 가져온다. 그리고 <em>_Color</em> 변수를 가져온 색에 각각에 rgba 별로 곱연산을 해준다. 그렇게 계산된 fixed4 자료형 <em>c</em> 의 데이터를 스탠다드 라이팅 모델 인자의 Albedo 변수에는 rgb 값을, Alpha 변수에는 a 값을 넘겨준다. 나머지는 입력된 데이터 그대로 넣어준다.</p>
 
@@ -556,7 +551,7 @@
 
 <p>다음으로 살펴볼 쉐이더는 정점/픽셀 쉐이더를 조합한 쉐이더다. CG 를 사용하는 가장 낮은 단계의 쉐이더이며 실질적으로 돌아가는 쉐이더다. 그만큼 해야할 것도 많고 신경써야 할것도 많다. 특히 라이팅을 세팅할 때는 꽤나 코드가 길어지고 복잡해진다. 하지만 그만큼 세세하게 조정이 가능하다. 그래서 보통은 특수효과에 많이 쓰이며 최적화를 위한 쉐이딩을 할때도 쓰인다. 또한 여러 다른 쉐이더를 사용할 때에도 쓰인다. 아래 예제를 살펴보자.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Shader "Custom/ColorTextureCG" {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Shader "Custom/ColorTextureCG" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
@@ -605,8 +600,7 @@
 
 	FallBack "Diffuse"
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>위 예제는 색과 텍스쳐를 입혀주는 쉐이더로 아주 간단한 코드로 이루어져 있다. 한번 살펴보자. 그리고 CG 에서는 픽셀 쉐이더의 픽셀을 <em>fragment</em> 라고 칭한다.</p>
 
@@ -616,27 +610,25 @@
 
 <p>이제 직접 정점 쉐이더와 픽셀 쉐이더를 계산하는 부분들이 남았다. <em>vert</em> 함수를 보면 <em>appdata</em> 라는 구조체 변수를 인자로 받아서 <em>v2f</em> 구조체 데이터를 반환하는 간단한 함수로 보인다. 이 함수의 코드를 보자.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>v2f vert (appdata v)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>v2f vert (appdata v)
 {
 	v2f o;
 	o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
 	o.uv = v.uv;
 	return o;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>첫번째 줄은 실제 Unity 의 위치와 <em>Mesh</em> 에 저장되어 있던 로컬 정점 위치를 계산하여 정점의 실제 위치를 계산하여 넣어주는 줄이다. 실제로는 행렬 변환을 통해 위치값을 변경한다. 이 줄을 빼버리면 (0,0,0) 을 기준으로 모델이 출력될 것이다. 두번째 줄에서는 UV 좌표값을 그대로 넣어준다. 이 UV 좌표는 픽셀 쉐이더에서 사용한다.</p>
 
 <p>내부적으로 복잡한 처리가 끝나고 다음으로 픽셀 쉐이더 단계로 넘어간다. 등록된 함수가 호출되며 위의 <em>frag</em> 함수가 호출되는데 여기서 텍스쳐와 UV 좌표로 폴리곤에 색을 입혀준다. 내용을 보자.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>fixed4 frag (v2f i) : SV_Target
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fixed4 frag (v2f i) : SV_Target
 {
 	fixed4 col = tex2D(_MainTex, i.uv);
 	return col * _Color;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><em>frag</em> 함수의 타입이 지정된 첫줄에 마지막에 쓰여있는 <em>SV_TARGET</em> 은 어떤 곳에 픽셀 쉐이딩의 결과를 저장하는지에 대한 선언이다. Render Target 이라고 한다. <em>SV_TARGET</em> 을 기본으로 쓰는데 이는 한곳에 모든 데이터를 쓴다는 선언이다. 여러곳에 데이터를 기록하면 Multiple Render Target 이라고 칭하게 되는 기술을 쓰는 것이다. 문법에 더 궁금한 사람은 <a href="https://docs.unity3d.com/Manual/SL-ShaderSemantics.html">Semantics</a> 를 보라. MRT 에 대해 궁금한 사람은 <a href="https://en.wikipedia.org/wiki/Multiple_Render_Targets">Wiki: MRT</a> 를 보라.</p>
 

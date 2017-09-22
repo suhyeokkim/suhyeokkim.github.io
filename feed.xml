@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ko">
-  <generator uri="http://jekyllrb.com" version="3.5.2">Jekyll</generator>
+  <generator uri="http://jekyllrb.com" version="3.6.0">Jekyll</generator>
   
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-09-21T05:31:25+00:00</updated>
+  <updated>2017-09-22T05:32:16+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -690,7 +690,7 @@ v2f vert (uint vertexID : SV_VertexID)
 
 &lt;p&gt;아 그러면 쉐이더는 어디서 정의하냐고? &lt;em&gt;Graphics.DrawMeshInstanced&lt;/em&gt; 메소드는 &lt;strong&gt;Material&lt;/strong&gt; 과 &lt;strong&gt;MaterialPropertyBlock&lt;/strong&gt; 둘다 필요하다. 적당히 데이터를 분리해서 취급하면 된다. 아래 그리는 코드를 살펴보자. &lt;a href=&quot;https://github.com/hrmrzizon/InstancedSkinningExmaple/blob/master/Assets/2%20-%20InstancedSkinning/CharacterSet.cs&quot;&gt;InstancedSkinning - CharacterSet&lt;/a&gt; 에서 간추려서 가져왔다.&lt;/p&gt;
 
-&lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Dictionary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CharacterData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DrawData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drawDataDict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Dictionary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CharacterData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DrawData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drawDataDict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 
 &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
@@ -718,8 +718,7 @@ v2f vert (uint vertexID : SV_VertexID)
             &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;strong&gt;Material&lt;/strong&gt; 인스턴스는 단 한개이며 &lt;strong&gt;Texture2DArray&lt;/strong&gt; 를 사용해 모든 텍스쳐를 하나로 합쳐 &lt;em&gt;DrawCall&lt;/em&gt; 을 줄였다. &lt;strong&gt;DrawData&lt;/strong&gt; 는 &lt;em&gt;Graphics.DrawMeshInstanced&lt;/em&gt; 메소드 호출을하기 위한 구조체 데이터다. 기본적으로 물체를 그릴때 필요한 &lt;strong&gt;Mesh&lt;/strong&gt; 인스턴스와 각 그려야할 인스턴스 별로 필요한 변환행렬들을 가지고 있는 &lt;em&gt;DrawData.mainMatrixList&lt;/em&gt;, 필요한 데이터를 저장하고 있는 &lt;strong&gt;MaterialPropertyBlock&lt;/strong&gt; 인스턴스 &lt;em&gt;DrawData.block&lt;/em&gt; 을 가지고 있다. &lt;em&gt;DrawData.UpdateMaterialblcok&lt;/em&gt; 메소드는 필요한 데이터들을 &lt;em&gt;DrawData.block&lt;/em&gt; 에 넘겨주는 메소드다.&lt;/p&gt;
 
@@ -824,10 +823,9 @@ v2f vert (a2v v)
 
 &lt;p&gt;근데 위 코드처럼 인스턴싱을 많이하게 되면 아래와 같은 에러를 띄우면서 컴파일이 안될때가 있다.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Can't continue validation - aborting. (on d3d11)
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Can't continue validation - aborting. (on d3d11)
 Index Dimension 2 out of range (12000 specified, max allowed is 4096) for operand #1 of opcode #5 (counts are 1-based). Aborting. (on d3d11)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;그래서 위 코드에서 바꿔준 것이 맨 위에있는 전처리기 정의 구문이다.&lt;/p&gt;
 
@@ -1274,7 +1272,7 @@ fixed4 frag (v2f i) : SV_Target
 
 &lt;p&gt;Unity 의 기본적인 쉐이더 코딩은 ShaderLab 이라는 언어를 사용한다. 아래 ShaderLab 으로 되어있는 예제를 살펴보자.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Shader &quot;Custom/TextureColor&quot; {
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Shader &quot;Custom/TextureColor&quot; {
 	Properties {
 		_Color (&quot;Color&quot;, Color) = (1,1,1,1)
 		_MainTex (&quot;Texture&quot;, 2D) = &quot;white&quot; {}
@@ -1292,8 +1290,7 @@ fixed4 frag (v2f i) : SV_Target
 
   FallBack &quot;Diffuse&quot;
 }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;위 예제는 색과 텍스쳐를 인자로 받아 텍스쳐에 색을 입혀서 출력해주는 간단한 예제다. 몇 줄 안되는 코드로 텍스쳐와 색을 입혔다. 언어 자체는 단순하고 간결하다. 다만 우리가 알아야하는 몇가지 문법이 있다. CG 나 HLSL 을 사용해도 결국 인라인, 삽입해서 사용하고 기본은 ShdaderLab 이기 때문에 전체를 감싸는 문법은 반드시 알아야 한다.&lt;/p&gt;
 
@@ -1309,7 +1306,7 @@ fixed4 frag (v2f i) : SV_Target
 
 &lt;p&gt;표면 쉐이더는 실제로는 없는 개념으로 쉐이더를 컴파일하면서 정점/픽셀 쉐이더로 변환되는 쉐이더 기능이다. 보통은 간단하고 빠르게 정점 라이팅을 코딩할 때 쓰인다. 기존에 존재하는 여러 라이팅 모델들을 지원하며 직접 정점 라이팅을 할 수도 있다. 다만 픽셀/프래그먼트 쉐이딩은 안된다. 그래서 상식적으로 생각하면 디퍼드 렌더링에서는 안되겠지만 디퍼드 렌더링에서도 가능하게 만들어 놓았다. 아래 표면 쉐이더의 예제를 보자. Unity 5.5.2f 버젼에서 기본으로 생성되는 쉐이더다.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Shader &quot;Custom/NewSurfaceShader&quot; {
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Shader &quot;Custom/NewSurfaceShader&quot; {
 	Properties {
 		_Color (&quot;Color&quot;, Color) = (1,1,1,1)
 		_MainTex (&quot;Albedo (RGB)&quot;, 2D) = &quot;white&quot; {}
@@ -1344,26 +1341,23 @@ fixed4 frag (v2f i) : SV_Target
 	}
 	FallBack &quot;Diffuse&quot;
 }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;ShdaderLab 에 비하면 코드가 상당히 길다. 새롭게 변수를 세팅해 주어야 하기도 하고 몇가지 세팅을 해주어야 하기 때문이기도 하다. 이 코드에서는 라이팅을 Unity Standard 의 PBR 라이팅 모델을 사용하고 있다. 몇가지 살펴보면, 처음과 마지막을 CGPROGRAM 과 ENDCG 로 감싸준다. 그리고 바로 아래에 C 계열에서 많이 쓰이는 &lt;em&gt;pragma&lt;/em&gt; 전처리 키워드를 사용하여 뭔가 정의하고 있는데 바로 표면 쉐이더 함수의 정의를 써주는 곳이다.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#pragma surface surf Standard fullforwardshadows
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#pragma surface surf Standard fullforwardshadows
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;surface 는 표면 쉐이더 함수를 정의한다는 것을, surf 는 코드에 정의되어 있는 함수의 이름을, Standard 는 라이팅 모델을 뜻한다. Unity Standard 쉐이더의 PBR 을 모델이다. 그리고 fullforwardshadows 는 그림자에 대한 옵션이다. 메터리얼의 인자에 들어가는 텍스쳐 등 설정값을 변수로 정의해준다. 변수 이름을 위에 Properties 에 정의와 똑같이 써주면 알아서 Unity 에서는 이 값을들을 접근하게 해준다. 반드시 똑같이 써주어야 작동한다.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;struct Input {
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;struct Input {
 	float2 uv_MainTex;
 };
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;사이에 Input 구조체가 있다. 이 구조체에는 단순히 uv_MainTex 라는 변수한개만 있다. 단순하게 이름을 풀이해보면 MainTex 텍스쳐의 uv 좌표를 뜻한다. 이 변수 이름 역시 반드시 맞춰주어야 한다. 앞에는 uv 가 붙어야 하며, 그 다음 존재하는 텍스쳐 이름을 붙여주어야 한다.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;void surf (Input IN, inout SurfaceOutputStandard o) {
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;void surf (Input IN, inout SurfaceOutputStandard o) {
 	// Albedo comes from a texture tinted by color
 	fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 	o.Albedo = c.rgb;
@@ -1372,8 +1366,7 @@ fixed4 frag (v2f i) : SV_Target
 	o.Smoothness = _Glossiness;
 	o.Alpha = c.a;
 }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;이제 남은것은 surf 함수만 남아있다. 이는 표면 쉐이더에서 어떻게 정보를 처리하느냐를 적어주는 곳이다. Input 구조체는 위에서 정의해 주었고, &lt;em&gt;SurfaceOutputStandard&lt;/em&gt; 는 Standard 라이팅 모델에서 이미 정의된 구조체이다. 이 구조체의 값을 넣어주는 것으로 쉐이더 연산을 정의한다. 안의 코드를 풀어보자면, 가장 처음에 &lt;em&gt;tex2D&lt;/em&gt; 라는 함수로 &lt;em&gt;_MainTex&lt;/em&gt; 라는 텍스쳐와 &lt;em&gt;IN.uv_MainTex&lt;/em&gt; uv 좌표를 이용해 색을 가져온다. 그리고 &lt;em&gt;_Color&lt;/em&gt; 변수를 가져온 색에 각각에 rgba 별로 곱연산을 해준다. 그렇게 계산된 fixed4 자료형 &lt;em&gt;c&lt;/em&gt; 의 데이터를 스탠다드 라이팅 모델 인자의 Albedo 변수에는 rgb 값을, Alpha 변수에는 a 값을 넘겨준다. 나머지는 입력된 데이터 그대로 넣어준다.&lt;/p&gt;
 
@@ -1381,7 +1374,7 @@ fixed4 frag (v2f i) : SV_Target
 
 &lt;p&gt;다음으로 살펴볼 쉐이더는 정점/픽셀 쉐이더를 조합한 쉐이더다. CG 를 사용하는 가장 낮은 단계의 쉐이더이며 실질적으로 돌아가는 쉐이더다. 그만큼 해야할 것도 많고 신경써야 할것도 많다. 특히 라이팅을 세팅할 때는 꽤나 코드가 길어지고 복잡해진다. 하지만 그만큼 세세하게 조정이 가능하다. 그래서 보통은 특수효과에 많이 쓰이며 최적화를 위한 쉐이딩을 할때도 쓰인다. 또한 여러 다른 쉐이더를 사용할 때에도 쓰인다. 아래 예제를 살펴보자.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Shader &quot;Custom/ColorTextureCG&quot; {
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Shader &quot;Custom/ColorTextureCG&quot; {
 	Properties {
 		_Color (&quot;Color&quot;, Color) = (1,1,1,1)
 		_MainTex (&quot;Albedo (RGB)&quot;, 2D) = &quot;white&quot; {}
@@ -1430,8 +1423,7 @@ fixed4 frag (v2f i) : SV_Target
 
 	FallBack &quot;Diffuse&quot;
 }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;위 예제는 색과 텍스쳐를 입혀주는 쉐이더로 아주 간단한 코드로 이루어져 있다. 한번 살펴보자. 그리고 CG 에서는 픽셀 쉐이더의 픽셀을 &lt;em&gt;fragment&lt;/em&gt; 라고 칭한다.&lt;/p&gt;
 
@@ -1441,27 +1433,25 @@ fixed4 frag (v2f i) : SV_Target
 
 &lt;p&gt;이제 직접 정점 쉐이더와 픽셀 쉐이더를 계산하는 부분들이 남았다. &lt;em&gt;vert&lt;/em&gt; 함수를 보면 &lt;em&gt;appdata&lt;/em&gt; 라는 구조체 변수를 인자로 받아서 &lt;em&gt;v2f&lt;/em&gt; 구조체 데이터를 반환하는 간단한 함수로 보인다. 이 함수의 코드를 보자.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;v2f vert (appdata v)
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;v2f vert (appdata v)
 {
 	v2f o;
 	o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
 	o.uv = v.uv;
 	return o;
 }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;첫번째 줄은 실제 Unity 의 위치와 &lt;em&gt;Mesh&lt;/em&gt; 에 저장되어 있던 로컬 정점 위치를 계산하여 정점의 실제 위치를 계산하여 넣어주는 줄이다. 실제로는 행렬 변환을 통해 위치값을 변경한다. 이 줄을 빼버리면 (0,0,0) 을 기준으로 모델이 출력될 것이다. 두번째 줄에서는 UV 좌표값을 그대로 넣어준다. 이 UV 좌표는 픽셀 쉐이더에서 사용한다.&lt;/p&gt;
 
 &lt;p&gt;내부적으로 복잡한 처리가 끝나고 다음으로 픽셀 쉐이더 단계로 넘어간다. 등록된 함수가 호출되며 위의 &lt;em&gt;frag&lt;/em&gt; 함수가 호출되는데 여기서 텍스쳐와 UV 좌표로 폴리곤에 색을 입혀준다. 내용을 보자.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fixed4 frag (v2f i) : SV_Target
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fixed4 frag (v2f i) : SV_Target
 {
 	fixed4 col = tex2D(_MainTex, i.uv);
 	return col * _Color;
 }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;em&gt;frag&lt;/em&gt; 함수의 타입이 지정된 첫줄에 마지막에 쓰여있는 &lt;em&gt;SV_TARGET&lt;/em&gt; 은 어떤 곳에 픽셀 쉐이딩의 결과를 저장하는지에 대한 선언이다. Render Target 이라고 한다. &lt;em&gt;SV_TARGET&lt;/em&gt; 을 기본으로 쓰는데 이는 한곳에 모든 데이터를 쓴다는 선언이다. 여러곳에 데이터를 기록하면 Multiple Render Target 이라고 칭하게 되는 기술을 쓰는 것이다. 문법에 더 궁금한 사람은 &lt;a href=&quot;https://docs.unity3d.com/Manual/SL-ShaderSemantics.html&quot;&gt;Semantics&lt;/a&gt; 를 보라. MRT 에 대해 궁금한 사람은 &lt;a href=&quot;https://en.wikipedia.org/wiki/Multiple_Render_Targets&quot;&gt;Wiki: MRT&lt;/a&gt; 를 보라.&lt;/p&gt;
 
@@ -1585,7 +1575,7 @@ skinnedMeshRenderer.bindposes[0] = boneTransform.worldToLocalMatrix * rootObject
 
 &lt;p&gt;&lt;em&gt;boneIndex&lt;/em&gt; 들은 전부다 위의 &lt;em&gt;SkinnedMeshRenderer.bones&lt;/em&gt; 에 들어간 &lt;strong&gt;Transform&lt;/strong&gt; 의 인덱스들이다. 그리고 &lt;em&gt;weight&lt;/em&gt; 들은 해당 &lt;em&gt;bone&lt;/em&gt; 을 기준으로 얼마만큼 가까워질지에 대한 값이다. 가중치가 한 &lt;em&gt;bone&lt;/em&gt; 에 상대적으로 클수록 해당 &lt;em&gt;bone&lt;/em&gt; 의 위치에 더 가까워질 것이다. 하지만 우리는 여러 가중치를 설정할 필요없이 부위별로 한개의 가중치만 설정해주면 된다. 설정만 해주면 &lt;em&gt;skinning&lt;/em&gt; 은 끝난다. 생각보다 간단하다. 이 과정이 끝나면 직접 &lt;em&gt;bone&lt;/em&gt; 을 움직여 잘 따라가는지 확인할 수 있다.&lt;/p&gt;
 
-&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;partCount&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vertexByPart&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;24&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;partCount&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vertexByPart&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;24&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;BoneWeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;weights&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BoneWeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;partCount&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vertexByPart&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
 
 &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;partCount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;++)&lt;/span&gt;
@@ -1597,8 +1587,7 @@ skinnedMeshRenderer.bindposes[0] = boneTransform.worldToLocalMatrix * rootObject
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
 &lt;span class=&quot;n&quot;&gt;mesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;boneWeights&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;weights&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;마인크래프트의 케릭터들은 한개의 &lt;em&gt;bone&lt;/em&gt; 을 기준으로 케릭터가 움직이기 때문에 &lt;em&gt;bone&lt;/em&gt; 을 정점별로 한개씩 설정해 주었다. 여기까지 설정해주면 설정된 &lt;em&gt;bone&lt;/em&gt; 들을 따라 그려진다. 여기까지 &lt;em&gt;bone&lt;/em&gt; 을 직접 설정해주고, &lt;em&gt;bone&lt;/em&gt; 별 변환 행렬을 설정해주고, 정점별로 가중치를 두어 해당 가중치로 &lt;em&gt;bone&lt;/em&gt; 을 따라가게 해주었다. 그런데 몇가지 짚고 넘어가야할 것들이 있다. &lt;strong&gt;MeshRenderer&lt;/strong&gt; 와 &lt;strong&gt;SkinnedMeshRenderer&lt;/strong&gt; 의 디테일한 동작의 차이다. 위에서 &lt;em&gt;skinning&lt;/em&gt; 이 적용되냐 마냐의 차이만 있다고 설명했다. 물론 기능상의 차이는 이것 뿐이지만 이 기능 때문에 벌어지는 몇가지 세부사항도 알아야 한다. Unity 시스템에서는 &lt;strong&gt;MeshRenderer&lt;/strong&gt; 가 그리는 정점들이 움직이지 않는다는 가정하에 모든 &lt;strong&gt;MeshRenderer&lt;/strong&gt; 를 모아서 최적화를 해준다. 물론 &lt;strong&gt;Mesh&lt;/strong&gt; 인스턴스가 가진 데이터가 적어야 한다는 한계가 있지만 복수의 오브젝트가 많아질 수록 이 부분은 꽤나 중요해진다. 하지만 &lt;strong&gt;SkinnedMeshRenderer&lt;/strong&gt; 는 크게 최적화가 되어있지 않아 많이 쓰면 쓸수록, &lt;strong&gt;Mesh&lt;/strong&gt; 인스턴스의 정점의 갯수가 많으면 많을수록 부하는 심해진다. 물론 한두개만 쓰면 크게 문제되는 상황은 없지만 많으면 많을수록 퍼포먼스가 떨어지는 디바이스에서는 문제가 된다. 즉 사용시 주의해서 사용해야 한다.&lt;/p&gt;
 
@@ -1697,7 +1686,7 @@ skinnedMeshRenderer.bindposes[0] = boneTransform.worldToLocalMatrix * rootObject
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/hrmrzizon/3DBasicExample&quot;&gt;3DBasicExample&lt;/a&gt; 의 edu/mat 브랜치에 우리가 봐야할 소스들이 있다. 씬안에 MeshToolTest2 스크립트가 붙어있을 텐데 uv 를 설정해주는 라인이 있을것이다.&lt;/p&gt;
 
-&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;AddPlane&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Mesh&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;AddPlane&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Mesh&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isCube&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
         &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
@@ -1728,8 +1717,7 @@ skinnedMeshRenderer.bindposes[0] = boneTransform.worldToLocalMatrix * rootObject
                       &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
         &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;이 코드는 정점을 다루는 게시물에서 한번 본 예제다. 크게 달라진 내용은 없다. 면을 정의하기 위해 4개의 점을 만들고, 폴리곤을 만들기 위해 인덱스 배열을 만들어 정점의 인덱스를 넣어준다. 아래 UV 좌표를 넣는 부분이 우리가 알아야할 부분이다. 위에서도 계속 언급했지만 UV 좌표 하나는 정점 하나에 맞춰져야 한다. 즉 정점 한개당 UV 좌표 한개가 무조건 있어야 한다. 만약 같은 좌표에 다른 UV 좌표가 필요하면 같은 정점이 여러개가 필요할 것이다.&lt;/p&gt;
 
@@ -1898,7 +1886,7 @@ skinnedMeshRenderer.bindposes[0] = boneTransform.worldToLocalMatrix * rootObject
 
 &lt;p&gt;Unity 에서 직접 정점과 폴리곤을 조작하는 방법에 대해서 알아보기 위해 Scripts 디렉토리에 MeshTest.cs 소스코드를 보자.&lt;/p&gt;
 
-&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ModifyMesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Mesh&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ModifyMesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Mesh&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;mesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vertices&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Vector3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
                     &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
@@ -1917,24 +1905,22 @@ skinnedMeshRenderer.bindposes[0] = boneTransform.worldToLocalMatrix * rootObject
 
    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;위 코드는 정점과 폴리곤을 구성하는 정점의 인덱스를 직접 만들어 넣어주는 코드다. &lt;strong&gt;Mesh&lt;/strong&gt; 클래스는 위에서 설명한 정점과 폴리곤의 정보 등 렌더링에 필요한 정보를 가지고 있는 데이터 뭉치다. 여기에 정점과 폴리곤 정보를 넣는다. &lt;em&gt;ModifyMesh&lt;/em&gt; 함수에서는 &lt;strong&gt;Mesh&lt;/strong&gt; 의 프로퍼티에 두개의 배열을 새로 생성하여 넣어준다. &lt;em&gt;vertices&lt;/em&gt; 는 3차원 좌표계의 정점 정보 배열로써 가장 핵심적인 데이터다. 코드에서는 4개의 점을 넣어준다. X,Z축으로 정사각형을 구성하는 정점들을 가지고 있다. &lt;em&gt;triangles&lt;/em&gt; 는 폴리곤을 표현하기 위한 정수 배열인데 여기에는 &lt;em&gt;vertices&lt;/em&gt; 배열의 인덱스들이 들어가 있다. 당연히 3개의 인덱스가 하나의 폴리곤을 구성하며 위의 &lt;strong&gt;Mesh&lt;/strong&gt; 인스턴스는 두개의 폴리곤을 그리게 될것이다. 아래 소스에 주석으로 위의 정점과 인덱스들이 나타내는 것을 표현해 보았다.&lt;/p&gt;
 
-&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cm&quot;&gt;/*
+&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cm&quot;&gt;/*
   (0,0,1) 2   3 (1,0,1)
           * - *
           | / |
           * - *
   (0,0,0) 0   1 (1,0,0)
 */&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Y축에서 아래로 바라보는 뷰로 표현했다. 그리고 폴리곤을 구성하는 인덱스 배열에서 중요한게 하나있다. 바로 인덱스의 순서다. 이 코드에서 인덱스 배열이 각각 가르키는 정점의 순서를 보면 전부다 시계 방향(cw: clockwise)인 것을 알 수 있다. 만약 방향이 반시계 방향(ccw: countclockwise)으로 구성된다면 보이는 방향이 밑으로 바뀔 것이다. &lt;em&gt;mesh.triangles&lt;/em&gt; 에 들어가는 순서를 살짝 바꾸어 실행해보자.&lt;/p&gt;
 
-&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
 
 &lt;span class=&quot;n&quot;&gt;mesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;triangles&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
                  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
@@ -1943,8 +1929,7 @@ skinnedMeshRenderer.bindposes[0] = boneTransform.worldToLocalMatrix * rootObject
                  &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
 
 &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;원래 보이던 방향에서 반대로 바뀐 것을 알 수 있다. 이건 꽤나 중요한 사항이다. 다른 어플리케이션에는 어떤 방향으로 설정하는지 모르겠지만 Unity 에서는 시계 방향을 기준으로 윗 방향을 보이는 기준으로 잡는다. 물론 직접 인덱스를 건드릴일은 거의 없다. 복잡한 모델들은 대부분 파일에서 불러와서 사용하기 때문이다. 하지만 모른다면 꽤나 난처해질 것이다.&lt;/p&gt;
 
@@ -2290,27 +2275,27 @@ Temp/*
 &lt;p&gt;이제 실제 적용사례를 보자. 이 블로그의 예전 빌드스크립트를 확인해 볼것이다.&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;language: ruby
-sudo: &lt;span class=&quot;nb&quot;&gt;false
+&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt;: &lt;span class=&quot;nb&quot;&gt;false
 &lt;/span&gt;cache: bundler
 rvm:
   - 2.3.3
 before_install:
-  - gem update --system
-  - gem update --remote bundler
+  - gem update &lt;span class=&quot;nt&quot;&gt;--system&lt;/span&gt;
+  - gem update &lt;span class=&quot;nt&quot;&gt;--remote&lt;/span&gt; bundler
 install:
-  - bundle install --jobs&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3 --retry&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3 --path&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;BUNDLE_PATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:-&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;vendor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;/bundle&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
+  - bundle install &lt;span class=&quot;nt&quot;&gt;--jobs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3 &lt;span class=&quot;nt&quot;&gt;--retry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3 &lt;span class=&quot;nt&quot;&gt;--path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;BUNDLE_PATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:-&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;vendor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;/bundle&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
 before_script:
-  - git config --global user.name &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;git --no-pager show --no-patch --format&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'%an'&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-  - git config --global user.email &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;git --no-pager show --no-patch --format&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'%ae'&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+  - git config &lt;span class=&quot;nt&quot;&gt;--global&lt;/span&gt; user.name &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;git &lt;span class=&quot;nt&quot;&gt;--no-pager&lt;/span&gt; show &lt;span class=&quot;nt&quot;&gt;--no-patch&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--format&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'%an'&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+  - git config &lt;span class=&quot;nt&quot;&gt;--global&lt;/span&gt; user.email &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;git &lt;span class=&quot;nt&quot;&gt;--no-pager&lt;/span&gt; show &lt;span class=&quot;nt&quot;&gt;--no-patch&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--format&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'%ae'&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
 script:
-  - git clone -b master --depth 1 --quiet &lt;span class=&quot;s2&quot;&gt;&quot;https://&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOKEN&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;@github.com/&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TRAVIS_REPO_SLUG&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.git&quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt;site
-  - rm -r &lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt;site/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+  - git clone &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; master &lt;span class=&quot;nt&quot;&gt;--depth&lt;/span&gt; 1 &lt;span class=&quot;nt&quot;&gt;--quiet&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;https://&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOKEN&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;@github.com/&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TRAVIS_REPO_SLUG&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.git&quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt;site
+  - rm &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt;site/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
   - bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;jekyll build
 after_success:
   - &lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\_&lt;/span&gt;site
-  - git add -A
-  - git commit -m &lt;span class=&quot;s2&quot;&gt;&quot;Updated to &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;git rev-parse --short &lt;span class=&quot;nv&quot;&gt;$TRAVIS_COMMIT&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; at &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;date -u +&lt;span class=&quot;s1&quot;&gt;'%Y-%m-%d %H:%M:%S %Z'&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-  - git push -f &lt;span class=&quot;s2&quot;&gt;&quot;https://&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOKEN&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;@github.com/&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TRAVIS_REPO_SLUG&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.git&quot;&lt;/span&gt; master --quiet
+  - git add &lt;span class=&quot;nt&quot;&gt;-A&lt;/span&gt;
+  - git commit &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Updated to &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;git rev-parse &lt;span class=&quot;nt&quot;&gt;--short&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$TRAVIS_COMMIT&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; at &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;date &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; +&lt;span class=&quot;s1&quot;&gt;'%Y-%m-%d %H:%M:%S %Z'&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+  - git push &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;https://&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TOKEN&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;@github.com/&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TRAVIS_REPO_SLUG&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.git&quot;&lt;/span&gt; master &lt;span class=&quot;nt&quot;&gt;--quiet&lt;/span&gt;
 branches:
   only:
     - &lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;

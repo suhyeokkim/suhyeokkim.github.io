@@ -491,7 +491,7 @@
 <p>여기서 우리가 주의깊게 살펴볼 사항은 버려지는 메모리인데, 여기서 버려지는 메모리는 스택에 존재하는 단순 값들을 <strong>object</strong> 로 반환할 때 생기는 일이다. 이런일은 잘 발생하지 않지만 짚고 넘어가보겠다.</p>
 
 <figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">123</span><span class="p">;</span>
-<span class="kt">object</span> <span class="n">o</span> <span class="p">=</span> <span class="p">(</span><span class="kt">object</span><span class="p">)</span><span class="n">i</span><span class="p">;</span>  <span class="p">//</span> <span class="k">explicit</span> <span class="n">boxing</span></code></pre></figure>
+<span class="kt">object</span> <span class="n">o</span> <span class="p">=</span> <span class="p">(</span><span class="kt">object</span><span class="p">)</span><span class="n">i</span><span class="p">;</span>  <span class="c1">// explicit boxing</span></code></pre></figure>
 
 <p><img src="https://i-msdn.sec.s-msft.com/dynimg/IC165510.jpeg" alt="MSDN : boxing" class="center-image" /></p>
 

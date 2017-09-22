@@ -274,30 +274,30 @@
 
 <p>대리자(Delgate) 의 개념이 고안된지는 꽤 많은 시간이 흘렀다. 시작으로 거슬러 올라가면, 가장 사람들이 많이 접한 형태는 Windows API 의 메세지 처리 콜백 함수가 있겠다. 긴말 필요없이 간단한 예제를 살펴보자.</p>
 
-<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="c1">//
-// delegate 를 이용한 간단한 Unity 예제다.  
-//
-</span>
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="c1">//</span>
+<span class="c1">// delegate 를 이용한 간단한 Unity 예제다.  </span>
+<span class="c1">//</span>
+
 <span class="k">public</span> <span class="k">delegate</span> <span class="k">void</span> <span class="nf">CheckForAwake</span><span class="p">();</span>
 <span class="k">public</span> <span class="n">CheckForAwake</span> <span class="n">onAwake</span><span class="p">;</span>
 
 <span class="k">void</span> <span class="nf">Awake</span><span class="p">()</span>
 <span class="p">{</span>
-  <span class="c1">// 단순히 함수를 대입한다.
-</span>  <span class="n">onAwake</span> <span class="p">=</span> <span class="n">LogAwake</span><span class="p">;</span>
+  <span class="c1">// 단순히 함수를 대입한다.</span>
+  <span class="n">onAwake</span> <span class="p">=</span> <span class="n">LogAwake</span><span class="p">;</span>
   <span class="k">if</span><span class="p">(</span><span class="n">onAwake</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span> <span class="n">onAwake</span><span class="p">.</span><span class="nf">Invoke</span><span class="p">();</span>
 
-  <span class="c1">// 람다식을 += 를 사용해 onAwake 델리게이트에 추가한다.
-</span>  <span class="n">CheckForAwake</span> <span class="n">otherAwake</span> <span class="p">=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Awake!! Twice!!"</span><span class="p">);</span>
+  <span class="c1">// 람다식을 += 를 사용해 onAwake 델리게이트에 추가한다.</span>
+  <span class="n">CheckForAwake</span> <span class="n">otherAwake</span> <span class="p">=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Awake!! Twice!!"</span><span class="p">);</span>
   <span class="n">onAwake</span> <span class="p">+=</span> <span class="n">otherAwake</span><span class="p">;</span>
   <span class="k">if</span><span class="p">(</span><span class="n">onAwake</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span> <span class="n">onAwake</span><span class="p">.</span><span class="nf">Invoke</span><span class="p">();</span>
 
-  <span class="c1">// 람다식을 -= 를 사용해 onAwake 델리게이트에서 지운다.
-</span>  <span class="n">onAwake</span> <span class="p">-=</span> <span class="n">otherAwake</span><span class="p">;</span>
+  <span class="c1">// 람다식을 -= 를 사용해 onAwake 델리게이트에서 지운다.</span>
+  <span class="n">onAwake</span> <span class="p">-=</span> <span class="n">otherAwake</span><span class="p">;</span>
   <span class="k">if</span><span class="p">(</span><span class="n">onAwake</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span> <span class="n">onAwake</span><span class="p">.</span><span class="nf">Invoke</span><span class="p">();</span>
 
-  <span class="c1">// null 을 넣어 빈 델리게이트를 표현한다.
-</span>  <span class="n">onAwake</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
+  <span class="c1">// null 을 넣어 빈 델리게이트를 표현한다.</span>
+  <span class="n">onAwake</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
@@ -323,34 +323,34 @@
 <figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">using</span> <span class="nn">UnityEngine.Events</span><span class="p">;</span>
 <span class="k">using</span> <span class="nn">UnityEngine.SceneManagement</span><span class="p">;</span>
 
-<span class="c1">//
-// 씬 로드 event 를 이용한 예제다.
-//
-</span>
-<span class="c1">// 대리자 이벤트 변수
-</span><span class="k">public</span> <span class="k">event</span> <span class="n">UnityAction</span><span class="p">&lt;</span><span class="n">Scene</span><span class="p">,</span> <span class="n">LoadSceneMode</span><span class="p">&gt;</span> <span class="n">onLoad</span><span class="p">;</span>
+<span class="c1">//</span>
+<span class="c1">// 씬 로드 event 를 이용한 예제다.</span>
+<span class="c1">//</span>
+
+<span class="c1">// 대리자 이벤트 변수</span>
+<span class="k">public</span> <span class="k">event</span> <span class="n">UnityAction</span><span class="p">&lt;</span><span class="n">Scene</span><span class="p">,</span> <span class="n">LoadSceneMode</span><span class="p">&gt;</span> <span class="n">onLoad</span><span class="p">;</span>
 
 <span class="k">void</span> <span class="nf">Awake</span><span class="p">()</span>
 <span class="p">{</span>
-  <span class="c1">// 자기 자신의 대리자 이벤트 변수는 어떤 접근도 가능함.
-</span>  <span class="n">onLoad</span> <span class="p">=</span> <span class="n">OnSceneLoaded</span><span class="p">;</span>
+  <span class="c1">// 자기 자신의 대리자 이벤트 변수는 어떤 접근도 가능함.</span>
+  <span class="n">onLoad</span> <span class="p">=</span> <span class="n">OnSceneLoaded</span><span class="p">;</span>
   <span class="n">onLoad</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
   <span class="n">onLoad</span> <span class="p">+=</span> <span class="n">OnSceneLoaded</span><span class="p">;</span>
 
-  <span class="c1">// 컴파일 에러! 외부의 event 변수는 assign 이 안됨.
-</span>  <span class="c1">// SceneManager.sceneLoaded = onLoad;
-</span>
-  <span class="c1">// += 접근은 가능함.
-</span>  <span class="n">SceneManager</span><span class="p">.</span><span class="n">sceneLoaded</span> <span class="p">+=</span> <span class="n">onLoad</span><span class="p">;</span>
+  <span class="c1">// 컴파일 에러! 외부의 event 변수는 assign 이 안됨.</span>
+  <span class="c1">// SceneManager.sceneLoaded = onLoad;</span>
+
+  <span class="c1">// += 접근은 가능함.</span>
+  <span class="n">SceneManager</span><span class="p">.</span><span class="n">sceneLoaded</span> <span class="p">+=</span> <span class="n">onLoad</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="k">void</span> <span class="nf">OnDestroy</span><span class="p">()</span>
 <span class="p">{</span>
-  <span class="c1">// 컴파일 에러! 외부의 event 변수는 assign 이 안됨.
-</span>  <span class="c1">// SceneManager.sceneLoaded = null;
-</span>
-  <span class="c1">// -= 접근은 가능함.
-</span>  <span class="n">SceneManager</span><span class="p">.</span><span class="n">sceneLoaded</span> <span class="p">-=</span> <span class="n">onLoad</span><span class="p">;</span>
+  <span class="c1">// 컴파일 에러! 외부의 event 변수는 assign 이 안됨.</span>
+  <span class="c1">// SceneManager.sceneLoaded = null;</span>
+
+  <span class="c1">// -= 접근은 가능함.</span>
+  <span class="n">SceneManager</span><span class="p">.</span><span class="n">sceneLoaded</span> <span class="p">-=</span> <span class="n">onLoad</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="k">void</span> <span class="nf">OnSceneLoaded</span><span class="p">(</span><span class="n">Scene</span> <span class="n">scene</span><span class="p">,</span> <span class="n">LoadSceneMode</span> <span class="n">mode</span><span class="p">)</span>
@@ -396,15 +396,15 @@
 <span class="p">{</span>
   <span class="p">..</span>
 
-  <span class="c1">// 무조건 한번에 값을 반환해주어야 함.
-</span><span class="p">}</span>
+  <span class="c1">// 무조건 한번에 값을 반환해주어야 함.</span>
+<span class="p">}</span>
 
 <span class="k">void</span> <span class="nf">GetObjectCount</span><span class="p">(</span><span class="n">Action</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">getCount</span><span class="p">)</span>
 <span class="p">{</span>
   <span class="p">..</span>
 
-  <span class="c1">// 실행시에 대리자를 호출할 수도 있고, 일정 시간이 흐른뒤에 대리자를 호출할 수도 있다.
-</span><span class="p">}</span></code></pre></figure>
+  <span class="c1">// 실행시에 대리자를 호출할 수도 있고, 일정 시간이 흐른뒤에 대리자를 호출할 수도 있다.</span>
+<span class="p">}</span></code></pre></figure>
 
 <p>Action 은 C# 라이브러리에서 미리 정해놓은 대리자 형식이다.(<a href="https://msdn.microsoft.com/ko-kr/library/018hxwa8.aspx">Action 링크</a>)</p>
 

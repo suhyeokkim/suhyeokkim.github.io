@@ -216,12 +216,12 @@
 
 <h2>Property 직렬화 제어</h2>
 
-<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="c1">// Unity 시스템에 데이터를 직렬화해 멤버변수 초기값을 지정한다.
-</span><span class="na">[UnityEngine.SerializeField]</span>
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="c1">// Unity 시스템에 데이터를 직렬화해 멤버변수 초기값을 지정한다.</span>
+<span class="na">[UnityEngine.SerializeField]</span>
 <span class="k">public</span> <span class="kt">int</span> <span class="n">limitCount</span><span class="p">;</span>
 
-<span class="c1">// 직렬화를 못하게 한다.
-</span><span class="na">[System.NonSerialized]</span>
+<span class="c1">// 직렬화를 못하게 한다.</span>
+<span class="na">[System.NonSerialized]</span>
 <span class="k">public</span> <span class="kt">int</span> <span class="n">gameCount</span><span class="p">;</span></code></pre></figure>
 
 <p>Unity 스크립팅 시스템은 따로 멤버 직렬화에 대한 속성을 지정하지 않으면 접근 제한자(public, protected, private) 에 따라 직렬화를 할지 말지 결정한다. 하지만 접근 제한자로만 사용하기에는 부족한 부분이 있다 그래서 Unity 에서는 멤버 변수 직렬화를 <strong>Attribute</strong> 문법을 사용해 Unity 전용 속성을 만들어 제어를 할 수 있도록 해두었다.</p>
@@ -359,19 +359,19 @@
 
 <span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnGUI</span><span class="p">(</span><span class="n">Rect</span> <span class="n">position</span><span class="p">,</span> <span class="n">SerializedProperty</span> <span class="n">property</span><span class="p">,</span> <span class="n">GUIContent</span> <span class="n">label</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="c1">// 왼쪽에 이름으로 나오는 라벨, 여기서는 변수 이름이 들어감.
-</span>    <span class="n">position</span> <span class="p">=</span> <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">PrefixLabel</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">label</span><span class="p">);</span>
+    <span class="c1">// 왼쪽에 이름으로 나오는 라벨, 여기서는 변수 이름이 들어감.</span>
+    <span class="n">position</span> <span class="p">=</span> <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">PrefixLabel</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">label</span><span class="p">);</span>
 
     <span class="kt">float</span> <span class="n">otherWidth</span> <span class="p">=</span> <span class="n">position</span><span class="p">.</span><span class="n">width</span> <span class="p">-</span> <span class="n">numberWidth</span> <span class="p">*</span> <span class="m">2</span><span class="p">;</span>
 
-    <span class="c1">// 각 위치별로 설정해줌.
-</span>    <span class="n">Rect</span> <span class="n">nameRect</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Rect</span><span class="p">(</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">otherWidth</span><span class="p">,</span> <span class="n">position</span><span class="p">.</span><span class="n">height</span><span class="p">),</span>
+    <span class="c1">// 각 위치별로 설정해줌.</span>
+    <span class="n">Rect</span> <span class="n">nameRect</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Rect</span><span class="p">(</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">otherWidth</span><span class="p">,</span> <span class="n">position</span><span class="p">.</span><span class="n">height</span><span class="p">),</span>
         <span class="n">numberRect</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Rect</span><span class="p">(</span><span class="n">position</span><span class="p">.</span><span class="n">x</span> <span class="p">+</span> <span class="n">otherWidth</span><span class="p">,</span> <span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">numberWidth</span><span class="p">,</span> <span class="n">position</span><span class="p">.</span><span class="n">height</span><span class="p">),</span>
         <span class="n">rotateRect</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Rect</span><span class="p">(</span><span class="n">position</span><span class="p">.</span><span class="n">x</span> <span class="p">+</span> <span class="n">otherWidth</span> <span class="p">+</span> <span class="n">numberWidth</span><span class="p">,</span> <span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">numberWidth</span><span class="p">,</span> <span class="n">position</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
 
-    <span class="c1">// 각 변수별로 Unity 에서 기본으로 지원하는 형식을 사용함.
-</span>    <span class="c1">// 끝에 GUIContent.none 를 안넣어주면 이름이 표시되어 에디터에서 밀리게 나옴.
-</span>    <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">PropertyField</span><span class="p">(</span><span class="n">nameRect</span><span class="p">,</span> <span class="n">property</span><span class="p">.</span><span class="nf">FindPropertyRelative</span><span class="p">(</span><span class="s">"someName"</span><span class="p">),</span> <span class="n">GUIContent</span><span class="p">.</span><span class="n">none</span><span class="p">);</span>
+    <span class="c1">// 각 변수별로 Unity 에서 기본으로 지원하는 형식을 사용함.</span>
+    <span class="c1">// 끝에 GUIContent.none 를 안넣어주면 이름이 표시되어 에디터에서 밀리게 나옴.</span>
+    <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">PropertyField</span><span class="p">(</span><span class="n">nameRect</span><span class="p">,</span> <span class="n">property</span><span class="p">.</span><span class="nf">FindPropertyRelative</span><span class="p">(</span><span class="s">"someName"</span><span class="p">),</span> <span class="n">GUIContent</span><span class="p">.</span><span class="n">none</span><span class="p">);</span>
     <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">PropertyField</span><span class="p">(</span><span class="n">numberRect</span><span class="p">,</span> <span class="n">property</span><span class="p">.</span><span class="nf">FindPropertyRelative</span><span class="p">(</span><span class="s">"someNumber"</span><span class="p">),</span> <span class="n">GUIContent</span><span class="p">.</span><span class="n">none</span><span class="p">);</span>
     <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">PropertyField</span><span class="p">(</span><span class="n">rotateRect</span><span class="p">,</span> <span class="n">property</span><span class="p">.</span><span class="nf">FindPropertyRelative</span><span class="p">(</span><span class="s">"someYRotation"</span><span class="p">),</span> <span class="n">GUIContent</span><span class="p">.</span><span class="n">none</span><span class="p">);</span>
 <span class="p">}</span></code></pre></figure>

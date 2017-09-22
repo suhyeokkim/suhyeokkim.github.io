@@ -283,27 +283,27 @@
 <p>이제 실제 적용사례를 보자. 이 블로그의 예전 빌드스크립트를 확인해 볼것이다.</p>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">language: ruby
-sudo: <span class="nb">false
+<span class="nb">sudo</span>: <span class="nb">false
 </span>cache: bundler
 rvm:
   - 2.3.3
 before_install:
-  - gem update --system
-  - gem update --remote bundler
+  - gem update <span class="nt">--system</span>
+  - gem update <span class="nt">--remote</span> bundler
 install:
-  - bundle install --jobs<span class="o">=</span>3 --retry<span class="o">=</span>3 --path<span class="o">=</span><span class="k">${</span><span class="nv">BUNDLE_PATH</span><span class="k">:-</span><span class="nv">vendor</span><span class="p">/bundle</span><span class="k">}</span>
+  - bundle install <span class="nt">--jobs</span><span class="o">=</span>3 <span class="nt">--retry</span><span class="o">=</span>3 <span class="nt">--path</span><span class="o">=</span><span class="k">${</span><span class="nv">BUNDLE_PATH</span><span class="k">:-</span><span class="nv">vendor</span><span class="p">/bundle</span><span class="k">}</span>
 before_script:
-  - git config --global user.name <span class="s2">"</span><span class="k">$(</span>git --no-pager show --no-patch --format<span class="o">=</span><span class="s1">'%an'</span><span class="k">)</span><span class="s2">"</span>
-  - git config --global user.email <span class="s2">"</span><span class="k">$(</span>git --no-pager show --no-patch --format<span class="o">=</span><span class="s1">'%ae'</span><span class="k">)</span><span class="s2">"</span>
+  - git config <span class="nt">--global</span> user.name <span class="s2">"</span><span class="k">$(</span>git <span class="nt">--no-pager</span> show <span class="nt">--no-patch</span> <span class="nt">--format</span><span class="o">=</span><span class="s1">'%an'</span><span class="k">)</span><span class="s2">"</span>
+  - git config <span class="nt">--global</span> user.email <span class="s2">"</span><span class="k">$(</span>git <span class="nt">--no-pager</span> show <span class="nt">--no-patch</span> <span class="nt">--format</span><span class="o">=</span><span class="s1">'%ae'</span><span class="k">)</span><span class="s2">"</span>
 script:
-  - git clone -b master --depth 1 --quiet <span class="s2">"https://</span><span class="k">${</span><span class="nv">TOKEN</span><span class="k">}</span><span class="s2">@github.com/</span><span class="k">${</span><span class="nv">TRAVIS_REPO_SLUG</span><span class="k">}</span><span class="s2">.git"</span> <span class="se">\_</span>site
-  - rm -r <span class="se">\_</span>site/<span class="k">*</span>
+  - git clone <span class="nt">-b</span> master <span class="nt">--depth</span> 1 <span class="nt">--quiet</span> <span class="s2">"https://</span><span class="k">${</span><span class="nv">TOKEN</span><span class="k">}</span><span class="s2">@github.com/</span><span class="k">${</span><span class="nv">TRAVIS_REPO_SLUG</span><span class="k">}</span><span class="s2">.git"</span> <span class="se">\_</span>site
+  - rm <span class="nt">-r</span> <span class="se">\_</span>site/<span class="k">*</span>
   - bundle <span class="nb">exec </span>jekyll build
 after_success:
   - <span class="nb">cd</span> <span class="se">\_</span>site
-  - git add -A
-  - git commit -m <span class="s2">"Updated to </span><span class="k">$(</span>git rev-parse --short <span class="nv">$TRAVIS_COMMIT</span><span class="k">)</span><span class="s2"> at </span><span class="k">$(</span>date -u +<span class="s1">'%Y-%m-%d %H:%M:%S %Z'</span><span class="k">)</span><span class="s2">"</span>
-  - git push -f <span class="s2">"https://</span><span class="k">${</span><span class="nv">TOKEN</span><span class="k">}</span><span class="s2">@github.com/</span><span class="k">${</span><span class="nv">TRAVIS_REPO_SLUG</span><span class="k">}</span><span class="s2">.git"</span> master --quiet
+  - git add <span class="nt">-A</span>
+  - git commit <span class="nt">-m</span> <span class="s2">"Updated to </span><span class="k">$(</span>git rev-parse <span class="nt">--short</span> <span class="nv">$TRAVIS_COMMIT</span><span class="k">)</span><span class="s2"> at </span><span class="k">$(</span>date <span class="nt">-u</span> +<span class="s1">'%Y-%m-%d %H:%M:%S %Z'</span><span class="k">)</span><span class="s2">"</span>
+  - git push <span class="nt">-f</span> <span class="s2">"https://</span><span class="k">${</span><span class="nv">TOKEN</span><span class="k">}</span><span class="s2">@github.com/</span><span class="k">${</span><span class="nv">TRAVIS_REPO_SLUG</span><span class="k">}</span><span class="s2">.git"</span> master <span class="nt">--quiet</span>
 branches:
   only:
     - <span class="nb">source</span></code></pre></figure>

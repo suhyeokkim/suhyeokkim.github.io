@@ -337,7 +337,7 @@
 
 <p>아 그러면 쉐이더는 어디서 정의하냐고? <em>Graphics.DrawMeshInstanced</em> 메소드는 <strong>Material</strong> 과 <strong>MaterialPropertyBlock</strong> 둘다 필요하다. 적당히 데이터를 분리해서 취급하면 된다. 아래 그리는 코드를 살펴보자. <a href="https://github.com/hrmrzizon/InstancedSkinningExmaple/blob/master/Assets/2%20-%20InstancedSkinning/CharacterSet.cs">InstancedSkinning - CharacterSet</a> 에서 간추려서 가져왔다.</p>
 
-<div class="language-csharp highlighter-rouge"><pre class="highlight"><code><span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">CharacterData</span><span class="p">,</span> <span class="n">DrawData</span><span class="p">&gt;</span> <span class="n">drawDataDict</span><span class="p">;</span>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">CharacterData</span><span class="p">,</span> <span class="n">DrawData</span><span class="p">&gt;</span> <span class="n">drawDataDict</span><span class="p">;</span>
 
 <span class="k">void</span> <span class="nf">Update</span><span class="p">()</span>
 <span class="p">{</span>
@@ -365,8 +365,7 @@
             <span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><strong>Material</strong> 인스턴스는 단 한개이며 <strong>Texture2DArray</strong> 를 사용해 모든 텍스쳐를 하나로 합쳐 <em>DrawCall</em> 을 줄였다. <strong>DrawData</strong> 는 <em>Graphics.DrawMeshInstanced</em> 메소드 호출을하기 위한 구조체 데이터다. 기본적으로 물체를 그릴때 필요한 <strong>Mesh</strong> 인스턴스와 각 그려야할 인스턴스 별로 필요한 변환행렬들을 가지고 있는 <em>DrawData.mainMatrixList</em>, 필요한 데이터를 저장하고 있는 <strong>MaterialPropertyBlock</strong> 인스턴스 <em>DrawData.block</em> 을 가지고 있다. <em>DrawData.UpdateMaterialblcok</em> 메소드는 필요한 데이터들을 <em>DrawData.block</em> 에 넘겨주는 메소드다.</p>
 
@@ -471,10 +470,9 @@ v2f vert (a2v v)
 
 <p>근데 위 코드처럼 인스턴싱을 많이하게 되면 아래와 같은 에러를 띄우면서 컴파일이 안될때가 있다.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Can't continue validation - aborting. (on d3d11)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Can't continue validation - aborting. (on d3d11)
 Index Dimension 2 out of range (12000 specified, max allowed is 4096) for operand #1 of opcode #5 (counts are 1-based). Aborting. (on d3d11)
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>그래서 위 코드에서 바꿔준 것이 맨 위에있는 전처리기 정의 구문이다.</p>
 

@@ -169,13 +169,13 @@
 
 <span class="k">namespace</span> <span class="nn">CustomExtensions</span>
 <span class="p">{</span>
-    <span class="c1">//Extension methods must be defined in a static class
-</span>    <span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">StringExtension</span>
+    <span class="c1">//Extension methods must be defined in a static class</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">StringExtension</span>
        <span class="p">{</span>
-        <span class="c1">// This is the extension method.
-</span>        <span class="c1">// The first parameter takes the "this" modifier
-</span>        <span class="c1">// and specifies the type for which the method is defined.
-</span>        <span class="k">public</span> <span class="k">static</span> <span class="kt">int</span> <span class="nf">WordCount</span><span class="p">(</span><span class="k">this</span> <span class="n">String</span> <span class="n">str</span><span class="p">)</span>
+        <span class="c1">// This is the extension method.</span>
+        <span class="c1">// The first parameter takes the "this" modifier</span>
+        <span class="c1">// and specifies the type for which the method is defined.</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="kt">int</span> <span class="nf">WordCount</span><span class="p">(</span><span class="k">this</span> <span class="n">String</span> <span class="n">str</span><span class="p">)</span>
         <span class="p">{</span>
             <span class="k">return</span> <span class="n">str</span><span class="p">.</span><span class="nf">Split</span><span class="p">(</span><span class="k">new</span> <span class="kt">char</span><span class="p">[]</span> <span class="p">{</span><span class="sc">' '</span><span class="p">,</span> <span class="sc">'.'</span><span class="p">,</span><span class="sc">'?'</span><span class="p">},</span> <span class="n">StringSplitOptions</span><span class="p">.</span><span class="n">RemoveEmptyEntries</span><span class="p">).</span><span class="n">Length</span><span class="p">;</span>
         <span class="p">}</span>
@@ -186,17 +186,17 @@
 
 <figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">namespace</span> <span class="nn">Extension_Methods_Simple</span>
 <span class="p">{</span>
-    <span class="c1">//Import the extension method namespace.
-</span>    <span class="k">using</span> <span class="nn">CustomExtensions</span><span class="p">;</span>
+    <span class="c1">//Import the extension method namespace.</span>
+    <span class="k">using</span> <span class="nn">CustomExtensions</span><span class="p">;</span>
     <span class="k">class</span> <span class="nc">Program</span>
     <span class="p">{</span>
         <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
         <span class="p">{</span>
             <span class="kt">string</span> <span class="n">s</span> <span class="p">=</span> <span class="s">"The quick brown fox jumped over the lazy dog."</span><span class="p">;</span>
-            <span class="c1">//  Call the method as if it were an
-</span>            <span class="c1">//  instance method on the type. Note that the first
-</span>            <span class="c1">//  parameter is not specified by the calling code.
-</span>            <span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="n">s</span><span class="p">.</span><span class="nf">WordCount</span><span class="p">();</span>
+            <span class="c1">//  Call the method as if it were an</span>
+            <span class="c1">//  instance method on the type. Note that the first</span>
+            <span class="c1">//  parameter is not specified by the calling code.</span>
+            <span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="n">s</span><span class="p">.</span><span class="nf">WordCount</span><span class="p">();</span>
             <span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"Word count of s is {0}"</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
         <span class="p">}</span>
     <span class="p">}</span>

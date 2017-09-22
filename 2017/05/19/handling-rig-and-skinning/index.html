@@ -371,7 +371,7 @@ skinnedMeshRenderer.bindposes[0] = boneTransform.worldToLocalMatrix * rootObject
 
 <p><em>boneIndex</em> 들은 전부다 위의 <em>SkinnedMeshRenderer.bones</em> 에 들어간 <strong>Transform</strong> 의 인덱스들이다. 그리고 <em>weight</em> 들은 해당 <em>bone</em> 을 기준으로 얼마만큼 가까워질지에 대한 값이다. 가중치가 한 <em>bone</em> 에 상대적으로 클수록 해당 <em>bone</em> 의 위치에 더 가까워질 것이다. 하지만 우리는 여러 가중치를 설정할 필요없이 부위별로 한개의 가중치만 설정해주면 된다. 설정만 해주면 <em>skinning</em> 은 끝난다. 생각보다 간단하다. 이 과정이 끝나면 직접 <em>bone</em> 을 움직여 잘 따라가는지 확인할 수 있다.</p>
 
-<div class="language-c# highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="n">partCount</span> <span class="p">=</span> <span class="m">6</span><span class="p">,</span> <span class="n">vertexByPart</span> <span class="p">=</span> <span class="m">24</span><span class="p">;</span>
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">partCount</span> <span class="p">=</span> <span class="m">6</span><span class="p">,</span> <span class="n">vertexByPart</span> <span class="p">=</span> <span class="m">24</span><span class="p">;</span>
 <span class="n">BoneWeight</span><span class="p">[]</span> <span class="n">weights</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BoneWeight</span><span class="p">[</span><span class="n">partCount</span> <span class="p">*</span> <span class="n">vertexByPart</span><span class="p">];</span>
 
 <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">partCount</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
@@ -383,8 +383,7 @@ skinnedMeshRenderer.bindposes[0] = boneTransform.worldToLocalMatrix * rootObject
 <span class="p">}</span>
 
 <span class="n">mesh</span><span class="p">.</span><span class="n">boneWeights</span> <span class="p">=</span> <span class="n">weights</span><span class="p">;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>마인크래프트의 케릭터들은 한개의 <em>bone</em> 을 기준으로 케릭터가 움직이기 때문에 <em>bone</em> 을 정점별로 한개씩 설정해 주었다. 여기까지 설정해주면 설정된 <em>bone</em> 들을 따라 그려진다. 여기까지 <em>bone</em> 을 직접 설정해주고, <em>bone</em> 별 변환 행렬을 설정해주고, 정점별로 가중치를 두어 해당 가중치로 <em>bone</em> 을 따라가게 해주었다. 그런데 몇가지 짚고 넘어가야할 것들이 있다. <strong>MeshRenderer</strong> 와 <strong>SkinnedMeshRenderer</strong> 의 디테일한 동작의 차이다. 위에서 <em>skinning</em> 이 적용되냐 마냐의 차이만 있다고 설명했다. 물론 기능상의 차이는 이것 뿐이지만 이 기능 때문에 벌어지는 몇가지 세부사항도 알아야 한다. Unity 시스템에서는 <strong>MeshRenderer</strong> 가 그리는 정점들이 움직이지 않는다는 가정하에 모든 <strong>MeshRenderer</strong> 를 모아서 최적화를 해준다. 물론 <strong>Mesh</strong> 인스턴스가 가진 데이터가 적어야 한다는 한계가 있지만 복수의 오브젝트가 많아질 수록 이 부분은 꽤나 중요해진다. 하지만 <strong>SkinnedMeshRenderer</strong> 는 크게 최적화가 되어있지 않아 많이 쓰면 쓸수록, <strong>Mesh</strong> 인스턴스의 정점의 갯수가 많으면 많을수록 부하는 심해진다. 물론 한두개만 쓰면 크게 문제되는 상황은 없지만 많으면 많을수록 퍼포먼스가 떨어지는 디바이스에서는 문제가 된다. 즉 사용시 주의해서 사용해야 한다.</p>
 
