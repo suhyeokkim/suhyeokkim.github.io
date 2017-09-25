@@ -9,7 +9,9 @@ permalink: /edu/
  - [Slide 0 : 강의 개요](https://docs.google.com/presentation/d/12864ypOgKxDkegD3_HoCA9r7CPPasMorxUkZetkpLq4/edit?usp=sharing)
  - [Slide 1 : 기초 수 체계 및 변환](https://docs.google.com/presentation/d/1B4pAvR0yvY8DzID1exy3LjGE1rwgfAbB5aL9Y6xCtTg/edit?usp=sharing)
  - [Slide 2 : Rendering Pipeline](https://docs.google.com/presentation/d/1tx5duDdeAiJEof_iGwMcBguIZbJ1jwZdRVHgQTQ586c/edit?usp=sharing)
-
+ - [Slide 3 : Visual Appearance Part.1](https://docs.google.com/presentation/d/1jvKKsdAvIlav_JoDmtgSvRIJPCSvhxs71LYpQMNN4iA/edit?usp=sharing)
+ - [Slide 4 : Visual Appearance Part.2](https://docs.google.com/presentation/d/1Ysrr03geHWBwFFmLzRdH7rKVsapR-NQa7tlS4Z6JT10/edit?usp=sharing)
+ 
 ### Unity Advanced
 
 <!-- Advanced function -->
