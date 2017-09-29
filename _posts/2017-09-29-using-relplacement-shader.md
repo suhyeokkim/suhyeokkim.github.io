@@ -29,7 +29,7 @@ string replacementTag = "replace";
 camera.SetReplacementShader(shader, replacementTag);
 ```
 
-사용 방법은 굉장히 단순하다. 다만 이 _Replacement Shader_ 기능에서 중요한 것은 쉐이더를 단순히 치환하는게 포인트가 아니다. 치환된 쉐이더들은 기존 __Material__ 이 가지고 있던 데이터들과 쉐이더 코드에서 이름만 똑같이 맞추어주면 자동으로 데이터들이 쉐이더로 들어온다. 즉 쉐이더를 갈아치우지 않고도 데이터를 공유할 수 있는 것이다. 이는 Unity 의 렌더링에서 굉장히 강력한 시스템으로 초기에는 이해하기도 힘들고 잔머리가 필요하지만 이를 잘 사용만 한다면 굉장히 유용하게 쓰일 수 있다.
+사용 방법은 굉장히 단순하다. 다만 이 _Replacement Shader_ 기능에서 중요한 것은 쉐이더를 단순히 치환하는 것만 포인트가 아니다. 치환된 쉐이더들은 기존 __Material__ 이 가지고 있던 데이터들과 쉐이더 코드에서 이름만 똑같이 맞추어주면 자동으로 데이터들이 쉐이더로 들어온다. 즉 쉐이더를 갈아치우지 않고도 데이터를 공유할 수 있는 것이다. 이는 Unity 의 렌더링에서 굉장히 강력한 시스템으로 초기에는 이해하기도 힘들고 잔머리가 필요하지만 이를 잘 사용만 한다면 굉장히 유용하게 쓰일 수 있다.
 
 필자는 Github 에서 OIT 예제를 보면서 처음 보았다. [Github : OIT_Lab](https://github.com/candycat1992/OIT_Lab) 에서 OIT 를 처리하는 코드에서 구경할 수 있다. 또한 일본 Unity 지사에서 일하는 유명한 keijiro 의 [Skinner](https://github.com/keijiro/Skinner) 에서 위치를 처리하는데 쓰이기도 한다.
 
