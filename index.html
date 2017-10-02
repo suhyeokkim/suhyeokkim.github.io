@@ -278,13 +278,13 @@
         </header>
 
         <div class="post-content">
-          <p>일반적으로 Graphics Driver API 에서 지원하는 <em>CommandBuffer</em> 는 굉장히 낮은 드라이버 레벨의 렌더링 명령을 저장하여, GPU 에서 이 <em>CommandBuffer</em> 를 참조해 그려주는 <strong>Task Queue</strong> 의 개념입니다. 하지만 Unity 에서 지원하는 <em>CommandBuffer</em> 의 개념은 비슷하지만 조금 다릅니다.</p>
+          <p>일반적으로 Graphics Driver API 에서 지원하는 <em>CommandBuffer</em> 는 굉장히 낮은 드라이버 레벨의 렌더링 명령을 저장하여, GPU 에서 이 <em>CommandBuffer</em> 를 참조해 그려주는 <strong>Task Queue</strong> 의 개념이다. 하지만 Unity 에서 지원하는 <em>CommandBuffer</em> 의 개념은 비슷하지만 조금 다르다.</p>
 
-<p>Unity 렌더링 시스템은 재미있는 기능을 많이 제공하지만 그중에서도 가장 활용할 가능성이 높은 기능은 <strong>CommandBuffer</strong> 일 것 입니다. 이는 일반적으로 알려진 Graphics Driver API 에서의 낮은 레벨의 명령을 저장하는 <em>CommandBuffer</em> 와는 달리 Unity 에서 사용할 수 있는 <strong>CommandBuffer</strong> 는 Unity 의 대부분의 렌더링 기능을 사용할 수 있습니다. <a href="https://docs.unity3d.com/ScriptReference/Rendering.CommandBuffer.html">Unity Reference : Command Buffer</a> 이 링크를 보면 알겠지만 정말 많은 기능들을 <strong>CommandBuffer</strong> 에 저장할 수 있습니다. 이는 렌더링 스크립트를 유연하게 짤 수 있게 해주며, 파이프라인의 개념까지 건드릴 수 있게 됩니다.</p>
+<p>Unity 렌더링 시스템은 재미있는 기능을 많이 제공하지만 그중에서도 가장 활용할 가능성이 높은 기능은 <strong>CommandBuffer</strong> 일 것이다. 이는 일반적으로 알려진 Graphics Driver API 에서의 낮은 레벨의 명령을 저장하는 <em>CommandBuffer</em> 와는 달리 Unity 에서 사용할 수 있는 <strong>CommandBuffer</strong> 는 Unity 의 대부분의 렌더링 기능을 사용할 수 있다. <a href="https://docs.unity3d.com/ScriptReference/Rendering.CommandBuffer.html">Unity Reference : Command Buffer</a> 이 링크를 보면 알겠지만 정말 많은 기능들을 <strong>CommandBuffer</strong> 에 저장할 수 있다. 이는 렌더링 스크립트를 유연하게 짤 수 있게 해주며, 파이프라인의 개념까지 건드릴 수 있게 된다.</p>
 
-<p>그리고 이 명령을 실행하는 방법은 3가지가 있습니다. 하나는 <em>Camera.AddCommandBuffer</em> 메소드를 사용하는 방법입니다. 이는 <strong>Camera</strong> 컴포넌트에 <strong>CommandBuffer</strong> 를 집어넣는 기능인데, 단순히 넣는게 아니라 <strong>Camera</strong> 의 렌더링 단계는 굉장히 많은 단계로 나뉘는데, 이 단계별로 시간을 정해 그릴 수도 있습니다. 굉장히 과정이 많기 때문에 사용자가 원하는 시점에 넣기만 하면 됩니다. 그러면 <strong>Camera</strong> 가 렌더링을 하는 과정에서 <strong>CommandBuffer</strong> 의 명령들을 실행할 것입니다. 또한 같은 이치로 <em>Light.AddCommandBuffer</em> 메소드가 있습니다. <em>Camera.AddCommandBuffer</em> 와 같이 원하는 시점에 <strong>CommandBuffer</strong> 를 넘기면 됩니다.</p>
+<p>그리고 이 명령을 실행하는 방법은 3가지가 있다. 하나는 <em>Camera.AddCommandBuffer</em> 메소드를 사용하는 방법이다. 이는 <strong>Camera</strong> 컴포넌트에 <strong>CommandBuffer</strong> 를 집어넣는 기능인데, 단순히 넣는게 아니라 <strong>Camera</strong> 의 렌더링 단계는 굉장히 많은 단계로 나뉘는데, 이 단계별로 시간을 정해 그릴 수도 있다. 굉장히 과정이 많기 때문에 사용자가 원하는 시점에 넣기만 하면 된다. 그러면 <strong>Camera</strong> 가 렌더링을 하는 과정에서 <strong>CommandBuffer</strong> 의 명령들을 실행할 것이다. 또한 같은 이치로 <em>Light.AddCommandBuffer</em> 메소드가 있다. <em>Camera.AddCommandBuffer</em> 와 같이 원하는 시점에 <strong>CommandBuffer</strong> 를 넘기면 된다.</p>
 
-<p>마지막으로는 <em>Graphics.ExecuteCommandBuffer</em> 입니다. 이는 즉각적으로 <strong>CommandBuffer</strong> 안의 명령들을 실행시키는 기능으로 앞에서 언급한 시스템에서 알아서 실행되는 것과는 다릅니다. 사용자가 실행 시점을 정하고 싶은 경우에는 이 메소드를 쓰면 될것입니다.</p>
+<p>마지막으로는 <em>Graphics.ExecuteCommandBuffer</em> 이다. 이는 즉각적으로 <strong>CommandBuffer</strong> 안의 명령들을 실행시키는 기능으로 앞에서 언급한 시스템에서 알아서 실행되는 것과는 다르다. 사용자가 실행 시점을 정하고 싶은 경우에는 이 메소드를 쓰면 될것이다.</p>
 
 <h1>참조 자료</h1>
 
