@@ -105,213 +105,6 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
-            <a class="post-link" href="/2017/04/07/unity-message-system/">Unity Message System</a>
-          </h1>
-
-          <p class="post-meta">Apr 7, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/mono/">mono</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/c/">c#</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <h2>이름으로 메소드를 호출하다. SendMessage</h2>
-
-<p>Unity 런타임 시스템에서는 Unity 자체의 캐시 시스템을 이용하여 컴포넌트의 메소드를 문자열로 찾아 호출해주는 기능을 가지고 있다. 그중 하나는 <strong>GameObject</strong> 와 <a href="https://docs.unity3d.com/ScriptReference/Component.html"><strong>Component</strong></a> 클래스에 존재하는 <a href="https://docs.unity3d.com/kr/current/ScriptReference/GameObject.SendMessage.html"><strong>SendMessage</strong></a> 라는 메소드다. 아래와 같이 사용을 할 수 있다.</p>
-
-<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">void</span> <span class="nf">OnEnable</span><span class="p">()</span>
-<span class="p">{</span>
-  <span class="nf">SendMessage</span><span class="p">(</span><span class="s">"DoSomething"</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="k">void</span> <span class="nf">DoSomething</span><span class="p">()</span>
-<span class="p">{</span>
-  <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Do something!"</span><span class="p">);</span>
-<span class="p">}</span></code></pre></figure>
-
-<p>OnEnable 에서 해당 컴포넌트의 DoSomething 이라는 메소드를 찾아 호출하는 SendMessage 메소드를 호출하고, 아마 DoSomething 메소드가 호출되면서 로그가 출력될 것이다.</p>
-
-<p>Unity 에서 메세징 방식의 대표적인 사용사례는 컴포넌트 스크립팅을 할 때 항상 볼 수 있는 Start, Update 등 <a href="https://docs.unity3d.com/ScriptReference/MonoBehaviour.html">MonoBehaviour</a> 의 여러 메시지 콜백들이다. 저 메시지 콜백들을 통해 스크립트 컴포넌트는 여러 상태를 알 수 있다.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/04/07/unity-message-system/">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
             <a class="post-link" href="/2017/04/05/unity-event-handling/">Unity Event Handling</a>
           </h1>
 
@@ -326,6 +119,8 @@
   
     
       <a href="/categories/unity/">unity</a>,
+    
+  
     
   
     
@@ -425,6 +220,8 @@
   
     
   
+    
+  
 
   
   
@@ -440,6 +237,8 @@
   
     
       <a href="/categories/analysis/">analysis</a>
+    
+  
     
   
     
@@ -516,7 +315,66 @@
     
   
     
-      <a href="/categories/unity/">unity</a>
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/try/">try</a>
+    
+  
+    
+  
     
   
     
@@ -644,6 +502,8 @@
   
     
   
+    
+  
 
 </p>
         </header>
@@ -685,6 +545,8 @@
   
     
       <a href="/categories/unity/">unity</a>,
+    
+  
     
   
     
@@ -784,6 +646,8 @@
   
     
   
+    
+  
 
   
   
@@ -799,6 +663,8 @@
   
     
       <a href="/categories/analysis/">analysis</a>
+    
+  
     
   
     
@@ -933,6 +799,8 @@
   
     
   
+    
+  
 
   
   
@@ -946,6 +814,8 @@
   
     
       <a href="/categories/texture-compression/">texture_compression</a>,
+    
+  
     
   
     
@@ -1003,6 +873,8 @@
   
     
       <a href="/categories/analysis/">analysis</a>
+    
+  
     
   
     
@@ -1124,6 +996,8 @@
   
     
   
+    
+  
 
   
   
@@ -1131,6 +1005,8 @@
   
     
       <a href="/categories/makeblog/">makeblog</a>,
+    
+  
     
   
     
@@ -1188,6 +1064,8 @@
   
     
       <a href="/categories/try/">try</a>
+    
+  
     
   
     
