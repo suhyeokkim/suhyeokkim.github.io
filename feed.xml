@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-10-27T05:53:07+00:00</updated>
+  <updated>2017-10-27T09:47:29+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -24,6 +24,100 @@
     </author>
   
 
+  
+  
+    <entry>
+      
+      <title type="html">Loop Attributes For Dynamic Branching</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/10/26/loop-attributes-for-dynamic-branching/" rel="alternate" type="text/html" title="Loop Attributes For Dynamic Branching" />
+      <published>2017-10-26T00:00:00+00:00</published>
+      <updated>2017-10-26T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/10/26/loop-attributes-for-dynamic-branching</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/10/26/loop-attributes-for-dynamic-branching/">&lt;p&gt;&lt;em&gt;Programmable Shader&lt;/em&gt; 를 작성할 때에는 한가지 유의해야 할 점이 있다. 이는 &lt;em&gt;Dynamic Branching&lt;/em&gt; 이라는 개념이다. &lt;em&gt;Dynamic Branching&lt;/em&gt; 은 조건 분기문이 &lt;em&gt;Programmable Shader&lt;/em&gt; 에서 사용될 때 나타나는 현상을 말한다. &lt;em&gt;Programmable Shader&lt;/em&gt; 는 직렬이 아닌 병렬로 실행되기 때문에 나타나는 특성이다. 반복문에서도 조건 분기를 사용한다. 간단한 아래 코드를 보자.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-hlsl&quot;&gt;int i = 0;
+while(i &amp;lt; 5)
+{
+  i++;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;위 코드는 프로그래밍을 입문할때 볼 수 있는 코드다. 중요한 것은 &lt;em&gt;while&lt;/em&gt; 단어가 있는 줄에 있는 조건 식이다. &lt;em&gt;(i &amp;lt; 5)&lt;/em&gt; 조건식 때문에 &lt;em&gt;Dynamic Branching&lt;/em&gt; 이 발생한다. 이 &lt;em&gt;Dynamic Branching&lt;/em&gt; 을 명시적으로 없에거나 만들기 위해 &lt;em&gt;hlsl&lt;/em&gt; 에서 &lt;em&gt;attribute&lt;/em&gt; 를 지원한다. 아래를 보자.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-hlsl&quot;&gt;[Attribute] for ( Initializer; Conditional; Iterator )
+{
+  Statement Block;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;해당 구문은 &lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/windows/desktop/bb509602.aspx&quot;&gt;MSDN : for Statement&lt;/a&gt; 에서 가져왔다. 일반적으로 프로그래머이 정말 많이본 &lt;em&gt;for&lt;/em&gt; 반복문이다. 우리가 봐야할 것은 &lt;em&gt;for&lt;/em&gt; 구문 왼쪽의 &lt;em&gt;[Attribute]&lt;/em&gt; 라는 구문이다. 이 부분에는 총 4가지의 옵션을 넣을 수 있는데, 이 글에서 언급할 &lt;em&gt;[Attribute]&lt;/em&gt; 는 두가지다. &lt;em&gt;unroll&lt;/em&gt; 과 &lt;em&gt;loop&lt;/em&gt; 이 두가지이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;hlsl&lt;/em&gt; 로 정상적인 반복문 실행을 하게되면, 매번 반복을 할때 마다 조건식을 검사하게 되고, 해당 반복문의 범위를 마음대로 조정하여 코딩을 할 수 있다. 다만 조건식의 범위가 매번 달라진다면 &lt;em&gt;Dynamic Branching&lt;/em&gt; 이 발생하게 된다. 그리고 반복문이 매번 &lt;em&gt;Programmable Shader&lt;/em&gt; 가 실행될 때 상수로 반복을 한다면 쉐이더 컴파일러는 최적화를 위해 특정한 행동을 하게 된다. 아래 코드를 보자.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-hlsl&quot;&gt;for(int i = 0; i &amp;lt; 5; i++)
+{
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;위의 코드는 루프를 다섯번 실행시키는 코드다. 따로 안에 인덱스 &lt;em&gt;i&lt;/em&gt; 를 건드리지 않는다면 쉐이더 컴파일러는 컴파일 시점에 최적화를 한다. 이를 &lt;em&gt;unroll&lt;/em&gt; 이라고 부를 수 있는데, 실행할 반복문을 반복문으로 해석하는게 아닌 5번 연속해서 같은 행동을 하게 하는 것이다. 조건 자체도 없어지고 그저 인덱스를 풀어쓰게 된다. 이는 상수(constant)로 반복문을 제어하면 쉐이더 컴파일러가 알아서 해주기 때문에 신경써주지 않아도 된다. 다만 &lt;em&gt;unroll&lt;/em&gt; 이라는 키워드를 써서 바뀔 때는 변수를 사용해 반복문을 제어할 때다. 변수를 사용하면 컴파일 시점에서는 추측할 수 없기 때문에 암시적으로 &lt;em&gt;unroll&lt;/em&gt; 을 할 수 없다. 이 때 &lt;em&gt;unroll&lt;/em&gt; 키워드를 사용하여 제어할 수 있다.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-hlsl&quot;&gt;int count = ...;
+[unroll(5)]
+for(int i = 0; i &amp;lt; count; i++)
+{
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;또한 암시적으로 &lt;em&gt;unroll&lt;/em&gt; 된 반복문을 명시적으로 반복문으로 실행되게 할 수도 있다.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-hlsl&quot;&gt;[loop]
+for(int i = 0; i &amp;lt; 5; i++)
+{
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1&gt;참조 자료&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/windows/desktop/bb509602.aspx&quot;&gt;MSDN : for Statement&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.gamedev.net/forums/topic/649408-can-someone-explain-loop-and-unroll-to-me/&quot;&gt;GameDev : Can someone explain [loop] and [unroll] to me?&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.gamedev.net/forums/topic/543541-hlsl-warning-gradient-based-operations-must-be-moved-out-of-flow-control-to-prevent/&quot;&gt;GameDev : HLSL warning: Gradient-based operations must be moved out of flow control to prevent
+ &lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="render" />
+      
+        <category term="shader" />
+      
+        <category term="hlsl" />
+      
+
+      
+
+      
+        <summary type="html">Programmable Shader 를 작성할 때에는 한가지 유의해야 할 점이 있다. 이는 Dynamic Branching 이라는 개념이다. Dynamic Branching 은 조건 분기문이 Programmable Shader 에서 사용될 때 나타나는 현상을 말한다. Programmable Shader 는 직렬이 아닌 병렬로 실행되기 때문에 나타나는 특성이다. 반복문에서도 조건 분기를 사용한다. 간단한 아래 코드를 보자. int i = 0; while(i &amp;lt; 5) { i++; } 위 코드는 프로그래밍을 입문할때 볼 수 있는 코드다. 중요한 것은 while 단어가 있는 줄에 있는 조건 식이다. (i &amp;lt; 5) 조건식 때문에 Dynamic Branching 이 발생한다. 이 Dynamic Branching 을 명시적으로 없에거나 만들기 위해 hlsl 에서 attribute 를 지원한다. 아래를 보자. [Attribute] for ( Initializer; Conditional; Iterator ) { Statement Block; } 해당 구문은 MSDN : for Statement 에서 가져왔다. 일반적으로 프로그래머이 정말 많이본 for 반복문이다. 우리가 봐야할 것은 for 구문 왼쪽의 [Attribute] 라는 구문이다. 이 부분에는 총 4가지의 옵션을 넣을 수 있는데, 이 글에서 언급할 [Attribute] 는 두가지다. unroll 과 loop 이 두가지이다. hlsl 로 정상적인 반복문 실행을 하게되면, 매번 반복을 할때 마다 조건식을 검사하게 되고, 해당 반복문의 범위를 마음대로 조정하여 코딩을 할 수 있다. 다만 조건식의 범위가 매번 달라진다면 Dynamic Branching 이 발생하게 된다. 그리고 반복문이 매번 Programmable Shader 가 실행될 때 상수로 반복을 한다면 쉐이더 컴파일러는 최적화를 위해 특정한 행동을 하게 된다. 아래 코드를 보자. for(int i = 0; i &amp;lt; 5; i++) { } 위의 코드는 루프를 다섯번 실행시키는 코드다. 따로 안에 인덱스 i 를 건드리지 않는다면 쉐이더 컴파일러는 컴파일 시점에 최적화를 한다. 이를 unroll 이라고 부를 수 있는데, 실행할 반복문을 반복문으로 해석하는게 아닌 5번 연속해서 같은 행동을 하게 하는 것이다. 조건 자체도 없어지고 그저 인덱스를 풀어쓰게 된다. 이는 상수(constant)로 반복문을 제어하면 쉐이더 컴파일러가 알아서 해주기 때문에 신경써주지 않아도 된다. 다만 unroll 이라는 키워드를 써서 바뀔 때는 변수를 사용해 반복문을 제어할 때다. 변수를 사용하면 컴파일 시점에서는 추측할 수 없기 때문에 암시적으로 unroll 을 할 수 없다. 이 때 unroll 키워드를 사용하여 제어할 수 있다. int count = ...; [unroll(5)] for(int i = 0; i &amp;lt; count; i++) { } 또한 암시적으로 unroll 된 반복문을 명시적으로 반복문으로 실행되게 할 수도 있다. [loop] for(int i = 0; i &amp;lt; 5; i++) { } 참조 자료 MSDN : for Statement GameDev : Can someone explain [loop] and [unroll] to me? GameDev : HLSL warning: Gradient-based operations must be moved out of flow control to prevent</summary>
+      
+
+      
+      
+    </entry>
+  
   
   
     <entry>
@@ -2029,131 +2123,6 @@ skinnedMeshRenderer.bindposes[0] = boneTransform.worldToLocalMatrix * rootObject
 
       
         <summary type="html">Unity 에서는 Mesh 를 활용하기 위해 몇가지의 컴포넌트를 지원한다. 간단하게 알아보자. Mesh 를 가지고 있는 컴포넌트 : MeshFilter 이 컴포넌트는 Unity 컴퓨넌트가 아닌 Mesh 클래스의 인스턴스를 가지고 있는 목적으로 만들어진 클래스다. Mesh 의 인스턴스를 보관하고 외부에서 Mesh 인스턴스에 접근할 수도 있다. 다만 조금 유의해야할 사항은 사용법이다. MeshFilter 문서를 보면 사용할 수 있는 프로퍼티가 두개가 있는데 하나는 MeshFilter.sharedMesh 와 MeshFilter.mesh 두개가 있다. MeshFilter.sharedMesh 는 실제 가지고 있는 Mesh 인스턴스이고 MeshFilter.mesh 는 원래의 인스턴스를 복사해 새로 생성한 것을 반환하기 때문에 주의해야 한다. Mesh 를 통해 그리는 컴포넌트 : MeshRenderer MeshRenderer 컴포넌트는 Mesh 인스턴스와 등록된 Material 들을 통해 화면상에서 실제로 보여주는 역할을 하는 컴포넌트다. 같은 GameObject 안에 있는 MeshFilter 를 통해 Mesh 인스턴스에 접근한다. 또한 여러 옵션들을 통해 렌더링을 제어할 수 있다. 중요한 기능은 그림자를 받는 기능과 그림자를 생기게 하는 기능이다. 그 외에도 Unity 에서 지원하는 여러 옵션을 설정할 수 있다. 그리고 여러개의 Material 들을 가지고 있을 수 있는데 Mesh 의 submesh 별로 Material 을 매칭해주어야 알맞게 그릴 수 있다. 기본값은 한개이므로 특별히 세팅을 안했다면 한개씩만 넣어주면 된다. SkinnedMeshRenderer 위에서 설명한 MeshRenderer 와 이름이 매우 비슷하다. 앞에 Skinned 라는 키워드만 붙어있다. 이름은 비슷하지만 Unity 안에서 처리되는 것은 조금 다르다. MeshRenderer 는 정점이 실시간으로 움직이지 않는 것들을 대상으로 그리는 컴포넌트다. 하지만 SkinnedMeshRenderer 는 다르다. 이 컴포넌트도 Mesh 를 그리기 위해 만들어진 컴포넌트지만 특정한 Bone 을 기준으로 위치를 전부 계산하고 그려야 한다. 특정한 Bone 을(Unity 에서는 Bone 한개마다 GameObject 하나로 나타낸다.) 기준으로 정점들을 움직이게 하게 해주는 작업을 Rigging 이라고 하는데 Rigging 이 적용된 것을 그릴려면 SkinnedMeshRenderer 컴포넌트를 붙여 주어야 한다. MeshRenderer 를 사용하면 Bone 을 움직여도 움직임이 적용이 안된채로 그려져서 말짱 꽝이 되버린다. MeshCollider 충돌 감지를 Mesh 를 활용해서 하는 컴포넌트로 일반적으로는 안쓴다. 폴리곤의 갯수가 많으면 많을수록 체크에 병목이 생기기 때문이다. 상황에 따라 폴리곤이 적은 경우에는 써도 무방하다. 이 컴포넌트는 생성될 때 MeshFilter 컴포넌트가 존재하면 sharedMesh 를 통해 Mesh 인스턴스에 접근한다. 이렇게 Mesh 를 활용하는 여러가지 컴포넌트들에 대하여 알아보았다. 할말은 많지만 간단한 소개를 위해 쓰여졌기에 여기까지 하겠다. 참조 Unity Manual - MeshFilter Unity Manual - MeshRenderer Unity Manual - SkinnedMeshRenderer Unity ref - MeshFilter Unity ref - MeshRenderer Unity ref - SkinnedMeshRenderer</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Handling Vertices And Indices In Unity</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/05/14/handling-vertices-and-indices-in-unity/" rel="alternate" type="text/html" title="Handling Vertices And Indices In Unity" />
-      <published>2017-05-14T00:00:00+00:00</published>
-      <updated>2017-05-14T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/05/14/handling-vertices-and-indices-in-unity</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/05/14/handling-vertices-and-indices-in-unity/">&lt;p&gt;여태까지 많은 게임들은 Graphics API 를 사용하여 만들어졌다. 1992년에 OpenGL 의 첫버젼이 릴리즈 되었고 이어서 1995년에 DirectX 가 Windows Game SDK 안에 포함되어 릴리즈 되었다. 그 이후로 수많은 게임들이 이 두가지의 Graphics API 를 사용하여 개발되었다. 다만 Graphics API 를 직접 사용하려면 꽤 많은 배경지식과(선형대수학, Graphics 이론 등) 해당 Graphics API 에 대한 경험이 많이 필요했다. 즉 일반적인 프로그래머들이 접근하기 조금 어려운 분야였다. 하지만 이를 꽤 뚫어본 많은 사람들이 게임을 만들기 위한 소프트웨어 이른바 게임 엔진이라는 소프트웨어를 개발하면서 널리 퍼지게 되었고  요즘에는 많은 지식 없이 게임을 만들 수 있게 되었다.&lt;/p&gt;
-
-&lt;p&gt;하지만 프로그래머로써 성장하려면 한계단씩 내려가 보면서 원리를 깨우쳐야 한다. 특히 게임 클라이언트 프로그래머는 결국 Graphics API 를 활용한 프로그램을 짜는 것이기 때문에 지식이 없으면 없을수록 난항을 겪기 마련이다. 수학적인 지식이 부족하면 직접 계산하는 코드를 짤수가 없고, Graphics API 의 구성을 모른다면 최적화를 할때 하나하나 삽질해가며 바꿔보아야 한다.&lt;/p&gt;
-
-&lt;p&gt;이 게시물에서는 Graphics API 를 공부하면 처음 나오게는 지식들(정점, 폴리곤, UV)에 대해서 알아보고 Unity 에서 이 지식들을 시험해보겠다.&lt;/p&gt;
-
-&lt;!-- more --&gt;
-
-&lt;h3&gt;공간을 구성하는 기본 단위 : 정점(vertex)&lt;/h3&gt;
-
-&lt;p&gt;가장 먼저 알아야것은 정점이다. 영어로는 &lt;em&gt;vertex&lt;/em&gt; 인데 이 단어는 다양한 이론에서 상이하게 다뤄지므로 헷갈릴 수도 있다. 우선 그래픽스 분야에서의 정점은 3차원 공간에서 특정 위치를 나타내는 단어다. 수학에서 흔이 쓰이는 점의 정의와 비슷하다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/position_p.png&quot; alt=&quot;Position P in math&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;또한 정점은 위의 수학의 점 P 의 정의와 같은 말이다. 모든 3차원 상의 물체는 점으로 이루어져 있다. 하나하나의 점이 특정한 구성 방식으로 모여 선과 면을 정의한다. 정점은 모든 물체를 표현하기 위한 기본적인 단위다.&lt;/p&gt;
-
-&lt;h3&gt;그려지는 면의 기본 단위 : 삼각형(polygon, triangle)&lt;/h3&gt;
-
-&lt;p&gt;위에서 정점들은 물체를 표현하기 위한 기본적인 단위라고 설명했다. 그리고 물체를 표현하려면 표면(surface)를 표현할 수 있어야 한다. 정점을 가지고 표면을 정의할 수 있는 방법은 여러가지가 있지만 정점을 최소의 갯수만 가지고 표현하려면 삼각형으로 표현하는 것이 최적의 방법이다. 그리고 Graphics API 에서도 삼각형을 기본 단위로 물체를 그린다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/rabbit_polygons.jpg&quot; alt=&quot;Rabbit&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;위와 같이 모든 물체는 삼각형을 기본으로 만들어진다.&lt;/p&gt;
-
-&lt;h3&gt;그려지는 정보의 집합체 : Mesh&lt;/h3&gt;
-
-&lt;p&gt;이 개념은 위에서 언급한 개념들과는 조금 다르다. 점이나 삼각형은 위상 수학에서 나올법한 내용이지만 Mesh 에 대한 내용은 소프트웨어에서 나온 개념이다. Mesh 는 3D 오브젝트가 그려질 때 필요한 정보들을 담아놓고 있는 정보 덩어리라고 할 수 있다. 위에서 언급한 여러개의 정점들과 폴리곤에 대한 여러 정보들을 가지고 있다. 위의 토끼는 결국 여러 정점들과 여러 폴리곤 정보들로 그려진다고 볼 수 있다.&lt;/p&gt;
-
-&lt;p&gt;여기까지 기본적으로 쓰이는 용어에 대한 간단한 설명들을 살펴보았다. 이제 Unity 에서 직접 이것들을 만져볼 차례다. 우선 &lt;a href=&quot;https://github.com/hrmrzizon/3DBasicExample&quot;&gt;3DBasicExample&lt;/a&gt; 을 받아서 &lt;em&gt;edu/plane&lt;/em&gt; 브랜치로 이동한다.&lt;/p&gt;
-
-&lt;p&gt;Unity 에서 직접 정점과 폴리곤을 조작하는 방법에 대해서 알아보기 위해 Scripts 디렉토리에 MeshTest.cs 소스코드를 보자.&lt;/p&gt;
-
-&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ModifyMesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Mesh&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;mesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vertices&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Vector3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
-                    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                            &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Vector3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-                            &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Vector3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-                            &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Vector3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-                            &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Vector3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-
-
-    &lt;span class=&quot;n&quot;&gt;mesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;triangles&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
-                     &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                             &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                             &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
-                     &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-
-   &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;위 코드는 정점과 폴리곤을 구성하는 정점의 인덱스를 직접 만들어 넣어주는 코드다. &lt;strong&gt;Mesh&lt;/strong&gt; 클래스는 위에서 설명한 정점과 폴리곤의 정보 등 렌더링에 필요한 정보를 가지고 있는 데이터 뭉치다. 여기에 정점과 폴리곤 정보를 넣는다. &lt;em&gt;ModifyMesh&lt;/em&gt; 함수에서는 &lt;strong&gt;Mesh&lt;/strong&gt; 의 프로퍼티에 두개의 배열을 새로 생성하여 넣어준다. &lt;em&gt;vertices&lt;/em&gt; 는 3차원 좌표계의 정점 정보 배열로써 가장 핵심적인 데이터다. 코드에서는 4개의 점을 넣어준다. X,Z축으로 정사각형을 구성하는 정점들을 가지고 있다. &lt;em&gt;triangles&lt;/em&gt; 는 폴리곤을 표현하기 위한 정수 배열인데 여기에는 &lt;em&gt;vertices&lt;/em&gt; 배열의 인덱스들이 들어가 있다. 당연히 3개의 인덱스가 하나의 폴리곤을 구성하며 위의 &lt;strong&gt;Mesh&lt;/strong&gt; 인스턴스는 두개의 폴리곤을 그리게 될것이다. 아래 소스에 주석으로 위의 정점과 인덱스들이 나타내는 것을 표현해 보았다.&lt;/p&gt;
-
-&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cm&quot;&gt;/*
-  (0,0,1) 2   3 (1,0,1)
-          * - *
-          | / |
-          * - *
-  (0,0,0) 0   1 (1,0,0)
-*/&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Y축에서 아래로 바라보는 뷰로 표현했다. 그리고 폴리곤을 구성하는 인덱스 배열에서 중요한게 하나있다. 바로 인덱스의 순서다. 이 코드에서 인덱스 배열이 각각 가르키는 정점의 순서를 보면 전부다 시계 방향(cw: clockwise)인 것을 알 수 있다. 만약 방향이 반시계 방향(ccw: countclockwise)으로 구성된다면 보이는 방향이 밑으로 바뀔 것이다. &lt;em&gt;mesh.triangles&lt;/em&gt; 에 들어가는 순서를 살짝 바꾸어 실행해보자.&lt;/p&gt;
-
-&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;mesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;triangles&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
-                 &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                         &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;
-                         &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;
-                 &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;원래 보이던 방향에서 반대로 바뀐 것을 알 수 있다. 이건 꽤나 중요한 사항이다. 다른 어플리케이션에는 어떤 방향으로 설정하는지 모르겠지만 Unity 에서는 시계 방향을 기준으로 윗 방향을 보이는 기준으로 잡는다. 물론 직접 인덱스를 건드릴일은 거의 없다. 복잡한 모델들은 대부분 파일에서 불러와서 사용하기 때문이다. 하지만 모른다면 꽤나 난처해질 것이다.&lt;/p&gt;
-
-&lt;p&gt;여기까지 직접 정점과 폴리곤을 구성하는 방법에 대해서 알아보았다. 다만 정리가 조금 안된사항들이 있다. Graphics API 에서는 정점의 배열들을 Vertex Buffer 라고 칭한다. 폴리곤을 구성하는 인덱스의 배열은 Index Buffer 라고 칭한다. 그리고 &lt;em&gt;vertices&lt;/em&gt; 는 vertex 의 복수형이다. 비슷한 표현으로는 &lt;em&gt;indcies&lt;/em&gt; 가 있다. 명칭들을 잘 알아두면 문서를 읽거나 소통할때 말하기 편하니 알아두길 바란다.&lt;/p&gt;
-
-&lt;p&gt;자동으로 생성되는 Unity 컴포넌트가 궁금하다면 &lt;a href=&quot;/2017/05/14/mesh-components-in-unity/&quot;&gt;Mesh components in unity&lt;/a&gt;에서 확인하라.&lt;/p&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="unity" />
-      
-        <category term="rendering" />
-      
-        <category term="try" />
-      
-
-      
-
-      
-        <summary type="html">여태까지 많은 게임들은 Graphics API 를 사용하여 만들어졌다. 1992년에 OpenGL 의 첫버젼이 릴리즈 되었고 이어서 1995년에 DirectX 가 Windows Game SDK 안에 포함되어 릴리즈 되었다. 그 이후로 수많은 게임들이 이 두가지의 Graphics API 를 사용하여 개발되었다. 다만 Graphics API 를 직접 사용하려면 꽤 많은 배경지식과(선형대수학, Graphics 이론 등) 해당 Graphics API 에 대한 경험이 많이 필요했다. 즉 일반적인 프로그래머들이 접근하기 조금 어려운 분야였다. 하지만 이를 꽤 뚫어본 많은 사람들이 게임을 만들기 위한 소프트웨어 이른바 게임 엔진이라는 소프트웨어를 개발하면서 널리 퍼지게 되었고 요즘에는 많은 지식 없이 게임을 만들 수 있게 되었다. 하지만 프로그래머로써 성장하려면 한계단씩 내려가 보면서 원리를 깨우쳐야 한다. 특히 게임 클라이언트 프로그래머는 결국 Graphics API 를 활용한 프로그램을 짜는 것이기 때문에 지식이 없으면 없을수록 난항을 겪기 마련이다. 수학적인 지식이 부족하면 직접 계산하는 코드를 짤수가 없고, Graphics API 의 구성을 모른다면 최적화를 할때 하나하나 삽질해가며 바꿔보아야 한다. 이 게시물에서는 Graphics API 를 공부하면 처음 나오게는 지식들(정점, 폴리곤, UV)에 대해서 알아보고 Unity 에서 이 지식들을 시험해보겠다.</summary>
       
 
       
