@@ -27,3 +27,7 @@ GPU 의 여태까지의 주요한 역할은 기하학적(geometry) 성격을 띄
 이 그림에는 여러가지 항목들이 있다. _Programmable Shader_ 를 제외하면 전부 고정된 기능을 가진 단계로써 프로그래머가 완전히 제어를 할 수 없는 단계다. 우리가 살펴볼 것은 이름 끝에 _Shader_ 가 붙은 것들이다. 차례대로 _Vertex Shader_, _Hull Shader_, _Domain Shader_, _Geometry Shader_, _Pixel Shader_ 가 있다. 위의 단계들은 두가지로 분류할 수 있다. _Geometry Stage_ 와 _Rasterizer Stage_ 다. _Geometry Stage_ 는 일반적인 3D 상의 위치나 벡터를 가지고 있는 데이터를 처리하는 단계를 말한다. 위 그림에서는 _Rasterizer_ 전 까지의 단계를 뜻한다. _Rasterizer Stage_ 는 2D 이미지로 처리된 상태에서 데이터를 처리하는 단계를 말한다. _Rasterizer_ 단계 부터 오른쪽 끝까지의 단계다. 각 단계에 대한 자세한 설명은 해당 글에서 하겠다.
 
 쉐이더 파이프라인을 알고 있어야 여러 이론들을 구현할 수 있다. 쉐이더를 다루려면 이 쉐이더 파이프라인을 아는 것은 필수라고 할 수 있겠다.
+
+### 각종 버퍼들의 활용
+
+_Shader Model 4.0_ 과 _Shader Model 5.0_ 를 통해 여러 버퍼들을 사용하여 _Shader_ 안에서 돌고도는 _varying data_ (쉐이더들의 파라미터들) 와 함께 응용을 할 수 있게 되었다. 이는 함수 한개씩을 파라미터와 반환값만 바꾸면서 코딩하는 환경에서 참조할 전역 변수를 만들어주어 훨씬 더 많은 데이터들을 접근할 수 있게 해준것이다. 
