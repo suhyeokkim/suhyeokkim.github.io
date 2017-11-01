@@ -45,6 +45,10 @@ v2f vert(appdata_tan i)
 
     return o;
 }
+
+/*
+  기타 코드들..
+*/
 ```
 
 굉장히 단순한 _Vertex Shader_ 코드다. 코드가 단순한 만큼 이 _Shader_ 는 최소한의 역할만 하고 있다. _model-space_ 에 있는 정점을 _clipping-space_ 의 정점으로 변환 시켜 다음으로(fragment shader) 넘긴다. 위에서 위치 데이터를 바꿀 수 있다고 언급했는데, 이 변환은 정상적인 메커니즘을 통해 오브젝트를 출력하려면 _Rasterizer Stage_ 로 넘어가기전에 반드시 정점값에 적용시켜주어야 하는 변환이다. 해당 변환에 대해서는 [Model, View, Projection](https://docs.google.com/presentation/d/10VzsjfifKJlRTHDlBq7e8vNBTu4D5jOWUF87KYYGwlk/edit?usp=sharing)에 설명해 놓았으니 간단하게 참고하길 바란다.

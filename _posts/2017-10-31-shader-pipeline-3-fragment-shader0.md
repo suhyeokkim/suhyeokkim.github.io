@@ -16,6 +16,31 @@ _Fragment Shader_ 의 역할은 굉장히 단순하다. _Geometry Stage_ 에서 
 
 ![Fragment Shader](/images/fragment_shader.jpg)
 
+가장 단순한 형태의 Unity 에서 사용하는 CG/HLSL 쉐이더를 보자.
+
+``` C
+#pragma fragment frag
+
+struct v2f
+{
+    float4 vertex : SV_POSITION;
+    float4 tangent : TANGENT;
+    float3 normal : NORMAL;
+    float4 texcoord : TEXCOORD0;
+}
+
+/*
+  다른 코드 들..
+*/
+
+fixed4 frag(v2f i)
+{
+  return float4(1,1,1,1);
+}
+```
+
+해당 쉐이더는 단순하게 흰색만 출력해주는 쉐이더다. 그만큼 매우 단순하고 쉽다. 하지만 많은 것들을 표현하려면 _frag_ 함수의 코드는 점점 길어질 것이다. 
+
 또한 _Fragment Shader_ 가 실행되는 시점에서 하드웨어, 드라이버 단계에서 지원하는 기능들도 있다. 일반적인 것들에 대해서 이야기 하자면 _Depth Buffer_ 와 _Stencil Buffer_ 가 있다. 두가지의 공통점은 각 픽셀 단위별로 데이터를 저장하는 버퍼들이다. _Depth Buffer_ 는 _Clip-Space_ 로 변환된 정점 값의 Z 값을 저장하는 용도로 쓰이는 버퍼로, 요즘 개발되거나 쓰이는 기술들은 _Depth Buffer_ 를 엄청 많이 쓴다. 대표적으로 _Depth Pre-Pass_ 가 있다. _Stencil Buffer_ 는 픽셀별로 정수 데이터를 저장해서 사용하는 버퍼로써, 대부분 마스킹을 할 때 쓰인다.
 
 # 참조 자료
