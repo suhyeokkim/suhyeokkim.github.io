@@ -105,6 +105,320 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2017/05/15/handling-uv-and-material-in-unity/">Handling Uv And Material In Unity</a>
+          </h1>
+
+          <p class="post-meta">May 15, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/builtin/">builtin</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p><a href="/2017/05/14/handling-vertices-and-indices-in-unity/">Handling vertices and indices</a> 글에서 Unity 에서 정점과 인덱스를 사용해 물체를 그리는 방법에 대해서 알아보았다. 그런데 뭔가 설정해야 할것들이 빠진 것처럼 보인다. 실제로 그려지는 모습은 Unity 에서 아무것도 설정이 안되어 있을 때 나오는 분홍색으로 전부 칠해져 있다. 일반적으로 게임에서 나오는 3D 물체들은 전부 색이 칠해져 있거나 그림이 그려져 있다. 거기다가 빛을 받아서 반짝반짝이기도 할때도 있다. 이번 글에서는 3D 오브젝트에 색을 입히거나 그림을 입히는 방법에 대해서 알아보자.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/05/15/handling-uv-and-material-in-unity/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/05/14/mesh-components-in-unity/">Mesh Components In Unity</a>
+          </h1>
+
+          <p class="post-meta">May 14, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/builtin/">builtin</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>Unity 에서는 Mesh 를 활용하기 위해 몇가지의 컴포넌트를 지원한다. 간단하게 알아보자.</p>
+
+<h3>Mesh 를 가지고 있는 컴포넌트 : MeshFilter</h3>
+
+<p>이 컴포넌트는 Unity 컴퓨넌트가 아닌 <strong>Mesh</strong> 클래스의 인스턴스를 가지고 있는 목적으로 만들어진 클래스다. <strong>Mesh</strong> 의 인스턴스를 보관하고 외부에서 <strong>Mesh</strong> 인스턴스에 접근할 수도 있다. 다만 조금 유의해야할 사항은 사용법이다. <a href="https://docs.unity3d.com/ScriptReference/MeshFilter.html">MeshFilter</a> 문서를 보면 사용할 수 있는 프로퍼티가 두개가 있는데 하나는 <em>MeshFilter.sharedMesh</em> 와 <em>MeshFilter.mesh</em> 두개가 있다.  <em>MeshFilter.sharedMesh</em> 는 실제 가지고 있는 <strong>Mesh</strong> 인스턴스이고 <em>MeshFilter.mesh</em> 는 원래의 인스턴스를 복사해 새로 생성한 것을 반환하기 때문에 주의해야 한다.</p>
+
+<h3>Mesh 를 통해 그리는 컴포넌트 : MeshRenderer</h3>
+
+<p><strong>MeshRenderer</strong> 컴포넌트는 <strong>Mesh</strong> 인스턴스와 등록된 Material 들을 통해 화면상에서 실제로 보여주는 역할을 하는 컴포넌트다. 같은 GameObject 안에 있는 <strong>MeshFilter</strong> 를 통해 <strong>Mesh</strong> 인스턴스에 접근한다. 또한 여러 옵션들을 통해 렌더링을 제어할 수 있다. 중요한 기능은 그림자를 받는 기능과 그림자를 생기게 하는 기능이다. 그 외에도 Unity 에서 지원하는 여러 옵션을 설정할 수 있다. 그리고 여러개의 <strong>Material</strong> 들을 가지고 있을 수 있는데 <strong>Mesh</strong> 의 <em>submesh</em> 별로 <strong>Material</strong> 을 매칭해주어야 알맞게 그릴 수 있다. 기본값은 한개이므로 특별히 세팅을 안했다면 한개씩만 넣어주면 된다.</p>
+
+<h3>SkinnedMeshRenderer</h3>
+
+<p>위에서 설명한 <strong>MeshRenderer</strong> 와 이름이 매우 비슷하다. 앞에 <em>Skinned</em> 라는 키워드만 붙어있다. 이름은 비슷하지만 Unity 안에서 처리되는 것은 조금 다르다. <strong>MeshRenderer</strong> 는 정점이 실시간으로 움직이지 않는 것들을 대상으로 그리는 컴포넌트다. 하지만 <strong>SkinnedMeshRenderer</strong> 는 다르다. 이 컴포넌트도 <strong>Mesh</strong> 를 그리기 위해 만들어진 컴포넌트지만 특정한 <em>Bone</em> 을 기준으로 위치를 전부 계산하고 그려야 한다.</p>
+
+<p>특정한 <em>Bone</em> 을(Unity 에서는 Bone 한개마다 GameObject 하나로 나타낸다.) 기준으로 정점들을 움직이게 하게 해주는 작업을 <em>Rigging</em> 이라고 하는데 <em>Rigging</em> 이 적용된 것을 그릴려면 <strong>SkinnedMeshRenderer</strong> 컴포넌트를 붙여 주어야 한다. <strong>MeshRenderer</strong> 를 사용하면 <em>Bone</em> 을 움직여도 움직임이 적용이 안된채로 그려져서 말짱 꽝이 되버린다.</p>
+
+<h3>MeshCollider</h3>
+
+<p>충돌 감지를 <strong>Mesh</strong> 를 활용해서 하는 컴포넌트로 일반적으로는 안쓴다. 폴리곤의 갯수가 많으면 많을수록 체크에 병목이 생기기 때문이다. 상황에 따라 폴리곤이 적은 경우에는 써도 무방하다. 이 컴포넌트는 생성될 때 <strong>MeshFilter</strong> 컴포넌트가 존재하면 <em>sharedMesh</em> 를 통해 <strong>Mesh</strong> 인스턴스에 접근한다.</p>
+
+<p>이렇게 <strong>Mesh</strong> 를 활용하는 여러가지 컴포넌트들에 대하여 알아보았다. 할말은 많지만 간단한 소개를 위해 쓰여졌기에 여기까지 하겠다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="https://docs.unity3d.com/kr/current/Manual/class-MeshFilter.html">Unity Manual - MeshFilter</a></li>
+  <li><a href="https://docs.unity3d.com/kr/current/Manual/class-MeshRenderer.html">Unity Manual - MeshRenderer</a></li>
+  <li><a href="https://docs.unity3d.com/kr/current/Manual/class-SkinnedMeshRenderer.html">Unity Manual - SkinnedMeshRenderer</a></li>
+  <li><a href="https://docs.unity3d.com/ScriptReference/MeshFilter.html">Unity ref - MeshFilter</a></li>
+  <li><a href="https://docs.unity3d.com/ScriptReference/MeshRenderer.html">Unity ref - MeshRenderer</a></li>
+  <li><a href="https://docs.unity3d.com/kr/current/ScriptReference/SkinnedMeshRenderer.html">Unity ref - SkinnedMeshRenderer</a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2017/05/14/handling-vertices-and-indices-in-unity/">Handling Vertices And Indices In Unity</a>
           </h1>
 
@@ -197,66 +511,7 @@
     
   
     
-      <a href="/categories/rendering/">rendering</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/try/">try</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
+      <a href="/categories/builtin/">builtin</a>
     
   
     
@@ -1295,65 +1550,6 @@
     
   
     
-      <a href="/categories/try/">try</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
   
     
   
@@ -1441,66 +1637,7 @@
     
   
     
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/try/">try</a>
-    
-  
+      <a href="/categories/unity/">unity</a>
     
   
     
@@ -1569,310 +1706,6 @@
 
         </div>
 
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/04/12/usage-of-attributes-in-unity/">Usage Of Attributes In Unity</a>
-          </h1>
-
-          <p class="post-meta">Apr 12, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/try/">try</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>C# 문법은 클래스, 구조체, 열거형, 멤버 변수, 메소드등 여러 타입에 표시를 하는 기능을 제공한다. 이 표시들을 C# 문법에서는 <strong>Attribute</strong>(속성) 라고 칭한다. 그리고 이 속성을 사용하여 Unity 에서는 많은 기능들을 제공한다. 아래 우리가 가장 많이 볼만한 속성을 사용한 예제가 있다.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/04/12/usage-of-attributes-in-unity/">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/04/09/using-scriptable-object/">Using Scriptable Object</a>
-          </h1>
-
-          <p class="post-meta">Apr 9, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/try/">try</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>2년전 Unity 로 모바일 게임 개발을 시작했었다. 학생 시절 간단하게 게임을 만든적은 있었지만 Unity 로 게임을 만들어본 적은 한번도 없었기에 매우 어려운 도전이였다. 그래서 Unity 시스템에 대해 간단히 알고 개발을 시작했었는데 당시에는 ScriptableObject 의 기능을 모르고 있던터라 단순히 Prefab 만으로 데이터를 저장하고 있었다.</p>
-
-<p><img src="/images/subwaysurfer.png" alt="Subway suffer" class="center-image" /></p>
-
-<p>당시 만든 게임은 3D 러닝 게임이였는데, 서브웨이 서퍼과 비슷한 방식의 게임이였다. 핵심은 어떻게 맵을 계속 나타나게 하느냐 였는데, 나는 단순하게 플레이어의 위치에 따라 맵을 계속 이어붙였다.</p>
-
-<p><img src="/images/map_example_0.png" alt="runtime map" class="center-image" /></p>
-
-<p>Map 은 Prefab 단위로 구성되어 있었는데, Map Prefab 에는 플레이어가 지나갈 길의 정보, 3D 메쉬 정보가 있었다. 그리고 맵 종류별로 풀링을 하여 활용했었다.</p>
-
-<p><img src="/images/map_example_1.png" alt="map pooling" class="center-image" /></p>
-
-<p>여기서 한가지 아쉬운게 있다면 Map Prefab 별로 모두 길 정보를 가지고 있는게 아쉬웠다. 프리팹은 보이는 정보만 가지고 길 정보는 따로 존재해  참조하는 방식이 조금 더 나았을 것이다. 종류 별로 반복되는 길 정보가 많았기 때문에 더욱 아쉬웠다.</p>
-
-<p><img src="/images/map_example_2.png" alt="map refer to road data" class="center-image" /></p>
-
-<p>위와 같이 길 정보는 따로 존재하고 맵이 길 정보를 참조하는 방식으로 말이다. 하지만 위와 같은 방식을 고안하더라도 실제로 구현할 방법을 몰랐기 때문에 방치했었다. 하지만 지금은 독립적으로 존재하는 데이터 에셋을 만드는 방법을 알고 있다. 그건 바로 ScriptableObject 라는 에셋 타입이다.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/04/09/using-scriptable-object/">Read on &rarr;</a>
-          </p>
         
       </li>
     
