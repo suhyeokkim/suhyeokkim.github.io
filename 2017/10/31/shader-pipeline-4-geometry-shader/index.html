@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Shader Pipeline 4 Geometry Shader</title>
+  <meta name="description" content="“Fragemnt Shader” 에서 Fragment Shader 에 대해 알아보았다. 다음은 Geometry Shader 에 대해서 써보려 한다. Geometry Shader 는 쉐이더 파이프라인에서 Rasterizer Stage 넘어가기 전의 Geometry Stage 의 마지막 단계로써 이전 쉐이더에서 넘긴 Primitive 데이터(point, line, triangle..)를 프로그래머가 원하는 복수의 Primitive 데이터로 변환할 수 있다. 삼각형을 삼각형의 중심을 나타내는 점으로 변환하는 쉐이더를 보자. [maxvertexcount(1)] void geom(vertexOutput input[3], inout PointStream&amp;lt;geometryOutput&amp;gt; pointStream) { geometryShaderOutput o; o.vertex = (input[0].vertex + input[1].vertex + input[2].vertex) / 3; pointStream.Append(o); } 매우 간단한 코드다. 간략하게 설명하자면, 맨 윗줄의 maxvertexcount 는 해당 지오메트리 쉐이더에서 Stream 으로 넘길 정점별 데이터의 갯수를 뜻한다. Geometry Shader 한번당 Stream 으로 넘길 maxvertexcount 의 한계는 정해지지 않았지만 크기는 1024 바이트로 정해져 있기 때문에 적절하게 사용해야 겠다. 그 다음줄의 인자들에 대해서 설명하면, 첫번째 vertexOutput input[3] 은 정해진 프리미티브의 값들을 뜻한다. 여기서는 삼각형을 기준으로 만들었기 때문에 정점별 정보가 3개가 있다. _inout PointStream pointStream_ 은 _Geometry Shader_ 의 최종 출력을 해주는 오브젝트다. _PointStream_ 은 점 프리미티브의 데이터를 받는 _Stream_ 으로써, 프리미티브가 다르면 각자 다른것을 사용할 수 있다.([MSDN : Getting Started with the Stream-Output Stage](https://msdn.microsoft.com/en-us/library/windows/desktop/bb205122.aspx)) 부등호 안에 있는 것은 일반적으로 알려진 제너릭이나 템플릿의 형태와 같으니 안에 출력으로 넘길 구조체를 넘겨주면 된다. 함수의 내용은 삼각형을 구성하는 각 정점의 위치의 평균을 구해 하나의 정점 정보만 _Stream_ 에 넘긴다. Stream 은 총 두가지의 역할을 한다. 하나는 Rasterizer 단계로 넘겨서 쉐이더에서 처리를 할 수 있게 하는 통로 역할을 하고, 다른 하나는 드라이버 레벨에서 데이터를 출력해주는 통로 역할을 한다. 두가지의 일을 하기 때문에 Stream 의 개념으로 추상화한 것인가 싶다. 그리고 하나의 Geometry Shader 에서 여러개의 Stream 으로 출력이 가능하긴 하다. 최대 4개의 Stream 을 사용할 수 있다. Stream 을 선택해서 데이터를 받아올 수도 있으며, Rasterizer 로 보낼수도 있다. 자세한 사항은 MSDN : How To: Index Multiple Output Streams 에서 확인하면 되겠다. 활용할 수 있는 다른 기능이 하나 더 있다. instance 기능이다. 아래 코드를 보자. [instance(3)] [maxvertexcount(1)] void geom(vertexOutput input[3], uint InstanceID : SV_GSInstanceID, inout PointStream&amp;lt;geometryOutput&amp;gt; pointStream) { geometryShaderOutput o; o.vertex = input[InstanceID].vertex; pointStream.Append(o); } 해당 코드는 삼각형의 세개의 정점 위치를 넘기는 코드다. 달라진 것은 instance(3) 코드가 붙고, uint InstanceID : SV_GSInstanceID 파라미터가 생겨 코드 안에서 이를 활용한다. instance(x) 에 들어가는 x 는 반복하는 횟수를 뜻하고, InstanceID 파라미터는 반복하는 인덱스를 뜻한다. 같은 입력을 여러번 받아서 일정한 수만큼 반복하는 것이다. instance 속성에 들어가는 숫자의 한계는 32까지다. Geometry Shader 는 Shader Model 4.0 에서 추가되었으며 뒤에 추가적으로 알아본 multiple stream 과 instance 키워드는 Shader Model 5.0 에서 확장된 기능들이다. 참조 자료 MSDN : Geometry-Shader Object MSDN : Getting Started with the Stream-Output Stage MSDN : How To: Index Multiple Output Streams MSDN : How To: Instance a Geometry Shader GameDev : limit on maxvertexcount() GS">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://hrmrzizon.github.io/2017/10/31/shader-pipeline-4-geometry-shader/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
+
+  <meta name="google-site-verification" content="f8AsB97UC1pp_K4EwkRaJYJZVC0P4j36RK_TGOPPGAU" />
+
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Shader Pipeline 4 Geometry Shader">
+  <meta name="twitter:description" content="“Fragemnt Shader” 에서 Fragment Shader 에 대해 알아보았다. 다음은 Geometry Shader 에 대해서 써보려 한다. Geometry Shader 는 쉐이더 파이프라인에서 Rasterizer Stage 넘어가기 전의 Geometry Stage 의 마지막 단계로써 이전 쉐이더에서 넘긴 Primitive 데이터(point, ...">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Appocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="/edu">Edu</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Shader Pipeline 4 Geometry Shader</h1>
+    
+    <p class="post-meta"><time datetime="2017-10-31T00:00:00+00:00" itemprop="datePublished">Oct 31, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/render/">render</a>,
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/hlsl/">hlsl</a>
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>“<a href="/2017/10/31/shader-pipeline-3-fragment-shader0/">Fragemnt Shader</a>” 에서 <em>Fragment Shader</em> 에 대해 알아보았다. 다음은 <em>Geometry Shader</em> 에 대해서 써보려 한다.</p>
+
+<p><em>Geometry Shader</em> 는 쉐이더 파이프라인에서 <em>Rasterizer Stage</em> 넘어가기 전의 <em>Geometry Stage</em> 의 마지막 단계로써 이전 쉐이더에서 넘긴  <em>Primitive</em> 데이터(point, line, triangle..)를 프로그래머가 원하는 복수의 <em>Primitive</em> 데이터로 변환할 수 있다. 삼각형을 삼각형의 중심을 나타내는 점으로 변환하는 쉐이더를 보자.</p>
+
+<pre><code class="language-C">[maxvertexcount(1)]
+void geom(vertexOutput input[3], inout PointStream&lt;geometryOutput&gt; pointStream)
+{
+    geometryShaderOutput o;
+
+    o.vertex = (input[0].vertex + input[1].vertex + input[2].vertex) / 3;
+
+    pointStream.Append(o);
+}
+</code></pre>
+
+<p>매우 간단한 코드다. 간략하게 설명하자면, 맨 윗줄의 <em>maxvertexcount</em> 는 해당 지오메트리 쉐이더에서 <em>Stream</em> 으로 넘길 정점별 데이터의 갯수를 뜻한다. <em>Geometry Shader</em> 한번당 <em>Stream</em> 으로 넘길 <em>maxvertexcount</em> 의 한계는 정해지지 않았지만 크기는 1024 바이트로 정해져 있기 때문에 적절하게 사용해야 겠다. 그 다음줄의 인자들에 대해서 설명하면, 첫번째 <em>vertexOutput input[3]</em> 은 정해진 프리미티브의 값들을 뜻한다. 여기서는 삼각형을 기준으로 만들었기 때문에 정점별 정보가 3개가 있다. _inout PointStream<geometryOutput> pointStream_ 은 _Geometry Shader_ 의 최종 출력을 해주는 오브젝트다. _PointStream_ 은 점 프리미티브의 데이터를 받는 _Stream_ 으로써, 프리미티브가 다르면 각자 다른것을 사용할 수 있다.([MSDN : Getting Started with the Stream-Output Stage](https://msdn.microsoft.com/en-us/library/windows/desktop/bb205122.aspx)) 부등호 안에 있는 것은 일반적으로 알려진 제너릭이나 템플릿의 형태와 같으니 안에 출력으로 넘길 구조체를 넘겨주면 된다. 함수의 내용은 삼각형을 구성하는 각 정점의 위치의 평균을 구해 하나의 정점 정보만 _Stream_ 에 넘긴다.</geometryOutput></p>
+
+<p><em>Stream</em> 은 총 두가지의 역할을 한다. 하나는 <em>Rasterizer</em> 단계로 넘겨서 쉐이더에서 처리를 할 수 있게 하는 통로 역할을 하고, 다른 하나는 드라이버 레벨에서 데이터를 출력해주는 통로 역할을 한다. 두가지의 일을 하기 때문에 <em>Stream</em> 의 개념으로 추상화한 것인가 싶다. 그리고 하나의 <em>Geometry Shader</em> 에서 여러개의 <em>Stream</em> 으로 출력이 가능하긴 하다. 최대 4개의 <em>Stream</em> 을 사용할 수 있다. <em>Stream</em> 을 선택해서 데이터를 받아올 수도 있으며, <em>Rasterizer</em> 로 보낼수도 있다. 자세한 사항은 <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff471424.aspx">MSDN : How To: Index Multiple Output Streams </a> 에서 확인하면 되겠다.</p>
+
+<p>활용할 수 있는 다른 기능이 하나 더 있다. <em>instance</em> 기능이다. 아래 코드를 보자.</p>
+
+<pre><code class="language-C">[instance(3)]
+[maxvertexcount(1)]
+void geom(vertexOutput input[3], uint InstanceID : SV_GSInstanceID, inout PointStream&lt;geometryOutput&gt; pointStream)
+{
+    geometryShaderOutput o;
+
+    o.vertex = input[InstanceID].vertex;
+
+    pointStream.Append(o);
+}
+</code></pre>
+
+<p>해당 코드는 삼각형의 세개의 정점 위치를 넘기는 코드다. 달라진 것은 <em>instance(3)</em> 코드가 붙고, <em>uint InstanceID : SV_GSInstanceID</em> 파라미터가 생겨 코드 안에서 이를 활용한다. <em>instance(x)</em> 에 들어가는 x 는 반복하는 횟수를 뜻하고, <em>InstanceID</em> 파라미터는 반복하는 인덱스를 뜻한다. 같은 입력을 여러번 받아서 일정한 수만큼 반복하는 것이다.  <em>instance</em> 속성에 들어가는 숫자의 한계는 32까지다.</p>
+
+<p><em>Geometry Shader</em> 는 <em>Shader Model 4.0</em> 에서 추가되었으며 뒤에 추가적으로 알아본 <em>multiple stream</em> 과 <em>instance</em> 키워드는 <em>Shader Model 5.0</em> 에서 확장된 기능들이다.</p>
+
+<h1>참조 자료</h1>
+
+<ul>
+  <li><a href="https://msdn.microsoft.com/ko-kr/library/windows/desktop/bb509609.aspx">MSDN : Geometry-Shader Object</a></li>
+  <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb205122.aspx">MSDN : Getting Started with the Stream-Output Stage</a></li>
+  <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff471424.aspx">MSDN : How To: Index Multiple Output Streams</a></li>
+  <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff471425.aspx">MSDN : How To: Instance a Geometry Shader</a></li>
+  <li><a href="https://www.gamedev.net/forums/topic/600141-limit-on-maxvertexcount-gs/">GameDev : limit on maxvertexcount() GS</a></li>
+</ul>
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://zizon.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy; Su-Hyeok Kim - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

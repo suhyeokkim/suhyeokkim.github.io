@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-11-02T15:04:26+00:00</updated>
+  <updated>2017-11-03T04:43:39+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -24,6 +24,414 @@
     </author>
   
 
+  
+  
+    <entry>
+      
+      <title type="html">Shader Pipeline 4 Geometry Shader</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/10/31/shader-pipeline-4-geometry-shader/" rel="alternate" type="text/html" title="Shader Pipeline 4 Geometry Shader" />
+      <published>2017-10-31T00:00:00+00:00</published>
+      <updated>2017-10-31T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/10/31/shader-pipeline-4-geometry-shader</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/10/31/shader-pipeline-4-geometry-shader/">&lt;p&gt;“&lt;a href=&quot;/2017/10/31/shader-pipeline-3-fragment-shader0/&quot;&gt;Fragemnt Shader&lt;/a&gt;” 에서 &lt;em&gt;Fragment Shader&lt;/em&gt; 에 대해 알아보았다. 다음은 &lt;em&gt;Geometry Shader&lt;/em&gt; 에 대해서 써보려 한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Geometry Shader&lt;/em&gt; 는 쉐이더 파이프라인에서 &lt;em&gt;Rasterizer Stage&lt;/em&gt; 넘어가기 전의 &lt;em&gt;Geometry Stage&lt;/em&gt; 의 마지막 단계로써 이전 쉐이더에서 넘긴  &lt;em&gt;Primitive&lt;/em&gt; 데이터(point, line, triangle..)를 프로그래머가 원하는 복수의 &lt;em&gt;Primitive&lt;/em&gt; 데이터로 변환할 수 있다. 삼각형을 삼각형의 중심을 나타내는 점으로 변환하는 쉐이더를 보자.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;[maxvertexcount(1)]
+void geom(vertexOutput input[3], inout PointStream&amp;lt;geometryOutput&amp;gt; pointStream)
+{
+    geometryShaderOutput o;
+
+    o.vertex = (input[0].vertex + input[1].vertex + input[2].vertex) / 3;
+
+    pointStream.Append(o);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;매우 간단한 코드다. 간략하게 설명하자면, 맨 윗줄의 &lt;em&gt;maxvertexcount&lt;/em&gt; 는 해당 지오메트리 쉐이더에서 &lt;em&gt;Stream&lt;/em&gt; 으로 넘길 정점별 데이터의 갯수를 뜻한다. &lt;em&gt;Geometry Shader&lt;/em&gt; 한번당 &lt;em&gt;Stream&lt;/em&gt; 으로 넘길 &lt;em&gt;maxvertexcount&lt;/em&gt; 의 한계는 정해지지 않았지만 크기는 1024 바이트로 정해져 있기 때문에 적절하게 사용해야 겠다. 그 다음줄의 인자들에 대해서 설명하면, 첫번째 &lt;em&gt;vertexOutput input[3]&lt;/em&gt; 은 정해진 프리미티브의 값들을 뜻한다. 여기서는 삼각형을 기준으로 만들었기 때문에 정점별 정보가 3개가 있다. _inout PointStream&lt;geometryOutput&gt; pointStream_ 은 _Geometry Shader_ 의 최종 출력을 해주는 오브젝트다. _PointStream_ 은 점 프리미티브의 데이터를 받는 _Stream_ 으로써, 프리미티브가 다르면 각자 다른것을 사용할 수 있다.([MSDN : Getting Started with the Stream-Output Stage](https://msdn.microsoft.com/en-us/library/windows/desktop/bb205122.aspx)) 부등호 안에 있는 것은 일반적으로 알려진 제너릭이나 템플릿의 형태와 같으니 안에 출력으로 넘길 구조체를 넘겨주면 된다. 함수의 내용은 삼각형을 구성하는 각 정점의 위치의 평균을 구해 하나의 정점 정보만 _Stream_ 에 넘긴다.&lt;/geometryOutput&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Stream&lt;/em&gt; 은 총 두가지의 역할을 한다. 하나는 &lt;em&gt;Rasterizer&lt;/em&gt; 단계로 넘겨서 쉐이더에서 처리를 할 수 있게 하는 통로 역할을 하고, 다른 하나는 드라이버 레벨에서 데이터를 출력해주는 통로 역할을 한다. 두가지의 일을 하기 때문에 &lt;em&gt;Stream&lt;/em&gt; 의 개념으로 추상화한 것인가 싶다. 그리고 하나의 &lt;em&gt;Geometry Shader&lt;/em&gt; 에서 여러개의 &lt;em&gt;Stream&lt;/em&gt; 으로 출력이 가능하긴 하다. 최대 4개의 &lt;em&gt;Stream&lt;/em&gt; 을 사용할 수 있다. &lt;em&gt;Stream&lt;/em&gt; 을 선택해서 데이터를 받아올 수도 있으며, &lt;em&gt;Rasterizer&lt;/em&gt; 로 보낼수도 있다. 자세한 사항은 &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/ff471424.aspx&quot;&gt;MSDN : How To: Index Multiple Output Streams &lt;/a&gt; 에서 확인하면 되겠다.&lt;/p&gt;
+
+&lt;p&gt;활용할 수 있는 다른 기능이 하나 더 있다. &lt;em&gt;instance&lt;/em&gt; 기능이다. 아래 코드를 보자.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;[instance(3)]
+[maxvertexcount(1)]
+void geom(vertexOutput input[3], uint InstanceID : SV_GSInstanceID, inout PointStream&amp;lt;geometryOutput&amp;gt; pointStream)
+{
+    geometryShaderOutput o;
+
+    o.vertex = input[InstanceID].vertex;
+
+    pointStream.Append(o);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;해당 코드는 삼각형의 세개의 정점 위치를 넘기는 코드다. 달라진 것은 &lt;em&gt;instance(3)&lt;/em&gt; 코드가 붙고, &lt;em&gt;uint InstanceID : SV_GSInstanceID&lt;/em&gt; 파라미터가 생겨 코드 안에서 이를 활용한다. &lt;em&gt;instance(x)&lt;/em&gt; 에 들어가는 x 는 반복하는 횟수를 뜻하고, &lt;em&gt;InstanceID&lt;/em&gt; 파라미터는 반복하는 인덱스를 뜻한다. 같은 입력을 여러번 받아서 일정한 수만큼 반복하는 것이다.  &lt;em&gt;instance&lt;/em&gt; 속성에 들어가는 숫자의 한계는 32까지다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Geometry Shader&lt;/em&gt; 는 &lt;em&gt;Shader Model 4.0&lt;/em&gt; 에서 추가되었으며 뒤에 추가적으로 알아본 &lt;em&gt;multiple stream&lt;/em&gt; 과 &lt;em&gt;instance&lt;/em&gt; 키워드는 &lt;em&gt;Shader Model 5.0&lt;/em&gt; 에서 확장된 기능들이다.&lt;/p&gt;
+
+&lt;h1&gt;참조 자료&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/windows/desktop/bb509609.aspx&quot;&gt;MSDN : Geometry-Shader Object&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/bb205122.aspx&quot;&gt;MSDN : Getting Started with the Stream-Output Stage&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/ff471424.aspx&quot;&gt;MSDN : How To: Index Multiple Output Streams&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/ff471425.aspx&quot;&gt;MSDN : How To: Instance a Geometry Shader&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.gamedev.net/forums/topic/600141-limit-on-maxvertexcount-gs/&quot;&gt;GameDev : limit on maxvertexcount() GS&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="render" />
+      
+        <category term="shader" />
+      
+        <category term="hlsl" />
+      
+
+      
+
+      
+        <summary type="html">“Fragemnt Shader” 에서 Fragment Shader 에 대해 알아보았다. 다음은 Geometry Shader 에 대해서 써보려 한다. Geometry Shader 는 쉐이더 파이프라인에서 Rasterizer Stage 넘어가기 전의 Geometry Stage 의 마지막 단계로써 이전 쉐이더에서 넘긴 Primitive 데이터(point, line, triangle..)를 프로그래머가 원하는 복수의 Primitive 데이터로 변환할 수 있다. 삼각형을 삼각형의 중심을 나타내는 점으로 변환하는 쉐이더를 보자. [maxvertexcount(1)] void geom(vertexOutput input[3], inout PointStream&amp;lt;geometryOutput&amp;gt; pointStream) { geometryShaderOutput o; o.vertex = (input[0].vertex + input[1].vertex + input[2].vertex) / 3; pointStream.Append(o); } 매우 간단한 코드다. 간략하게 설명하자면, 맨 윗줄의 maxvertexcount 는 해당 지오메트리 쉐이더에서 Stream 으로 넘길 정점별 데이터의 갯수를 뜻한다. Geometry Shader 한번당 Stream 으로 넘길 maxvertexcount 의 한계는 정해지지 않았지만 크기는 1024 바이트로 정해져 있기 때문에 적절하게 사용해야 겠다. 그 다음줄의 인자들에 대해서 설명하면, 첫번째 vertexOutput input[3] 은 정해진 프리미티브의 값들을 뜻한다. 여기서는 삼각형을 기준으로 만들었기 때문에 정점별 정보가 3개가 있다. _inout PointStream pointStream_ 은 _Geometry Shader_ 의 최종 출력을 해주는 오브젝트다. _PointStream_ 은 점 프리미티브의 데이터를 받는 _Stream_ 으로써, 프리미티브가 다르면 각자 다른것을 사용할 수 있다.([MSDN : Getting Started with the Stream-Output Stage](https://msdn.microsoft.com/en-us/library/windows/desktop/bb205122.aspx)) 부등호 안에 있는 것은 일반적으로 알려진 제너릭이나 템플릿의 형태와 같으니 안에 출력으로 넘길 구조체를 넘겨주면 된다. 함수의 내용은 삼각형을 구성하는 각 정점의 위치의 평균을 구해 하나의 정점 정보만 _Stream_ 에 넘긴다. Stream 은 총 두가지의 역할을 한다. 하나는 Rasterizer 단계로 넘겨서 쉐이더에서 처리를 할 수 있게 하는 통로 역할을 하고, 다른 하나는 드라이버 레벨에서 데이터를 출력해주는 통로 역할을 한다. 두가지의 일을 하기 때문에 Stream 의 개념으로 추상화한 것인가 싶다. 그리고 하나의 Geometry Shader 에서 여러개의 Stream 으로 출력이 가능하긴 하다. 최대 4개의 Stream 을 사용할 수 있다. Stream 을 선택해서 데이터를 받아올 수도 있으며, Rasterizer 로 보낼수도 있다. 자세한 사항은 MSDN : How To: Index Multiple Output Streams 에서 확인하면 되겠다. 활용할 수 있는 다른 기능이 하나 더 있다. instance 기능이다. 아래 코드를 보자. [instance(3)] [maxvertexcount(1)] void geom(vertexOutput input[3], uint InstanceID : SV_GSInstanceID, inout PointStream&amp;lt;geometryOutput&amp;gt; pointStream) { geometryShaderOutput o; o.vertex = input[InstanceID].vertex; pointStream.Append(o); } 해당 코드는 삼각형의 세개의 정점 위치를 넘기는 코드다. 달라진 것은 instance(3) 코드가 붙고, uint InstanceID : SV_GSInstanceID 파라미터가 생겨 코드 안에서 이를 활용한다. instance(x) 에 들어가는 x 는 반복하는 횟수를 뜻하고, InstanceID 파라미터는 반복하는 인덱스를 뜻한다. 같은 입력을 여러번 받아서 일정한 수만큼 반복하는 것이다. instance 속성에 들어가는 숫자의 한계는 32까지다. Geometry Shader 는 Shader Model 4.0 에서 추가되었으며 뒤에 추가적으로 알아본 multiple stream 과 instance 키워드는 Shader Model 5.0 에서 확장된 기능들이다. 참조 자료 MSDN : Geometry-Shader Object MSDN : Getting Started with the Stream-Output Stage MSDN : How To: Index Multiple Output Streams MSDN : How To: Instance a Geometry Shader GameDev : limit on maxvertexcount() GS</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Shader Pipeline 3 Fragment Shader0</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/10/31/shader-pipeline-3-fragment-shader0/" rel="alternate" type="text/html" title="Shader Pipeline 3 Fragment Shader0" />
+      <published>2017-10-31T00:00:00+00:00</published>
+      <updated>2017-10-31T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/10/31/shader-pipeline-3-fragment-shader0</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/10/31/shader-pipeline-3-fragment-shader0/">&lt;p&gt;이전 글 : “&lt;a href=&quot;/2017/10/31/shader-pipeline-2-rasterizer/&quot;&gt;Rasterizer&lt;/a&gt;” 에서 &lt;em&gt;Rasterizer&lt;/em&gt; 에 대해 알아보았다. 이번에는 &lt;em&gt;Fragment Shader&lt;/em&gt; 을 알아보자.&lt;/p&gt;
+
+&lt;p&gt;쉐이더 파이프라인에서 &lt;em&gt;Rasterizer&lt;/em&gt; 다음에 실행되는 것은 &lt;em&gt;Programmable Shader&lt;/em&gt; 중에서 &lt;em&gt;Fragment Shader&lt;/em&gt; 이다. &lt;em&gt;Fragment Shader&lt;/em&gt; 은 &lt;em&gt;Pixel Shader&lt;/em&gt; 라고도 불리는데, 이전에 &lt;em&gt;Rasterizer&lt;/em&gt; 에서 조각낸 픽셀들을 단위로 실행되기 때문에 &lt;em&gt;Pixel Shader&lt;/em&gt; 라고 불리기도 한다. 또한 각 픽셀은 조각난 단위이기 때문에 조각의 뜻을 가진 &lt;em&gt;Fragment Shader&lt;/em&gt; 라고도 불린다. 이 글에서는 &lt;em&gt;Fragment Shader&lt;/em&gt; 로 사용할 것이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Fragment Shader&lt;/em&gt; 의 역할은 굉장히 단순하다. &lt;em&gt;Geometry Stage&lt;/em&gt; 에서 넘어와 &lt;em&gt;Rasterizer&lt;/em&gt; 단계에서 정리된 파라미터를 받고, 해당 픽셀의 색을 반환하면 끝난다. 역할은 단순하지만 그만큼 중요한 것이 &lt;em&gt;Fragment Shader&lt;/em&gt; 다. 마지막으로 픽셀 단위로 보여주는 색을 바꿀 수 있는 &lt;em&gt;Programmable Shader&lt;/em&gt; 로써 반복하는 비용이 꽤나 많아 일반적으로 오래 걸린다고 평가되지만 색을 바꿀 수 있어 그만큼 잘쓰면 굉장한 효과를 낼 수 있는 &lt;em&gt;Programmable Shader&lt;/em&gt; 다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/fragment_shader.jpg&quot; alt=&quot;Fragment Shader&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;가장 단순한 형태의 Unity 에서 사용하는 CG/HLSL 쉐이더를 보자.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;#pragma fragment frag
+
+struct v2f
+{
+    float4 vertex : SV_POSITION;
+    float4 tangent : TANGENT;
+    float3 normal : NORMAL;
+    float4 texcoord : TEXCOORD0;
+}
+
+/*
+  다른 코드 들..
+*/
+
+fixed4 frag(v2f i)
+{
+  return float4(1,1,1,1);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;해당 쉐이더는 단순하게 흰색만 출력해주는 쉐이더다. 그만큼 매우 단순하고 쉽다. 하지만 많은 것들을 표현하려면 &lt;em&gt;frag&lt;/em&gt; 함수의 코드는 점점 길어질 것이다.&lt;/p&gt;
+
+&lt;p&gt;또한 &lt;em&gt;Fragment Shader&lt;/em&gt; 가 실행되는 시점에서 하드웨어, 드라이버 단계에서 지원하는 기능들도 있다. 일반적인 것들에 대해서 이야기 하자면 &lt;em&gt;Depth Buffer&lt;/em&gt; 와 &lt;em&gt;Stencil Buffer&lt;/em&gt; 가 있다. 두가지의 공통점은 각 픽셀 단위별로 데이터를 저장하는 버퍼들이다. &lt;em&gt;Depth Buffer&lt;/em&gt; 는 &lt;em&gt;Clip-Space&lt;/em&gt; 로 변환된 정점 값의 Z 값을 저장하는 용도로 쓰이는 버퍼로, 요즘 개발되거나 쓰이는 기술들은 &lt;em&gt;Depth Buffer&lt;/em&gt; 를 엄청 많이 쓴다. 대표적으로 &lt;em&gt;Depth Pre-Pass&lt;/em&gt; 가 있다. &lt;em&gt;Stencil Buffer&lt;/em&gt; 는 픽셀별로 정수 데이터를 저장해서 사용하는 버퍼로써, 대부분 마스킹을 할 때 쓰인다.&lt;/p&gt;
+
+&lt;h1&gt;참조 자료&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.slideshare.net/kyruie/everything-about-earlyz&quot;&gt;SlideShader : Everything about Early-Z&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="render" />
+      
+        <category term="shader" />
+      
+        <category term="hlsl" />
+      
+
+      
+
+      
+        <summary type="html">이전 글 : “Rasterizer” 에서 Rasterizer 에 대해 알아보았다. 이번에는 Fragment Shader 을 알아보자. 쉐이더 파이프라인에서 Rasterizer 다음에 실행되는 것은 Programmable Shader 중에서 Fragment Shader 이다. Fragment Shader 은 Pixel Shader 라고도 불리는데, 이전에 Rasterizer 에서 조각낸 픽셀들을 단위로 실행되기 때문에 Pixel Shader 라고 불리기도 한다. 또한 각 픽셀은 조각난 단위이기 때문에 조각의 뜻을 가진 Fragment Shader 라고도 불린다. 이 글에서는 Fragment Shader 로 사용할 것이다. Fragment Shader 의 역할은 굉장히 단순하다. Geometry Stage 에서 넘어와 Rasterizer 단계에서 정리된 파라미터를 받고, 해당 픽셀의 색을 반환하면 끝난다. 역할은 단순하지만 그만큼 중요한 것이 Fragment Shader 다. 마지막으로 픽셀 단위로 보여주는 색을 바꿀 수 있는 Programmable Shader 로써 반복하는 비용이 꽤나 많아 일반적으로 오래 걸린다고 평가되지만 색을 바꿀 수 있어 그만큼 잘쓰면 굉장한 효과를 낼 수 있는 Programmable Shader 다. 가장 단순한 형태의 Unity 에서 사용하는 CG/HLSL 쉐이더를 보자. #pragma fragment frag struct v2f { float4 vertex : SV_POSITION; float4 tangent : TANGENT; float3 normal : NORMAL; float4 texcoord : TEXCOORD0; } /* 다른 코드 들.. */ fixed4 frag(v2f i) { return float4(1,1,1,1); } 해당 쉐이더는 단순하게 흰색만 출력해주는 쉐이더다. 그만큼 매우 단순하고 쉽다. 하지만 많은 것들을 표현하려면 frag 함수의 코드는 점점 길어질 것이다. 또한 Fragment Shader 가 실행되는 시점에서 하드웨어, 드라이버 단계에서 지원하는 기능들도 있다. 일반적인 것들에 대해서 이야기 하자면 Depth Buffer 와 Stencil Buffer 가 있다. 두가지의 공통점은 각 픽셀 단위별로 데이터를 저장하는 버퍼들이다. Depth Buffer 는 Clip-Space 로 변환된 정점 값의 Z 값을 저장하는 용도로 쓰이는 버퍼로, 요즘 개발되거나 쓰이는 기술들은 Depth Buffer 를 엄청 많이 쓴다. 대표적으로 Depth Pre-Pass 가 있다. Stencil Buffer 는 픽셀별로 정수 데이터를 저장해서 사용하는 버퍼로써, 대부분 마스킹을 할 때 쓰인다. 참조 자료 SlideShader : Everything about Early-Z</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Shader Pipeline 2 Rasterizer</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/10/31/shader-pipeline-2-rasterizer/" rel="alternate" type="text/html" title="Shader Pipeline 2 Rasterizer" />
+      <published>2017-10-31T00:00:00+00:00</published>
+      <updated>2017-10-31T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/10/31/shader-pipeline-2-rasterizer</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/10/31/shader-pipeline-2-rasterizer/">&lt;p&gt;이전 포스트 “&lt;a href=&quot;/2017/10/30/shader-pipeline-1-vertex-shader/&quot;&gt;Vertex Shader&lt;/a&gt;” 에서 &lt;em&gt;Vertex Shader&lt;/em&gt; 에 대해 간단히 알아보았다. 이번 글에서는 &lt;em&gt;Rasterizer&lt;/em&gt; 에 대해서 간단히 써보려 한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Rasterizer&lt;/em&gt; 는 쉐이더 파이프라인에 존재하는 고정 기능 단계이다. 간단하게 정의하면, &lt;em&gt;Rasterizer&lt;/em&gt; 이전 단계를 거쳐 나온 Geometry 데이터들(vertex, mesh, …)을 정해진 해상도에 맞춰 픽셀별로 조각내어 주는 단계다. 아래 그림을 보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i-msdn.sec.s-msft.com/dynimg/IC520311.png&quot; alt=&quot;MSDN : Traignel Rasterization Rule&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;이는 일반적인 삼각형 폴리곤을 &lt;em&gt;Rasterizer&lt;/em&gt; 단계에서 어떻게 픽셀로 변환하는지 한눈에 알게 해놓은 사진이다. 겹치는 정도에 따라 검은색에 가깝게 해놓은 것을 볼 수있다. &lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/windows/desktop/cc627092.aspx&quot;&gt;MSDN : Rasterization Rules&lt;/a&gt; 에서 다른 프리미티브의 &lt;em&gt;Rasterize&lt;/em&gt; 과정도 살펴볼 수 있다.&lt;/p&gt;
+
+&lt;p&gt;쉐이더 파이프라인에서 &lt;em&gt;Rasterizer&lt;/em&gt; 가 가지는 의미도 조금 특별하다. 이는 3차원 메시 데이터를 2차원 이미지 데이터로 바꿔주는 과정이기 때문에 &lt;em&gt;Geometry Stage&lt;/em&gt; 에서 &lt;em&gt;Rasterizer Stage&lt;/em&gt; 로 넘어가는 관문이다.&lt;/p&gt;
+
+&lt;h1&gt;참조 자료&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/windows/desktop/cc627092.aspx&quot;&gt;MSDN : Rasterization Rules&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="render" />
+      
+        <category term="hlsl" />
+      
+
+      
+
+      
+        <summary type="html">이전 포스트 “Vertex Shader” 에서 Vertex Shader 에 대해 간단히 알아보았다. 이번 글에서는 Rasterizer 에 대해서 간단히 써보려 한다. Rasterizer 는 쉐이더 파이프라인에 존재하는 고정 기능 단계이다. 간단하게 정의하면, Rasterizer 이전 단계를 거쳐 나온 Geometry 데이터들(vertex, mesh, …)을 정해진 해상도에 맞춰 픽셀별로 조각내어 주는 단계다. 아래 그림을 보자. 이는 일반적인 삼각형 폴리곤을 Rasterizer 단계에서 어떻게 픽셀로 변환하는지 한눈에 알게 해놓은 사진이다. 겹치는 정도에 따라 검은색에 가깝게 해놓은 것을 볼 수있다. MSDN : Rasterization Rules 에서 다른 프리미티브의 Rasterize 과정도 살펴볼 수 있다. 쉐이더 파이프라인에서 Rasterizer 가 가지는 의미도 조금 특별하다. 이는 3차원 메시 데이터를 2차원 이미지 데이터로 바꿔주는 과정이기 때문에 Geometry Stage 에서 Rasterizer Stage 로 넘어가는 관문이다. 참조 자료 MSDN : Rasterization Rules</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Shader Pipeline 1 Vertex Shader</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/10/30/shader-pipeline-1-vertex-shader/" rel="alternate" type="text/html" title="Shader Pipeline 1 Vertex Shader" />
+      <published>2017-10-30T00:00:00+00:00</published>
+      <updated>2017-10-30T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/10/30/shader-pipeline-1-vertex-shader</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/10/30/shader-pipeline-1-vertex-shader/">&lt;p&gt;이번 글에서 언급할 쉐이더는 &lt;em&gt;Vertex Shader&lt;/em&gt; 다. 한글로는 &lt;em&gt;정점 쉐이더&lt;/em&gt; 라고 보통 말한다. &lt;em&gt;Vertex Shader&lt;/em&gt; 에서 할 수 있는 것은, 정점별로 들어온 정보들을 코딩을 해서 프로그래머가 원하는대로 바꾸어 다음 쉐이더에서 처리할 수 있도록 해주는 &lt;em&gt;Shader&lt;/em&gt; 다.&lt;/p&gt;
+
+&lt;p&gt;Unity 에서의 CG/HLSL 일반적인 &lt;em&gt;Vertex Shader&lt;/em&gt; 코드는 아래와 같다.&lt;/p&gt;
+
+&lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#pragma vertex vert
+#include &quot;UnityCG.cginc&quot;
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;appdata_tan&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;float4&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vertex&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;POSITION&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;float4&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tangent&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TANGENT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;float3&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;normal&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NORMAL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;float4&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;texcoord&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TEXCOORD0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v2f&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;float4&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vertex&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SV_POSITION&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;float4&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tangent&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TANGENT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;float3&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;normal&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NORMAL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;float4&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;texcoord&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TEXCOORD0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;v2f&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;appdata_tan&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;v2f&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vertex&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mul&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UNITY_MATRIX_MVP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vertex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tangent&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tangent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;normal&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;normal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;texcoord&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;texcoord&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/*
+  기타 코드들..
+*/&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;굉장히 단순한 &lt;em&gt;Vertex Shader&lt;/em&gt; 코드다. 코드가 단순한 만큼 이 &lt;em&gt;Shader&lt;/em&gt; 는 최소한의 역할만 하고 있다. &lt;em&gt;model-space&lt;/em&gt; 에 있는 정점을 &lt;em&gt;clipping-space&lt;/em&gt; 의 정점으로 변환 시켜 다음으로(fragment shader) 넘긴다. 위에서 위치 데이터를 바꿀 수 있다고 언급했는데, 이 변환은 정상적인 메커니즘을 통해 오브젝트를 출력하려면 &lt;em&gt;Rasterizer Stage&lt;/em&gt; 로 넘어가기전에 반드시 정점값에 적용시켜주어야 하는 변환이다. 해당 변환에 대해서는 &lt;a href=&quot;https://docs.google.com/presentation/d/10VzsjfifKJlRTHDlBq7e8vNBTu4D5jOWUF87KYYGwlk/edit?usp=sharing&quot;&gt;Model, View, Projection&lt;/a&gt;에 설명해 놓았으니 간단하게 참고하길 바란다.&lt;/p&gt;
+
+&lt;p&gt;위 코드에서 보여준 것들은 최소한의 것들이다. 코드를 짜는 것은 프로그래머의 역량이기 때문에 더 창의적인 것들을 할 수 있다. 쉬운 것들 중에서는 표면에서 웨이브를 주어 표면이 일렁이는 것처럼 보이게 할 수 있다. 이는 시간을 키값으로 두어 삼각함수를 이용해 할 수 있겠다.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;float time;
+
+struct appdata
+{
+    float4 vertex : POSITION;
+};
+
+struct v2f
+{
+    float4 vertex : SV_POSITION;
+}
+
+v2f vert(appdata i)
+{
+    v2f o;
+
+    i.vertex = i.vertex + i.normal * sin(time + i.vertex.x + i.vertex.z);
+    o.vertex = mul(UNITY_MATRIX_MVP, i.vertex);
+
+    return o;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;메쉬는 여러개의 정사각형 모양으로 잘라진 평평한 판의 형태의 메쉬를 준비하고, 간단하게 x 좌표와 z 좌표를 기준으로 오브젝트가 일렁이는 것을 만들어 보았다. 이렇게 &lt;em&gt;Vertex Shader&lt;/em&gt; 를 응용해서 정점 데이터를 프로그래머가 원하는데로 움직일 수 있다. 정점 쉐이더는 사용하기에 크게 어려운점은 없기에 &lt;em&gt;Shader&lt;/em&gt; 를 처음 다룰 때 가지고 놀만하다. 또한 &lt;em&gt;Vertex Shader&lt;/em&gt; 가 가장 응용되기 쉬운 것은 바로 &lt;em&gt;skinning&lt;/em&gt; 이다. &lt;em&gt;skinning&lt;/em&gt; 자체가 정점 데이터들을 움직이고 움직임을 기반으로 바꾸는 것이기 때문에 &lt;em&gt;Vertex Shader&lt;/em&gt; 의 형태가 &lt;em&gt;skinning&lt;/em&gt; 을 적용하기 가장 알맞다.&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="render" />
+      
+        <category term="shader" />
+      
+        <category term="cg" />
+      
+        <category term="hlsl" />
+      
+        <category term="unity" />
+      
+
+      
+
+      
+        <summary type="html">이번 글에서 언급할 쉐이더는 Vertex Shader 다. 한글로는 정점 쉐이더 라고 보통 말한다. Vertex Shader 에서 할 수 있는 것은, 정점별로 들어온 정보들을 코딩을 해서 프로그래머가 원하는대로 바꾸어 다음 쉐이더에서 처리할 수 있도록 해주는 Shader 다. Unity 에서의 CG/HLSL 일반적인 Vertex Shader 코드는 아래와 같다. #pragma vertex vert #include &quot;UnityCG.cginc&quot; struct appdata_tan { float4 vertex : POSITION; float4 tangent : TANGENT; float3 normal : NORMAL; float4 texcoord : TEXCOORD0; }; struct v2f { float4 vertex : SV_POSITION; float4 tangent : TANGENT; float3 normal : NORMAL; float4 texcoord : TEXCOORD0; } v2f vert(appdata_tan i) { v2f o; o.vertex = mul(UNITY_MATRIX_MVP, i.vertex); o.tangent = i.tangent; o.normal = i.normal; o.texcoord = i.texcoord; return o; } /* 기타 코드들.. */ 굉장히 단순한 Vertex Shader 코드다. 코드가 단순한 만큼 이 Shader 는 최소한의 역할만 하고 있다. model-space 에 있는 정점을 clipping-space 의 정점으로 변환 시켜 다음으로(fragment shader) 넘긴다. 위에서 위치 데이터를 바꿀 수 있다고 언급했는데, 이 변환은 정상적인 메커니즘을 통해 오브젝트를 출력하려면 Rasterizer Stage 로 넘어가기전에 반드시 정점값에 적용시켜주어야 하는 변환이다. 해당 변환에 대해서는 Model, View, Projection에 설명해 놓았으니 간단하게 참고하길 바란다. 위 코드에서 보여준 것들은 최소한의 것들이다. 코드를 짜는 것은 프로그래머의 역량이기 때문에 더 창의적인 것들을 할 수 있다. 쉬운 것들 중에서는 표면에서 웨이브를 주어 표면이 일렁이는 것처럼 보이게 할 수 있다. 이는 시간을 키값으로 두어 삼각함수를 이용해 할 수 있겠다. float time; struct appdata { float4 vertex : POSITION; }; struct v2f { float4 vertex : SV_POSITION; } v2f vert(appdata i) { v2f o; i.vertex = i.vertex + i.normal * sin(time + i.vertex.x + i.vertex.z); o.vertex = mul(UNITY_MATRIX_MVP, i.vertex); return o; } 메쉬는 여러개의 정사각형 모양으로 잘라진 평평한 판의 형태의 메쉬를 준비하고, 간단하게 x 좌표와 z 좌표를 기준으로 오브젝트가 일렁이는 것을 만들어 보았다. 이렇게 Vertex Shader 를 응용해서 정점 데이터를 프로그래머가 원하는데로 움직일 수 있다. 정점 쉐이더는 사용하기에 크게 어려운점은 없기에 Shader 를 처음 다룰 때 가지고 놀만하다. 또한 Vertex Shader 가 가장 응용되기 쉬운 것은 바로 skinning 이다. skinning 자체가 정점 데이터들을 움직이고 움직임을 기반으로 바꾸는 것이기 때문에 Vertex Shader 의 형태가 skinning 을 적용하기 가장 알맞다.</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Shader Pipeline 0 Opening</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/10/30/shader-pipeline-0-opening/" rel="alternate" type="text/html" title="Shader Pipeline 0 Opening" />
+      <published>2017-10-30T00:00:00+00:00</published>
+      <updated>2017-10-30T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/10/30/shader-pipeline-0-opening</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/10/30/shader-pipeline-0-opening/">&lt;h3&gt;쉐이더 프로그래밍 환경&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;Programmable Shader&lt;/em&gt; 들을 정리하기 위해 각 쉐이더별로 한개씩 글을 써보기로 했다. 그 전에 미리 알아야될 것들에 대해 알아보려고 한다. 각각의 &lt;em&gt;Shader&lt;/em&gt; 들은 코더의 입장에서 바라보았을 때는 단지 몇개의 파라미터를 받고 값을 반환하는 함수들이다. 하지만 일반적으로 알고있는 함수들과는 조금 다르게 실행된다. 첫번째로 일반적인 바이너리들은 CPU 에서 직렬로 실행된다. 멀티 스레드 기능을 따로 쓰지 않는한 말이다. 하지만 &lt;em&gt;Shader&lt;/em&gt; 는 기본적으로 병렬로 실행된다. 아래 그림을 보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/cpucore_vs_gpucore.jpg&quot; alt=&quot;CPU core vs GPU core&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;CPU 와 GPU 의 차이를 간단하게 보여주는 그림이다. 다만 위 그림이 전부는 아니니 간단하게 알고 넘어가도록 하자. 우리가 주목해야 할 것은 바로 &lt;em&gt;core&lt;/em&gt; 갯수의 차이다. 요즘의 CPU 는 &lt;em&gt;core&lt;/em&gt; 의 갯수가 많지 않다. 최근에 나온 &lt;a href=&quot;https://ark.intel.com/ko/products/126684/Intel-Core-i7-8700K-Processor-12M-Cache-up-to-4_70-GHz&quot;&gt;i7-8700k&lt;/a&gt; 를 보면 코어의 갯수가 6개 인것을 확인할 수 있다. 다만 OS 스케줄링이 있어서 실질적으로 실행되는 것은 &lt;em&gt;core&lt;/em&gt; 의 갯수에 엄격하게 제한되지는 않는다. 중요한 것은 개인용 PC 에 들어가는 CPU 는 아직은 &lt;em&gt;core&lt;/em&gt; 의 갯수가 10개를 넘어가지 않는다는 것이다. 반면에 실제 GPU 의 코어의 갯수를 꽤나 많다. 그림에서는 &lt;em&gt;hundreds of cores&lt;/em&gt;, 몇백개의 &lt;em&gt;core&lt;/em&gt; 라고 하지만 요즘 개인용 PC 에 들어가는 GPU 코어는 몇천개나(&lt;a href=&quot;https://www.geforce.co.uk/hardware/desktop-gpus/geforce-gtx-1080/specifications&quot;&gt;gtx1080&lt;/a&gt;) 된다. GPU 의 코어가 많은 이유는 간단하다. CPU 에서 돌아가는 프로그램에 비해 간단한 프로그램 바이너리(쉐이더 혹은 GPGPU 프로그램)를 동시에 실행하는게 최근의 GPU 가 쓰이는 목적이기 때문이다.&lt;/p&gt;
+
+&lt;p&gt;일반적으로 CPU 에서 코딩하는 프로그램과 다르게 GPU 에서 실행되는 프로그램들은 이러한 병렬적인 실행 환경 때문에 특수한 사항들과 제약사항들이 존재한다. 퍼포먼스를 염두하고 프로그램을 코딩하다 보면 처음 경험하는 프로그래머는 조금 당황스러울 수도 있다.&lt;/p&gt;
+
+&lt;h3&gt;쉐이더 파이프라인&lt;/h3&gt;
+
+&lt;p&gt;GPU 의 여태까지의 주요한 역할은 기하학적(geometry) 성격을 띄고있는 데이터들을(mesh, vertex …) 이차원 이미지로 계산하여 보여주는 일이였다. 그렇게 3D 에셋 저작툴이나(3dsmax, maya, …) 게임에서 GPU 를 활용해 보다 많은 것들을 표현할 수 있게 해주었다. 우리가 이번에 살펴볼 것은 &lt;em&gt;Shader Model 5.0&lt;/em&gt; 의 쉐이더가 실행되는 단계다. 이 단계는 위에서 언급한 기하학적 성격을 띄고 있는 데이터를 이차원 이미지로 계산하는 단계를 나타낸 것이다. 아래 그림을 보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/sm_5-0_pipeline.jpg&quot; alt=&quot;Shader Model 5_0 pipeline&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;이 그림에는 여러가지 항목들이 있다. &lt;em&gt;Programmable Shader&lt;/em&gt; 를 제외하면 전부 고정된 기능을 가진 단계로써 프로그래머가 완전히 제어를 할 수 없는 단계다. 우리가 살펴볼 것은 이름 끝에 &lt;em&gt;Shader&lt;/em&gt; 가 붙은 것들이다. 차례대로 &lt;em&gt;Vertex Shader&lt;/em&gt;, &lt;em&gt;Hull Shader&lt;/em&gt;, &lt;em&gt;Domain Shader&lt;/em&gt;, &lt;em&gt;Geometry Shader&lt;/em&gt;, &lt;em&gt;Pixel Shader&lt;/em&gt; 가 있다. 위의 단계들은 두가지로 분류할 수 있다. &lt;em&gt;Geometry Stage&lt;/em&gt; 와 &lt;em&gt;Rasterizer Stage&lt;/em&gt; 다. &lt;em&gt;Geometry Stage&lt;/em&gt; 는 일반적인 3D 상의 위치나 벡터를 가지고 있는 데이터를 처리하는 단계를 말한다. 위 그림에서는 &lt;em&gt;Rasterizer&lt;/em&gt; 전 까지의 단계를 뜻한다. &lt;em&gt;Rasterizer Stage&lt;/em&gt; 는 2D 이미지로 처리된 상태에서 데이터를 처리하는 단계를 말한다. &lt;em&gt;Rasterizer&lt;/em&gt; 단계 부터 오른쪽 끝까지의 단계다. 각 단계에 대한 자세한 설명은 해당 글에서 하겠다.&lt;/p&gt;
+
+&lt;p&gt;쉐이더 파이프라인을 알고 있어야 여러 이론들을 구현할 수 있다. 쉐이더를 다루려면 이 쉐이더 파이프라인을 아는 것은 필수라고 할 수 있겠다.&lt;/p&gt;
+
+&lt;h3&gt;각종 버퍼들의 활용&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;Shader Model 4.0&lt;/em&gt; 과 &lt;em&gt;Shader Model 5.0&lt;/em&gt; 를 통해 여러 버퍼들을 사용하여 &lt;em&gt;Shader&lt;/em&gt; 안에서 돌고도는 &lt;em&gt;varying data&lt;/em&gt; (쉐이더들의 파라미터들) 와 함께 응용을 할 수 있게 되었다. 이는 함수 한개씩을 파라미터와 반환값만 바꾸면서 코딩하는 환경에서 참조할 전역 변수를 만들어주어 훨씬 더 많은 데이터들을 접근할 수 있게 해준것이다.&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="render" />
+      
+        <category term="shader" />
+      
+        <category term="hlsl" />
+      
+
+      
+
+      
+        <summary type="html">쉐이더 프로그래밍 환경 Programmable Shader 들을 정리하기 위해 각 쉐이더별로 한개씩 글을 써보기로 했다. 그 전에 미리 알아야될 것들에 대해 알아보려고 한다. 각각의 Shader 들은 코더의 입장에서 바라보았을 때는 단지 몇개의 파라미터를 받고 값을 반환하는 함수들이다. 하지만 일반적으로 알고있는 함수들과는 조금 다르게 실행된다. 첫번째로 일반적인 바이너리들은 CPU 에서 직렬로 실행된다. 멀티 스레드 기능을 따로 쓰지 않는한 말이다. 하지만 Shader 는 기본적으로 병렬로 실행된다. 아래 그림을 보자. CPU 와 GPU 의 차이를 간단하게 보여주는 그림이다. 다만 위 그림이 전부는 아니니 간단하게 알고 넘어가도록 하자. 우리가 주목해야 할 것은 바로 core 갯수의 차이다. 요즘의 CPU 는 core 의 갯수가 많지 않다. 최근에 나온 i7-8700k 를 보면 코어의 갯수가 6개 인것을 확인할 수 있다. 다만 OS 스케줄링이 있어서 실질적으로 실행되는 것은 core 의 갯수에 엄격하게 제한되지는 않는다. 중요한 것은 개인용 PC 에 들어가는 CPU 는 아직은 core 의 갯수가 10개를 넘어가지 않는다는 것이다. 반면에 실제 GPU 의 코어의 갯수를 꽤나 많다. 그림에서는 hundreds of cores, 몇백개의 core 라고 하지만 요즘 개인용 PC 에 들어가는 GPU 코어는 몇천개나(gtx1080) 된다. GPU 의 코어가 많은 이유는 간단하다. CPU 에서 돌아가는 프로그램에 비해 간단한 프로그램 바이너리(쉐이더 혹은 GPGPU 프로그램)를 동시에 실행하는게 최근의 GPU 가 쓰이는 목적이기 때문이다. 일반적으로 CPU 에서 코딩하는 프로그램과 다르게 GPU 에서 실행되는 프로그램들은 이러한 병렬적인 실행 환경 때문에 특수한 사항들과 제약사항들이 존재한다. 퍼포먼스를 염두하고 프로그램을 코딩하다 보면 처음 경험하는 프로그래머는 조금 당황스러울 수도 있다. 쉐이더 파이프라인 GPU 의 여태까지의 주요한 역할은 기하학적(geometry) 성격을 띄고있는 데이터들을(mesh, vertex …) 이차원 이미지로 계산하여 보여주는 일이였다. 그렇게 3D 에셋 저작툴이나(3dsmax, maya, …) 게임에서 GPU 를 활용해 보다 많은 것들을 표현할 수 있게 해주었다. 우리가 이번에 살펴볼 것은 Shader Model 5.0 의 쉐이더가 실행되는 단계다. 이 단계는 위에서 언급한 기하학적 성격을 띄고 있는 데이터를 이차원 이미지로 계산하는 단계를 나타낸 것이다. 아래 그림을 보자. 이 그림에는 여러가지 항목들이 있다. Programmable Shader 를 제외하면 전부 고정된 기능을 가진 단계로써 프로그래머가 완전히 제어를 할 수 없는 단계다. 우리가 살펴볼 것은 이름 끝에 Shader 가 붙은 것들이다. 차례대로 Vertex Shader, Hull Shader, Domain Shader, Geometry Shader, Pixel Shader 가 있다. 위의 단계들은 두가지로 분류할 수 있다. Geometry Stage 와 Rasterizer Stage 다. Geometry Stage 는 일반적인 3D 상의 위치나 벡터를 가지고 있는 데이터를 처리하는 단계를 말한다. 위 그림에서는 Rasterizer 전 까지의 단계를 뜻한다. Rasterizer Stage 는 2D 이미지로 처리된 상태에서 데이터를 처리하는 단계를 말한다. Rasterizer 단계 부터 오른쪽 끝까지의 단계다. 각 단계에 대한 자세한 설명은 해당 글에서 하겠다. 쉐이더 파이프라인을 알고 있어야 여러 이론들을 구현할 수 있다. 쉐이더를 다루려면 이 쉐이더 파이프라인을 아는 것은 필수라고 할 수 있겠다. 각종 버퍼들의 활용 Shader Model 4.0 과 Shader Model 5.0 를 통해 여러 버퍼들을 사용하여 Shader 안에서 돌고도는 varying data (쉐이더들의 파라미터들) 와 함께 응용을 할 수 있게 되었다. 이는 함수 한개씩을 파라미터와 반환값만 바꾸면서 코딩하는 환경에서 참조할 전역 변수를 만들어주어 훨씬 더 많은 데이터들을 접근할 수 있게 해준것이다.</summary>
+      
+
+      
+      
+    </entry>
+  
   
   
     <entry>
@@ -183,131 +591,6 @@ for(int i = 0; i &amp;lt; 5; i++)
   
     <entry>
       
-      <title type="html">Using Command Buffer</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/09/30/using-command-buffer/" rel="alternate" type="text/html" title="Using Command Buffer" />
-      <published>2017-09-30T00:00:00+00:00</published>
-      <updated>2017-09-30T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/09/30/using-command-buffer</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/09/30/using-command-buffer/">&lt;p&gt;일반적으로 Graphics Driver API 에서 지원하는 &lt;em&gt;CommandBuffer&lt;/em&gt; 는 굉장히 낮은 드라이버 레벨의 렌더링 명령을 저장하여, GPU 에서 이 &lt;em&gt;CommandBuffer&lt;/em&gt; 를 참조해 그려주는 &lt;strong&gt;Task Queue&lt;/strong&gt; 의 개념이다. 하지만 Unity 에서 지원하는 &lt;em&gt;CommandBuffer&lt;/em&gt; 의 개념은 비슷하지만 조금 다르다.&lt;/p&gt;
-
-&lt;p&gt;Unity 렌더링 시스템은 재미있는 기능을 많이 제공하지만 그중에서도 가장 활용할 가능성이 높은 기능은 &lt;strong&gt;CommandBuffer&lt;/strong&gt; 일 것이다. 이는 일반적으로 알려진 Graphics Driver API 에서의 낮은 레벨의 명령을 저장하는 &lt;em&gt;CommandBuffer&lt;/em&gt; 와는 달리 Unity 에서 사용할 수 있는 &lt;strong&gt;CommandBuffer&lt;/strong&gt; 는 Unity 의 대부분의 렌더링 기능을 사용할 수 있다. &lt;a href=&quot;https://docs.unity3d.com/ScriptReference/Rendering.CommandBuffer.html&quot;&gt;Unity Reference : Command Buffer&lt;/a&gt; 이 링크를 보면 알겠지만 정말 많은 기능들을 &lt;strong&gt;CommandBuffer&lt;/strong&gt; 에 저장할 수 있다. 이는 렌더링 스크립트를 유연하게 짤 수 있게 해주며, 파이프라인의 개념까지 건드릴 수 있게 된다.&lt;/p&gt;
-
-&lt;p&gt;그리고 이 명령을 실행하는 방법은 3가지가 있다. 하나는 &lt;em&gt;Camera.AddCommandBuffer&lt;/em&gt; 메소드를 사용하는 방법이다. 이는 &lt;strong&gt;Camera&lt;/strong&gt; 컴포넌트에 &lt;strong&gt;CommandBuffer&lt;/strong&gt; 를 집어넣는 기능인데, 단순히 넣는게 아니라 &lt;strong&gt;Camera&lt;/strong&gt; 의 렌더링 단계는 굉장히 많은 단계로 나뉘는데, 이 단계별로 시간을 정해 그릴 수도 있다. 굉장히 과정이 많기 때문에 사용자가 원하는 시점에 넣기만 하면 된다. 그러면 &lt;strong&gt;Camera&lt;/strong&gt; 가 렌더링을 하는 과정에서 &lt;strong&gt;CommandBuffer&lt;/strong&gt; 의 명령들을 실행할 것이다. 또한 같은 이치로 &lt;em&gt;Light.AddCommandBuffer&lt;/em&gt; 메소드가 있다. &lt;em&gt;Camera.AddCommandBuffer&lt;/em&gt; 와 같이 원하는 시점에 &lt;strong&gt;CommandBuffer&lt;/strong&gt; 를 넘기면 된다.&lt;/p&gt;
-
-&lt;p&gt;마지막으로는 &lt;em&gt;Graphics.ExecuteCommandBuffer&lt;/em&gt; 이다. 이는 즉각적으로 &lt;strong&gt;CommandBuffer&lt;/strong&gt; 안의 명령들을 실행시키는 기능으로 앞에서 언급한 시스템에서 알아서 실행되는 것과는 다르다. 사용자가 실행 시점을 정하고 싶은 경우에는 이 메소드를 쓰면 될것이다.&lt;/p&gt;
-
-&lt;h1&gt;참조 자료&lt;/h1&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/Manual/GraphicsCommandBuffers.html&quot;&gt;Unity Manual : Graphics Command Buffers&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/ScriptReference/Rendering.CommandBuffer.html&quot;&gt;Unity Reference : Command Buffer&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/ScriptReference/Rendering.CameraEvent.html&quot;&gt;Unity Reference : CameraEvent&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="unity" />
-      
-        <category term="rendering" />
-      
-        <category term="builtin" />
-      
-
-      
-
-      
-        <summary type="html">일반적으로 Graphics Driver API 에서 지원하는 CommandBuffer 는 굉장히 낮은 드라이버 레벨의 렌더링 명령을 저장하여, GPU 에서 이 CommandBuffer 를 참조해 그려주는 Task Queue 의 개념이다. 하지만 Unity 에서 지원하는 CommandBuffer 의 개념은 비슷하지만 조금 다르다. Unity 렌더링 시스템은 재미있는 기능을 많이 제공하지만 그중에서도 가장 활용할 가능성이 높은 기능은 CommandBuffer 일 것이다. 이는 일반적으로 알려진 Graphics Driver API 에서의 낮은 레벨의 명령을 저장하는 CommandBuffer 와는 달리 Unity 에서 사용할 수 있는 CommandBuffer 는 Unity 의 대부분의 렌더링 기능을 사용할 수 있다. Unity Reference : Command Buffer 이 링크를 보면 알겠지만 정말 많은 기능들을 CommandBuffer 에 저장할 수 있다. 이는 렌더링 스크립트를 유연하게 짤 수 있게 해주며, 파이프라인의 개념까지 건드릴 수 있게 된다. 그리고 이 명령을 실행하는 방법은 3가지가 있다. 하나는 Camera.AddCommandBuffer 메소드를 사용하는 방법이다. 이는 Camera 컴포넌트에 CommandBuffer 를 집어넣는 기능인데, 단순히 넣는게 아니라 Camera 의 렌더링 단계는 굉장히 많은 단계로 나뉘는데, 이 단계별로 시간을 정해 그릴 수도 있다. 굉장히 과정이 많기 때문에 사용자가 원하는 시점에 넣기만 하면 된다. 그러면 Camera 가 렌더링을 하는 과정에서 CommandBuffer 의 명령들을 실행할 것이다. 또한 같은 이치로 Light.AddCommandBuffer 메소드가 있다. Camera.AddCommandBuffer 와 같이 원하는 시점에 CommandBuffer 를 넘기면 된다. 마지막으로는 Graphics.ExecuteCommandBuffer 이다. 이는 즉각적으로 CommandBuffer 안의 명령들을 실행시키는 기능으로 앞에서 언급한 시스템에서 알아서 실행되는 것과는 다르다. 사용자가 실행 시점을 정하고 싶은 경우에는 이 메소드를 쓰면 될것이다. 참조 자료 Unity Manual : Graphics Command Buffers Unity Reference : Command Buffer Unity Reference : CameraEvent</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Multi Compiled Shader In Unity</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/09/30/multi-compiled-shader-in-unity/" rel="alternate" type="text/html" title="Multi Compiled Shader In Unity" />
-      <published>2017-09-30T00:00:00+00:00</published>
-      <updated>2017-09-30T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/09/30/multi-compiled-shader-in-unity</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/09/30/multi-compiled-shader-in-unity/">&lt;p&gt;Unity 는 렌더링을 위한 하부 시스템을 꽤나 많이 만들어 놓았다. 그 중에서도 꽤나 오래된 시스템은 &lt;em&gt;multi-compiled shader&lt;/em&gt; 시스템일 것이다. 직역하면 여러개로 컴파일된 &lt;em&gt;Shader&lt;/em&gt; 란 말이다. 또한 기능또한 별 차이 없다. 하지만 이를 위해 시스템에서 어떤 일을 하는지에 대해서는 알아야 한다.&lt;/p&gt;
-
-&lt;p&gt;우선 &lt;em&gt;multi-compiled shader&lt;/em&gt; 에 대해서 알아야 겠다. Unity 시스템에서는 단순히 물체를 렌더링하는데 한가지 방법만 쓰이지 않는다. &lt;strong&gt;UnityEngine.MeshRenderer&lt;/strong&gt; 같은 지원하는 컴포넌트를 통해 렌더링을 하는게 가장 알려진 방법이다. 또한 컴포넌트가 아닌 코드 레벨에서도 렌더링이 가능하다. &lt;em&gt;Graphics.DrawProcedural&lt;/em&gt; 와 비슷한 메서드를 통해서도 렌더링이 가능하다. 또한 Unity 에서 지원하는 시스템을 사용하기 위해 분기 키워드가 아닌 전처리 옵션을 두어 사용하기도 한다.(Unity 에서는 기능 지원을 위해 전처리기 기능을 많이 쓴다.) 여기서 알아야 할 것은 Unity 시스템에서는 굉장히 많은 방법으로 다양한 렌더링을 지원하는데, 다양한 렌더링을 사용하기 위해서는 &lt;em&gt;Shader&lt;/em&gt; 또한 각각 다양한 렌더링 방법에 맞추어 컴파일 될 필요가 있다. 그럴때 쓰는 것이 &lt;em&gt;multi-compiled shader&lt;/em&gt; 기능이다.&lt;/p&gt;
-
-&lt;p&gt;사용자가 직접 &lt;em&gt;multi-compiled shader&lt;/em&gt; 기능을 사용하는 것은 꽤나 단순하다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;#pragma multi_compile FANCY_STUFF_OFF FANCY_STUFF_ON
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;쉐이더 코드에서 위와 같이 사용하게 되면 &lt;em&gt;FANCY_STUFF_OFF&lt;/em&gt;, &lt;em&gt;FANCY_STUFF_ON&lt;/em&gt; 두가지 옵션을 통해 컴파일 하는 것을 나눌 수 있게 된다. 이 키워드는 쉐이더 바깥에서 제어가 가능하다. 모든 쉐이더의 키워드를 제어하려면 &lt;em&gt;Shader.EnableKeyword&lt;/em&gt;, &lt;em&gt;Shader.DisableKeyword&lt;/em&gt; 를 사용하면 되고, &lt;strong&gt;Material&lt;/strong&gt; 단위로 사용하려면 &lt;em&gt;Material.EnableKeyword&lt;/em&gt;, &lt;em&gt;Material.DisableKeyword&lt;/em&gt; 을 사용하면 된다. 또한 Unity 시스템 내에서 이 &lt;em&gt;multi-compiled shader&lt;/em&gt; 를 사용하니, 기존에 있는 것들은 사용하면 영 좋지 않은 꼴이 일어날듯 하다.&lt;/p&gt;
-
-&lt;p&gt;이런 복잡함을 만드는 시스템에는 언제나 문제가 있다. Unity 에서의 기본적인 &lt;em&gt;Shader&lt;/em&gt; 컴파일은 따로 설정을 해주지 않는 이상 Runtime 에 일어난다. 정확히 Unity 시스템에서 해당 쉐이더를 사용해 렌더링을 할때 컴파일을 하게 된다. 그리고 컴파일할 &lt;em&gt;Shader&lt;/em&gt; 의 양이 많으면 많을수록 이는 영 좋지않은 꼴을 보게된다. &lt;em&gt;multi-compiled shader&lt;/em&gt; 는 더욱더 시간을 많이 잡아먹게 한다. 물론 이를 해결하기 위한 방법은 존재한다.&lt;/p&gt;
-
-&lt;p&gt;Unity 프로젝트 설정에서 &lt;em&gt;Graphics Setting&lt;/em&gt; 에서 가능하다. 잘 찾아보면 &lt;strong&gt;&lt;em&gt;Shader Preloading&lt;/em&gt;&lt;/strong&gt; 이라는 항목이 있다. 말그대로 Runtime 에 로딩하는게 아닌 시작하자마자 로딩하는 기능이다. 다만 이 기능을 사용하려면 &lt;em&gt;Shader&lt;/em&gt; 를 그대로 넣는게 아닌 다른 것을 만들어야 한다. 이는 &lt;strong&gt;ShaderVariantsCollection&lt;/strong&gt; 이라는 에셋인데, Unity 에서 생성가능하다. 이 에셋은 &lt;em&gt;Shader&lt;/em&gt; 의 종류를 가지고 &lt;em&gt;multi-compiled shader&lt;/em&gt; 의 어떤 쉐이더를 로딩할지 결정하는 에셋이다. 이 에셋을 생성하여 &lt;em&gt;Shader&lt;/em&gt; 들을 세팅한 뒤, &lt;strong&gt;&lt;em&gt;Shader Preloading&lt;/em&gt;&lt;/strong&gt; 아래에 있는 리스트에 넣어주면 응용 프로그램이 시작될 때, Unity 시스템에서 알아서 로딩한다. 미리 로딩하는게 아닌 사용자가 원할때 로딩하는 것도 가능한 것처럼 보인다. &lt;strong&gt;ShaderVariantsCollection&lt;/strong&gt; 를 사용하면 사용자가 원할 떄 단순히 메소드 호출을 통해 로딩이 가능하다. &lt;em&gt;ShaderVariantsCollection.WarmUp&lt;/em&gt; 이라는 메소드를 호출하면 전부 로딩을 하기 시작하는데 이때 로딩하는 개념이 조금 재미있다. Unity 시스템에서는 필요할 때 &lt;em&gt;Shader&lt;/em&gt; 를 로딩한다. 이는 위에서도 언급했었는데 &lt;em&gt;ShaderVariantsCollection.WarmUp&lt;/em&gt; 는 단순히 이 지연 로딩 시스템을 이용한 것 뿐이다. &lt;em&gt;ShaderVariantsCollection.WarmUp&lt;/em&gt; 을 호출하면 단순한 폴리곤 한개를 렌더링하는데, &lt;strong&gt;ShaderVariantsCollection&lt;/strong&gt; 이 가지고 있는 모든 쉐이더로 한번씩 렌더링을 한다. 이렇게 되면 지연 로딩 시스템이 쉐이더를 로딩하게 되는 것이다.&lt;/p&gt;
-
-&lt;h1&gt;참조 자료&lt;/h1&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/Manual/SL-MultipleProgramVariants.html&quot;&gt;Unity Manual : Making multiple shader program variants&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/kr/current/ScriptReference/ShaderVariantCollection.html&quot;&gt;Unity Reference : ShaderVariantsCollection&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/Manual/OptimizingShaderLoadTime.html&quot;&gt;Unity Manual : Optimizing Shader Load Time&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="unity" />
-      
-        <category term="shader" />
-      
-        <category term="rendering" />
-      
-        <category term="builtin" />
-      
-
-      
-
-      
-        <summary type="html">Unity 는 렌더링을 위한 하부 시스템을 꽤나 많이 만들어 놓았다. 그 중에서도 꽤나 오래된 시스템은 multi-compiled shader 시스템일 것이다. 직역하면 여러개로 컴파일된 Shader 란 말이다. 또한 기능또한 별 차이 없다. 하지만 이를 위해 시스템에서 어떤 일을 하는지에 대해서는 알아야 한다. 우선 multi-compiled shader 에 대해서 알아야 겠다. Unity 시스템에서는 단순히 물체를 렌더링하는데 한가지 방법만 쓰이지 않는다. UnityEngine.MeshRenderer 같은 지원하는 컴포넌트를 통해 렌더링을 하는게 가장 알려진 방법이다. 또한 컴포넌트가 아닌 코드 레벨에서도 렌더링이 가능하다. Graphics.DrawProcedural 와 비슷한 메서드를 통해서도 렌더링이 가능하다. 또한 Unity 에서 지원하는 시스템을 사용하기 위해 분기 키워드가 아닌 전처리 옵션을 두어 사용하기도 한다.(Unity 에서는 기능 지원을 위해 전처리기 기능을 많이 쓴다.) 여기서 알아야 할 것은 Unity 시스템에서는 굉장히 많은 방법으로 다양한 렌더링을 지원하는데, 다양한 렌더링을 사용하기 위해서는 Shader 또한 각각 다양한 렌더링 방법에 맞추어 컴파일 될 필요가 있다. 그럴때 쓰는 것이 multi-compiled shader 기능이다. 사용자가 직접 multi-compiled shader 기능을 사용하는 것은 꽤나 단순하다. #pragma multi_compile FANCY_STUFF_OFF FANCY_STUFF_ON 쉐이더 코드에서 위와 같이 사용하게 되면 FANCY_STUFF_OFF, FANCY_STUFF_ON 두가지 옵션을 통해 컴파일 하는 것을 나눌 수 있게 된다. 이 키워드는 쉐이더 바깥에서 제어가 가능하다. 모든 쉐이더의 키워드를 제어하려면 Shader.EnableKeyword, Shader.DisableKeyword 를 사용하면 되고, Material 단위로 사용하려면 Material.EnableKeyword, Material.DisableKeyword 을 사용하면 된다. 또한 Unity 시스템 내에서 이 multi-compiled shader 를 사용하니, 기존에 있는 것들은 사용하면 영 좋지 않은 꼴이 일어날듯 하다. 이런 복잡함을 만드는 시스템에는 언제나 문제가 있다. Unity 에서의 기본적인 Shader 컴파일은 따로 설정을 해주지 않는 이상 Runtime 에 일어난다. 정확히 Unity 시스템에서 해당 쉐이더를 사용해 렌더링을 할때 컴파일을 하게 된다. 그리고 컴파일할 Shader 의 양이 많으면 많을수록 이는 영 좋지않은 꼴을 보게된다. multi-compiled shader 는 더욱더 시간을 많이 잡아먹게 한다. 물론 이를 해결하기 위한 방법은 존재한다. Unity 프로젝트 설정에서 Graphics Setting 에서 가능하다. 잘 찾아보면 Shader Preloading 이라는 항목이 있다. 말그대로 Runtime 에 로딩하는게 아닌 시작하자마자 로딩하는 기능이다. 다만 이 기능을 사용하려면 Shader 를 그대로 넣는게 아닌 다른 것을 만들어야 한다. 이는 ShaderVariantsCollection 이라는 에셋인데, Unity 에서 생성가능하다. 이 에셋은 Shader 의 종류를 가지고 multi-compiled shader 의 어떤 쉐이더를 로딩할지 결정하는 에셋이다. 이 에셋을 생성하여 Shader 들을 세팅한 뒤, Shader Preloading 아래에 있는 리스트에 넣어주면 응용 프로그램이 시작될 때, Unity 시스템에서 알아서 로딩한다. 미리 로딩하는게 아닌 사용자가 원할때 로딩하는 것도 가능한 것처럼 보인다. ShaderVariantsCollection 를 사용하면 사용자가 원할 떄 단순히 메소드 호출을 통해 로딩이 가능하다. ShaderVariantsCollection.WarmUp 이라는 메소드를 호출하면 전부 로딩을 하기 시작하는데 이때 로딩하는 개념이 조금 재미있다. Unity 시스템에서는 필요할 때 Shader 를 로딩한다. 이는 위에서도 언급했었는데 ShaderVariantsCollection.WarmUp 는 단순히 이 지연 로딩 시스템을 이용한 것 뿐이다. ShaderVariantsCollection.WarmUp 을 호출하면 단순한 폴리곤 한개를 렌더링하는데, ShaderVariantsCollection 이 가지고 있는 모든 쉐이더로 한번씩 렌더링을 한다. 이렇게 되면 지연 로딩 시스템이 쉐이더를 로딩하게 되는 것이다. 참조 자료 Unity Manual : Making multiple shader program variants Unity Reference : ShaderVariantsCollection Unity Manual : Optimizing Shader Load Time</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
       <title type="html">Using Rendering To Cubemap</title>
       
       <link href="https://hrmrzizon.github.io/2017/09/29/using-rendering-to-cubemap/" rel="alternate" type="text/html" title="Using Rendering To Cubemap" />
@@ -351,11 +634,7 @@ camera.RenderToCubemap(cubemapRT, 63);
       
         <category term="unity" />
       
-        <category term="shader" />
-      
-        <category term="rendering" />
-      
-        <category term="builtin" />
+        <category term="render" />
       
 
       
@@ -425,11 +704,7 @@ camera.SetReplacementShader(shader, replacementTag);
       
         <category term="unity" />
       
-        <category term="shader" />
-      
-        <category term="rendering" />
-      
-        <category term="builtin" />
+        <category term="render" />
       
 
       
@@ -510,11 +785,11 @@ void Process (uint3 id : SV_DispatchThreadID)
       
         <category term="unity" />
       
-        <category term="rendering" />
-      
         <category term="shader" />
       
-        <category term="builtin" />
+        <category term="gpuinstancing" />
+      
+        <category term="try" />
       
 
       
@@ -950,6 +1225,8 @@ void Process (uint3 id : SV_DispatchThreadID)
       
         <category term="translate" />
       
+        <category term="try" />
+      
 
       
 
@@ -1064,6 +1341,10 @@ v2f vert (uint vertexID : SV_VertexID)
         <category term="unity" />
       
         <category term="shader" />
+      
+        <category term="gpuinstancing" />
+      
+        <category term="try" />
       
 
       
@@ -1296,6 +1577,8 @@ fixed4 frag (v2f i) : SV_Target
       
         <category term="rendering" />
       
+        <category term="try" />
+      
 
       
 
@@ -1420,6 +1703,8 @@ fixed4 frag (v2f i) : SV_Target
       
         <category term="unity" />
       
+        <category term="try" />
+      
 
       
 
@@ -1505,515 +1790,6 @@ fixed4 frag (v2f i) : SV_Target
 
       
         <summary type="html">Unity 에서 렌더링에 관련된 최적화를 할때는 TextureArray 를 사용할 수 밖에 없다. 이는 Unity 에서 DrawCall 을 줄이기 위해 써먹는 Batching 이라는 개념 때문인데 단순하게 말하면 그리는 새로운 매터리얼과 메쉬의 종류가 많으면 많을 수록 DrawCall 을 많이 하게 된다. 하지만 이 DrawCall 의 비용은 싼편이 아니기 때문에 CPU 의 성능을 꽤나 잡아먹게 된다. 그래서 Unity 는 자동으로 Batching 을 해주게 된다. 같은 메터리얼을 쓰면 자동으로 묶어주고, 같은 메쉬를 쓰면 또 자동으로 묶어준다. 결국 Batching 이 DrawCall 의 횟수와 같은 개념이 되는 것이다. 그래서 Batching 의 횟수를 줄이기 위해 매터리얼을 줄이는 방법에 대한 것이 TextureArray 다. 이것보다 일반적으로 알려진 기법은 TexutreAtlas 인데, 이 방법은 상당히 단순하다. 그냥 텍스쳐 한장에 모든 그림을 때려박고 UV 를 수정해주는 작업을 할때 쓰인다. 보통은 UI 이미지에서 스프라이트를 설정할 때 쓰이며, Unity 는 UGUI 기능에 Sprite 들을 합쳐서 TextureAtlas 로 만들어주는 기능이 있다. 하지만 3D 오브젝트의 UV 에서는 말이 조금 달라진다. UV 좌표는 0과 1사이의 값으로 이루어지는데 텍스쳐 여러장과 세팅되어 있던 UV 좌표들을 한장으로 통합해 다시 세팅하려면 굉장히 귀찮아진다. 그리고 합쳐지기전의 텍스쳐의 갯수가 합쳐진 후에 추가된다면 그것또한 굉장히 귀찮아질 것이다. 결국 생산성의 문제가 된다. 그래서 다른 방법을 쓸 수 있는데, 이 방법이 바로 TextureArray 다. TextureArray 의 개념은 단순하게 텍스쳐를 배열로 묶은 것으로, 인덱스만 있으면 그냥 하나하나 참조하여 사용가능하다. 즉 UV 의 2차원 좌표와 함께 인덱스 한개만 더 있으면 된다. 그리고 TextureArray 의 장점은 TextureAtlas 마냥 합쳐주고 UV 를 수정할 일이 없고, 메쉬별로 인덱스를 따로 설정해주는 작업만 해주면 상당히 편하게 할 수 있다. 또한 텍스쳐 갯수가 몇개가 되던간에 메터리얼을 한개로 유지할 수 있기 때문에 굉장히 편하다. 근데 Unity 에서 사용하려면 몇가지 단점이 있다. Asset 생성을 지원하지 않기 때문에 굉장히 불편하고, 보여주는 GUI 또한 Unity 내부에서 지원하지 않는다. 편하게 사용하기 위해선 에디터 코드를 직접 만져야 한다. 물론 직접 생성해주는 것도 상관없지만 생산성 자체만 놓고보면 그다지 좋은 편은 아니다. 또한 Shader 코드들도 직접 바꿔주어야 하기 때문에 이것저것 세팅해줘야 할것이 많다. 즉 사용하기에 비용이 많이 든다. 이제 직접 Unity 에서 적용시켜보자.</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Various Technique For Rendering</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/06/02/various-technique-for-rendering/" rel="alternate" type="text/html" title="Various Technique For Rendering" />
-      <published>2017-06-02T00:00:00+00:00</published>
-      <updated>2017-06-02T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/06/02/various-technique-for-rendering</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/06/02/various-technique-for-rendering/">&lt;p&gt;&lt;a href=&quot;/2017/05/29/simple-shader-programming/&quot;&gt;Simple shader programming&lt;/a&gt; 글 에서 간단하게 CG 를 통해 쉐이더를 작성하는 법에 대해서 알아보았다. 텍스쳐와 간단하게 색을 입히는 코드에 대해서 알아보았다. 하지만 이렇게 직접 쉐이더 코드를 변경하는 단계가 오게되면 이렇게 간단한 코드보다는 되게 복잡한 코드를 쓰는 경우가 많을 것이다. 또한 그 복잡한 코드들의 주요 원인은 보통 라이팅에 때문일것이다. 아무리 GPU 가 발전했다해도 빛에 대한 처리는 아직도 난감하다. 실제 빛의 속도는 &lt;em&gt;299792458m/s&lt;/em&gt; 이다. 대략 초당 3억 미터를 간다는 소리인데, 이를 컴퓨터에서 완벽하게 시뮬레이션을 하려면 답이 안나온다. 양자 컴퓨터가 나온다면 모르겠지만 말이다. 게다가 빛은 광자라는 미세한 입자로 나누어져 있고 이와 같이 상호작용하는 물체또한 입자단위로 빛을 반사하는데 모든 것을 똑같이 표현할 수는 없다.&lt;/p&gt;
-
-&lt;p&gt;그래서 컴퓨터 그래픽스 분야에서는 한정된 자원의 컴퓨터를 사용해 빛을 실제와 같이 표현하기 위해 많은 노력을 해왔다. 물론 십몇년 전까지는 실제와는 거리가 멀었다. 대표적인 예전의 컴퓨터 그래픽을 나타내는 것은 아래와 같은 영상이다.&lt;/p&gt;
-
-&lt;style&gt;.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }&lt;/style&gt;
-&lt;div class=&quot;embed-container&quot;&gt;    &lt;iframe title=&quot;YouTube video player&quot; width=&quot;640&quot; height=&quot;390&quot; src=&quot;//www.youtube.com/embed/oRL5durPleI&quot; frameborder=&quot;0&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;&lt;/div&gt;
-
-&lt;p&gt;Windows 95 시절의 화면 보호기 영상인데, 컴퓨터 그래픽인 것을 알 수 있는 부분은 맨 마지막에 OpenGL 이라고 쓰여져 있는 부분이다. 물론 이는 OpenGL 이 나온지 얼마 안되었을 때이고 95 년을 기준으로 따졌을 떄 20년이 지난 것들이다. 게다가 여기서는 라이팅도 없다. 하지만 20년이 지나고.. 현재로 돌아와서 최근에 와서는 꽤 실제와 비슷한 것들이 많이 나왔다. 아래 영상을 보자.&lt;/p&gt;
-
-&lt;style&gt;.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }&lt;/style&gt;
-&lt;div class=&quot;embed-container&quot;&gt;    &lt;iframe title=&quot;YouTube video player&quot; width=&quot;640&quot; height=&quot;390&quot; src=&quot;//www.youtube.com/embed/9v4XM8y-8fs&quot; frameborder=&quot;0&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;&lt;/div&gt;
-
-&lt;p&gt;최근에 공개된 파크라이5 의 트레일러 영상이다. 자세히 보면 조금은 인위적인게 보이지만 실시간 3D 렌더링으로 이 정도를 나타낸건 지금도 혀를 내두를만한 기술들이 총 집약되어 여태까지 나온 게임들 중에 최고의 실시간 렌더링의 퀄리티를 보여준다. 특히 빛에 대한 묘사들이 더욱더 실제와 비슷하게 느끼게 해준다.&lt;/p&gt;
-
-&lt;p&gt;이 글에서는 위 영상처럼 발전하기 까지의 여러가지 기본적인 렌더링 기법과 라이팅 기법에 대해서 알아볼 것이다. 최신 기술들도 중요하지만 최신 기술들을 이해하기 위해서도 여태까지의 기술들을 알아야 하고, 그 와중에서도 이전에 쓰이던 것을 그대로 쓰는 것도 있기 때문이다.&lt;/p&gt;
-
-&lt;!-- more --&gt;
-
-&lt;p&gt;필자는 여태까지 프로그래밍과 여러 아키텍쳐를 공부할 때 전체적인 개괄을 먼저 공부하고, 자세한 것들을 하나하나 공부하는 하향식 공부방법을 택해왔다. 그도 그럴수 밖에 없는 이유가 있다. Unity 만 예로 들어도 가장 맨 처음에는 로드맵을 보고 공부를 시작한다. 그 로드맵에는 디테일한 내용들은 없고 전부다 겉핡기 수준의 지식들만 노출되어 있다. 로드맵을 전부 보고난 후에 게임을 만들면서 필요한 기능들을 하나하나 들여다보기 시작한다.&lt;/p&gt;
-
-&lt;p&gt;이와 같이 렌더링 기술들을 익히기 위해서는 전체적인 과정을 본 다음에 공부하는 것이 좋다. 아래에 렌더링이 한틱마다 이루어지는 과정을 보여주는 그림이 있다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/vulkan_pipeline.svg&quot; alt=&quot;Vulkan pipeline&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;위 사진은 최근에 나온 Vulkan API 의 렌러링 파이프라인을 그려놓은 사진이다. 근데..  음.. 굉장히 복잡하다. Vulkan 은 DX12 에 대항하기 위해 만들어진 멀티 플랫폼 Graphics API 로써 Graphics API 를 통하여 이전 버젼의 API 들 보다 굉장히 많은 것을 프로그래머가 제어할 수 있게 해주는 API 다. 그러니 복잡할 수 밖에 없다. 하지만 우리는 자세한 것 보다 대략적인 큰 그림을 봐야하기 때문에 다른 간단한 그림을 보자.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/sm40_tess.png&quot; alt=&quot;TesselPlusPipe&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;이전의 Vulkan 파이프라인과는 다르게 간단하게 표현된 그림이다. DirectX10 의 렌더링 파이프라인을 간단하게 보여준다. 연두색은 프로그래머가 제어할 수 있는 것이며(&lt;em&gt;Programmable&lt;/em&gt;) 주황색은 프로그래머가 제어할 수 없는 것들이다. 물론 중간 과정에는 꽤나 복잡한 작업들이 이루어 진다. 하지만 우리가 주목할 것들은 연두색으로 된 &lt;em&gt;Programmable shader&lt;/em&gt; 들이다.&lt;/p&gt;
-
-&lt;p&gt;대부분의 라이팅 처리는 정점 쉐이더(vertex shader, 이하 &lt;em&gt;VS&lt;/em&gt;), 기하 쉐이더(geometry shader, 이하 &lt;em&gt;GS&lt;/em&gt;), 픽셀 쉐이더(pixel shader, 이하 &lt;em&gt;FS&lt;/em&gt;)를 사용해서 처리를 한다. 이 세가지의 쉐이더 조합은 나온지 몇년이 지났음에도 불구하고 엄청많이 사용되는 쉐이더 모델이다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;VS&lt;/em&gt; 는  &lt;em&gt;Programmable shader&lt;/em&gt; 중에 가장 맨 처음에 시작되는 쉐이더로 반드시 정점 데이터 한개를 인자로 받아야 한다. 그리고 보통 &lt;em&gt;VS&lt;/em&gt; 는 위치 변환 연산을 하고 정점 별 라이팅에 대한 처리를 한다. 그 이외에는 보통 &lt;em&gt;GS&lt;/em&gt; 나 &lt;em&gt;FS&lt;/em&gt; 에 넘겨줘야할 데이터들이 그대로 넘어간다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;GS&lt;/em&gt; 는 &lt;em&gt;Programmable shader&lt;/em&gt; 에서 필수로 있어야할 쉐이더는 아니다. 하지만 &lt;em&gt;VS&lt;/em&gt; 와 &lt;em&gt;FS&lt;/em&gt; 사이의 거쳐가는 쉐이더로써 꽤나 많은 활용성을 가지고 있다. 테셀레이션이라는 기능을 간단하게 사용할 수는 있지만 사실 &lt;em&gt;GS&lt;/em&gt; 는 다른 용도로 많이 사용된다고 한다. 렌더링에 필요한 데이터가 아니더라도 도중에 필요한 데이터들을 연산하는데 사용하거나, 중간에 렌더링 되는 결과를 변환하는 용도로 사용된다고 한다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;FS&lt;/em&gt; 는 이미 픽셀별로 조각을 내준 데이터를 따라 픽셀의 색을 변환하는 쉐이더다. 이 과정은 내준 조각별로 실행이 되며 텍스쳐 샘플링 등 색자체를 가져와서 설정하는 작업을 해준다. 보통은 이 과정에서 한 대상에 대한 렌더링은 끝난다.&lt;/p&gt;
-
-&lt;p&gt;이제 라이팅에 대하여 알아보자.&lt;/p&gt;
-
-&lt;p&gt;맨 처음에 등장한 라이팅 기법은 정점 쉐이더에서 모든 정점 마다 빛이 반사되는 값을 계산하여 처리해주는 &lt;em&gt;forward lighting&lt;/em&gt; 이라는 기법이다. 이 기법은 단순하고 오래된 전통적인 기법이며 VR 이나 모바일 같은 GPU 의 퍼포먼스가 조금 딸리는 분야에서 많이 사용된다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/forward-v2.png&quot; alt=&quot;forward lighting&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;forward lighting&lt;/em&gt; 방식은 근데 중요한 문제가 하나 있었다. 모든 오브젝트의 정점마다 모든 라이팅을 전부 계산하기 때문에 오브젝트의 수와 라이팅의 갯수가 많으면 많을 수록 렌더링되는 속도는 현저하게 느려졌다. 그래서 최대한 그리는 정점의 갯수를 줄이기 위해 여러 기법들이 나왔다. 아주 기본적인 기법은 &lt;em&gt;Frustom Culling&lt;/em&gt; 이라는 기법이다. 카메라에서 보이는 것들만 그린다는 아이디어로 구현되어 있으며 간단한 충돌처리를 이용해서 구현할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/frustum_culling.png&quot; alt=&quot;Frustom Culling&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;이 방식은 Perspective 형식으로 화면을 렌더링하는 카메라로 그릴 오브젝트와 안그릴 오브젝트를 구분하는 그림이다. 주황색은 그릴 오브젝트들 이며 회색은 안 그릴 오브젝트 들이다. 여기서 더 발전해서 가려져서 안보이는 오브젝트들을 그리지 않는 &lt;em&gt;Occlusion Culling&lt;/em&gt; 이라는 기법이 나왔다.&lt;/p&gt;
-
-&lt;p&gt;카메라에서 가려지는 오브젝트를 아예 그리지 않는 것이다. 이 기법은 Unity 에서도 지원한다. &lt;a href=&quot;https://docs.unity3d.com/kr/current/Manual/OcclusionCulling.html&quot;&gt;Unity : Occlusion Culling&lt;/a&gt; 여기를 보면 사용 방법들을 참조할 수 있다. Unity 의 &lt;em&gt;Occlusion Culling&lt;/em&gt; 은 에디터상에서 정육면체들을 미리 설정해서 보이는 정육면체 단위로 메쉬 렌더러를 끄거나 킨다. 조금 이상하다고 느껴지는 점은 왜 맨처음에 귀찮게 설정을 해주어야 하며, 정육면체 단위로 공간을 잘라서 판단하는게 이상하다고 느껴진다. 이렇게 하면 연산량이나 여러모로 귀찮을 것 같기 때문이다. 하지만 이는 절대적인 연산량들을 줄이고 간편하게 &lt;em&gt;Occlusion Culling&lt;/em&gt; 을 구현하기 위한 일종의 꼼수다. 미리 영역을 계산하는 것은 실시간으로 할 필요가 없이 미리 공간을 정해놓고 공간에 해당되는 메쉬 렌더러를 설정하는 과정이고, 정육면체 나눈것은 가려지는 것들을 판단하게 실시간으로 빠르게 계산하기 위한 것이다.&lt;/p&gt;
-
-&lt;p&gt;결국 절대적인 라이팅 연산량을 줄이고자 여러 기법들이 사용되었다. 하지만 근본적인 &lt;em&gt;forward lighting&lt;/em&gt; 의 문제인 라이트의 종류와 갯수는 여러 문제를 일으켰고 다른 기법(다시말해 꼼수) 들을 사용해 어떻게든 구현하였다.&lt;/p&gt;
-
-&lt;p&gt;하이엔드 게임들은 꽤 많은 실시간 라이팅을 사용해 오브젝트의 디테일을 살렸다. 하지만 기존의 라이팅 방식은 논리적 라이트의 갯수에 따라 엄청난 부하를 일으켰고 문제를 해결하기 위해 사람들은 다른 라이팅 방식을 고안해냈다. 이름은 &lt;em&gt;deferred lighting&lt;/em&gt; 이다. 사실 이 &lt;em&gt;deferred lighting&lt;/em&gt; 이 고안되기 전에는 &lt;em&gt;forward lighting&lt;/em&gt; 이라는 단어도 없었다. 단지 개념이 한개가 더 추가되어 두 라이팅 개념을 다르게 통칭하기 위해 서로 이름이 붙혀진 것이다. 그래서 &lt;em&gt;deferred lighting&lt;/em&gt; 은 어떤 식으로 &lt;em&gt;forward lighting&lt;/em&gt; 의 라이트의 갯수의 문제를 해결했는지 알아보자.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;forward lighting&lt;/em&gt; 에서는 픽셀 쉐이더에서 라이팅의 처리를 했었다. 그래서 &lt;em&gt;deferred lighting&lt;/em&gt; 은 정점 쉐이더는 기본적인 위치 변환만 한 후 새롭게 추가된 지오메트리 쉐이더에서 라이팅을 계산하기 위한 데이터들만 전부 넘겨주어 계산을 하지 않고 픽셀 쉐이더 이후에 넘어온 라이팅에 대한 데이터 전부를 뒤로 쭈~욱 넘겨서 마지막에 픽셀별로 처리해서 라이팅의 연산 비용을 줄인셈이다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/deferred-v2.png&quot; alt=&quot;deferred lighting&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;forward lighting&lt;/em&gt; 에 비해 많은 수의 라이팅을 쓸 수 있고 이미 그려놓은 데이터들을 가져다가 후처리를 할 수도 있고, HDR 등 여러 기법들을 사용할 수 있다. 그렇지만 &lt;em&gt;deferred lighting&lt;/em&gt; 은 만능이 아니다. MRT 를 사용하므로 기본적으로 메모리 공간을 많이 잡아먹고, 많이 쓰일 당시에는 MSAA 를 사용하기에 상당히 애매했었다. 그리고 조금이라도 투명한 오브젝트를 처리하기에 굉장히 애매했다. 또한 전체적으로 &lt;em&gt;forward lighting&lt;/em&gt; 에 비해 넘어가는 인자의 크기가 크므로 전체적인 부담이 심했다.&lt;/p&gt;
-
-&lt;p&gt;하드웨어도 꽤나 빠르게 진화하는 PC 플랫폼에서는 &lt;em&gt;deferred lighting&lt;/em&gt; 구조가 더 성능이 좋은 경우가 훨씬 많았지만 모바일 같은 GPU 의 성능도 별로 안좋고 화면만 엄청 큰(=필레이트가 많이 필요함) 환경에서는 부하가 걸릴 수 밖에 없다. 모바일에서는 런타임에서 최대한 기능을 조금만 쓰기 위해 &lt;em&gt;forward lighting&lt;/em&gt; 을 사용하고 빛에 대한 처리는 여러 꼼수를 사용했다.&lt;/p&gt;
-
-&lt;p&gt;아주 가장 기초적인 꼼수인 &lt;em&gt;light map&lt;/em&gt; 이라는 기법을 사용했는데 원리는 상당히 간단하다. 버텍스별 라이트의 정보를 전부 텍스쳐로 저장해두어 uv 좌표를 사용해 텍스쳐 값을 합쳐주어 사용하는 것이다. 이는 노말맵과 비슷한 원리이다. 그래서 라이팅 기능을 모두 해제하고 필요한 빛 데이터들을 라이트맵을 이용하여 사용했다.&lt;/p&gt;
-
-&lt;p&gt;이렇게 기본적인 렌더링 파이프라인들과 라이팅 방식에 대하여 알아보았다. 이 글의 내용이 전부는 아니지만 전체적인 개념을 잡는데 도움이 되었길 바란다.&lt;/p&gt;
-
-&lt;h2&gt;참조&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Unified_shader_model&quot;&gt;Unified shader model&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://gamedevelopment.tutsplus.com/articles/forward-rendering-vs-deferred-rendering--gamedev-12342&quot;&gt;GameDev : forward rendering vs deferred rendering&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Deferred_shading&quot;&gt;Wikipedia : Deferred shading&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://learnopengl.com/#!Advanced-Lighting/Deferred-Shading&quot;&gt;LearnOGL : Deferred shading&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://celdee.tistory.com/525&quot;&gt;Ambient Light, Diffuse Light, Specular Reflectio&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://m.blog.naver.com/blue9954/220404249147&quot;&gt;PBR For Artist&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://mmikkelsen3d.blogspot.kr/2016/05/fine-pruned-tiled-lighting.html&quot;&gt;Mikkelsen’s Blog : FPTL&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.slideshare.net/dgtman/hierachical-z-map-occlusion-culling&quot;&gt;Slideshare : hi-z occlusion culling&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="shader" />
-      
-        <category term="rendering" />
-      
-
-      
-
-      
-        <summary type="html">Simple shader programming 글 에서 간단하게 CG 를 통해 쉐이더를 작성하는 법에 대해서 알아보았다. 텍스쳐와 간단하게 색을 입히는 코드에 대해서 알아보았다. 하지만 이렇게 직접 쉐이더 코드를 변경하는 단계가 오게되면 이렇게 간단한 코드보다는 되게 복잡한 코드를 쓰는 경우가 많을 것이다. 또한 그 복잡한 코드들의 주요 원인은 보통 라이팅에 때문일것이다. 아무리 GPU 가 발전했다해도 빛에 대한 처리는 아직도 난감하다. 실제 빛의 속도는 299792458m/s 이다. 대략 초당 3억 미터를 간다는 소리인데, 이를 컴퓨터에서 완벽하게 시뮬레이션을 하려면 답이 안나온다. 양자 컴퓨터가 나온다면 모르겠지만 말이다. 게다가 빛은 광자라는 미세한 입자로 나누어져 있고 이와 같이 상호작용하는 물체또한 입자단위로 빛을 반사하는데 모든 것을 똑같이 표현할 수는 없다. 그래서 컴퓨터 그래픽스 분야에서는 한정된 자원의 컴퓨터를 사용해 빛을 실제와 같이 표현하기 위해 많은 노력을 해왔다. 물론 십몇년 전까지는 실제와는 거리가 멀었다. 대표적인 예전의 컴퓨터 그래픽을 나타내는 것은 아래와 같은 영상이다. Windows 95 시절의 화면 보호기 영상인데, 컴퓨터 그래픽인 것을 알 수 있는 부분은 맨 마지막에 OpenGL 이라고 쓰여져 있는 부분이다. 물론 이는 OpenGL 이 나온지 얼마 안되었을 때이고 95 년을 기준으로 따졌을 떄 20년이 지난 것들이다. 게다가 여기서는 라이팅도 없다. 하지만 20년이 지나고.. 현재로 돌아와서 최근에 와서는 꽤 실제와 비슷한 것들이 많이 나왔다. 아래 영상을 보자. 최근에 공개된 파크라이5 의 트레일러 영상이다. 자세히 보면 조금은 인위적인게 보이지만 실시간 3D 렌더링으로 이 정도를 나타낸건 지금도 혀를 내두를만한 기술들이 총 집약되어 여태까지 나온 게임들 중에 최고의 실시간 렌더링의 퀄리티를 보여준다. 특히 빛에 대한 묘사들이 더욱더 실제와 비슷하게 느끼게 해준다. 이 글에서는 위 영상처럼 발전하기 까지의 여러가지 기본적인 렌더링 기법과 라이팅 기법에 대해서 알아볼 것이다. 최신 기술들도 중요하지만 최신 기술들을 이해하기 위해서도 여태까지의 기술들을 알아야 하고, 그 와중에서도 이전에 쓰이던 것을 그대로 쓰는 것도 있기 때문이다.</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Simple Shader Programming</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/05/29/simple-shader-programming/" rel="alternate" type="text/html" title="Simple Shader Programming" />
-      <published>2017-05-29T00:00:00+00:00</published>
-      <updated>2017-05-29T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/05/29/simple-shader-programming</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/05/29/simple-shader-programming/">&lt;p&gt;이전에 쓴 글(&lt;a href=&quot;/2017/05/15/handling-uv-and-material-in-unity/&quot;&gt;handling uvs and material&lt;/a&gt;)에서 쉐이더에 대한 언급을 한적이 있다. 간단하게 전체적인 의미와 역할에 대해서 설명했었다. 이 글에서는 조금 더 자세하게 알아보고 CG 를 이용해서 직접 다루는 방법에 대해서 알아보겠다.&lt;/p&gt;
-
-&lt;p&gt;3D 오브젝트는 GPU 에서 특정한 연산을 하여 화면상에 실제로 그려진다. 예전에는 그리는 방식이 정해져 있어 그 방식에 맞추어 데이터를 넣어주면 GPU 와 Graphics API 가 알아서 3D 오브젝트를 그렸었다. 하지만 기술은 점점 발전하여 프로그래머들이 직접 많은것을 제어할 수 있게 되었고 현재는 꽤 많은 것들이 가능하게 되었다. 그 발전속에서 나타난 것이 쉐이더다. 쉐이더는 3D 오브젝트를 그리는 방식을 적어놓은 코드라고 할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;3D 오브젝트를 그리는 쉐이더 코드는 두가지로 나뉘는데, 하나는 vertex 를 처리하는 과정 또 하나는 pixel 자체를 처리하는 코드로 나뉜다. 이 두가지 과정을 잘 처리하면 게임에서 원하는 연출과 성능 두가지 토끼를 잡을 수 있다. 물론 잘하기 힘들다. 그래서 두 방법에서 프로그래머가 직접 코드를 짜서 넣으면서 게임의 그래픽을 원하는대로 커스터마이징이 가능하게 되었다. 이로써 꽤 많은 것을 실현 가능하게 되었었다. 하지만 이게 다가 아니였다.&lt;/p&gt;
-
-&lt;p&gt;쉐이더를 사용한 AAA급 3D 게임들과 함께 GPU 도 격렬하게 발전했다. 발전한 만큼 GPU 의 퍼포먼스는 점점 괴물이 되어가고 그 과정에서 vertex shader 와 pixel shader 를 단순하게 그리는 것에만 사용하는 것이 아니라 다른 계산이 필요한 곳에 써먹기 시작했고 편법을 사용한 많은 기술이 나왔었다. (&lt;a href=&quot;http://www.gamedevforever.com/61&quot;&gt;vtf&lt;/a&gt;) 그렇게 프로그래머의 니즈를 파악한 GPU 제조사는 다른 기술을 개발한다. 이름하여 GPGPU 라는 이름의 기술인데 풀어 쓰면 &lt;em&gt;“general purpose computing on graphics processing units”&lt;/em&gt; 이다. &lt;em&gt;GPU 상의 범용 계산&lt;/em&gt; 이라는 뜻이다. 즉 위에서 언급한 병렬 계산이 가능한 것들을 편법을 쓰지말고 직접 이 기술을 사용해서 사용하라는 것이다. 이 GPGPU 기술이 나오면서 GPU 의 하드웨어적인 퍼포먼스에 따라 엄청 많은 것들을 가능하게 되었다. GPGPU 를 통해 불편했던 편법을 사용하던 기법들이 변형되어 쏟아져 나왔으며 새로운 기술 또한 엄청나게 쏟아져 나왔다. 그리고 그 기술들은 일반적으로 알려진 3D 그래픽이 차용된 AAA 급 게임들에 사용되어 일반 사용자들은 엄청난 그래픽을 자랑하는 게임들을 경험할 수 있게 되었다. 또한 최근에 &lt;em&gt;AI&lt;/em&gt; 기술이 대두되면서 GPGPU 가 더욱더 각광받게 되었다.&lt;/p&gt;
-
-&lt;p&gt;이렇게 우리에게 다가오는 것은 꽤 많은 게임들의 발전인데, 다만 우리가 이 게임들의 기술에 접근하려면 꽤 많은 지식과 발상의 전환이 필요하다. 쉐이더만 하더라도 쉐이더 코드는 컴파일되어 GPU 에서 실행된다. CPU 에서 실행되는 일반적인 코드와 조금 다른 점은 CPU 에서 처리되는 것은 멀티스레딩을 하지 않는 이상 상당히 선형적인 코드를 짜게 되고 GPU 에서 돌아가는 쉐이더 코드를 짤 때는 병렬(parallel) 환경에서 돌아가게 짜야한다. 쉐이더 코드를 짤 때 첫번째로 겪게되는 어려움은 이것이다. 쉐이더까지 건드리게되면 경험이 어느정도 있는 상태일텐데, 개념을 조금 깨부수고 아예 병렬적으로 코드를 짜야하니 적응하는 것에 시간이 꽤나 소모된다.&lt;/p&gt;
-
-&lt;p&gt;Unity 에서 Shader 를 직접 만들어 사용하는 것에 대하여 알아보자.&lt;/p&gt;
-
-&lt;!-- more --&gt;
-
-&lt;p&gt;Unity 는 여러 메인 스트림의 쉐이더 언어를 통해 쉐이더 코딩이 가능하다. 각각 언어마다 큰 차이는 없다. DirectX 와 OpenGL 에서 각각 지원하는 HLSL, GLSL 은 C 기반의 언어이고, Unity 에서 가장 많이 쓰이는 CG 는 NVidia 에서 MS 와 협력하여 만들어졌기 때문에 HLSL 과 비슷할 수 밖에 없다.(&lt;a href=&quot;https://web.archive.org/web/20120824051248/http://www.fusionindustries.com/default.asp?page=cg-hlsl-faq&quot;&gt;Cg &amp;amp; HLSL FAQ&lt;/a&gt;) 또한 쓰이는 문법도 많은 편은 아니라 한가지를 익혀두면 나머지를 사용하는데 크게 불편함은 없을 것이다. 물론 Unity 에서 쓰이는 쉐이더는 ShaderLab 을 기반으로 코딩해야 하기 때문에 네이티브 CG, HLSL, GLSL 과 전체적인 개괄은 다르다. 더 궁금한 사람은 Unity 본사 엔지니어 Aras 가 답변한 &lt;a href=&quot;https://forum.unity3d.com/threads/hlsl-cg-shaderlab.4300/&quot;&gt;질문 링크&lt;/a&gt; 를 보면 된다.&lt;/p&gt;
-
-&lt;p&gt;Unity 의 기본적인 쉐이더 코딩은 ShaderLab 이라는 언어를 사용한다. 아래 ShaderLab 으로 되어있는 예제를 살펴보자.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Shader &quot;Custom/TextureColor&quot; {
-	Properties {
-		_Color (&quot;Color&quot;, Color) = (1,1,1,1)
-		_MainTex (&quot;Texture&quot;, 2D) = &quot;white&quot; {}
-	}
-	SubShader {
-    Tags { &quot;Queue&quot;=&quot;Geometry&quot; &quot;RenderType&quot;=&quot;Opaque&quot; }
-
-		Pass {
-      Lighting Off
-
-			constantColor[_Color]
-			SetTexture[_MainTex] { combine texture * constant }
-		}
-	}
-
-  FallBack &quot;Diffuse&quot;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;위 예제는 색과 텍스쳐를 인자로 받아 텍스쳐에 색을 입혀서 출력해주는 간단한 예제다. 몇 줄 안되는 코드로 텍스쳐와 색을 입혔다. 언어 자체는 단순하고 간결하다. 다만 우리가 알아야하는 몇가지 문법이 있다. CG 나 HLSL 을 사용해도 결국 인라인, 삽입해서 사용하고 기본은 ShdaderLab 이기 때문에 전체를 감싸는 문법은 반드시 알아야 한다.&lt;/p&gt;
-
-&lt;p&gt;가장 첫 줄에 Shader 이름을 적어주면 Unity 에서 매터리얼의 쉐이더를 선택하는 부분에 적어준 이름이 나온다. 그리고 밑부분을 보면 Properties 라는 항목들이 있다. 이 부분은 실제로 매터리얼에 저장하는 정보들을 정의해주는 부분으로 지정된 자료형들만 세팅이 가능하다. 위 코드에는 색과 텍스쳐를 넣어줄 수 있게 해놓았다. 그 다음부터는 실제로 렌더링을 하는 부분에 대한 코드들이다. 다만 조금의 구조가 있어 기본적인 사항은 숙지해야 한다. 기본만 알면 쉽게 코딩이 가능하다.&lt;/p&gt;
-
-&lt;p&gt;SubShader 는 Shader 안에 여러개가 존재할 수 있는데 이는 꽤나 타당한 이유가 있다. 렌더링은 결국 빛과 여러 색들을 조합해서 화면에 뿌린다. 그리고 GPU 실제로 색을 그려준다. 그런데 낮은 버젼의 GPU 들은 꽤나 지원하지 않는 것들이 많다. GPU 별로 지원하는 Graphics API 버젼이 다른데 최신 기술을 쓰면 낮은 버젼의 Graphics API 를 지원하는 GPU 들은 해당 쉐이더 코드를 실행하지 못한다. 그래서 SubShader 의 개념을 두어 GPU 가 기능을 지원하지 못할 시 코드 상에서 아래 있는 걸로 한계단씩 내려가게 된다. 문제는 모든 SubShader 를 쓰지 못할때다. 그때는 Fallback 키워드에 적혀있는 쉐이더를 사용하여 그리게 한다. 위 예제 코드에서는 Diffuse 쉐이더를 사용하게 했다. 또한 Tag 를 설정해서 SubShader 를 Material 에서 설정할 수도 있다. Standard 쉐이더가 Tag 로 선택하는 기능을 지원한다.&lt;/p&gt;
-
-&lt;p&gt;SubShader 는 전체적인 그리는 방법을 포함하는 개념이고 그 다음 하부로 내려가면 Pass 라는 개념이 있다. 이는 진~~~짜로 렌더링을 하는 구문으로써 이 부분에 그리는 방법을 서술한다. CG 나 HLSL 을 넣어줄 수도 있다. 자세한 문법은 &lt;a href=&quot;http://chulin28ho.tistory.com/159&quot;&gt;링크&lt;/a&gt;를 참조하라.&lt;/p&gt;
-
-&lt;p&gt;특별하게 최적화를 할것이 아니라면 ShdaderLab 을 통해서 코딩을 해도 문제가 없다. 다만 좋은 퀄리티의 게임들은 대부분 쉐이더와 여러가지를 최적화를 시켜 주어야 하기 때문에 ShaderLab 만으로는 무리가 있다.&lt;/p&gt;
-
-&lt;p&gt;결국 모든 것을 제어하려면 CG 나 HLSL 을 사용해야한다. 그래서 우리는 CG 를 통해서 Unity 에서 쉐이더 코딩을 할 것이다. CG 는 두가지 종류로 쉐이더 코딩을 지원한다. 하나는 표면 쉐이더(surface shader) 를 통한 코딩이고, 하나는 정점 쉐이더(vertex shader) 와 픽셀 쉐이더(pixel shader) 의 조합으로 사용된다.&lt;/p&gt;
-
-&lt;p&gt;표면 쉐이더는 실제로는 없는 개념으로 쉐이더를 컴파일하면서 정점/픽셀 쉐이더로 변환되는 쉐이더 기능이다. 보통은 간단하고 빠르게 정점 라이팅을 코딩할 때 쓰인다. 기존에 존재하는 여러 라이팅 모델들을 지원하며 직접 정점 라이팅을 할 수도 있다. 다만 픽셀/프래그먼트 쉐이딩은 안된다. 그래서 상식적으로 생각하면 디퍼드 렌더링에서는 안되겠지만 디퍼드 렌더링에서도 가능하게 만들어 놓았다. 아래 표면 쉐이더의 예제를 보자. Unity 5.5.2f 버젼에서 기본으로 생성되는 쉐이더다.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Shader &quot;Custom/NewSurfaceShader&quot; {
-	Properties {
-		_Color (&quot;Color&quot;, Color) = (1,1,1,1)
-		_MainTex (&quot;Albedo (RGB)&quot;, 2D) = &quot;white&quot; {}
-		_Glossiness (&quot;Smoothness&quot;, Range(0,1)) = 0.5
-		_Metallic (&quot;Metallic&quot;, Range(0,1)) = 0.0
-	}
-	SubShader {
-		Tags { &quot;RenderType&quot;=&quot;Opaque&quot; }
-
-		CGPROGRAM
-		#pragma surface surf Standard fullforwardshadows
-    sampler2D _MainTex;
-
-		struct Input {
-			float2 uv_MainTex;
-		};
-
-		half _Glossiness;
-		half _Metallic;
-		fixed4 _Color;
-
-		void surf (Input IN, inout SurfaceOutputStandard o) {
-			// Albedo comes from a texture tinted by color
-			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-			o.Albedo = c.rgb;
-			// Metallic and smoothness come from slider variables
-			o.Metallic = _Metallic;
-			o.Smoothness = _Glossiness;
-			o.Alpha = c.a;
-		}
-		ENDCG
-	}
-	FallBack &quot;Diffuse&quot;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;ShdaderLab 에 비하면 코드가 상당히 길다. 새롭게 변수를 세팅해 주어야 하기도 하고 몇가지 세팅을 해주어야 하기 때문이기도 하다. 이 코드에서는 라이팅을 Unity Standard 의 PBR 라이팅 모델을 사용하고 있다. 몇가지 살펴보면, 처음과 마지막을 CGPROGRAM 과 ENDCG 로 감싸준다. 그리고 바로 아래에 C 계열에서 많이 쓰이는 &lt;em&gt;pragma&lt;/em&gt; 전처리 키워드를 사용하여 뭔가 정의하고 있는데 바로 표면 쉐이더 함수의 정의를 써주는 곳이다.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#pragma surface surf Standard fullforwardshadows
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;surface 는 표면 쉐이더 함수를 정의한다는 것을, surf 는 코드에 정의되어 있는 함수의 이름을, Standard 는 라이팅 모델을 뜻한다. Unity Standard 쉐이더의 PBR 을 모델이다. 그리고 fullforwardshadows 는 그림자에 대한 옵션이다. 메터리얼의 인자에 들어가는 텍스쳐 등 설정값을 변수로 정의해준다. 변수 이름을 위에 Properties 에 정의와 똑같이 써주면 알아서 Unity 에서는 이 값을들을 접근하게 해준다. 반드시 똑같이 써주어야 작동한다.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;struct Input {
-	float2 uv_MainTex;
-};
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;사이에 Input 구조체가 있다. 이 구조체에는 단순히 uv_MainTex 라는 변수한개만 있다. 단순하게 이름을 풀이해보면 MainTex 텍스쳐의 uv 좌표를 뜻한다. 이 변수 이름 역시 반드시 맞춰주어야 한다. 앞에는 uv 가 붙어야 하며, 그 다음 존재하는 텍스쳐 이름을 붙여주어야 한다.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;void surf (Input IN, inout SurfaceOutputStandard o) {
-	// Albedo comes from a texture tinted by color
-	fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-	o.Albedo = c.rgb;
-	// Metallic and smoothness come from slider variables
-	o.Metallic = _Metallic;
-	o.Smoothness = _Glossiness;
-	o.Alpha = c.a;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;이제 남은것은 surf 함수만 남아있다. 이는 표면 쉐이더에서 어떻게 정보를 처리하느냐를 적어주는 곳이다. Input 구조체는 위에서 정의해 주었고, &lt;em&gt;SurfaceOutputStandard&lt;/em&gt; 는 Standard 라이팅 모델에서 이미 정의된 구조체이다. 이 구조체의 값을 넣어주는 것으로 쉐이더 연산을 정의한다. 안의 코드를 풀어보자면, 가장 처음에 &lt;em&gt;tex2D&lt;/em&gt; 라는 함수로 &lt;em&gt;_MainTex&lt;/em&gt; 라는 텍스쳐와 &lt;em&gt;IN.uv_MainTex&lt;/em&gt; uv 좌표를 이용해 색을 가져온다. 그리고 &lt;em&gt;_Color&lt;/em&gt; 변수를 가져온 색에 각각에 rgba 별로 곱연산을 해준다. 그렇게 계산된 fixed4 자료형 &lt;em&gt;c&lt;/em&gt; 의 데이터를 스탠다드 라이팅 모델 인자의 Albedo 변수에는 rgb 값을, Alpha 변수에는 a 값을 넘겨준다. 나머지는 입력된 데이터 그대로 넣어준다.&lt;/p&gt;
-
-&lt;p&gt;간단하게 표면 쉐이더 코드에 대해서 살펴보았다. 한가지 짚고 넘어가야 될것은 표면 쉐이더는 Unity 에서 자동으로 원래의 개념으로 컴파일 해주는 일종의  위 예제에서 본 Standard 라이팅 모델 말고도 미리 정의되어 있는 다른 라이팅 모델을 사용할 수도 있고 직접 라이팅 모델을 정의해서 사용할 수도 있다. 이 글에서는 라이팅 모델에 대해서 자세한 것은 다루지 않겠다. 자세한 사항에 대해서는 &lt;a href=&quot;https://docs.unity3d.com/kr/current/Manual/SL-SurfaceShaders.html&quot;&gt;Unity 표면 쉐이더 레퍼런스&lt;/a&gt; 를 참조하라.&lt;/p&gt;
-
-&lt;p&gt;다음으로 살펴볼 쉐이더는 정점/픽셀 쉐이더를 조합한 쉐이더다. CG 를 사용하는 가장 낮은 단계의 쉐이더이며 실질적으로 돌아가는 쉐이더다. 그만큼 해야할 것도 많고 신경써야 할것도 많다. 특히 라이팅을 세팅할 때는 꽤나 코드가 길어지고 복잡해진다. 하지만 그만큼 세세하게 조정이 가능하다. 그래서 보통은 특수효과에 많이 쓰이며 최적화를 위한 쉐이딩을 할때도 쓰인다. 또한 여러 다른 쉐이더를 사용할 때에도 쓰인다. 아래 예제를 살펴보자.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Shader &quot;Custom/ColorTextureCG&quot; {
-	Properties {
-		_Color (&quot;Color&quot;, Color) = (1,1,1,1)
-		_MainTex (&quot;Albedo (RGB)&quot;, 2D) = &quot;white&quot; {}
-	}
-	SubShader {
-		Tags { &quot;RenderType&quot;=&quot;Opaque&quot; }
-
-		Pass {
-			CGPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
-
-			#include &quot;UnityCG.cginc&quot;
-
-			struct appdata
-			{
-				float4 vertex : POSITION;
-				float2 uv : TEXCOORD0;
-			};
-
-			struct v2f
-			{
-				float4 vertex : SV_POSITION;
-        float2 uv : TEXCOORD0;
-			};
-
-			v2f vert (appdata v)
-			{
-				v2f o;
-				o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
-				o.uv = v.uv;
-				return o;
-			}
-
-			fixed4 _Color;
-			sampler2D _MainTex;
-
-			fixed4 frag (v2f i) : SV_Target
-			{
-				fixed4 col = tex2D(_MainTex, i.uv);
-				return col * _Color;
-			}
-			ENDCG
-		}
-	}
-
-	FallBack &quot;Diffuse&quot;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;위 예제는 색과 텍스쳐를 입혀주는 쉐이더로 아주 간단한 코드로 이루어져 있다. 한번 살펴보자. 그리고 CG 에서는 픽셀 쉐이더의 픽셀을 &lt;em&gt;fragment&lt;/em&gt; 라고 칭한다.&lt;/p&gt;
-
-&lt;p&gt;역시나 CGPROGRAM 과 ENDCG 로 감싸져 있으며 가장 처음에는 &lt;em&gt;pragma&lt;/em&gt; 구문이 등장한다. 표면 쉐이더에서는 함수와 라이팅 모델을 설정하는데 쓰였는데, 여기서도 정점/픽셀 쉐이더 함수를 설정해주는데 쓰인다. 정점 쉐이더는 vertex 오른쪽에 함수 이름을 넘겨주고, 픽셀 쉐이더는 fragment 오른쪽에 함수 이름을 넘겨준다. 말 그리고 표면 쉐이더가 내부의 동작 원리를 알기 힘든것과는 다르게 정점/픽셀 쉐이더는 보이는 코드와 같이 똑같이 동작한다. 정점/픽셀 별로 처리하는 과정이 다르며 예제에 써준 코드 그대로 실행된다는 뜻이다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;pragma&lt;/em&gt; 구문 아래에 표면 쉐이더 코드에서는 못보던 것이 있다. 바로 C 프로그래밍을 했을 떄 보던 &lt;em&gt;include&lt;/em&gt; 키워드다. 우리가 보는것과 같이 해당 위치에 &lt;em&gt;UnityCG.cginc&lt;/em&gt; 라는 이름을 가진 파일의 내용을 넣어주는 역할을 하는데, 이 &lt;em&gt;UnityCG.cginc&lt;/em&gt; 라는 파일에는 Unity 에서 제공하는 파일로 Unity 상에서 필요한 데이터들을 접근하고 데이터을 변환해주는 함수들이 들어있다. 정점이 &lt;em&gt;UnityCG.cginc&lt;/em&gt; 파일은 필수적으로 넣어주어야 한다.&lt;/p&gt;
-
-&lt;p&gt;이제 직접 정점 쉐이더와 픽셀 쉐이더를 계산하는 부분들이 남았다. &lt;em&gt;vert&lt;/em&gt; 함수를 보면 &lt;em&gt;appdata&lt;/em&gt; 라는 구조체 변수를 인자로 받아서 &lt;em&gt;v2f&lt;/em&gt; 구조체 데이터를 반환하는 간단한 함수로 보인다. 이 함수의 코드를 보자.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;v2f vert (appdata v)
-{
-	v2f o;
-	o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
-	o.uv = v.uv;
-	return o;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;첫번째 줄은 실제 Unity 의 위치와 &lt;em&gt;Mesh&lt;/em&gt; 에 저장되어 있던 로컬 정점 위치를 계산하여 정점의 실제 위치를 계산하여 넣어주는 줄이다. 실제로는 행렬 변환을 통해 위치값을 변경한다. 이 줄을 빼버리면 (0,0,0) 을 기준으로 모델이 출력될 것이다. 두번째 줄에서는 UV 좌표값을 그대로 넣어준다. 이 UV 좌표는 픽셀 쉐이더에서 사용한다.&lt;/p&gt;
-
-&lt;p&gt;내부적으로 복잡한 처리가 끝나고 다음으로 픽셀 쉐이더 단계로 넘어간다. 등록된 함수가 호출되며 위의 &lt;em&gt;frag&lt;/em&gt; 함수가 호출되는데 여기서 텍스쳐와 UV 좌표로 폴리곤에 색을 입혀준다. 내용을 보자.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fixed4 frag (v2f i) : SV_Target
-{
-	fixed4 col = tex2D(_MainTex, i.uv);
-	return col * _Color;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;em&gt;frag&lt;/em&gt; 함수의 타입이 지정된 첫줄에 마지막에 쓰여있는 &lt;em&gt;SV_TARGET&lt;/em&gt; 은 어떤 곳에 픽셀 쉐이딩의 결과를 저장하는지에 대한 선언이다. Render Target 이라고 한다. &lt;em&gt;SV_TARGET&lt;/em&gt; 을 기본으로 쓰는데 이는 한곳에 모든 데이터를 쓴다는 선언이다. 여러곳에 데이터를 기록하면 Multiple Render Target 이라고 칭하게 되는 기술을 쓰는 것이다. 문법에 더 궁금한 사람은 &lt;a href=&quot;https://docs.unity3d.com/Manual/SL-ShaderSemantics.html&quot;&gt;Semantics&lt;/a&gt; 를 보라. MRT 에 대해 궁금한 사람은 &lt;a href=&quot;https://en.wikipedia.org/wiki/Multiple_Render_Targets&quot;&gt;Wiki: MRT&lt;/a&gt; 를 보라.&lt;/p&gt;
-
-&lt;p&gt;이제 내용을 보면 tex2D 함수에 &lt;em&gt;_MainTex&lt;/em&gt; 텍스쳐와 &lt;em&gt;i.uv&lt;/em&gt; 데이터를 넣어주어 추출된 색을 &lt;em&gt;col&lt;/em&gt; 변수에 저장한다. 이 안에는 RGBA 데이터가 들어있다. 그리고 &lt;em&gt;col&lt;/em&gt; 변수와 &lt;em&gt;_Color&lt;/em&gt; 변수를 &lt;em&gt;col&lt;/em&gt; 변수에 곱하여 실제 출력되는 픽셀 색을 반환한다. 반환된 색은 이제 실제로 보이게 된다.&lt;/p&gt;
-
-&lt;p&gt;자세한 사항은 &lt;a href=&quot;https://docs.unity3d.com/kr/current/Manual/SL-ShaderPrograms.html&quot;&gt;Unity 정점/픽셀 쉐이더 레퍼런스&lt;/a&gt; 를 참조하면 된다.&lt;/p&gt;
-
-&lt;p&gt;여기까지 텍스쳐와 색을 입히는 정점/픽셀 쉐이더에 대해서 알아보았다. 아주 기본적인 것들만 다루었기에 코드는 단순하다. 여기에 여러 효과들과 여러 기법들이 많이 들어가면 들어갈수록 복잡해질 것이다. 게다가 여러 플랫폼을 지원하기 위해 여러개의 SubShader 와 Pass 를 넣게되면 엄~청 긴 코드가 나올 것이다.&lt;/p&gt;
-
-&lt;p&gt;그리고 번외로 Unity 컴포넌트 안에서 픽셀을 직접 만져서 바꿀 수 있는 기능이 있다. &lt;a href=&quot;https://docs.unity3d.com/kr/current/ScriptReference/MonoBehaviour.OnRenderImage.html&quot;&gt;링크&lt;/a&gt;를 참조하라. 이 기능을 통해 Standard Asset 에 꽤 많은 효과들을 지원하는 기능들이 있다.&lt;/p&gt;
-
-&lt;h2&gt;참조&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.khronos.org/opengl/wiki/Fixed_Function_Pipeline&quot;&gt;Khronos : Fixed function pipeline&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/kr/current/Manual/SL-Reference.html&quot;&gt;Unity ref : shader references&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://forum.unity3d.com/threads/hlsl-cg-shaderlab.4300/&quot;&gt;Unity forum : hlsl? cg? shaderlab?&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://forum.unity3d.com/threads/cg-toolkit-legacy.238181/&quot;&gt;Unity forum : CG Toolkit is legacy&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://developer.nvidia.com/cg-toolkit&quot;&gt;NVidia developer : CG Toolkit&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://unity3d.com/kr/learn/tutorials/topics/graphics/gentle-introduction-shaders&quot;&gt;Unity tutorial : Shader tutorial&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://chulin28ho.tistory.com/159&quot;&gt;블로그 : Shaderlab Ref&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://jinhomang.tistory.com/43&quot;&gt;블로그 : 세이더 기초&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://en.wikibooks.org/wiki/Cg_Programming/Unity&quot;&gt;Unity wikibooks : cg programming&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="unity" />
-      
-        <category term="shader" />
-      
-        <category term="rendering" />
-      
-        <category term="cg" />
-      
-        <category term="shaderlab" />
-      
-
-      
-
-      
-        <summary type="html">이전에 쓴 글(handling uvs and material)에서 쉐이더에 대한 언급을 한적이 있다. 간단하게 전체적인 의미와 역할에 대해서 설명했었다. 이 글에서는 조금 더 자세하게 알아보고 CG 를 이용해서 직접 다루는 방법에 대해서 알아보겠다. 3D 오브젝트는 GPU 에서 특정한 연산을 하여 화면상에 실제로 그려진다. 예전에는 그리는 방식이 정해져 있어 그 방식에 맞추어 데이터를 넣어주면 GPU 와 Graphics API 가 알아서 3D 오브젝트를 그렸었다. 하지만 기술은 점점 발전하여 프로그래머들이 직접 많은것을 제어할 수 있게 되었고 현재는 꽤 많은 것들이 가능하게 되었다. 그 발전속에서 나타난 것이 쉐이더다. 쉐이더는 3D 오브젝트를 그리는 방식을 적어놓은 코드라고 할 수 있다. 3D 오브젝트를 그리는 쉐이더 코드는 두가지로 나뉘는데, 하나는 vertex 를 처리하는 과정 또 하나는 pixel 자체를 처리하는 코드로 나뉜다. 이 두가지 과정을 잘 처리하면 게임에서 원하는 연출과 성능 두가지 토끼를 잡을 수 있다. 물론 잘하기 힘들다. 그래서 두 방법에서 프로그래머가 직접 코드를 짜서 넣으면서 게임의 그래픽을 원하는대로 커스터마이징이 가능하게 되었다. 이로써 꽤 많은 것을 실현 가능하게 되었었다. 하지만 이게 다가 아니였다. 쉐이더를 사용한 AAA급 3D 게임들과 함께 GPU 도 격렬하게 발전했다. 발전한 만큼 GPU 의 퍼포먼스는 점점 괴물이 되어가고 그 과정에서 vertex shader 와 pixel shader 를 단순하게 그리는 것에만 사용하는 것이 아니라 다른 계산이 필요한 곳에 써먹기 시작했고 편법을 사용한 많은 기술이 나왔었다. (vtf) 그렇게 프로그래머의 니즈를 파악한 GPU 제조사는 다른 기술을 개발한다. 이름하여 GPGPU 라는 이름의 기술인데 풀어 쓰면 “general purpose computing on graphics processing units” 이다. GPU 상의 범용 계산 이라는 뜻이다. 즉 위에서 언급한 병렬 계산이 가능한 것들을 편법을 쓰지말고 직접 이 기술을 사용해서 사용하라는 것이다. 이 GPGPU 기술이 나오면서 GPU 의 하드웨어적인 퍼포먼스에 따라 엄청 많은 것들을 가능하게 되었다. GPGPU 를 통해 불편했던 편법을 사용하던 기법들이 변형되어 쏟아져 나왔으며 새로운 기술 또한 엄청나게 쏟아져 나왔다. 그리고 그 기술들은 일반적으로 알려진 3D 그래픽이 차용된 AAA 급 게임들에 사용되어 일반 사용자들은 엄청난 그래픽을 자랑하는 게임들을 경험할 수 있게 되었다. 또한 최근에 AI 기술이 대두되면서 GPGPU 가 더욱더 각광받게 되었다. 이렇게 우리에게 다가오는 것은 꽤 많은 게임들의 발전인데, 다만 우리가 이 게임들의 기술에 접근하려면 꽤 많은 지식과 발상의 전환이 필요하다. 쉐이더만 하더라도 쉐이더 코드는 컴파일되어 GPU 에서 실행된다. CPU 에서 실행되는 일반적인 코드와 조금 다른 점은 CPU 에서 처리되는 것은 멀티스레딩을 하지 않는 이상 상당히 선형적인 코드를 짜게 되고 GPU 에서 돌아가는 쉐이더 코드를 짤 때는 병렬(parallel) 환경에서 돌아가게 짜야한다. 쉐이더 코드를 짤 때 첫번째로 겪게되는 어려움은 이것이다. 쉐이더까지 건드리게되면 경험이 어느정도 있는 상태일텐데, 개념을 조금 깨부수고 아예 병렬적으로 코드를 짜야하니 적응하는 것에 시간이 꽤나 소모된다. Unity 에서 Shader 를 직접 만들어 사용하는 것에 대하여 알아보자.</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Handling Rig And Skinning</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/05/19/handling-rig-and-skinning/" rel="alternate" type="text/html" title="Handling Rig And Skinning" />
-      <published>2017-05-19T00:00:00+00:00</published>
-      <updated>2017-05-19T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/05/19/handling-rig-and-skinning</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/05/19/handling-rig-and-skinning/">&lt;p&gt;앞서 오브젝트들을 그리는 방법에 대해서 알아보았다.(&lt;a href=&quot;/2017/05/14/handling-vertices-and-indices-in-unity/&quot;&gt;hnalding vertices&lt;/a&gt;, &lt;a href=&quot;/2017/05/15/handling-uv-and-material-in-unity/&quot;&gt;handling uvs&lt;/a&gt;) 폴리곤을 그리고 색을 칠하는 방법이었다. 하지만 이런 기능만 가지고 게임을 만들기에는 약간 부족하다. 보통 게임을 만들때 케릭터들의 부드러운 움직임을 표현해야 한다. 2D 게임은 보통 그림을 여러장을 그려서 움직이게 보이게 한다. 하지만 3D 게임에서의 부드러운 움직임은 2D 게임의 표현과는 다르게 표현한다. 일단 부드럽게 움직여야할 단위가 다르다. 메쉬의 정점들을 부드럽게 움직여야하기 때문에 2D 게임의 움직임과는 다른 무언가가 필요하다.&lt;/p&gt;
-
-&lt;p&gt;2D 게임에서 그림을 한꺼번에 움직이는 것처럼 단순하게 메쉬 전체를 부드럽게 움직여서 해결되면 좋겠지만 이 방법은 조금 문제가 있다. 관절같은 접합 부분에서 부드럽게 처리해야 하는 부분 즉 어떤 정점만 부드럽게 움직여야하는 문제가 있다. 그래서 고안된 방법은 특정한 위치를 설정해서 그 위치를 기준으로 정점들을 움직여주는 방법이다.&lt;/p&gt;
-
-&lt;p&gt;언급한 특정한 위치를 &lt;em&gt;Bone&lt;/em&gt; : 뼈라고 한다. 뼈를 움직여서 정점들을 직접 움직이는 것이다. 그리고 뼈를 기준으로 움직이는 것을 &lt;em&gt;Skinning&lt;/em&gt; 이라고 한다. 사람의 뼈가 움직이면 피부도 따라서 움직이듯이 피부를 직접 설정하는 것을 &lt;em&gt;Skinning&lt;/em&gt; 이라고 하는 것이다. 그리고 &lt;em&gt;Bone&lt;/em&gt; 의 위치도 상당히 중요하다. 자연스러운 움직임을 만들려면 만들어진 메쉬에 잘 맞게 위치를 설정해주어야 하기 때문이다. 위치 뿐만아니라 여러 움직이는 범위나 뼈의 계층 구조를 잘 설정해주어야 자연스러운 움직임을 나타낼 수 있다. 이러한 작업을 &lt;em&gt;Rigging&lt;/em&gt; 이라 한다. 보통 3D 오브젝트를 만들고 &lt;em&gt;Rigging&lt;/em&gt; 과 &lt;em&gt;Skinning&lt;/em&gt; 을 하는 작업은 그래픽 아티스트가 직접 해주지만 우리는 이 과정을 이해해야 하기에 Unity 에서 직접 만들어 볼 것이다.&lt;/p&gt;
-
-&lt;!-- more --&gt;
-
-&lt;h2&gt;Unity 에서 직접 리깅, 스키닝하기&lt;/h2&gt;
-
-&lt;p&gt;일반적으로 저장된 메쉬에 &lt;em&gt;Rigging&lt;/em&gt;, 뼈를 위치시키고 기타 설정을 하는 작업을 먼저한다. 그리고 뼈를 전부 위치시킨 다음 정점들과 뼈 사이의 가중치를 주는 &lt;em&gt;Skinning&lt;/em&gt; 작업을 한다. 우리도 이 순서에 맞게 작업을 할 것이다. &lt;a href=&quot;https://github.com/hrmrzizon/3DBasicExample&quot;&gt;3DBasicExample&lt;/a&gt; 의 &lt;em&gt;edu/skin&lt;/em&gt; 브랜치로 이동하면 미리 되어 있는것을 확인할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;이전에 &lt;strong&gt;Mesh&lt;/strong&gt; 인스턴스를 활용해서 화면에 그릴려면 &lt;strong&gt;MeshFilter&lt;/strong&gt; 컴포넌트와 &lt;strong&gt;MeshRenderer&lt;/strong&gt; 컴포넌트가 필요했다. 그런데 이번에 필요한 컴포넌트는 조금 다르다. 그대로 &lt;strong&gt;MeshFilter&lt;/strong&gt; 와 &lt;strong&gt;MeshRenderer&lt;/strong&gt; 를 그린다면 리깅과 스키닝이 적용이 안된채로 그려진다. 물론 가만히 있는 용도로는 상관없겠지만 리깅과 스키닝이 적용된 결과를 보고싶으면 &lt;strong&gt;SkinnedMeshRenderer&lt;/strong&gt; 라는 컴포넌트를 사용해야한다. &lt;strong&gt;MeshRenderer&lt;/strong&gt; 처럼 다른 부수적인 컴포넌트는 필요없다. &lt;strong&gt;SkinnedMeshRenderer&lt;/strong&gt; 안에 모든 정보를 다 넣기 때문에 &lt;strong&gt;SkinnedMeshRenderer&lt;/strong&gt; 컴포넌트 하나만 있으면 된다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Rigging&lt;/em&gt; 작업은 &lt;em&gt;Mesh&lt;/em&gt; 복잡도와 뼈의 갯수에 따라 시간이 비례한다. 그래서 복잡한 모델을 작업할때는 &lt;em&gt;Rigging&lt;/em&gt; 하는데 시간이 꽤 많이든다. 하지만 우리는 간단한 마인크래프트 케릭터를 가지고 할 것이기 때문에 그다지 오래 걸리지 않을 것이다. &lt;strong&gt;GameObject&lt;/strong&gt; 를 적당한 좌표, 적당한 &lt;strong&gt;Transform&lt;/strong&gt; 간의 위치에 놓은 다음에 &lt;em&gt;SkinnedMeshRenderer.bones&lt;/em&gt; 배열에 등록해준다. 아래와 비슷하게 해주면된다. 아래 코드에서는 미리 배치가 되어있다는 가정하에 넣어놓았다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C#&quot;&gt;SkinnedMeshRenderer skinnedMeshRenderer = GetComponent&amp;lt;SkinnedMeshRenderer&amp;gt;();
-
-skinnedMeshRenderer.bones = new Transform[] { transform.FindChild(&quot;bone0&quot;), transform.FindChild(&quot;bone1&quot;), transform.FindChild(&quot;bone2&quot;),
-                                              transform.FindChild(&quot;bone3&quot;), transform.FindChild(&quot;bone4&quot;), transform.FindChild(&quot;bone5&quot;) };
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;넣어준 &lt;em&gt;Bone&lt;/em&gt; 을 적용시키려면 특별한 행렬이 필요하다. 정점을 &lt;em&gt;Bone&lt;/em&gt; 과 연관시키려면 정점별 &lt;em&gt;Bone&lt;/em&gt; 과의 가중치와 앞에서 말한 행렬이 필요한데, 이 행렬이 단위행렬로(곱연산을 하면 값이 그대로 나오는 행렬이 설정되어 있으면 두가지 문제가 생긴다. &lt;em&gt;Bone&lt;/em&gt; 의 위치값을 정점에서 제외시키지 못해 이상한 거리에 &lt;em&gt;Skinning&lt;/em&gt; 이 되고, 루트 &lt;strong&gt;GameObject&lt;/strong&gt; 의 위치를 제외시키지 못해 한번 더 이상한 위치에 &lt;em&gt;Skinning&lt;/em&gt; 이 되어 버린다. 그래서 반드시 올바른 행렬값을 넣어주어야 한다. 기본 식은 아래와 같다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C#&quot;&gt;Transform boneTransform = transform.FindChild(&quot;bone0&quot;);
-GameObject rootObject = gameObject;
-
-skinnedMeshRenderer.bindposes[0] = boneTransform.worldToLocalMatrix * rootObject.transform.localToWorldMatrix;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;저 &lt;strong&gt;SkinnedMeshRenderer&lt;/strong&gt; 의 멤버 &lt;em&gt;bindposes&lt;/em&gt; 는 넣어준 &lt;em&gt;bones&lt;/em&gt; 배열의 갯수와 맞춰주어 넣어주어야 한다. &lt;em&gt;bone&lt;/em&gt; 별로 계산하는 행렬이니 말이다. 다음은 &lt;em&gt;skinning&lt;/em&gt; 이다. 우리가 만들 케릭터는 마인크래프트의 복셀 케릭터이니 상당히 간단하게 데이터를 설정할 것이지만 사실에 가까우면 가까울수록 필요한 가중치가 많아질 것이다. 정점별로 뼈의 기준에 따라서 얼만큼 가깝게 움직일 것이냐를 정해주어야 한다. Unity 는 이를 &lt;strong&gt;BoneWeight&lt;/strong&gt; 라는 구조체로 정의해 놓았다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C#&quot;&gt;public struct BoneWeight
-{
-    public int boneIndex0 { get; set; }
-    public int boneIndex1 { get; set; }
-    public int boneIndex2 { get; set; }
-    public int boneIndex3 { get; set; }
-    public float weight0 { get; set; }
-    public float weight1 { get; set; }
-    public float weight2 { get; set; }
-    public float weight3 { get; set; }
-
-    ...
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;em&gt;boneIndex&lt;/em&gt; 들은 전부다 위의 &lt;em&gt;SkinnedMeshRenderer.bones&lt;/em&gt; 에 들어간 &lt;strong&gt;Transform&lt;/strong&gt; 의 인덱스들이다. 그리고 &lt;em&gt;weight&lt;/em&gt; 들은 해당 &lt;em&gt;bone&lt;/em&gt; 을 기준으로 얼마만큼 가까워질지에 대한 값이다. 가중치가 한 &lt;em&gt;bone&lt;/em&gt; 에 상대적으로 클수록 해당 &lt;em&gt;bone&lt;/em&gt; 의 위치에 더 가까워질 것이다. 하지만 우리는 여러 가중치를 설정할 필요없이 부위별로 한개의 가중치만 설정해주면 된다. 설정만 해주면 &lt;em&gt;skinning&lt;/em&gt; 은 끝난다. 생각보다 간단하다. 이 과정이 끝나면 직접 &lt;em&gt;bone&lt;/em&gt; 을 움직여 잘 따라가는지 확인할 수 있다.&lt;/p&gt;
-
-&lt;div class=&quot;language-c# highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;partCount&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vertexByPart&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;24&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;BoneWeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;weights&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BoneWeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;partCount&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vertexByPart&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;partCount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;++)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vertexByPart&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;++)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;weights&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vertexByPart&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;BoneWeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;boneIndex0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;weight0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;mesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;boneWeights&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;weights&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;마인크래프트의 케릭터들은 한개의 &lt;em&gt;bone&lt;/em&gt; 을 기준으로 케릭터가 움직이기 때문에 &lt;em&gt;bone&lt;/em&gt; 을 정점별로 한개씩 설정해 주었다. 여기까지 설정해주면 설정된 &lt;em&gt;bone&lt;/em&gt; 들을 따라 그려진다. 여기까지 &lt;em&gt;bone&lt;/em&gt; 을 직접 설정해주고, &lt;em&gt;bone&lt;/em&gt; 별 변환 행렬을 설정해주고, 정점별로 가중치를 두어 해당 가중치로 &lt;em&gt;bone&lt;/em&gt; 을 따라가게 해주었다. 그런데 몇가지 짚고 넘어가야할 것들이 있다. &lt;strong&gt;MeshRenderer&lt;/strong&gt; 와 &lt;strong&gt;SkinnedMeshRenderer&lt;/strong&gt; 의 디테일한 동작의 차이다. 위에서 &lt;em&gt;skinning&lt;/em&gt; 이 적용되냐 마냐의 차이만 있다고 설명했다. 물론 기능상의 차이는 이것 뿐이지만 이 기능 때문에 벌어지는 몇가지 세부사항도 알아야 한다. Unity 시스템에서는 &lt;strong&gt;MeshRenderer&lt;/strong&gt; 가 그리는 정점들이 움직이지 않는다는 가정하에 모든 &lt;strong&gt;MeshRenderer&lt;/strong&gt; 를 모아서 최적화를 해준다. 물론 &lt;strong&gt;Mesh&lt;/strong&gt; 인스턴스가 가진 데이터가 적어야 한다는 한계가 있지만 복수의 오브젝트가 많아질 수록 이 부분은 꽤나 중요해진다. 하지만 &lt;strong&gt;SkinnedMeshRenderer&lt;/strong&gt; 는 크게 최적화가 되어있지 않아 많이 쓰면 쓸수록, &lt;strong&gt;Mesh&lt;/strong&gt; 인스턴스의 정점의 갯수가 많으면 많을수록 부하는 심해진다. 물론 한두개만 쓰면 크게 문제되는 상황은 없지만 많으면 많을수록 퍼포먼스가 떨어지는 디바이스에서는 문제가 된다. 즉 사용시 주의해서 사용해야 한다.&lt;/p&gt;
-
-&lt;h1&gt;참조&lt;/h1&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Skinning&quot;&gt;Wikipedia : Skinning&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Skeletal_animation&quot;&gt;Wikipedia : Skeletal animation&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/GameEngineStudy/CodeRigging&quot;&gt;코드로 리깅하고 애니메이션 하기&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/ScriptReference/PlayerSettings-gpuSkinning.html&quot;&gt;Unity ref: PlayerSettings.gpuSkinning&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="unity" />
-      
-        <category term="rig" />
-      
-        <category term="animate" />
-      
-        <category term="try" />
-      
-
-      
-
-      
-        <summary type="html">앞서 오브젝트들을 그리는 방법에 대해서 알아보았다.(hnalding vertices, handling uvs) 폴리곤을 그리고 색을 칠하는 방법이었다. 하지만 이런 기능만 가지고 게임을 만들기에는 약간 부족하다. 보통 게임을 만들때 케릭터들의 부드러운 움직임을 표현해야 한다. 2D 게임은 보통 그림을 여러장을 그려서 움직이게 보이게 한다. 하지만 3D 게임에서의 부드러운 움직임은 2D 게임의 표현과는 다르게 표현한다. 일단 부드럽게 움직여야할 단위가 다르다. 메쉬의 정점들을 부드럽게 움직여야하기 때문에 2D 게임의 움직임과는 다른 무언가가 필요하다. 2D 게임에서 그림을 한꺼번에 움직이는 것처럼 단순하게 메쉬 전체를 부드럽게 움직여서 해결되면 좋겠지만 이 방법은 조금 문제가 있다. 관절같은 접합 부분에서 부드럽게 처리해야 하는 부분 즉 어떤 정점만 부드럽게 움직여야하는 문제가 있다. 그래서 고안된 방법은 특정한 위치를 설정해서 그 위치를 기준으로 정점들을 움직여주는 방법이다. 언급한 특정한 위치를 Bone : 뼈라고 한다. 뼈를 움직여서 정점들을 직접 움직이는 것이다. 그리고 뼈를 기준으로 움직이는 것을 Skinning 이라고 한다. 사람의 뼈가 움직이면 피부도 따라서 움직이듯이 피부를 직접 설정하는 것을 Skinning 이라고 하는 것이다. 그리고 Bone 의 위치도 상당히 중요하다. 자연스러운 움직임을 만들려면 만들어진 메쉬에 잘 맞게 위치를 설정해주어야 하기 때문이다. 위치 뿐만아니라 여러 움직이는 범위나 뼈의 계층 구조를 잘 설정해주어야 자연스러운 움직임을 나타낼 수 있다. 이러한 작업을 Rigging 이라 한다. 보통 3D 오브젝트를 만들고 Rigging 과 Skinning 을 하는 작업은 그래픽 아티스트가 직접 해주지만 우리는 이 과정을 이해해야 하기에 Unity 에서 직접 만들어 볼 것이다.</summary>
       
 
       

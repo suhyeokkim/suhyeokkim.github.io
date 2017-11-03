@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Shader Pipeline 3 Fragment Shader0</title>
+  <meta name="description" content="이전 글 : “Rasterizer” 에서 Rasterizer 에 대해 알아보았다. 이번에는 Fragment Shader 을 알아보자. 쉐이더 파이프라인에서 Rasterizer 다음에 실행되는 것은 Programmable Shader 중에서 Fragment Shader 이다. Fragment Shader 은 Pixel Shader 라고도 불리는데, 이전에 Rasterizer 에서 조각낸 픽셀들을 단위로 실행되기 때문에 Pixel Shader 라고 불리기도 한다. 또한 각 픽셀은 조각난 단위이기 때문에 조각의 뜻을 가진 Fragment Shader 라고도 불린다. 이 글에서는 Fragment Shader 로 사용할 것이다. Fragment Shader 의 역할은 굉장히 단순하다. Geometry Stage 에서 넘어와 Rasterizer 단계에서 정리된 파라미터를 받고, 해당 픽셀의 색을 반환하면 끝난다. 역할은 단순하지만 그만큼 중요한 것이 Fragment Shader 다. 마지막으로 픽셀 단위로 보여주는 색을 바꿀 수 있는 Programmable Shader 로써 반복하는 비용이 꽤나 많아 일반적으로 오래 걸린다고 평가되지만 색을 바꿀 수 있어 그만큼 잘쓰면 굉장한 효과를 낼 수 있는 Programmable Shader 다. 가장 단순한 형태의 Unity 에서 사용하는 CG/HLSL 쉐이더를 보자. #pragma fragment frag struct v2f { float4 vertex : SV_POSITION; float4 tangent : TANGENT; float3 normal : NORMAL; float4 texcoord : TEXCOORD0; } /* 다른 코드 들.. */ fixed4 frag(v2f i) { return float4(1,1,1,1); } 해당 쉐이더는 단순하게 흰색만 출력해주는 쉐이더다. 그만큼 매우 단순하고 쉽다. 하지만 많은 것들을 표현하려면 frag 함수의 코드는 점점 길어질 것이다. 또한 Fragment Shader 가 실행되는 시점에서 하드웨어, 드라이버 단계에서 지원하는 기능들도 있다. 일반적인 것들에 대해서 이야기 하자면 Depth Buffer 와 Stencil Buffer 가 있다. 두가지의 공통점은 각 픽셀 단위별로 데이터를 저장하는 버퍼들이다. Depth Buffer 는 Clip-Space 로 변환된 정점 값의 Z 값을 저장하는 용도로 쓰이는 버퍼로, 요즘 개발되거나 쓰이는 기술들은 Depth Buffer 를 엄청 많이 쓴다. 대표적으로 Depth Pre-Pass 가 있다. Stencil Buffer 는 픽셀별로 정수 데이터를 저장해서 사용하는 버퍼로써, 대부분 마스킹을 할 때 쓰인다. 참조 자료 SlideShader : Everything about Early-Z">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://hrmrzizon.github.io/2017/10/31/shader-pipeline-3-fragment-shader0/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
+
+  <meta name="google-site-verification" content="f8AsB97UC1pp_K4EwkRaJYJZVC0P4j36RK_TGOPPGAU" />
+
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Shader Pipeline 3 Fragment Shader0">
+  <meta name="twitter:description" content="이전 글 : “Rasterizer” 에서 Rasterizer 에 대해 알아보았다. 이번에는 Fragment Shader 을 알아보자. 쉐이더 파이프라인에서 Rasterizer 다음에 실행되는 것은 Programmable Shader 중에서 Fragment Shader 이다. Fragment Shader 은 Pixel Shader 라고도 불리는데, 이전...">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Appocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="/edu">Edu</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Shader Pipeline 3 Fragment Shader0</h1>
+    
+    <p class="post-meta"><time datetime="2017-10-31T00:00:00+00:00" itemprop="datePublished">Oct 31, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/render/">render</a>,
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/hlsl/">hlsl</a>
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>이전 글 : “<a href="/2017/10/31/shader-pipeline-2-rasterizer/">Rasterizer</a>” 에서 <em>Rasterizer</em> 에 대해 알아보았다. 이번에는 <em>Fragment Shader</em> 을 알아보자.</p>
+
+<p>쉐이더 파이프라인에서 <em>Rasterizer</em> 다음에 실행되는 것은 <em>Programmable Shader</em> 중에서 <em>Fragment Shader</em> 이다. <em>Fragment Shader</em> 은 <em>Pixel Shader</em> 라고도 불리는데, 이전에 <em>Rasterizer</em> 에서 조각낸 픽셀들을 단위로 실행되기 때문에 <em>Pixel Shader</em> 라고 불리기도 한다. 또한 각 픽셀은 조각난 단위이기 때문에 조각의 뜻을 가진 <em>Fragment Shader</em> 라고도 불린다. 이 글에서는 <em>Fragment Shader</em> 로 사용할 것이다.</p>
+
+<p><em>Fragment Shader</em> 의 역할은 굉장히 단순하다. <em>Geometry Stage</em> 에서 넘어와 <em>Rasterizer</em> 단계에서 정리된 파라미터를 받고, 해당 픽셀의 색을 반환하면 끝난다. 역할은 단순하지만 그만큼 중요한 것이 <em>Fragment Shader</em> 다. 마지막으로 픽셀 단위로 보여주는 색을 바꿀 수 있는 <em>Programmable Shader</em> 로써 반복하는 비용이 꽤나 많아 일반적으로 오래 걸린다고 평가되지만 색을 바꿀 수 있어 그만큼 잘쓰면 굉장한 효과를 낼 수 있는 <em>Programmable Shader</em> 다.</p>
+
+<p><img src="/images/fragment_shader.jpg" alt="Fragment Shader" /></p>
+
+<p>가장 단순한 형태의 Unity 에서 사용하는 CG/HLSL 쉐이더를 보자.</p>
+
+<pre><code class="language-C">#pragma fragment frag
+
+struct v2f
+{
+    float4 vertex : SV_POSITION;
+    float4 tangent : TANGENT;
+    float3 normal : NORMAL;
+    float4 texcoord : TEXCOORD0;
+}
+
+/*
+  다른 코드 들..
+*/
+
+fixed4 frag(v2f i)
+{
+  return float4(1,1,1,1);
+}
+</code></pre>
+
+<p>해당 쉐이더는 단순하게 흰색만 출력해주는 쉐이더다. 그만큼 매우 단순하고 쉽다. 하지만 많은 것들을 표현하려면 <em>frag</em> 함수의 코드는 점점 길어질 것이다.</p>
+
+<p>또한 <em>Fragment Shader</em> 가 실행되는 시점에서 하드웨어, 드라이버 단계에서 지원하는 기능들도 있다. 일반적인 것들에 대해서 이야기 하자면 <em>Depth Buffer</em> 와 <em>Stencil Buffer</em> 가 있다. 두가지의 공통점은 각 픽셀 단위별로 데이터를 저장하는 버퍼들이다. <em>Depth Buffer</em> 는 <em>Clip-Space</em> 로 변환된 정점 값의 Z 값을 저장하는 용도로 쓰이는 버퍼로, 요즘 개발되거나 쓰이는 기술들은 <em>Depth Buffer</em> 를 엄청 많이 쓴다. 대표적으로 <em>Depth Pre-Pass</em> 가 있다. <em>Stencil Buffer</em> 는 픽셀별로 정수 데이터를 저장해서 사용하는 버퍼로써, 대부분 마스킹을 할 때 쓰인다.</p>
+
+<h1>참조 자료</h1>
+
+<ul>
+  <li><a href="https://www.slideshare.net/kyruie/everything-about-earlyz">SlideShader : Everything about Early-Z</a></li>
+</ul>
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://zizon.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy; Su-Hyeok Kim - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
