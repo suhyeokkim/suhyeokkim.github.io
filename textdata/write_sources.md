@@ -1,11 +1,13 @@
 # Practical Rendering
 
- - HLSL Loop 어노테이션
- - rendering pipeline 의 각각의 단계에 대해서 자세히 쓰기
+ - rendering pipeline 의 각각의 단계에 대해서 자세히 쓰기(진행중)
  - Forward, Differed, Forward+, Differed+ 쓰기(inffered lighting, light pre-pass)
- - 구조 분석하기
+
  - Scriptable Render Loop 분석하기
  - Tiled Lighting
+
+ - Order Independant Transparency
+ - Shadow mapping, Cascaded Shadow Mapping, Ray-Tracing Shadow, Frustom-Tracing Shadow, Percentage-Closer Soft-Shadow
 
 # Practical
 
@@ -27,13 +29,11 @@
 
 <!-- Unity -->
 
- - TextureArray, SparseTexture
- - GPU Instancing
+ - SparseTexture
  - light prove, light volume
  - ambient occlusion : 미리 라이팅 계산해서 넣어놓기.. per-vertex ao 는 mesh 에 color 에 라이팅을 넣어줌.
  - global illumination : http://lifeisforu.tistory.com/52
  - texture bone animating
- - vertex texture fetch(GPGPU 를 못썼을 떄)
 
 <!-- Unknowns -->
 
@@ -41,7 +41,6 @@
  - motion blur?
  - bsdf vs brdf vs btdf
  - Hi-Z
- - OIT
  - CSM
  - GPU-interporator
  - fft convolution
