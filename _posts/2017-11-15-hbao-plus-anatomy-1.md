@@ -32,7 +32,16 @@ __HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다.__
 
 코드를 보면 가장 처음에 시작하는 단계는 바로 _Linearize Depths_ 다. 이는 꽤나 알려진 방법이다. 하지만 필자는 _HBAO+_ 를 볼때 처음 봤기에 어느 정도의 설명을 해놓아야겠다. _Linearize Depths_ 를 알기 위해선 입력된 정점의 위치를 _Clipping-Space_ 로 변환하는 방법이 어떻게 이루어지는지 알고 있어야 한다.
 
-일반적인 모델을 렌더링 할때는 _Shader_ 에 입력으로 들어오는 정점의 기준 공간은 _Model-Space_(또는 _Local-Space_) _Position_ 이다. 그래서 _MVP_ 변환을 통해 _Rasterizer_ 가 처리할 수 있도록 _Clipping-Space_ 로 적어도 _Rasterizer_ 로 넘어가기 전에 변환해주어야 한다. 대강의 내용은 [Model, View, Projection 변환](https://docs.google.com/presentation/d/10VzsjfifKJlRTHDlBq7e8vNBTu4D5jOWUF87KYYGwlk/edit#slide=id.g25f88339be_0_0) 에서 확인할 수 있다.
+일반적인 오브젝트를 렌더링 할때는 _Shader_ 에 입력으로 들어오는 정점의 기준 공간은 _Model-Space_(또는 _Local-Space_) _Position_ 이다. 그래서 _MVP_ 변환을 통해 _Rasterizer_ 가 처리할 수 있도록 _Clipping-Space_ 로 적어도 _Rasterizer_ 로 넘어가기 전에 변환해주어야 한다.(대강의 내용은 [Model, View, Projection 변환](https://docs.google.com/presentation/d/10VzsjfifKJlRTHDlBq7e8vNBTu4D5jOWUF87KYYGwlk/edit#slide=id.g25f88339be_0_0) 에서 확인할 수 있다.
+) 그래서 _Pixel Shader_ 로 넘어간 데이터들은 픽셀별로 들어가고, 픽셀별로 들어간 정점들의 위치는 _Clipping-Space_ 로 되어있다. 여기까지 이해했으면 아래 그림을 보자.
+
+<br/>
+![Frustom vs Clipping](/images/Graphics3D_ClipVolume.png)
+<center>출처 : <a href="https://www.ntu.edu.sg/home/ehchua/programming/opengl/CG_BasicsTheory.html">3D Graphics with OpenGL Basic Theory</a>
+</center>
+<br/>
+
+위 그림은 _View Frustom_ 과 _Clipping-Space_ 를 보여준다. OpenGL 기준이니 DirectX 와는 좌표계 상으로 조금 다를 수 있다. 
 
 ## Deintereaved Texturing
 
