@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-11-16T06:04:19+00:00</updated>
+  <updated>2017-11-17T03:06:05+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -28,13 +28,465 @@
   
     <entry>
       
+      <title type="html">Hbao Plus Analysis 3</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-3/" rel="alternate" type="text/html" title="Hbao Plus Analysis 3" />
+      <published>2017-11-15T00:00:00+00:00</published>
+      <updated>2017-11-15T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-3</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-3/">&lt;p&gt;&lt;strong&gt;HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;이전 &lt;a href=&quot;/2017/11/15/hbao-plus-analysis-2/&quot;&gt;hbao plus analysis 2&lt;/a&gt; 글에서 &lt;em&gt;Horizon based ambient occlusion&lt;/em&gt; 와 &lt;em&gt;Cross Bilateral Filter&lt;/em&gt; 대해서 알아보았다. 이번 글에서는 부록의 느낌으로 &lt;em&gt;HLSL&lt;/em&gt; 코드를 읽으면서 생소했던 기타 기법들에 대해서 써볼 것이다.&lt;/p&gt;
+
+&lt;p&gt;첫번째로 &lt;em&gt;Full Screen Triangle&lt;/em&gt; 이라는 기법이다. 알고마면 굉장히 단순한 개념으로, 화면을 모두 덮는 한개의 삼각형을 그려서 모든 픽셀에 쉐이더를 돌릴 수 있게 해주는 기법이다. 아래 슬라이드를 보면 쉽게 이해가 갈것이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/vertex-shader-tricks-by-bill-bilodeau-amd-at-gdc14-14-638.jpg&quot; alt=&quot;Full Screen Triangle&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://www.gdcvault.com/play/1020624/Advanced-Visual-Effects-with-DirectX&quot;&gt;GDC 2014 : Vertex Sahder Tricks&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;단순하지만 처음 봤을 때는 조금 신박하게 느껴질 수도 있다. 두번째로는 모든 계산에 최대한 &lt;em&gt;HLSL Intrisic&lt;/em&gt; 을 사용한다. 특히 벡터와 벡터사이의 거리를 계산할때 &lt;em&gt;dot product&lt;/em&gt; 를 써서 하는게 정말 많았다. 어셈블리 레벨에서 달라지는것 같긴하나 정확한 이유는 알지 못했다. 추측해보면 GPU 에서 해당 명령어가 있지 않을까.. 라고 생각한다.&lt;/p&gt;
+
+&lt;p&gt;세번째도 위의 것과 비슷하다. 대부분의 데이터에 &lt;em&gt;MAD&lt;/em&gt; 방식을 사용해서 계산한다. 하지만 이는 거의 공식적으로 정해진게 있다. &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/ff471418.aspx&quot;&gt;MSDN : mad  function&lt;/a&gt; 레퍼런스에서도 나오듯이 어떤 GPU 에서는 위에서 추측한대로 하드웨어에서 지원하는 명령어라고 한다.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;…
+Shaders can then take advantage of potential performance improvements by using a native mad instruction (versus mul + add) on some hardware.
+…&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;또한 &lt;em&gt;HBAO+&lt;/em&gt; 소스에서 찾은 주석에는 &lt;em&gt;GK104&lt;/em&gt; 부터 특정 구간에서 10% 퍼포먼스 이득이 있다고 쓰여져 있다.&lt;/p&gt;
+
+&lt;p&gt;네번째는 나누기를 절대 쓰지 않는다. 나머지 연산(mod, A % B)는 간혹 쓰이지만 나누기는 절대로 쓰이지 않았었다. 혹시라도 필요하다면 전부 &lt;em&gt;Constant Buffer&lt;/em&gt; 에 CPU 에서 역수를 취해서 넘겨주는 방식으로 되어 있었다. 이도 역시 하드웨어에서 동작하는 부분을 알고 짠듯하다.&lt;/p&gt;
+
+&lt;p&gt;다섯번째는 &lt;em&gt;HLSL&lt;/em&gt; 코드를 &lt;em&gt;cpp&lt;/em&gt; 소스에 &lt;em&gt;include&lt;/em&gt; 하여 &lt;em&gt;Constant Buffer&lt;/em&gt; 값을 갱신하는 코드였다. 여태까지 예전의 &lt;em&gt;DirectX&lt;/em&gt; 소스만 보거나 &lt;em&gt;Unity&lt;/em&gt; 에서만 작업을 해서 그런지 이런 기능은 굉장히 낯설었다.&lt;/p&gt;
+
+&lt;h1&gt;참조 자료&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://docs.nvidia.com/gameworks/content/gameworkslibrary/visualfx/hbao/index.html&quot;&gt;NVIDIA HBAO+&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.gdcvault.com/play/1020624/Advanced-Visual-Effects-with-DirectX&quot;&gt;GDC 2014 : Vertex Sahder Tricks&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/ff471418.aspx&quot;&gt;MSDN : mad function&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="render" />
+      
+        <category term="hlsl" />
+      
+        <category term="analysis" />
+      
+        <category term="hbaoplus" />
+      
+
+      
+
+      
+        <summary type="html">HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다. 이전 hbao plus analysis 2 글에서 Horizon based ambient occlusion 와 Cross Bilateral Filter 대해서 알아보았다. 이번 글에서는 부록의 느낌으로 HLSL 코드를 읽으면서 생소했던 기타 기법들에 대해서 써볼 것이다. 첫번째로 Full Screen Triangle 이라는 기법이다. 알고마면 굉장히 단순한 개념으로, 화면을 모두 덮는 한개의 삼각형을 그려서 모든 픽셀에 쉐이더를 돌릴 수 있게 해주는 기법이다. 아래 슬라이드를 보면 쉽게 이해가 갈것이다. 출처 : GDC 2014 : Vertex Sahder Tricks 단순하지만 처음 봤을 때는 조금 신박하게 느껴질 수도 있다. 두번째로는 모든 계산에 최대한 HLSL Intrisic 을 사용한다. 특히 벡터와 벡터사이의 거리를 계산할때 dot product 를 써서 하는게 정말 많았다. 어셈블리 레벨에서 달라지는것 같긴하나 정확한 이유는 알지 못했다. 추측해보면 GPU 에서 해당 명령어가 있지 않을까.. 라고 생각한다. 세번째도 위의 것과 비슷하다. 대부분의 데이터에 MAD 방식을 사용해서 계산한다. 하지만 이는 거의 공식적으로 정해진게 있다. MSDN : mad function 레퍼런스에서도 나오듯이 어떤 GPU 에서는 위에서 추측한대로 하드웨어에서 지원하는 명령어라고 한다. … Shaders can then take advantage of potential performance improvements by using a native mad instruction (versus mul + add) on some hardware. … 또한 HBAO+ 소스에서 찾은 주석에는 GK104 부터 특정 구간에서 10% 퍼포먼스 이득이 있다고 쓰여져 있다. 네번째는 나누기를 절대 쓰지 않는다. 나머지 연산(mod, A % B)는 간혹 쓰이지만 나누기는 절대로 쓰이지 않았었다. 혹시라도 필요하다면 전부 Constant Buffer 에 CPU 에서 역수를 취해서 넘겨주는 방식으로 되어 있었다. 이도 역시 하드웨어에서 동작하는 부분을 알고 짠듯하다. 다섯번째는 HLSL 코드를 cpp 소스에 include 하여 Constant Buffer 값을 갱신하는 코드였다. 여태까지 예전의 DirectX 소스만 보거나 Unity 에서만 작업을 해서 그런지 이런 기능은 굉장히 낯설었다. 참조 자료 NVIDIA HBAO+ GDC 2014 : Vertex Sahder Tricks MSDN : mad function</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Hbao Plus Analysis 2</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-2/" rel="alternate" type="text/html" title="Hbao Plus Analysis 2" />
+      <published>2017-11-15T00:00:00+00:00</published>
+      <updated>2017-11-15T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-2</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-2/">&lt;p&gt;&lt;strong&gt;HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;이전 &lt;a href=&quot;/2017/11/15/hbao-plus-analysis-1/&quot;&gt;hbao plus analysis 1&lt;/a&gt; 글에서 &lt;em&gt;HBAO+&lt;/em&gt; 에서 &lt;em&gt;Linearize Depth&lt;/em&gt; 와 &lt;em&gt;Deinterleaved Texturing&lt;/em&gt; 에 대해서 알아보았다. 이번 글에서는 &lt;em&gt;HBAO+&lt;/em&gt; 의 핵심 알고리즘인 &lt;em&gt;Horizon Based Ambient Occlusion&lt;/em&gt; 와 AO 블러에 사용되는 &lt;em&gt;Cross Bilateral Filter&lt;/em&gt; 에 대해서 알아볼것이다.&lt;/p&gt;
+
+&lt;h2&gt;Horizon Based Ambient Occlusion&lt;/h2&gt;
+
+&lt;p&gt;&lt;em&gt;Horizon Based Ambient Occlusion&lt;/em&gt; 은 xy 평면과(horizon) Depth 값을 사용해서 &lt;em&gt;AO&lt;/em&gt; 를 계산한다. 슬라이드에서 가져온 일부를 보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/hbao_siggraph08_05.png&quot; alt=&quot;Horizon Mapping&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf&quot;&gt;Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;해당 슬라이드에서는 xy평면을 단순하게 1차원인 x축만으로 나타냈다. &lt;em&gt;HBAO&lt;/em&gt; 는 그림에 나오는 &lt;em&gt;horizon angle&lt;/em&gt; 을 사용하여 &lt;em&gt;AO&lt;/em&gt; 값을 구한다. 자세한 방법은 아래 슬라이드를 보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/hbao_siggraph08_12.png&quot; alt=&quot;Horizon-Based AO&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf&quot;&gt;Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;슬라이드에서는 표면의 접선을 나타내는 &lt;em&gt;Tangent&lt;/em&gt; 벡터와 &lt;em&gt;Horizon&lt;/em&gt; 벡터를 사용해서 &lt;em&gt;sin&lt;/em&gt; 의 차이로 &lt;em&gt;AO&lt;/em&gt; 를 계산한다고 설명되어 있다. &lt;em&gt;Horizon&lt;/em&gt; 벡터는 &lt;em&gt;Depth&lt;/em&gt; 와 화면의 좌표를 구해서 샘플링하는 위치값을 구하고 기준이 되는 위치값의 차이를 통해 구한다. &lt;em&gt;HBAO+&lt;/em&gt; 코드에서는 입력을 받은 &lt;em&gt;Normal&lt;/em&gt; 벡터와 &lt;em&gt;Horizon&lt;/em&gt; 벡터에 &lt;em&gt;dot&lt;/em&gt; 을 사용해 &lt;em&gt;cos&lt;/em&gt; 값을 구하고 변환해준다. 이렇게 한번 &lt;em&gt;AO&lt;/em&gt; 값을 구한다.&lt;/p&gt;
+
+&lt;p&gt;보다 정확한 &lt;em&gt;AO&lt;/em&gt; 값을 구하기 위해서는 전방위로 탐색할 필요가 있다. 정해진 방향으로 샘플링을 해도 오차가 생길 수 있고 완전히 랜덤하게 방향을 정해도 부정확한 결과를 얻을 수 있다. 그래서 &lt;em&gt;HBAO&lt;/em&gt; 는 랜덤하게 방향을 정하나 그 방향 벡터를 정해진 각도로 돌려주어 그나마 정확한 결과를 얻으려 한다. 슬라이드를 보고 넘어가자.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/hbao_siggraph08_14.png&quot; alt=&quot;Sampling the Depth Image&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf&quot;&gt;Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;핵심적인 개념은 모두 설명했지만 만족할만한 결과를 얻기 위해 여러가지 보정 방법들이 필요하다. 그래서 &lt;em&gt;HBAO&lt;/em&gt; 에서는 두가지 보정을 해주는 개념을 설명한다. &lt;em&gt;HBAO&lt;/em&gt; 는 방향을 설정해주고 해당 방향으로 한번만 샘플링 하는게 아니라 여러번 샘플링 한다. 그러므로 거리에 따른 감쇠(attenuation)가 필요하다. 방법은 간단하다. &lt;em&gt;AO&lt;/em&gt; 를 계산할때 구했던 &lt;em&gt;Horizon&lt;/em&gt; 벡터의 크기에 따라서 &lt;em&gt;AO&lt;/em&gt; 값을 줄여준다. 나머지 한가지는 &lt;em&gt;Horizon&lt;/em&gt; 벡터와 &lt;em&gt;Tangent&lt;/em&gt; 벡터를 이용해 구하는 실질적인 &lt;em&gt;AO&lt;/em&gt; 값에 &lt;em&gt;Bias&lt;/em&gt; 로 낮은 &lt;em&gt;AO&lt;/em&gt; 값들을 무시하는 방법이다. &lt;em&gt;Bias&lt;/em&gt; 가 없이 &lt;em&gt;AO&lt;/em&gt; 를 생성하게 되면 노이즈가 생기기 때문이다. 또한 &lt;em&gt;Bias&lt;/em&gt; 로 생긴 수학적 오차는 코드에서 따로 보정해주기 때문에 크게 문제는 없다.&lt;/p&gt;
+
+&lt;h2&gt;Cross Bilateral Filter&lt;/h2&gt;
+
+&lt;p&gt;&lt;em&gt;SSAO&lt;/em&gt; 의 결과에는 일반적으로 블러를 먹이게 된다. 대부분 근사에 기반한 계산이기 때문이다. &lt;em&gt;HBAO&lt;/em&gt; 에서는 &lt;em&gt;Depth&lt;/em&gt; 를 이용한 방법을 소개한다. 바로 &lt;em&gt;Cross Bilateral Filter&lt;/em&gt; 다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Cross Bilateral Filter&lt;/em&gt; 은 &lt;em&gt;Gaussian Filter&lt;/em&gt; 와 비슷한 필터로, &lt;em&gt;Gaussian Filter&lt;/em&gt; 는 샘플링할 위치의 거리에 따라 점차 가중치가 줄어드는 필터라면, &lt;em&gt;Bilateral Filter&lt;/em&gt; 는 위치에 따라 가중치가 줄어드는게 아닌 각 위치별로 가지고 있는 한개의 스칼라값에 차이에 따라서 가중치를 정하는 필터다. &lt;em&gt;Cross&lt;/em&gt; 단어를 붙인 이유는 왼쪽과 오른쪽 방향의 필터와 위와 아래의 필터를 따로하기 때문에 &lt;em&gt;Cross&lt;/em&gt; 라는 단어를 붙인 듯 하다. &lt;em&gt;HBAO+&lt;/em&gt; 코드에서도 X 축과 Y 축을 기준으로 하는 블러 소스가 나누어져 있다. &lt;em&gt;HBAO&lt;/em&gt; 에는 한개의 스칼라 값을 &lt;em&gt;Depth&lt;/em&gt; 를 기준으로 계산한다. 그래서 크게 튀는 부분의 결과는 많이 반영하지 않아 전체적으로 뿌옇게 바뀐다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/hbao_siggraph08_28.png&quot; alt=&quot;Sampling the Depth Image&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf&quot;&gt;Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h1&gt;참조 자료&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://docs.nvidia.com/gameworks/content/gameworkslibrary/visualfx/hbao/index.html&quot;&gt;NVidia HBAO+&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf&quot;&gt;Image-Space Horizon Based Ambient Occlusion&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Gaussian_filter&quot;&gt;Wikipedia : Gaussian Filter&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Bilateral_filter&quot;&gt;Wikipedia : Bilateral Filter&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="render" />
+      
+        <category term="analysis" />
+      
+        <category term="hbaoplus" />
+      
+        <category term="hbao" />
+      
+        <category term="bilateral_filter" />
+      
+
+      
+
+      
+        <summary type="html">HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다. 이전 hbao plus analysis 1 글에서 HBAO+ 에서 Linearize Depth 와 Deinterleaved Texturing 에 대해서 알아보았다. 이번 글에서는 HBAO+ 의 핵심 알고리즘인 Horizon Based Ambient Occlusion 와 AO 블러에 사용되는 Cross Bilateral Filter 에 대해서 알아볼것이다. Horizon Based Ambient Occlusion Horizon Based Ambient Occlusion 은 xy 평면과(horizon) Depth 값을 사용해서 AO 를 계산한다. 슬라이드에서 가져온 일부를 보자. 출처 : Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion 해당 슬라이드에서는 xy평면을 단순하게 1차원인 x축만으로 나타냈다. HBAO 는 그림에 나오는 horizon angle 을 사용하여 AO 값을 구한다. 자세한 방법은 아래 슬라이드를 보자. 출처 : Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion 슬라이드에서는 표면의 접선을 나타내는 Tangent 벡터와 Horizon 벡터를 사용해서 sin 의 차이로 AO 를 계산한다고 설명되어 있다. Horizon 벡터는 Depth 와 화면의 좌표를 구해서 샘플링하는 위치값을 구하고 기준이 되는 위치값의 차이를 통해 구한다. HBAO+ 코드에서는 입력을 받은 Normal 벡터와 Horizon 벡터에 dot 을 사용해 cos 값을 구하고 변환해준다. 이렇게 한번 AO 값을 구한다. 보다 정확한 AO 값을 구하기 위해서는 전방위로 탐색할 필요가 있다. 정해진 방향으로 샘플링을 해도 오차가 생길 수 있고 완전히 랜덤하게 방향을 정해도 부정확한 결과를 얻을 수 있다. 그래서 HBAO 는 랜덤하게 방향을 정하나 그 방향 벡터를 정해진 각도로 돌려주어 그나마 정확한 결과를 얻으려 한다. 슬라이드를 보고 넘어가자. 출처 : Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion 핵심적인 개념은 모두 설명했지만 만족할만한 결과를 얻기 위해 여러가지 보정 방법들이 필요하다. 그래서 HBAO 에서는 두가지 보정을 해주는 개념을 설명한다. HBAO 는 방향을 설정해주고 해당 방향으로 한번만 샘플링 하는게 아니라 여러번 샘플링 한다. 그러므로 거리에 따른 감쇠(attenuation)가 필요하다. 방법은 간단하다. AO 를 계산할때 구했던 Horizon 벡터의 크기에 따라서 AO 값을 줄여준다. 나머지 한가지는 Horizon 벡터와 Tangent 벡터를 이용해 구하는 실질적인 AO 값에 Bias 로 낮은 AO 값들을 무시하는 방법이다. Bias 가 없이 AO 를 생성하게 되면 노이즈가 생기기 때문이다. 또한 Bias 로 생긴 수학적 오차는 코드에서 따로 보정해주기 때문에 크게 문제는 없다. Cross Bilateral Filter SSAO 의 결과에는 일반적으로 블러를 먹이게 된다. 대부분 근사에 기반한 계산이기 때문이다. HBAO 에서는 Depth 를 이용한 방법을 소개한다. 바로 Cross Bilateral Filter 다. Cross Bilateral Filter 은 Gaussian Filter 와 비슷한 필터로, Gaussian Filter 는 샘플링할 위치의 거리에 따라 점차 가중치가 줄어드는 필터라면, Bilateral Filter 는 위치에 따라 가중치가 줄어드는게 아닌 각 위치별로 가지고 있는 한개의 스칼라값에 차이에 따라서 가중치를 정하는 필터다. Cross 단어를 붙인 이유는 왼쪽과 오른쪽 방향의 필터와 위와 아래의 필터를 따로하기 때문에 Cross 라는 단어를 붙인 듯 하다. HBAO+ 코드에서도 X 축과 Y 축을 기준으로 하는 블러 소스가 나누어져 있다. HBAO 에는 한개의 스칼라 값을 Depth 를 기준으로 계산한다. 그래서 크게 튀는 부분의 결과는 많이 반영하지 않아 전체적으로 뿌옇게 바뀐다. 출처 : Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion 참조 자료 NVidia HBAO+ Image-Space Horizon Based Ambient Occlusion Wikipedia : Gaussian Filter Wikipedia : Bilateral Filter</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Hbao Plus Analysis 1</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-1/" rel="alternate" type="text/html" title="Hbao Plus Analysis 1" />
+      <published>2017-11-15T00:00:00+00:00</published>
+      <updated>2017-11-15T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-1</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-1/">&lt;p&gt;&lt;strong&gt;HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;이전 &lt;a href=&quot;/2017/11/15/hbao-plus-analysis-0/&quot;&gt;hbao plus analysis 0&lt;/a&gt; 글에서 &lt;em&gt;HBAO+&lt;/em&gt; 을 알기위한 기본적인 개념들에 대해서 살펴보았다. 이번 글에서는 &lt;em&gt;HBAO+&lt;/em&gt; 의 구조와 &lt;em&gt;Linearize Depth&lt;/em&gt; 와 &lt;em&gt;Deinterleaved Texturing&lt;/em&gt; 에 대해서 알아보겠다.&lt;/p&gt;
+
+&lt;h2&gt;&lt;em&gt;HBAO+&lt;/em&gt; Pipeline&lt;/h2&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/hbao+_pipeline_with_input_normals.png&quot; alt=&quot;hbao+ with input normal&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://docs.nvidia.com/gameworks/content/gameworkslibrary/visualfx/hbao/index.html&quot;&gt;NVIDIA HBAO+&lt;/a&gt;
+&lt;/center&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/hbao+_pipeline_without_input_normals.png&quot; alt=&quot;hbao+ without input normal&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://docs.nvidia.com/gameworks/content/gameworkslibrary/visualfx/hbao/index.html&quot;&gt;NVIDIA HBAO+&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;그림이 두개가 있다. 하나는 &lt;em&gt;GBuffer&lt;/em&gt; 를 사용할 시 &lt;em&gt;World-Space Normal&lt;/em&gt; 버퍼와 &lt;em&gt;Depth Buffer&lt;/em&gt; 를 넘겨주어 계산하는 방식과 입력으로 &lt;em&gt;Depth Buffer&lt;/em&gt; 만 넘겨서 &lt;em&gt;Normal&lt;/em&gt; 데이터를 계산하는 두가지 방식에 대한 파이프라인이다. 두가지의 차이는 &lt;em&gt;Normal&lt;/em&gt; 데이터에 대한 처리방식만 다르다. 나머지 계산은 다를게 없다.&lt;/p&gt;
+
+&lt;h2&gt;Linearize Depths&lt;/h2&gt;
+
+&lt;p&gt;코드를 보면 가장 처음에 시작하는 단계는 바로 &lt;em&gt;Linearize Depths&lt;/em&gt; 다. 이는 꽤나 알려진 방법이다. 하지만 필자는 &lt;em&gt;HBAO+&lt;/em&gt; 를 볼때 처음 봤기에 어느 정도의 설명을 해놓아야겠다. &lt;em&gt;Linearize Depths&lt;/em&gt; 를 알기 위해선 입력된 정점의 위치를 &lt;em&gt;Clipping-Space&lt;/em&gt; 로 변환하는 방법이 어떻게 이루어지는지 알고 있어야 한다.&lt;/p&gt;
+
+&lt;p&gt;일반적인 오브젝트를 렌더링 할때는 &lt;em&gt;Shader&lt;/em&gt; 에 입력으로 들어오는 정점의 기준 공간은 &lt;em&gt;Model-Space&lt;/em&gt;(또는 &lt;em&gt;Local-Space&lt;/em&gt;) &lt;em&gt;Position&lt;/em&gt; 이다. 그래서 &lt;em&gt;MVP&lt;/em&gt; 변환을 통해 &lt;em&gt;Rasterizer&lt;/em&gt; 가 처리할 수 있도록 &lt;em&gt;Clipping-Space&lt;/em&gt; 로 &lt;em&gt;Rasterizer&lt;/em&gt; 로 넘어가기 전에 변환해주어야 한다.(전체적인 내용은 &lt;a href=&quot;https://docs.google.com/presentation/d/10VzsjfifKJlRTHDlBq7e8vNBTu4D5jOWUF87KYYGwlk/edit#slide=id.g25f88339be_0_0&quot;&gt;Model, View, Projection 변환&lt;/a&gt; 에서 확인할 수 있다.
+) 그래서 &lt;em&gt;Pixel Shader&lt;/em&gt; 로 넘어간 데이터들은 픽셀별로 들어가고, 픽셀별로 들어간 정점들의 위치는 &lt;em&gt;Clipping-Space&lt;/em&gt; 로 되어있다. 여기까지 이해했으면 아래 그림을 보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/Graphics3D_ClipVolume.png&quot; alt=&quot;Frustom vs Clipping&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://www.ntu.edu.sg/home/ehchua/programming/opengl/CG_BasicsTheory.html&quot;&gt;3D Graphics with OpenGL Basic Theory&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;위 그림은 &lt;em&gt;View Frustom&lt;/em&gt; 과 &lt;em&gt;Clipping Volume&lt;/em&gt; 을 보여준다. &lt;em&gt;View Frustom&lt;/em&gt; 은 &lt;em&gt;Perspective&lt;/em&gt; 방식으로 카메라가 실제로 보여주는 공간을 시각화 한것이고, &lt;em&gt;Clipping Volume&lt;/em&gt; 은 &lt;em&gt;MVP&lt;/em&gt; 변환에서 &lt;em&gt;Projection&lt;/em&gt; 행렬을 사용할시 &lt;em&gt;View Frustom&lt;/em&gt; 에서 &lt;em&gt;Clipping Volume&lt;/em&gt; 으로 변환되는 볼륨을 시각화 한것이다. &lt;em&gt;Projection&lt;/em&gt; 변환은 아래와 같다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/projection_matrix.png&quot; alt=&quot;perspective projection matrix&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://stackoverflow.com/questions/6652253/getting-the-true-z-value-from-the-depth-buffer
+&quot;&gt;Stackoverflow : Getting the true z value from the depth buffer&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Perspective Projection&lt;/em&gt; 은 &lt;em&gt;Frustom&lt;/em&gt; 기준 위치를 &lt;em&gt;Cube&lt;/em&gt; 기준 위치로 바꾸는 연산이기 때문에 실제 좌표의 왜곡이 발생한다. 우리는 Z(Detph) 값이 어떤식으로 왜곡되는지 알아야 한다. 우선 &lt;em&gt;Clipping-Space&lt;/em&gt; 로 변환할때, &lt;em&gt;Perspective&lt;/em&gt; 형식의 &lt;em&gt;View Frustom&lt;/em&gt; 의 &lt;em&gt;zNear&lt;/em&gt;, &lt;em&gt;zFar&lt;/em&gt; 사이의 Z 값을 [0~1] 값으로 매핑한다. 그러면 &lt;em&gt;zNear&lt;/em&gt;, &lt;em&gt;zFar&lt;/em&gt; 값을에 따라서 실제 좌표가 바뀐다. 그리고 값 자체가 실제 Z 값과 선형적으로 매핑되지 않는다. 아래 그림을 보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/nonlinearDepth.png&quot; alt=&quot;non linear depth&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://computergraphics.stackexchange.com/questions/5116/how-am-i-able-to-perform-perspective-projection-without-a-near-plane&quot;&gt;Computer Graphics StackExchange : How am I able to perform perspective projection without a near plane?&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;그림이 조금 헷갈릴수도 있다. 세로축의 &lt;em&gt;d&lt;/em&gt; 값은 &lt;em&gt;Projection&lt;/em&gt; 을 한 Z, &lt;em&gt;Depth&lt;/em&gt; 값이고 가로축은 &lt;em&gt;World-Space&lt;/em&gt; 의 Z 값이다. 조금 헷갈릴수도 있는 부분은 세로축의 기준값이 윗부분이 0이고 아랫부분이 1이다. 이 부분은 신경써서 봐야한다. 이해했다면 변경된 &lt;em&gt;Depth&lt;/em&gt; 값은 실제 Z 값과 선형적인 관계가 아니고, 실제 Z 값으로 복원하려면 여러 연산을 해야하기에 &lt;em&gt;HBAO+&lt;/em&gt; 에서는 &lt;em&gt;Depth&lt;/em&gt; 값들을 &lt;em&gt;Linearize&lt;/em&gt; 하는 과정을 맨 처음에 넣은 것이다. 실제 Z 값으로 복원하는 이유는 간단하다. &lt;em&gt;Linear&lt;/em&gt; 하지 않은 &lt;em&gt;Depth&lt;/em&gt; 값을 연산시에 사용하면 보다 부정확한 결과가 나오기 때문이다. 특히 &lt;em&gt;SSAO&lt;/em&gt; 연산을 할때는 &lt;em&gt;Depth&lt;/em&gt; 값이 기본이 되기 때문에 해주어야 한다.&lt;/p&gt;
+
+&lt;p&gt;이 단계에서의 결론은 간단하다. &lt;em&gt;Clipping-Space&lt;/em&gt; 의 &lt;em&gt;Depth&lt;/em&gt; 값을 &lt;em&gt;View-Space&lt;/em&gt; 의 Z 값으로 변환하는 단계다. 처리하는 코드는 다른 단계에 비해 짧다. 만약에 넘겨준 &lt;em&gt;Depth&lt;/em&gt; 데이터들이 &lt;em&gt;View-Space&lt;/em&gt; 인 경우에는 옵션을 통해 처리할 수 있다.&lt;/p&gt;
+
+&lt;h2&gt;Deintereaved Texturing&lt;/h2&gt;
+
+&lt;p&gt;위의 그림에는 &lt;em&gt;Generate HBAO+&lt;/em&gt; 라고 단순히 뭉뚱그려서 표현했지만 그 안에는 단순한 &lt;em&gt;Horizon based ambient occlusion(HBAO)&lt;/em&gt; 계산만 있지는 않다. &lt;em&gt;Deintereaved Texturing&lt;/em&gt; 이라는 테크닉과 함께 &lt;em&gt;HBAO&lt;/em&gt; 를 계산한다. &lt;em&gt;Computer Engineering&lt;/em&gt; 분야의 지식을 응용한 이론으로 개인적으로 이 이론을 접했을 떄 꽤나 충격이였다. 자세한 설명은 &lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf&quot;&gt;GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing&lt;/a&gt; 슬라이드의 몇장과 함께 보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/gdc2013_ParticleShadowsAndCacheEfficientPost_51.png&quot; alt=&quot;gdc2013_ParticleShadowsAndCacheEfficientPost_51&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf&quot;&gt;GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Deintereaved Texturing&lt;/em&gt; 의 방법은 간단하다. 텍스쳐를 여러장으로 나누어 샘플링을 한 후 각각의 나눠진 텍스쳐를 샘플링한 결과를 하나로 합친다. 슬라이드에는 &lt;em&gt;Post-Processing&lt;/em&gt; 을 기준으로 설명이 되어있다. 이점은 생각하면서 보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/gdc2013_ParticleShadowsAndCacheEfficientPost_52.png&quot; alt=&quot;gdc2013_ParticleShadowsAndCacheEfficientPost_52&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf&quot;&gt;GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;한 텍스쳐를 여러장으로 나누는건 &lt;em&gt;Multiple Render Target&lt;/em&gt; 을 사용해서 나눈다. 슬라이드는 4개를 기준으로 설명했지만 &lt;em&gt;DirectX10&lt;/em&gt; 부터는 최대 8개까지 지원하기 때문에 16개로 나누어 샘플링한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/gdc2013_ParticleShadowsAndCacheEfficientPost_53.png&quot; alt=&quot;gdc2013_ParticleShadowsAndCacheEfficientPost_53&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf&quot;&gt;GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;다음은 나누어진 각각의 텍스쳐를 샘플링하여 원하는 알고리즘으로 결과를 낸다. 조각난 텍스쳐 한개당 한번 &lt;em&gt;DrawCall&lt;/em&gt; 을 걸어준다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/gdc2013_ParticleShadowsAndCacheEfficientPost_54.png&quot; alt=&quot;gdc2013_ParticleShadowsAndCacheEfficientPost_54&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf&quot;&gt;GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Deintereave&lt;/em&gt; 를 하기전까지는 넓은 범위의 텍스쳐를 샘플링하여 캐시 효율이 많이 떨어졌지만 텍스쳐를 나누어 각각 할때마다 처리를 하게되니 캐시 효율의 이득을 얻었다. 또한 각각의 &lt;em&gt;DrawCall&lt;/em&gt; 마다 텍스쳐의 용량이 조금만 필요하게 되니 대역폭의 이득도 얻게 된다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/gdc2013_ParticleShadowsAndCacheEfficientPost_55.png&quot; alt=&quot;gdc2013_ParticleShadowsAndCacheEfficientPost_55&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf&quot;&gt;GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;한번의 &lt;em&gt;DrawCall&lt;/em&gt; 로 나누어진 결과들을 합친다. &lt;em&gt;Deintereaved Texturing&lt;/em&gt; 은 여기서 끝이다. 실제로 &lt;em&gt;HBAO+&lt;/em&gt; 는 16개의 텍스쳐로 나누어 샘플링한다. &lt;em&gt;Multiple Render Target&lt;/em&gt; 이 8개까지 지원되어 16개로 &lt;em&gt;Deintereave&lt;/em&gt; 하려면 2번 &lt;em&gt;DrawCall&lt;/em&gt; 을 해야한다. 또한 샘플링은 16번 &lt;em&gt;DrawCall&lt;/em&gt; 을 하여 계산한다. 그래서 한번 &lt;em&gt;Deintereaved Texturing&lt;/em&gt; 을 사용하여 &lt;em&gt;Post-Processing&lt;/em&gt; 처리하려면 약 20번의 &lt;em&gt;DrawCall&lt;/em&gt; 을 계산해야 한다. 절대적으로 큰 숫자가 아니기 때문에 크게 신경쓸 필요는 없어보인다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/gdc2013_ParticleShadowsAndCacheEfficientPost_62.png&quot; alt=&quot;gdc2013_ParticleShadowsAndCacheEfficientPost_62&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf&quot;&gt;GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;엄청난 성과를 거둔게 보인다. 캐시 히트 확률이 굉장히 올라갔고, 시간도 많이 절약했다. &lt;em&gt;HBAO+&lt;/em&gt; 의 성능향상을 시켜준 것이 이 &lt;em&gt;Deinterleaved Texturing&lt;/em&gt; 인듯하다.&lt;/p&gt;
+
+&lt;h2&gt;Reconstruction of Normal&lt;/h2&gt;
+
+&lt;p&gt;&lt;em&gt;HBAO+&lt;/em&gt; 는 기본적으로 &lt;em&gt;Depth&lt;/em&gt; 와 &lt;em&gt;Normal&lt;/em&gt; 을 통해서 계산한다. 그렇기 때문에 외부에서 &lt;em&gt;Normal&lt;/em&gt; 데이터를 넣어주거나 직접 만들어야 한다. 보통 &lt;em&gt;Deffered Rendering&lt;/em&gt; 을 차용하는 시스템들은 간단하게 &lt;em&gt;GBuffer&lt;/em&gt; 의 &lt;em&gt;Normal&lt;/em&gt; 데이터만 넣어주면 된다. &lt;em&gt;Normal&lt;/em&gt; 데이터를 가져오는 코드가 있으니 조금만 수정하여 사용하면 된다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Normal&lt;/em&gt; 데이터가 없는 경우에는 라이브러리 내에 직접 계산한다. 계산하는 픽셀을 기준으로 상하,좌우별로 &lt;em&gt;Depth&lt;/em&gt; 와 화면상의 좌표계를 이용하여 &lt;em&gt;View-Space&lt;/em&gt; 의 위치를 구한다음 위치가 상하, 좌우별로 가까운 픽셀의 위치 오프셋을 사용해 외적하여 &lt;em&gt;Normal&lt;/em&gt; 값을 구한다.&lt;/p&gt;
+
+&lt;h1&gt;참조 자료&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://docs.nvidia.com/gameworks/content/gameworkslibrary/visualfx/hbao/index.html&quot;&gt;NVidia HBAO+&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gameworks/samples/DeinterleavedTexturing.pdf&quot;&gt;NVidia : Deintereaved Texturing&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf&quot;&gt;GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.gdcvault.com/play/1017623/Advanced-Visual-Effects-with-DirectX&quot;&gt;GDCVault : Particle Shadows &amp;amp; Cache-Efficient Post-Processing Video&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="render" />
+      
+        <category term="analysis" />
+      
+        <category term="hbaoplus" />
+      
+        <category term="linearize_depth" />
+      
+        <category term="deintereaved_texturing" />
+      
+
+      
+
+      
+        <summary type="html">HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다. 이전 hbao plus analysis 0 글에서 HBAO+ 을 알기위한 기본적인 개념들에 대해서 살펴보았다. 이번 글에서는 HBAO+ 의 구조와 Linearize Depth 와 Deinterleaved Texturing 에 대해서 알아보겠다. HBAO+ Pipeline 출처 : NVIDIA HBAO+ 출처 : NVIDIA HBAO+ 그림이 두개가 있다. 하나는 GBuffer 를 사용할 시 World-Space Normal 버퍼와 Depth Buffer 를 넘겨주어 계산하는 방식과 입력으로 Depth Buffer 만 넘겨서 Normal 데이터를 계산하는 두가지 방식에 대한 파이프라인이다. 두가지의 차이는 Normal 데이터에 대한 처리방식만 다르다. 나머지 계산은 다를게 없다. Linearize Depths 코드를 보면 가장 처음에 시작하는 단계는 바로 Linearize Depths 다. 이는 꽤나 알려진 방법이다. 하지만 필자는 HBAO+ 를 볼때 처음 봤기에 어느 정도의 설명을 해놓아야겠다. Linearize Depths 를 알기 위해선 입력된 정점의 위치를 Clipping-Space 로 변환하는 방법이 어떻게 이루어지는지 알고 있어야 한다. 일반적인 오브젝트를 렌더링 할때는 Shader 에 입력으로 들어오는 정점의 기준 공간은 Model-Space(또는 Local-Space) Position 이다. 그래서 MVP 변환을 통해 Rasterizer 가 처리할 수 있도록 Clipping-Space 로 Rasterizer 로 넘어가기 전에 변환해주어야 한다.(전체적인 내용은 Model, View, Projection 변환 에서 확인할 수 있다. ) 그래서 Pixel Shader 로 넘어간 데이터들은 픽셀별로 들어가고, 픽셀별로 들어간 정점들의 위치는 Clipping-Space 로 되어있다. 여기까지 이해했으면 아래 그림을 보자. 출처 : 3D Graphics with OpenGL Basic Theory 위 그림은 View Frustom 과 Clipping Volume 을 보여준다. View Frustom 은 Perspective 방식으로 카메라가 실제로 보여주는 공간을 시각화 한것이고, Clipping Volume 은 MVP 변환에서 Projection 행렬을 사용할시 View Frustom 에서 Clipping Volume 으로 변환되는 볼륨을 시각화 한것이다. Projection 변환은 아래와 같다. 출처 : Stackoverflow : Getting the true z value from the depth buffer Perspective Projection 은 Frustom 기준 위치를 Cube 기준 위치로 바꾸는 연산이기 때문에 실제 좌표의 왜곡이 발생한다. 우리는 Z(Detph) 값이 어떤식으로 왜곡되는지 알아야 한다. 우선 Clipping-Space 로 변환할때, Perspective 형식의 View Frustom 의 zNear, zFar 사이의 Z 값을 [0~1] 값으로 매핑한다. 그러면 zNear, zFar 값을에 따라서 실제 좌표가 바뀐다. 그리고 값 자체가 실제 Z 값과 선형적으로 매핑되지 않는다. 아래 그림을 보자. 출처 : Computer Graphics StackExchange : How am I able to perform perspective projection without a near plane? 그림이 조금 헷갈릴수도 있다. 세로축의 d 값은 Projection 을 한 Z, Depth 값이고 가로축은 World-Space 의 Z 값이다. 조금 헷갈릴수도 있는 부분은 세로축의 기준값이 윗부분이 0이고 아랫부분이 1이다. 이 부분은 신경써서 봐야한다. 이해했다면 변경된 Depth 값은 실제 Z 값과 선형적인 관계가 아니고, 실제 Z 값으로 복원하려면 여러 연산을 해야하기에 HBAO+ 에서는 Depth 값들을 Linearize 하는 과정을 맨 처음에 넣은 것이다. 실제 Z 값으로 복원하는 이유는 간단하다. Linear 하지 않은 Depth 값을 연산시에 사용하면 보다 부정확한 결과가 나오기 때문이다. 특히 SSAO 연산을 할때는 Depth 값이 기본이 되기 때문에 해주어야 한다. 이 단계에서의 결론은 간단하다. Clipping-Space 의 Depth 값을 View-Space 의 Z 값으로 변환하는 단계다. 처리하는 코드는 다른 단계에 비해 짧다. 만약에 넘겨준 Depth 데이터들이 View-Space 인 경우에는 옵션을 통해 처리할 수 있다. Deintereaved Texturing 위의 그림에는 Generate HBAO+ 라고 단순히 뭉뚱그려서 표현했지만 그 안에는 단순한 Horizon based ambient occlusion(HBAO) 계산만 있지는 않다. Deintereaved Texturing 이라는 테크닉과 함께 HBAO 를 계산한다. Computer Engineering 분야의 지식을 응용한 이론으로 개인적으로 이 이론을 접했을 떄 꽤나 충격이였다. 자세한 설명은 GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing 슬라이드의 몇장과 함께 보자. 출처 : GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing Deintereaved Texturing 의 방법은 간단하다. 텍스쳐를 여러장으로 나누어 샘플링을 한 후 각각의 나눠진 텍스쳐를 샘플링한 결과를 하나로 합친다. 슬라이드에는 Post-Processing 을 기준으로 설명이 되어있다. 이점은 생각하면서 보자. 출처 : GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing 한 텍스쳐를 여러장으로 나누는건 Multiple Render Target 을 사용해서 나눈다. 슬라이드는 4개를 기준으로 설명했지만 DirectX10 부터는 최대 8개까지 지원하기 때문에 16개로 나누어 샘플링한다. 출처 : GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing 다음은 나누어진 각각의 텍스쳐를 샘플링하여 원하는 알고리즘으로 결과를 낸다. 조각난 텍스쳐 한개당 한번 DrawCall 을 걸어준다. 출처 : GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing Deintereave 를 하기전까지는 넓은 범위의 텍스쳐를 샘플링하여 캐시 효율이 많이 떨어졌지만 텍스쳐를 나누어 각각 할때마다 처리를 하게되니 캐시 효율의 이득을 얻었다. 또한 각각의 DrawCall 마다 텍스쳐의 용량이 조금만 필요하게 되니 대역폭의 이득도 얻게 된다. 출처 : GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing 한번의 DrawCall 로 나누어진 결과들을 합친다. Deintereaved Texturing 은 여기서 끝이다. 실제로 HBAO+ 는 16개의 텍스쳐로 나누어 샘플링한다. Multiple Render Target 이 8개까지 지원되어 16개로 Deintereave 하려면 2번 DrawCall 을 해야한다. 또한 샘플링은 16번 DrawCall 을 하여 계산한다. 그래서 한번 Deintereaved Texturing 을 사용하여 Post-Processing 처리하려면 약 20번의 DrawCall 을 계산해야 한다. 절대적으로 큰 숫자가 아니기 때문에 크게 신경쓸 필요는 없어보인다. 출처 : GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing 엄청난 성과를 거둔게 보인다. 캐시 히트 확률이 굉장히 올라갔고, 시간도 많이 절약했다. HBAO+ 의 성능향상을 시켜준 것이 이 Deinterleaved Texturing 인듯하다. Reconstruction of Normal HBAO+ 는 기본적으로 Depth 와 Normal 을 통해서 계산한다. 그렇기 때문에 외부에서 Normal 데이터를 넣어주거나 직접 만들어야 한다. 보통 Deffered Rendering 을 차용하는 시스템들은 간단하게 GBuffer 의 Normal 데이터만 넣어주면 된다. Normal 데이터를 가져오는 코드가 있으니 조금만 수정하여 사용하면 된다. Normal 데이터가 없는 경우에는 라이브러리 내에 직접 계산한다. 계산하는 픽셀을 기준으로 상하,좌우별로 Depth 와 화면상의 좌표계를 이용하여 View-Space 의 위치를 구한다음 위치가 상하, 좌우별로 가까운 픽셀의 위치 오프셋을 사용해 외적하여 Normal 값을 구한다. 참조 자료 NVidia HBAO+ NVidia : Deintereaved Texturing GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing GDCVault : Particle Shadows &amp;amp; Cache-Efficient Post-Processing Video</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Hbao Plus Analysis 0</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-0/" rel="alternate" type="text/html" title="Hbao Plus Analysis 0" />
+      <published>2017-11-15T00:00:00+00:00</published>
+      <updated>2017-11-15T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-0</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-0/">&lt;p&gt;게임에서 쓰이는 실시간 렌더링에서 빛과 물체들의 상호작용을 완벽하게 현실적으로 표현하는 거의 불가능하다. 하지만 이를 위해 수십년동안 많은 엔지니어와 연구자들이 노력하여 부분적이고 제한된 환경에서의 빛과 물체의 상호작용을 현실 세계와 비슷하게 따라잡고 있다. 이번 글에서 살펴볼 것은 &lt;em&gt;Screen-Space Ambient Occlusion(SSAO)&lt;/em&gt; 기반의 &lt;em&gt;HBAO+&lt;/em&gt; 라는 라이브러리에 대해서 알아볼 것이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;HBAO+&lt;/em&gt; 는 NVidia 에서 만든 라이브러리로써, 현재 &lt;a href=&quot;https://developer.nvidia.com/shadowworks&quot;&gt;&lt;em&gt;ShadowWorks&lt;/em&gt;&lt;/a&gt; 라는 프로젝트에 포함되어 있다. &lt;a href=&quot;https://developer.nvidia.com/shadowworks&quot;&gt;&lt;em&gt;ShadowWorks&lt;/em&gt;&lt;/a&gt; 에는 &lt;em&gt;HBAO+&lt;/em&gt; 뿐만 아니라 &lt;em&gt;ShadowLib&lt;/em&gt; 이라는 그림자 렌더링을 위한 라이브러리로써 HFTS, PCSS, CSM 등 많은 기능들을 포함하고 있는 라이브러리가 있다. 현재 &lt;em&gt;ShadowLib&lt;/em&gt; 은 오픈소스가 아니지만 이번에 알아볼 &lt;em&gt;HBAO+&lt;/em&gt; 는 &lt;em&gt;Github&lt;/em&gt; 에서 소스를 받을 수 있다. 이에 대한 자세한 사항은 &lt;a href=&quot;https://developer.nvidia.com/gameworks-source-github&quot;&gt;“Access GameWorks Source on Github”&lt;/a&gt; 에서 확인할 수 있다.&lt;/p&gt;
+
+&lt;h3&gt;Ambient Occlusion?&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;Ambient Occlusion&lt;/em&gt; 이란 말은 처음 들어본 사람에게는 생소한 말이지만 한번이라도 들어본 사람들에게는 꽤나 익숙한 말일 것이다. 빠른 이해를 위해 아래 그림을 보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/220px-AmbientOcclusion_German.jpg&quot; alt=&quot;Wikipedia : Ambient Occlusion Image&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://en.wikipedia.org/wiki/Ambient_occlusion&quot;&gt;Wikipedia : Ambient Occlusion&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;가장 위의 이미지를 보자. 단순한 렌더링이 아니라 반사를 구현해놓아서 꽤나 사실적이다. 하지만 여기서 더욱더 사실적으로 표현이 가능하다. 중간의 이미지를 보면 &lt;em&gt;Ambient Occlusion&lt;/em&gt; 이 무엇인지 쉽게 알 수 있다. 흰색 물체와 흰색 배경과 함께 아래 구석에 어두워진 것을 볼 수 있다. 이를 &lt;em&gt;Ambient Occlusion&lt;/em&gt; 이라고 한다.&lt;/p&gt;
+
+&lt;p&gt;글로 간단하게 설명하자면 물체가 모이면 좁은 공간이 생기게 되고, 구석이면 구석일 수록 직접 들어오는 빛은 있으나 반사되어 오는 빛이 적어지므로 어두워진다. 이를 말하는 것이바로 &lt;em&gt;Ambient Occlusion&lt;/em&gt; 이다. &lt;em&gt;Ambient&lt;/em&gt; 는 주변을 뜻하고, &lt;em&gt;Occlusion&lt;/em&gt; 은 무언가 가리는 것을 뜻한다. 빛을 가려서 주변에 보이는 것이 어두워지는 것을 말하는 것이다.&lt;/p&gt;
+
+&lt;p&gt;보통 &lt;em&gt;Ambient Occlusion&lt;/em&gt; 은 개발시에 미리 시간을 들여 계산해 미리 저장해놓은 다음 실시간으로 저장된 데이터를 읽어서 사용하는 &lt;em&gt;precomputed AO&lt;/em&gt; 방식으로 사용한다. 이유는 간단하다. 실시간으로 계산되기에는 요즘 컴퓨터로는 연산량을 버틸 수 없어서 그렇다. 월드가 복잡할수록, 넓을수록, 고퀄리티의 &lt;em&gt;AO&lt;/em&gt; 를 계산할수록 시간이 대폭 증가한다. 하지만 이는 물체와 물체간의 &lt;em&gt;AO&lt;/em&gt; 를 계산할때의 이야기이다.&lt;/p&gt;
+
+&lt;h3&gt;Screen-Space AO?&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;Deffered Rendering&lt;/em&gt; 이 많이 쓰이면서 이를 위한 많은 기술들이 연구되었다. &lt;em&gt;Deffered Rendering&lt;/em&gt; 의 대부분의 기술들은 이름앞에 보통 &lt;em&gt;Screen-Space&lt;/em&gt; 라는 단어를 달고 나왔다. &lt;em&gt;Screen-Space&lt;/em&gt; 란 &lt;em&gt;Geometry Stage&lt;/em&gt; 아닌 &lt;em&gt;Rasterizer Stage&lt;/em&gt; 로 넘어가서 처리되는 부분을 말한다. 말 뜻대로 해석한다면 2D 이미지의 공간이라는 뜻도 되겠다. 다만 &lt;em&gt;Pixel Shader&lt;/em&gt; 로 넘어간다고 해서 &lt;em&gt;Depth(Z value)&lt;/em&gt; 가 사라지지는 않기 때문에 이를 온전히 2D 공간이라고도 볼 수는 없다. 실제 좌표계는 &lt;em&gt;Clipping-Space&lt;/em&gt; 로 되어 있을 것이다.(x,y,z 가 -1 ~ 1 범위의 좌표로 되어있는 공간, Driver API 에 따라 조금씩 다르다.) 쉽게 이해하기 위해 아래 그림을 보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/DeferredLighting.jpg&quot; alt=&quot;Deffered Rendering&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://tower22.blogspot.kr/2010/11/from-deferred-to-inferred-part-uno.html&quot;&gt;From Deferred to Inferred, part uno&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;위 그림은 &lt;em&gt;Deffered Rendering&lt;/em&gt; 의 중요한 특징을 나타내는 그림이다. 이 데이터들을 &lt;em&gt;GBuffer&lt;/em&gt; 라고 한다. 저 결과들은 &lt;em&gt;Multi Render Target&lt;/em&gt; 을 통해 한 &lt;em&gt;Pixel Shader&lt;/em&gt; 에서 나온 결과물들이다. 즉 한 장면을 렌더링해서 2D 버퍼안에 데이터들을 픽셀별로 저장한 것이다. 각각 저마다 필요한 정보들을 담고 있다. 우리가 알아볼 &lt;em&gt;Screen-Space AO&lt;/em&gt; 또한 이런식으로 데이터를 처리한다. 위 그림에는 나와있지 않지만 하드웨어 차원에서 &lt;em&gt;Depth Buffer&lt;/em&gt; 를 지원한다. &lt;em&gt;Pixel Shader&lt;/em&gt; 를 실행한 후 알아서 &lt;em&gt;Depth Buffer&lt;/em&gt; 에 Z 값을 저장해준다. &lt;em&gt;Screen-Space AO&lt;/em&gt; 는 &lt;em&gt;Depth Buffer&lt;/em&gt; 를 이용하여 계산한다. 물론 &lt;em&gt;Depth Buffer&lt;/em&gt; 뿐만아니라 &lt;em&gt;GBuffer&lt;/em&gt; 에서 &lt;em&gt;Normal&lt;/em&gt; 데이터까지 사용하여 할 수도 있다.&lt;/p&gt;
+
+&lt;p&gt;하지만 &lt;em&gt;SSAO&lt;/em&gt; 는 정공법이 아니다. 모든 &lt;em&gt;AO&lt;/em&gt; 를 표현할 수 없으며 디테일한 &lt;em&gt;AO&lt;/em&gt; 밖에 표현하지 못한다. 그렇기에 이는 부가적인 방법으로 사용되어야 한다. &lt;em&gt;SSAO&lt;/em&gt; 를 활용하기 가장 좋은 장면은 화면에서 작게 표시되는 오브젝트들이 조밀하게 많이 있을 떄나 그려지는 오브젝트의 디테일이 많을 때다. 이럴때 &lt;em&gt;SSAO&lt;/em&gt; 를 표현하면 괜찮은 결과가 나온다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/0cf69542-8ff5-422a-8d01-f11bd65ab62e_scaled.jpg&quot; alt=&quot;Unity Technology : SSAO&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://forum.unity.com/threads/ssao-pro-high-quality-screen-space-ambient-occlusion.274003/page-5&quot;&gt;Unity Forum&lt;/a&gt;
+&lt;/center&gt;
+&lt;center&gt;&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;게임에서는 조금이라도 복잡한 메시를 쓸 수 밖에 없기 때문에 결국 왠만한 게임에는 &lt;em&gt;SSAO&lt;/em&gt; 를 넣는 것이 괜찮은 선택이 된것이다. 하지만 초기에 제안된 &lt;em&gt;SSAO&lt;/em&gt; 구현물들은 대부분 꽤나 시간을 잡아먹었었다. 그래서 시간에 따른 선택이 되었지만 &lt;em&gt;HBAO+&lt;/em&gt; 와 같은 개량된 기법이 여러개 등장하여 퍼포먼스를 다른 곳에 쓸 수 있게 되었다. &lt;a href=&quot;https://www.geforce.com/hardware/technology/hbao-plus/technology&quot;&gt;Geforce : HBAO+ Technology&lt;/a&gt; 에서 &lt;em&gt;SSAO&lt;/em&gt; 테크닉에 따른 벤치마킹을 볼 수 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/hbao_bench.png&quot; alt=&quot;benchmark&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://www.geforce.com/hardware/technology/hbao-plus/technology&quot;&gt;Geforce : HBAO+ Technology&lt;/a&gt;
+&lt;/center&gt;
+&lt;center&gt;&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;우리가 살펴볼 것은 가장 아래에 있는 &lt;em&gt;HBAO+&lt;/em&gt; 에 대한 것들이다. &lt;em&gt;Resolution&lt;/em&gt; 은 &lt;em&gt;Depth Buffer&lt;/em&gt; 의 해상도를 뜻한다. 당연히 큰 사이즈여야 디테일한 것까지 표현할 수 있다. 가장 왼쪽에 있는 것은 시간이다. &lt;em&gt;HBAO+&lt;/em&gt; 가 2.4ms 로 조금 느리지만 그 오른쪽에 있는 &lt;em&gt;Occlusion Samples Per AO Pixel&lt;/em&gt; 의 숫자와 같이 비교하면 이야기가 다르다. 이는 한 픽셀별로 몇번 다른 텍스쳐의 데이터 샘플링 숫자다. &lt;em&gt;HBAO&lt;/em&gt; 는 4번만 하지만, &lt;em&gt;HBAO+&lt;/em&gt; 는 이의 9배인 36번이다. 샘플링을 많이하게 되면 더욱더 사실적인 &lt;em&gt;SSAO&lt;/em&gt; 를 표현할 수 있다. 샘플링 숫자에 비하면 시간은 내어줄 수 있는 자원인 것이다.&lt;/p&gt;
+
+&lt;p&gt;이 글에서는 &lt;em&gt;HBAO+&lt;/em&gt; 를 분석하기 전 배경이 되는 개념에 대해서 알아보았다. 다음 &lt;a href=&quot;/2017/11/15/hbao-plus-analysis-1/&quot;&gt;hbao plus analysis 1&lt;/a&gt; 에서는 &lt;em&gt;HBAO+&lt;/em&gt; 라이브러리에 대한 본격적인 분석을 해보려고 한다.&lt;/p&gt;
+
+&lt;h1&gt;참조 자료&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Ambient_occlusion&quot;&gt;Wikipedia : Ambient Occlusion&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.nvidia.com/developer-program&quot;&gt;NVidia Developer Program&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.geforce.com/hardware/technology/hbao-plus/technology&quot;&gt;Geforce : HBAO+ Technology&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://forums.geforce.co.kr/index.php?document_srl=12616&amp;amp;mid=geforce&quot;&gt;한국 지포스 포럼 : HBAO+&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="render" />
+      
+        <category term="analysis" />
+      
+        <category term="hbaoplus" />
+      
+
+      
+
+      
+        <summary type="html">게임에서 쓰이는 실시간 렌더링에서 빛과 물체들의 상호작용을 완벽하게 현실적으로 표현하는 거의 불가능하다. 하지만 이를 위해 수십년동안 많은 엔지니어와 연구자들이 노력하여 부분적이고 제한된 환경에서의 빛과 물체의 상호작용을 현실 세계와 비슷하게 따라잡고 있다. 이번 글에서 살펴볼 것은 Screen-Space Ambient Occlusion(SSAO) 기반의 HBAO+ 라는 라이브러리에 대해서 알아볼 것이다. HBAO+ 는 NVidia 에서 만든 라이브러리로써, 현재 ShadowWorks 라는 프로젝트에 포함되어 있다. ShadowWorks 에는 HBAO+ 뿐만 아니라 ShadowLib 이라는 그림자 렌더링을 위한 라이브러리로써 HFTS, PCSS, CSM 등 많은 기능들을 포함하고 있는 라이브러리가 있다. 현재 ShadowLib 은 오픈소스가 아니지만 이번에 알아볼 HBAO+ 는 Github 에서 소스를 받을 수 있다. 이에 대한 자세한 사항은 “Access GameWorks Source on Github” 에서 확인할 수 있다. Ambient Occlusion? Ambient Occlusion 이란 말은 처음 들어본 사람에게는 생소한 말이지만 한번이라도 들어본 사람들에게는 꽤나 익숙한 말일 것이다. 빠른 이해를 위해 아래 그림을 보자. 출처 : Wikipedia : Ambient Occlusion 가장 위의 이미지를 보자. 단순한 렌더링이 아니라 반사를 구현해놓아서 꽤나 사실적이다. 하지만 여기서 더욱더 사실적으로 표현이 가능하다. 중간의 이미지를 보면 Ambient Occlusion 이 무엇인지 쉽게 알 수 있다. 흰색 물체와 흰색 배경과 함께 아래 구석에 어두워진 것을 볼 수 있다. 이를 Ambient Occlusion 이라고 한다. 글로 간단하게 설명하자면 물체가 모이면 좁은 공간이 생기게 되고, 구석이면 구석일 수록 직접 들어오는 빛은 있으나 반사되어 오는 빛이 적어지므로 어두워진다. 이를 말하는 것이바로 Ambient Occlusion 이다. Ambient 는 주변을 뜻하고, Occlusion 은 무언가 가리는 것을 뜻한다. 빛을 가려서 주변에 보이는 것이 어두워지는 것을 말하는 것이다. 보통 Ambient Occlusion 은 개발시에 미리 시간을 들여 계산해 미리 저장해놓은 다음 실시간으로 저장된 데이터를 읽어서 사용하는 precomputed AO 방식으로 사용한다. 이유는 간단하다. 실시간으로 계산되기에는 요즘 컴퓨터로는 연산량을 버틸 수 없어서 그렇다. 월드가 복잡할수록, 넓을수록, 고퀄리티의 AO 를 계산할수록 시간이 대폭 증가한다. 하지만 이는 물체와 물체간의 AO 를 계산할때의 이야기이다. Screen-Space AO? Deffered Rendering 이 많이 쓰이면서 이를 위한 많은 기술들이 연구되었다. Deffered Rendering 의 대부분의 기술들은 이름앞에 보통 Screen-Space 라는 단어를 달고 나왔다. Screen-Space 란 Geometry Stage 아닌 Rasterizer Stage 로 넘어가서 처리되는 부분을 말한다. 말 뜻대로 해석한다면 2D 이미지의 공간이라는 뜻도 되겠다. 다만 Pixel Shader 로 넘어간다고 해서 Depth(Z value) 가 사라지지는 않기 때문에 이를 온전히 2D 공간이라고도 볼 수는 없다. 실제 좌표계는 Clipping-Space 로 되어 있을 것이다.(x,y,z 가 -1 ~ 1 범위의 좌표로 되어있는 공간, Driver API 에 따라 조금씩 다르다.) 쉽게 이해하기 위해 아래 그림을 보자. 출처 : From Deferred to Inferred, part uno 위 그림은 Deffered Rendering 의 중요한 특징을 나타내는 그림이다. 이 데이터들을 GBuffer 라고 한다. 저 결과들은 Multi Render Target 을 통해 한 Pixel Shader 에서 나온 결과물들이다. 즉 한 장면을 렌더링해서 2D 버퍼안에 데이터들을 픽셀별로 저장한 것이다. 각각 저마다 필요한 정보들을 담고 있다. 우리가 알아볼 Screen-Space AO 또한 이런식으로 데이터를 처리한다. 위 그림에는 나와있지 않지만 하드웨어 차원에서 Depth Buffer 를 지원한다. Pixel Shader 를 실행한 후 알아서 Depth Buffer 에 Z 값을 저장해준다. Screen-Space AO 는 Depth Buffer 를 이용하여 계산한다. 물론 Depth Buffer 뿐만아니라 GBuffer 에서 Normal 데이터까지 사용하여 할 수도 있다. 하지만 SSAO 는 정공법이 아니다. 모든 AO 를 표현할 수 없으며 디테일한 AO 밖에 표현하지 못한다. 그렇기에 이는 부가적인 방법으로 사용되어야 한다. SSAO 를 활용하기 가장 좋은 장면은 화면에서 작게 표시되는 오브젝트들이 조밀하게 많이 있을 떄나 그려지는 오브젝트의 디테일이 많을 때다. 이럴때 SSAO 를 표현하면 괜찮은 결과가 나온다. 출처 : Unity Forum 게임에서는 조금이라도 복잡한 메시를 쓸 수 밖에 없기 때문에 결국 왠만한 게임에는 SSAO 를 넣는 것이 괜찮은 선택이 된것이다. 하지만 초기에 제안된 SSAO 구현물들은 대부분 꽤나 시간을 잡아먹었었다. 그래서 시간에 따른 선택이 되었지만 HBAO+ 와 같은 개량된 기법이 여러개 등장하여 퍼포먼스를 다른 곳에 쓸 수 있게 되었다. Geforce : HBAO+ Technology 에서 SSAO 테크닉에 따른 벤치마킹을 볼 수 있다. 출처 : Geforce : HBAO+ Technology 우리가 살펴볼 것은 가장 아래에 있는 HBAO+ 에 대한 것들이다. Resolution 은 Depth Buffer 의 해상도를 뜻한다. 당연히 큰 사이즈여야 디테일한 것까지 표현할 수 있다. 가장 왼쪽에 있는 것은 시간이다. HBAO+ 가 2.4ms 로 조금 느리지만 그 오른쪽에 있는 Occlusion Samples Per AO Pixel 의 숫자와 같이 비교하면 이야기가 다르다. 이는 한 픽셀별로 몇번 다른 텍스쳐의 데이터 샘플링 숫자다. HBAO 는 4번만 하지만, HBAO+ 는 이의 9배인 36번이다. 샘플링을 많이하게 되면 더욱더 사실적인 SSAO 를 표현할 수 있다. 샘플링 숫자에 비하면 시간은 내어줄 수 있는 자원인 것이다. 이 글에서는 HBAO+ 를 분석하기 전 배경이 되는 개념에 대해서 알아보았다. 다음 hbao plus analysis 1 에서는 HBAO+ 라이브러리에 대한 본격적인 분석을 해보려고 한다. 참조 자료 Wikipedia : Ambient Occlusion NVidia Developer Program Geforce : HBAO+ Technology 한국 지포스 포럼 : HBAO+</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
       <title type="html">Shader Pipeline 4 Geometry Shader</title>
       
       <link href="https://hrmrzizon.github.io/2017/10/31/shader-pipeline-4-geometry-shader/" rel="alternate" type="text/html" title="Shader Pipeline 4 Geometry Shader" />
       <published>2017-10-31T00:00:00+00:00</published>
       <updated>2017-10-31T00:00:00+00:00</updated>
       <id>https://hrmrzizon.github.io/2017/10/31/shader-pipeline-4-geometry-shader</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/10/31/shader-pipeline-4-geometry-shader/">&lt;p&gt;“&lt;a href=&quot;/2017/10/31/shader-pipeline-3-fragment-shader0/&quot;&gt;Fragemnt Shader&lt;/a&gt;” 에서 &lt;em&gt;Fragment Shader&lt;/em&gt; 에 대해 알아보았다. 다음은 &lt;em&gt;Geometry Shader&lt;/em&gt; 에 대해서 써보려 한다.&lt;/p&gt;
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/10/31/shader-pipeline-4-geometry-shader/">&lt;p&gt;“&lt;a href=&quot;/2017/10/31/shader-pipeline-3-fragment-shader/&quot;&gt;Fragemnt Shader&lt;/a&gt;” 에서 &lt;em&gt;Fragment Shader&lt;/em&gt; 에 대해 알아보았다. 다음은 &lt;em&gt;Geometry Shader&lt;/em&gt; 에 대해서 써보려 한다.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Geometry Shader&lt;/em&gt; 는 쉐이더 파이프라인에서 &lt;em&gt;Rasterizer Stage&lt;/em&gt; 넘어가기 전의 &lt;em&gt;Geometry Stage&lt;/em&gt; 의 마지막 단계로써 이전 쉐이더에서 넘긴  &lt;em&gt;Primitive&lt;/em&gt; 데이터(point, line, triangle..)를 프로그래머가 원하는 복수의 &lt;em&gt;Primitive&lt;/em&gt; 데이터로 변환할 수 있다. 삼각형을 삼각형의 중심을 나타내는 점으로 변환하는 쉐이더를 보자.&lt;/p&gt;
 
@@ -117,13 +569,13 @@ void geom(vertexOutput input[3], uint InstanceID : SV_GSInstanceID, inout PointS
   
     <entry>
       
-      <title type="html">Shader Pipeline 3 Fragment Shader0</title>
+      <title type="html">Shader Pipeline 3 Fragment Shader</title>
       
-      <link href="https://hrmrzizon.github.io/2017/10/31/shader-pipeline-3-fragment-shader0/" rel="alternate" type="text/html" title="Shader Pipeline 3 Fragment Shader0" />
+      <link href="https://hrmrzizon.github.io/2017/10/31/shader-pipeline-3-fragment-shader/" rel="alternate" type="text/html" title="Shader Pipeline 3 Fragment Shader" />
       <published>2017-10-31T00:00:00+00:00</published>
       <updated>2017-10-31T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/10/31/shader-pipeline-3-fragment-shader0</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/10/31/shader-pipeline-3-fragment-shader0/">&lt;p&gt;이전 글 : “&lt;a href=&quot;/2017/10/31/shader-pipeline-2-rasterizer/&quot;&gt;Rasterizer&lt;/a&gt;” 에서 &lt;em&gt;Rasterizer&lt;/em&gt; 에 대해 알아보았다. 이번에는 &lt;em&gt;Fragment Shader&lt;/em&gt; 을 알아보자.&lt;/p&gt;
+      <id>https://hrmrzizon.github.io/2017/10/31/shader-pipeline-3-fragment-shader</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/10/31/shader-pipeline-3-fragment-shader/">&lt;p&gt;이전 글 : “&lt;a href=&quot;/2017/10/31/shader-pipeline-2-rasterizer/&quot;&gt;Rasterizer&lt;/a&gt;” 에서 &lt;em&gt;Rasterizer&lt;/em&gt; 에 대해 알아보았다. 이번에는 &lt;em&gt;Fragment Shader&lt;/em&gt; 을 알아보자.&lt;/p&gt;
 
 &lt;p&gt;쉐이더 파이프라인에서 &lt;em&gt;Rasterizer&lt;/em&gt; 다음에 실행되는 것은 &lt;em&gt;Programmable Shader&lt;/em&gt; 중에서 &lt;em&gt;Fragment Shader&lt;/em&gt; 이다. &lt;em&gt;Fragment Shader&lt;/em&gt; 은 &lt;em&gt;Pixel Shader&lt;/em&gt; 라고도 불리는데, 이전에 &lt;em&gt;Rasterizer&lt;/em&gt; 에서 조각낸 픽셀들을 단위로 실행되기 때문에 &lt;em&gt;Pixel Shader&lt;/em&gt; 라고 불리기도 한다. 또한 각 픽셀은 조각난 단위이기 때문에 조각의 뜻을 가진 &lt;em&gt;Fragment Shader&lt;/em&gt; 라고도 불린다. 이 글에서는 &lt;em&gt;Fragment Shader&lt;/em&gt; 로 사용할 것이다.&lt;/p&gt;
 
@@ -1232,564 +1684,6 @@ void Process (uint3 id : SV_DispatchThreadID)
 
       
         <summary type="html">GameDev : structured buffer vs constant buffer의 답변 해석 글이다.</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Structured Buffer Vs Constant Buffer</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/07/06/structured-buffer-vs-constant-buffer/" rel="alternate" type="text/html" title="Structured Buffer Vs Constant Buffer" />
-      <published>2017-07-06T00:00:00+00:00</published>
-      <updated>2017-07-06T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/07/06/structured-buffer-vs-constant-buffer</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/07/06/structured-buffer-vs-constant-buffer/">&lt;p&gt;CG 로 쉐이더 코딩을 하기 위해 여러 소스와 웹페이지를 뒤지던 도중 재미있는 글을 발견했다. HLSL 에서 사용하는 &lt;em&gt;StructuredBuffer&lt;/em&gt; 와 &lt;em&gt;Constant Buffer&lt;/em&gt; 의 차이에 대한 글이였다. Unity 메뉴얼을 따라가면서 몇번 보긴했지만 무슨 차이인지도 모르는 것들이였다. 하지만 알고나니 GPU Instancing 에 대한 기본적인 상식이기에 글을 쓴다. 우선 두가지를 먼저 간단하게 알아보고 두 개념의 차이에 대해서 알아보자.&lt;/p&gt;
-
-&lt;!-- more --&gt;
-
-&lt;h2&gt;&lt;em&gt;Constant Buffer&lt;/em&gt;&lt;/h2&gt;
-
-&lt;p&gt;이름을 직역하면 상수 버퍼다. 직관적인 느낌은 단순한 고정값 참조를 위한 버퍼인 것 같다.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/windows/desktop/bb509581%28v=vs.85%29.aspx&quot;&gt;MSDN : Shader Constants&lt;/a&gt; 페이지에서 자세한 정보를 확인할 수 있다. 문서의 내용은 &lt;em&gt;Shdaer Model 4&lt;/em&gt; (DirectX10 이 &lt;em&gt;Shdaer Model 4&lt;/em&gt; 를 지원함.) 부터 쉐이더에서 쓰이는 상수(쉐이더 코드에서 변화시키지 않는 변수, 이하  &lt;em&gt;Shader Constants&lt;/em&gt;) 전용 버퍼 리소스를 제공한다고 한다. &lt;em&gt;Shader Constants&lt;/em&gt; 의 장점은 변경되지 않는 특징을 사용해 CPU 로 부터 낮은 시간으로 더 많이 업데이트를 받을 수 있다는 장점이 있다. 단점은 빠른만큼 제약조건이 여러개 있다는 것이다. 데이터의 크기는 정해져 있어야 하며 일정 크기를 넘기지 못한다. 그리고 데이터의 레이아웃(데이터를 정의하는데에 한계가 있는 듯하다. 필자는 정확히 모름)과 데이터를 접근할 때 한 쉐이더에서만 접근이 가능하다. 정점 쉐이더면 정점 쉐이더 전용, 프래그먼트 쉐이더면 프래그먼트 전용 상수 버퍼를 쓸 수 있다는 말이다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Shader Constants&lt;/em&gt; 는 두가지의 데이터의 형태를 지원하는데 하나는 위에서 언급한 &lt;em&gt;Constant Buffer&lt;/em&gt;(&lt;em&gt;cbuffer&lt;/em&gt;) 이고 하나는 &lt;em&gt;Texture Buffer&lt;/em&gt;(&lt;em&gt;tbuffer&lt;/em&gt;) 라는 놈이다. &lt;em&gt;tbuffer&lt;/em&gt; 는 텍스쳐처럼 접근 가능하다고 한다. 이 말은 뒤에 쓰여진 말을 생각해보면 이해할 수 있다. 임의로 인덱싱된 데이터에 대해 더 잘 수행된다고 쓰여있는데 이 말은 배열처럼 인덱스 단위로 바로바로 접근이 가능해서 랜덤으로 인덱스를 정해서 접근해도 잘 접근이 되야된다는 소리다. &lt;em&gt;cbuffer&lt;/em&gt; 와 &lt;em&gt;tbuffer&lt;/em&gt; 의 갯수 제한은 없다. 각각의 크기 제한만 있을 뿐이다. 이 두가지 버퍼를 선언하는 방법은 C 언어의 구조체를 선언하는 법과 매우 유사하다고 한다. 정말 그렇다. 또한 직접 레지스터에 데이터를 넣고 싶거나, 데이터의 패킹 오프셋(C 언어에서는 padding 이라는 단어로 알려져 있다.) 을 설정할 수도 있다. 다만 Shader 에서는 1바이트가 기본이 아닌 16바이트 패킹이 기본이다. 16바이트 중 4바이트 단위로 접근을 할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;Unity 에서는 GPU Instancing 기본 예제를 DirectX 의 경우에는 &lt;em&gt;cbuffer&lt;/em&gt; 를 사용하게 한다. 아래처럼 선언하게 되어 있다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;UNITY_INSTANCING_CBUFFER_START(_CBufferName)
-  ...
-UNITY_INSTANCING_CBUFFER_END
-&lt;/code&gt;&lt;/pre&gt;
-&lt;!--__ --&gt;
-&lt;p&gt;전처리가 끝나서 HLSL 식으로 컨버팅되면 아래와 같이 된다. Unity 에서 제공하는 쉐이더 코드를 참조했다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;cbuffer _CBufferName {
-  ...
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Unity 에서 제공하는 예제는 단순하게 컬러값을 인스턴스별로 바꾸게 해주는 그리하여 여러개의 메터리얼을 사용하지 않아 쓸데없는 &lt;em&gt;SetPass&lt;/em&gt; 를 안하게 해주는 예제다. 이 값들은 쉐이더에서 변경할 필요가 없는 상수 값이므로 &lt;em&gt;cbuffer&lt;/em&gt; 를 사용해도 문제가 없다.&lt;/p&gt;
-
-&lt;p&gt;하지만 필자는 &lt;a href=&quot;/2017/06/08/performence-and-optimization/&quot;&gt;Appocrypha : GPU Instancing&lt;/a&gt; 글에서 &lt;em&gt;cbuffer&lt;/em&gt; 가 추구하는 방향과는 조금 다르게 사용했다. 저 글을 쓸때 한창 스키닝에 대해 관심이 많았기 때문에 &lt;em&gt;cbuffer&lt;/em&gt; 를 사용해서 각 뼈들의 위치와 회전 데이터들을 사용했다. 하지만 저 사용용도는 그다지 좋지 않은 생각이였다. 이유는 글의 끝에서 말하겠다.&lt;/p&gt;
-
-&lt;h2&gt;&lt;em&gt;StructuredBuffer&lt;/em&gt;&lt;/h2&gt;
-
-&lt;p&gt;다음으로 알아볼 것은 &lt;em&gt;StructuredBuffer&lt;/em&gt; 다. 이 역시 맨 처음 등장한 것은 &lt;em&gt;Shader Model 4&lt;/em&gt; 부터 등장했다. 초기에는 사용 용도가 약간 한정되어 있는 것처럼 나온다. &lt;em&gt;Shader Model 4&lt;/em&gt; 에서는 읽기 전용의 버퍼만 지원하고, 버퍼의 종류가 적었다. 또한 사용 용도가 컴퓨터 쉐이더와 픽셀 쉐이더로 한정 되어 있었다고 한다. &lt;em&gt;Shader Model 5&lt;/em&gt; 부터는 다양한 변종의 버퍼들을 지원하고, 모든 쉐이더 코드에서 사용이 가능하게 되었다. 이는 쉐이더 코딩의 여러 가능성을 열어 주었다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;StructuredBuffer&lt;/em&gt; 는 &lt;em&gt;cbuffer&lt;/em&gt; 의 정의처럼 정적으로 명세를 지정했던 방식과는 다른 데이터를 접근하는 방식이다. &lt;em&gt;cbuffer&lt;/em&gt; 는 정해진 크기의 변수만 접근이 가능했다. 하지만 &lt;em&gt;StructuredBuffer&lt;/em&gt; 는 데이터를 쉐이더 코드에서 전역변수로 길이에 상관없는 리스트 형식으로 인덱스를 사용해 접근할 수 있는 데이터 형식이다. 사용하자면 아래와 같이 사용할 수 있겠다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;
-struct vertex
-{
-  float3 position;
-  float3 normal;
-}
-
-StructuredBuffer&amp;lt;vertex&amp;gt; perVertexDataBuffer;
-
-v2f vert (uint vertexID : SV_VertexID)
-{
-  vertex v = perVertexDataBuffer[vertexID];
-
-  ...
-
-  return someData;
-}
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;em&gt;Shader Model 5&lt;/em&gt; 에서는 쓰기도 가능한 &lt;em&gt;RWStructuredBuffer&lt;/em&gt; 와 단순한 데이터 한개씩 저장하는 &lt;em&gt;Buffer&lt;/em&gt;, &lt;em&gt;RWBuffer&lt;/em&gt; 등 특이한 다른 컨테이너도 지원해서 꽤나 재미있는 코딩이 가능할 듯 하다.&lt;/p&gt;
-
-&lt;h2&gt;결론?&lt;/h2&gt;
-
-&lt;p&gt;&lt;em&gt;StructuredBuffer&lt;/em&gt; 의 장단점에 대해서는 말하지 않았다. MSDN 에서도 그다지 자세하게 쓰여있지는 않다. 사실 필자도 그다지 관심이 없었다. 그냥 있으면 있는대로 쓰는거지 라는 생각을 당분간 하다가 문득 의문이 들었다. 도대체 무슨 차이길래 다르게 지원하는 것인가에 대한 의문이였다. 그래서 &lt;a href=&quot;https://www.gamedev.net/forums/topic/624529-structured-buffers-vs-constant-buffers/&quot;&gt;GameDev : structured buffer vs constant buffer&lt;/a&gt; 을 찾아 읽었고 꽤나 흥미로운 사실이였다. &lt;a href=&quot;https://www.gamedev.net/forums/topic/624529-structured-buffers-vs-constant-buffers/&quot;&gt;원문 링크&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;질문글은 &lt;em&gt;cbuffer&lt;/em&gt; 와 &lt;em&gt;StructuredBuffer&lt;/em&gt; 의 차이점에 대한 데이터가 없어 무슨 차이 인지, 그리고 3가지의 예시를 들어 각각 어떤게 더 알맞는지에 대한 구체적인 글이였다. 글또한 꽤나 잘쓰여져 있지만 질문글 보다 더욱더 봐야할 것은 아래에 달린 답글 2개다. 일반적으로 알기 힘든 사실들을 다루고 있다. 하나의 글은 두 버퍼의 차이에 대하여 써놨으며 하나의 답글은 질문글의 핀트에 맞추어 답글을 써놓았다. 해당 글의 답변 해석은 블로그에 올려놓았다. &lt;a href=&quot;/2017/07/06/translate-gamedev-structured-buffer-vs-constant-buffer/&quot;&gt;글 링크&lt;/a&gt; 에서 보면 된다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;cbuffer&lt;/em&gt; 는 레지스터를 사용하여 작으나 빠르고, 배열을 각각 다른 스레드에서 전부 다른 인덱스로 접근하면 느려진다. &lt;em&gt;StructuredBuffer&lt;/em&gt; 조금은 느리나 내부적으로 thread-safe 하게 구현되어 있고, 데이터 캐싱을 한다. 또한 크기의 제한이 없어 자유롭게 쓰고, 크기가 입력에 따라서 달라져서 유동적인 데이터에 쓸만하다는 것이다. 위에서 스키닝을 &lt;em&gt;cbuffer&lt;/em&gt; 로 사용한게 문제라고 했었는데, 글을 보면 알겠지만 &lt;em&gt;cbuffer&lt;/em&gt; 에서 각각 다른 인덱스로 접근하면 느려지니 문제인 것이다.&lt;/p&gt;
-
-&lt;h2&gt;참조&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/windows/desktop/bb509581%28v=vs.85%29.aspx&quot;&gt;MSDN : Shader Constants&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/ff471514%28v=vs.85%29.aspx&quot;&gt;MSDN Reference : StructuredBuffer&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/ff476335%28v=vs.85%29.aspx&quot;&gt;MSDN : New Resource Types&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.gamedev.net/forums/topic/624529-structured-buffers-vs-constant-buffers/&quot;&gt;GameDev : structured buffer vs constant buffer&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="unity" />
-      
-        <category term="shader" />
-      
-        <category term="gpuinstancing" />
-      
-        <category term="try" />
-      
-
-      
-
-      
-        <summary type="html">CG 로 쉐이더 코딩을 하기 위해 여러 소스와 웹페이지를 뒤지던 도중 재미있는 글을 발견했다. HLSL 에서 사용하는 StructuredBuffer 와 Constant Buffer 의 차이에 대한 글이였다. Unity 메뉴얼을 따라가면서 몇번 보긴했지만 무슨 차이인지도 모르는 것들이였다. 하지만 알고나니 GPU Instancing 에 대한 기본적인 상식이기에 글을 쓴다. 우선 두가지를 먼저 간단하게 알아보고 두 개념의 차이에 대해서 알아보자.</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Using Gpu Instancing In Unity</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/06/11/using-gpu-instancing-in-unity/" rel="alternate" type="text/html" title="Using Gpu Instancing In Unity" />
-      <published>2017-06-11T00:00:00+00:00</published>
-      <updated>2017-06-11T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/06/11/using-gpu-instancing-in-unity</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/06/11/using-gpu-instancing-in-unity/">&lt;p&gt;&lt;strong&gt;이 글은 Unity 5.6.1f 버젼에서 작성되었습니다. 다른 버젼에서는 에러가 날 수 있으니 참고 바랍니다.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/2017/06/04/using-texture2darray-in-unity/&quot;&gt;Using Texture2DArray in Unity&lt;/a&gt; 에 이어 &lt;em&gt;DrawCall&lt;/em&gt; 을 줄이기 위한 방법에 대해서 소개하려한다. GPU Instancing 이라는 방법인데 &lt;em&gt;TextureArray&lt;/em&gt; 와 같이 응용해서 사용하면 획기적으로 &lt;em&gt;DrawCall&lt;/em&gt; 을 줄일 수 있다.&lt;/p&gt;
-
-&lt;p&gt;일반적으로 알려진 &lt;em&gt;GPU Instancing&lt;/em&gt; 에 대해서 말하자면 컴퓨터의 RAM 에만 저장하던 데이터들을 GPU 메모리에 복사해놓고 GPGPU 나 쉐이더를 실행할 때 빠르게 데이터에 접근하는 것을 GPU Instancing 이라 한다. 만약 &lt;em&gt;GPU Instancing&lt;/em&gt; 을 사용하지 않으면 매번 &lt;em&gt;DrawCall&lt;/em&gt; 에 데이터를 넣어줘야하기 때문에 수많은 &lt;em&gt;DrawCall&lt;/em&gt; 이 걸리게 되고 이는 CPU 의 시간을 뺏어먹게 되어 영 좋지 않은 일이 된다. 보통은 같은 동작을 하는 오브젝트들을 최적화할 때 쓰인다. 사용하게 되면 &lt;em&gt;DrawCall&lt;/em&gt; 이 &lt;em&gt;O(&lt;strong&gt;오브젝트 갯수&lt;/strong&gt;)&lt;/em&gt; 로 되던것이 O(1) 의 갯수로 줄어든다. 그래서 &lt;em&gt;TextureArray&lt;/em&gt; 와 같이 사용하게 되면 &lt;em&gt;DrawCall&lt;/em&gt; 이 &lt;em&gt;O(&lt;strong&gt;오브젝트 갯수&lt;/strong&gt; * &lt;strong&gt;텍스쳐 갯수&lt;/strong&gt;)&lt;/em&gt; 로 계산되던게 &lt;em&gt;O(&lt;strong&gt;1&lt;/strong&gt;)&lt;/em&gt; 로 바뀌어 버리니 CPU 시간을 엄청나게 많이벌 수 있다. 다만 GPU 메모리를 많이 잡아먹기 때문에 신경써서 데이터를 구성하지 않으면 무슨일이 일어날지 모른다.&lt;/p&gt;
-
-&lt;!-- more --&gt;
-
-&lt;p&gt;기술을 써보기 전에 우선 구현 사항부터 생각해야 한다. 필자는 Unity 에서 지원하는 &lt;strong&gt;SkinnedMeshRenderer&lt;/strong&gt; 가 &lt;em&gt;DrawCall&lt;/em&gt; 배칭을 해주지 않아 간단한 스키닝을 직접 구현하였다. &lt;strong&gt;SkinnedMeshRenderer&lt;/strong&gt; 가 많은 기능을 지원하긴 하지만 &lt;strong&gt;SkinnedMeshRenderer&lt;/strong&gt; 컴포넌트의 갯수가 절대적으로 많아지고 매터리얼이 늘어나게 되면 어쩔 수 없이 원하는 기능을 붙여 직접 구현해야 한다. &lt;a href=&quot;git@github.com:hrmrzizon/InstancedSkinningExmaple.git&quot;&gt;InstancedSkinning&lt;/a&gt;에서 참고할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;해야할 것은 두가지다. 쉐이더에서 데이터를 선언 후 직접 사용하는 코드를 짜주어야 하고, 스크립트에서는 필요한 데이터를 모아서 넣어주기만 하면 된다. 말로는 간단하지만 신경써주어야 할것이 많다. 필자 역시 간단하다고 생각하여 시작했으나 꽤 많은 삽질 끝에 성공했다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;GPU Instancing&lt;/em&gt; 의 핵심은 GPU 메모리에 어떤 데이터들을 어떻게 옮겨놓고 그 데이터들을 어떻게 사용하느냐가 제일 핵심이다. 스크립트에서는 &lt;strong&gt;MaterialPropertyBlock&lt;/strong&gt; 인스턴스를 통해 데이터를 한꺼번에 세팅하고 &lt;em&gt;Graphics.DrawMeshInstanced&lt;/em&gt; 메소드를 호출해 그린다. 보통은 매 프레임별로 &lt;em&gt;Graphics.DrawMeshInstanced&lt;/em&gt; 호출하기 때문에 적당히 코딩이 되어있다면 필요할때마다 &lt;strong&gt;MaterialPropertyBlock&lt;/strong&gt; 인스턴스에 데이터를 갱신해주기만 하면 된다. &lt;strong&gt;MaterialPropertyBlock&lt;/strong&gt; 은 쉐이더에 들어가는 정보들을 취급하는 데이터 뭉치(chunk)다. &lt;strong&gt;Material&lt;/strong&gt; 은 쉐이더 정보와 필요한 데이터를 가지고 있는 인스턴스다. 쉐이더 정보를 가지고 있기 때문에 매터리얼의 갯수가 많으면 많을수록 &lt;em&gt;DrawCall&lt;/em&gt; 의 갯수가 늘어난다. 하지만 &lt;strong&gt;MaterialPropertyBlock&lt;/strong&gt; 은 &lt;strong&gt;Material&lt;/strong&gt; 과는 다르게 정보만 가지고 있는 것이기 때문에 &lt;em&gt;DrawCall&lt;/em&gt; 의 갯수가 늘어나지 않는다. &lt;strong&gt;MaterialPropertyBlock&lt;/strong&gt; 에 관한 자세한 사용법은 &lt;a href=&quot;https://docs.unity3d.com/kr/current/ScriptReference/MaterialPropertyBlock.html&quot;&gt;Unity Reference : MaterialPropertyBlock&lt;/a&gt; 을 참고하라.&lt;/p&gt;
-
-&lt;p&gt;아 그러면 쉐이더는 어디서 정의하냐고? &lt;em&gt;Graphics.DrawMeshInstanced&lt;/em&gt; 메소드는 &lt;strong&gt;Material&lt;/strong&gt; 과 &lt;strong&gt;MaterialPropertyBlock&lt;/strong&gt; 둘다 필요하다. 적당히 데이터를 분리해서 취급하면 된다. 아래 그리는 코드를 살펴보자. &lt;a href=&quot;https://github.com/hrmrzizon/InstancedSkinningExmaple/blob/master/Assets/2%20-%20InstancedSkinning/CharacterSet.cs&quot;&gt;InstancedSkinning - CharacterSet&lt;/a&gt; 에서 간추려서 가져왔다.&lt;/p&gt;
-
-&lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Dictionary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CharacterData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DrawData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drawDataDict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;enumer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;drawDataDict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetEnumerator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;enumer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;MoveNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;DrawData&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;enumer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Current&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-        &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;UpdateMatrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;UpdateMaterialblcok&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-
-        &lt;span class=&quot;n&quot;&gt;Graphics&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;DrawMeshInstanced&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;material&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mainMatrixList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;block&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;castShadow&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;
-                    &lt;span class=&quot;n&quot;&gt;UnityEngine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Rendering&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ShadowCastingMode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;On&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-                    &lt;span class=&quot;n&quot;&gt;UnityEngine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Rendering&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ShadowCastingMode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Off&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;receiveShadow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;drawLayerNumber&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;drawCamera&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;Material&lt;/strong&gt; 인스턴스는 단 한개이며 &lt;strong&gt;Texture2DArray&lt;/strong&gt; 를 사용해 모든 텍스쳐를 하나로 합쳐 &lt;em&gt;DrawCall&lt;/em&gt; 을 줄였다. &lt;strong&gt;DrawData&lt;/strong&gt; 는 &lt;em&gt;Graphics.DrawMeshInstanced&lt;/em&gt; 메소드 호출을하기 위한 구조체 데이터다. 기본적으로 물체를 그릴때 필요한 &lt;strong&gt;Mesh&lt;/strong&gt; 인스턴스와 각 그려야할 인스턴스 별로 필요한 변환행렬들을 가지고 있는 &lt;em&gt;DrawData.mainMatrixList&lt;/em&gt;, 필요한 데이터를 저장하고 있는 &lt;strong&gt;MaterialPropertyBlock&lt;/strong&gt; 인스턴스 &lt;em&gt;DrawData.block&lt;/em&gt; 을 가지고 있다. &lt;em&gt;DrawData.UpdateMaterialblcok&lt;/em&gt; 메소드는 필요한 데이터들을 &lt;em&gt;DrawData.block&lt;/em&gt; 에 넘겨주는 메소드다.&lt;/p&gt;
-
-&lt;p&gt;여기까지 스크립트에서 해주어야할 것들에 대해 말했다. 필요한 데이터들을 준비하고 &lt;em&gt;Graphics.DrawMeshInstanced&lt;/em&gt; 로 한꺼번에 그려주는게 핵심이다. 이제 쉐이더 코딩에 대해 알아보자. Unity 에서의 쉐이더 코딩은 굉장히 복잡하다. Unity 는 여러 플랫폼을 위한 엔진이기 때문에 여러 플랫폼, Graphics API 에 대한 세팅이 필요하며 &lt;em&gt;GPU Instancing&lt;/em&gt; 을 사용할 때 약간의 애로사항이 있다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;GPU Instancing&lt;/em&gt; 을 사용할 때 결국 데이터는 전부 배열로 들어오게 된다. 각종 쉐이더 언어(HLSL, GLSL)에서 지원하는 &lt;em&gt;instanceID&lt;/em&gt; 라는 배열에 접근하기 위한 인덱스가 있다. 이 인덱스에 접근하는 기능을 여러 플랫폼과 Graphics API 지원을 위해 해당 기능을 전처리기 구문으로 감싸놓았는데 Unity 엔진 사용자는 접근을 할수가 없다. 즉 배열의 인덱스에 직접 접근이 불가능하다는 것이다. 이렇게 되면 깔끔하게 코딩이 안되서 굉장히 불편할 뿐만 아니라 데이터도 효율적으로 쓰지 못한다.&lt;/p&gt;
-
-&lt;p&gt;또한 &lt;em&gt;Graphics.DrawMeshInstanced&lt;/em&gt; 를 사용하려면 옵션을 하나 붙여주어야 한다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;#pragma exclude_renderers d3d9 gles d3d11_9x
-#pragma only_renderers d3d11 glcore gles3 metal vulkan
-
-#pragma multi_compile_instancing
-
-#include &quot;UnityCG.cginc&quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;위와 같이 &lt;em&gt;UnityCG.cginc&lt;/em&gt; 파일을 포함하기 전에 전처리기 옵션 : &lt;em&gt;multi_compile_instancing&lt;/em&gt; 을 붙여주어야 한다. 저 옵션을 안붙이게 되면 컴포넌트 렌더러(&lt;strong&gt;MeshRenderer&lt;/strong&gt;, &lt;strong&gt;SkinnedMeshRenderer&lt;/strong&gt;)에서 개별로 쓰이는 쉐이더만 컴파일하게 되는데 그 상태에서 &lt;em&gt;Graphics.DrawMeshInstanced&lt;/em&gt; 를 사용하게 되면 아예 렌더링이 되지 않는다. 그래서 &lt;em&gt;GPU Instancing&lt;/em&gt; 에 필요한 쉐이더도 동시에 컴파일 하라는 옵션이 &lt;em&gt;multi_compile_instancing&lt;/em&gt; 옵션이다.&lt;/p&gt;
-
-&lt;p&gt;해당 옵션위에 다른 옵션들이 쓰여져 있는데 directX9 버젼이나 OpenGL ES 2.X 버젼에서는 제대로된 &lt;em&gt;GPU Instancing&lt;/em&gt; 을 사용하지 못하므로 &lt;em&gt;exclude_renderers&lt;/em&gt; 에 명시된 Graphics API 에서 돌아가는 쉐이더는 컴파일하지 말라는 옵션으로 생각하며 된다. 또한 동시에 &lt;em&gt;only_renderers&lt;/em&gt; 옵션도 사용했는데 이는 해당 Graphics API 를 위한 쉐이더만 컴파일하라는 옵션이다. 보통 두가지를 동시에 쓰지는 않지만 정확한 명시를 위해 적어놓았다. 이제 쉐이더 프로그램에서 인스턴싱된 버퍼들을 사용하는 방법과 편법에 대해서 알아보자.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;struct a2v
-{
-	float3 uv : TEXCOORD0;
-	float4 vertex : POSITION;
-	UNITY_VERTEX_INPUT_INSTANCE_ID
-};
-
-struct v2f
-{
-	float4 vertex : SV_POSITION;
-	float2 uv : TEXCOORD0;
-};
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;여기서 주목할 것은 a2v 구조체에 있는 &lt;em&gt;UNITY_VERTEX_INPUT_INSTANCE_ID&lt;/em&gt; 매크로다. 이는 각 쉐이더 별로 &lt;em&gt;instanceID&lt;/em&gt; 를 정의해주는 매크로 인데, 역시나 여러 플랫폼을 위해 전처리기로 처리 되어있다. 그리고 a2v 는 버텍스 쉐이더에 들어가는 인자를 구조체로 묶어놓은 것인데 만약 프래그먼트 쉐이더에서 &lt;em&gt;GPU Instancing&lt;/em&gt; 을 하려면 인자로 들어가는 v2f 구조체에 &lt;em&gt;UNITY_VERTEX_INPUT_INSTANCE_ID&lt;/em&gt; 매크로의 정의가 필요할 것이다. 이 쉐이더는 필요가 없어 넣지 않은 상태이다. 이제 버퍼들을 정의하고 사용하는 방법에 대해서 알아보자.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;#define UNITY_MAX_INSTANCE_COUNT 100
-
-UNITY_INSTANCING_CBUFFER_START(_BonePositions)
-	UNITY_DEFINE_INSTANCED_PROP(float4, _BonePosition0);
-	UNITY_DEFINE_INSTANCED_PROP(float4, _BonePosition1);
-	UNITY_DEFINE_INSTANCED_PROP(float4, _BonePosition2);
-	UNITY_DEFINE_INSTANCED_PROP(float4, _BonePosition3);
-	UNITY_DEFINE_INSTANCED_PROP(float4, _BonePosition4);
-	UNITY_DEFINE_INSTANCED_PROP(float4, _BonePosition5);
-UNITY_INSTANCING_CBUFFER_END
-
-float4 GetPosition(uint index)
-{
-	switch(index)
-	{
-		case 0:
-			return UNITY_ACCESS_INSTANCED_PROP(_BonePosition0);
-		case 1:
-			return UNITY_ACCESS_INSTANCED_PROP(_BonePosition1);
-		case 2:
-			return UNITY_ACCESS_INSTANCED_PROP(_BonePosition2);
-		case 3:
-			return UNITY_ACCESS_INSTANCED_PROP(_BonePosition3);
-		case 4:
-			return UNITY_ACCESS_INSTANCED_PROP(_BonePosition4);
-		case 5:
-			return UNITY_ACCESS_INSTANCED_PROP(_BonePosition5);
-	}
-
-	return float4(1, 1, 1, 1);
-}
-
-UNITY_INSTANCING_CBUFFER_START(_BoneMatrixs) /* 위 선언와 비슷함 */ UNITY_INSTANCING_CBUFFER_END
-
-float4x4 GetMatrix(uint index) { /* 위 함수와 비슷함 */ }
-
-v2f vert (a2v v)
-{
-	v2f o;
-
-	UNITY_SETUP_INSTANCE_ID(v);
-
-	uint boneIndex = v.uv[2];
-
-	float4 pos = GetPosition(boneIndex);
-
-	o.vertex = UnityObjectToClipPos(
-					mul(
-						GetMatrix(boneIndex),
-						float4(v.vertex.xyz - pos.xyz,1)
-					)
-					+
-					float4(pos.xyz, 0)
-				);
-	o.uv = v.uv.xy;
-
-	return o;
-}
-&amp;lt;!-- __) --&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;우선 데이터를 저장할 버퍼를 선언해야 한다. 이는 GPU 메모리에 저장되는 버퍼인데 DirectX 에서는 &lt;em&gt;constant buffer&lt;/em&gt; 라고 하고, OpenGL 에서는 &lt;em&gt;uniform buffer object&lt;/em&gt; 라고 한다. 하여튼 이렇게 선언되는 버퍼에 들어가는 정보는 &lt;strong&gt;Material&lt;/strong&gt; 이나 &lt;strong&gt;MaterialPropertyBlock&lt;/strong&gt; 에 저장한 정보들에서 똑같은 변수이름을 가진 변수에게 저장된다. 보통은 쉐이더의 &lt;em&gt;Properties&lt;/em&gt; 에 선언된 변수들은 &lt;strong&gt;Material&lt;/strong&gt; 에 저장하고, 버퍼 오브젝트들은 &lt;strong&gt;MaterialPropertyBlock&lt;/strong&gt; 에 저장된 데이터와 맞춰준다. 둘의 사용용도가 거의 일치하기 때문이라고 보면된다.&lt;/p&gt;
-
-&lt;p&gt;선언하는 방법은 간단하다. &lt;em&gt;UNITY_INSTANCING_CBUFFER_START&lt;/em&gt;, &lt;em&gt;UNITY_INSTANCING_CBUFFER_END&lt;/em&gt; 로 정의할 영역을 정해주고 그 안에 필요한 데이터들을 &lt;em&gt;UNITY_DEFINE_INSTANCED_PROP&lt;/em&gt; 구문을 사용하여 정의해주면 된다. &lt;em&gt;UNITY_DEFINE_INSTANCED_PROP&lt;/em&gt; 구문에는 자료형과 이름을 써주면 알아서 정의가 된다. 이 역시 HLSL 과 GLSL 로 알아서 컨버팅 되도록 한것이다. 그리고 해당 변수에 접근할 때는 &lt;em&gt;UNITY_ACCESS_INSTANCED_PROP&lt;/em&gt; 를 사용하여 접근하면 된다.  이렇게 해주면 &lt;em&gt;multi_compile_instancing&lt;/em&gt; 때문에 일반적인 컴포넌트 렌더러에서 쓰는 쉐이더와 &lt;em&gt;Graphics.DrawMeshInstanced&lt;/em&gt; 에서 쓰는 쉐이더로 알아서 컴파일된다. &lt;em&gt;UNITY_ACCESS_INSTANCED_PROP&lt;/em&gt; 로 접근을 한 이유도 여기에 있다. &lt;em&gt;Graphics.DrawMeshInstanced&lt;/em&gt; 를 사용할때는 배열에 접근해야 하고, 컴포넌트 렌더러를 사용할때는 단순 인스턴스에 접근해야한다. 즉 배열의 인덱스로 접근하기위해 &lt;em&gt;UNITY_ACCESS_INSTANCED_PROP&lt;/em&gt; 를 사용한다고 보면된다.&lt;/p&gt;
-
-&lt;p&gt;근데 위 코드처럼 인스턴싱을 많이하게 되면 아래와 같은 에러를 띄우면서 컴파일이 안될때가 있다.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Can't continue validation - aborting. (on d3d11)
-Index Dimension 2 out of range (12000 specified, max allowed is 4096) for operand #1 of opcode #5 (counts are 1-based). Aborting. (on d3d11)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;그래서 위 코드에서 바꿔준 것이 맨 위에있는 전처리기 정의 구문이다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;#define UNITY_MAX_INSTANCE_COUNT 100
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;이는 약간 HACK 한 방식으로 커스터마이징을 한것이다. &lt;em&gt;Graphics.DrawMeshInstanced&lt;/em&gt; 에서 쓰이는 쉐이더는 배열로 변수들을 선언하는데 기본 배열의 길이가 500 이다. 물론 모바일 같은 플랫폼에서는 4를 나누어줘서 125 이긴 하지만 PC 대상으로 컴파일하면 정의한 변수 한개당 500개씩 정의가 되서 변환 행렬덕분에 엄청난 메모리를 먹게된다. 그리고 배열 아이템의 갯수 4096 개를 초과해서 에러가 나는 것이다. 그래서 전처리기로 처리한 것에 약간의 편법을 써서 &lt;em&gt;UNITY_MAX_INSTANCE_COUNT&lt;/em&gt; 를 필요할때마다 정의해주면 배열의 크기를 맘대로 조정할 수 있다. 위의 코드는 에러를 막기위해 임시적으로 조절한 것이지만 참조한 인스턴스의 갯수가 적으면 직접 조정해주는 편이 낫다. 물론 인덱스를 벗어나지 않는 범위에서 말이다. 이 방법은 Unity 사이트에서 built-in 쉐이더를 받아 확인하여 코딩하였다.&lt;/p&gt;
-
-&lt;p&gt;그리고 굳이 배열로 선언하고 싶지 않고 한번 실행하는 쉐이더당 한개의 변수만 필요한 경우 아래와 같이 단순하게 정의해주면 된다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;UNITY_INSTANCING_CBUFFER_START(_FragmentBuffer)
-	float _TextureIndex;
-UNITY_INSTANCING_CBUFFER_END
-
-UNITY_DECLARE_TEX2DARRAY(_MainTexArray);
-
-fixed4 frag (v2f i) : SV_Target
-{
-	fixed4 col = UNITY_SAMPLE_TEX2DARRAY(_MainTexArray, float3(i.uv, _TextureIndex));
-	return col;
-}
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;!-- ___)(____) --&gt;
-
-&lt;p&gt;저렇게 하면 단순하게 사용할 수 있다. 물론 컴파일 에러는 안난다. 해당 코드는 &lt;a href=&quot;https://github.com/hrmrzizon/InstancedSkinningExmaple&quot;&gt;Github : InstancedSkinningExmaple&lt;/a&gt; 에서 확인할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;자세한 방법은 &lt;a href=&quot;https://docs.unity3d.com/Manual/GPUInstancing.html&quot;&gt;Unity Manual : GPU Instancing&lt;/a&gt; 에 적혀있으니 참고하길 바란다. 글을 쓰는 현재 2017년 6월 12일에는 한글 문서는 존재하지도 않는다. 영어로 읽어야한다.&lt;/p&gt;
-
-&lt;h2&gt;참조&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/Manual/GPUInstancing.html&quot;&gt;Unity Manual : GPU Instancing&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.slideshare.net/CassEveritt/approaching-zero-driver-overhead&quot;&gt;Slideshare : Approach Zero Driver Overhead&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/kr/current/ScriptReference/MaterialPropertyBlock.html&quot;&gt;Unity Reference : MaterialPropertyBlock&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="unity" />
-      
-        <category term="shader" />
-      
-        <category term="rendering" />
-      
-        <category term="try" />
-      
-
-      
-
-      
-        <summary type="html">이 글은 Unity 5.6.1f 버젼에서 작성되었습니다. 다른 버젼에서는 에러가 날 수 있으니 참고 바랍니다. Using Texture2DArray in Unity 에 이어 DrawCall 을 줄이기 위한 방법에 대해서 소개하려한다. GPU Instancing 이라는 방법인데 TextureArray 와 같이 응용해서 사용하면 획기적으로 DrawCall 을 줄일 수 있다. 일반적으로 알려진 GPU Instancing 에 대해서 말하자면 컴퓨터의 RAM 에만 저장하던 데이터들을 GPU 메모리에 복사해놓고 GPGPU 나 쉐이더를 실행할 때 빠르게 데이터에 접근하는 것을 GPU Instancing 이라 한다. 만약 GPU Instancing 을 사용하지 않으면 매번 DrawCall 에 데이터를 넣어줘야하기 때문에 수많은 DrawCall 이 걸리게 되고 이는 CPU 의 시간을 뺏어먹게 되어 영 좋지 않은 일이 된다. 보통은 같은 동작을 하는 오브젝트들을 최적화할 때 쓰인다. 사용하게 되면 DrawCall 이 O(오브젝트 갯수) 로 되던것이 O(1) 의 갯수로 줄어든다. 그래서 TextureArray 와 같이 사용하게 되면 DrawCall 이 O(오브젝트 갯수 * 텍스쳐 갯수) 로 계산되던게 O(1) 로 바뀌어 버리니 CPU 시간을 엄청나게 많이벌 수 있다. 다만 GPU 메모리를 많이 잡아먹기 때문에 신경써서 데이터를 구성하지 않으면 무슨일이 일어날지 모른다.</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Performence And Optimization</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/06/08/performence-and-optimization/" rel="alternate" type="text/html" title="Performence And Optimization" />
-      <published>2017-06-08T00:00:00+00:00</published>
-      <updated>2017-06-08T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/06/08/performence-and-optimization</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/06/08/performence-and-optimization/">&lt;p&gt;일반적인 응용 프로그램들은 중간중간에 잠시 멈춰도 원하는 결과를 유저에게 보여주면 상관이 없다. 하지만 게임은 ‘게임중’ 에는 어떤 경우에도 렉을 허용하지 않는다. 그만큼 ‘게임중’ 상태에서 렉을 아예 발생시키지 않는 것이 게임 프로그래머의 중요한 능력중 하나다.&lt;/p&gt;
-
-&lt;p&gt;게임은 일반적으로 1초에 60번 이상 업데이트하는 루틴을 유지해야 유저에게 원활한 환경을 제공한다. 여기서 급작스럽게 프레임수가 하락하면 그때 유저들은 순간적으로 끊기거나 부드럽지 않은 경험을 하게된다. 유저들은 그런 것들을 랙으로 통칭한다. 랙이 반복되면 유저들은 게이밍 환경에 불만을 느끼게 된다.&lt;/p&gt;
-
-&lt;p&gt;일반적인 랙은 프로그래머의 실수인 경우가 많다. 런타임에서 많은 것을 한꺼번에 처리하는 경우가 대표적이다. 하지만 이는 여러 리팩토링을 거치면 충분히 해결할 수 있다. 경험이 적은 사람들에게 가장 문제가 되는 것은 엔진을 사용하는 방법이 문제가 되는 경우가 많다. 엔진의 자세한 구현 사항을 파악하지 못했기 때문에 한계를 생각하지 않고 코딩하는 경우 말이다. 몇가지 사항들만 주의하며 코딩한다면 꽤 많은 병목들을 피해갈 수 있다.&lt;/p&gt;
-
-&lt;p&gt;이제 Unity 엔진을 사용할 때 퍼포먼스에 영향을 끼치는 것들과 해결 방안에 대해서 알아보자.&lt;/p&gt;
-
-&lt;!-- more --&gt;
-
-&lt;p&gt;만들어진 소프트웨어를 최대한 플랫폼의 자원을 덜 소모하고 빠르게 작업을 수행하게하는 것을 “최적화를 한다” 라고 한다. 게임이라는 소프트웨어의 최적화는 보통 게임 플레이 시간에 매 프레임 별로 최대한 시간을 덜 소모하게 하는 것을 일반적으로 여겨진다.&lt;/p&gt;
-
-&lt;p&gt;그래서 Unity 는 게임 플레이 시간동안 걸리는 작업들의 시간을 측정하는 툴을 지원한다. 이름은 &lt;em&gt;Profiler&lt;/em&gt; 라고 한다. &lt;em&gt;Profiler&lt;/em&gt; 를 통해 시간이 많이 걸리는 부분을 찾을 수 있다. &lt;a href=&quot;https://docs.unity3d.com/kr/current/Manual/ProfilerWindow.html&quot;&gt;Unity 메뉴얼&lt;/a&gt;에서 자세한 사용법을 확인하면 된다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://docs.unity3d.com/kr/current/uploads/Main/ProfilerTimeline.png&quot; alt=&quot;Unity Profiler&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;위 그림은 일반적인 CPU 시간을 잴 때 사용하는 모드로써 위에서 언급한 스크립트의 실행시간을 체크할 때 쓸 수 있는 모드 중 하나다. 직접 켜보면(Window -&amp;gt; Profiler) 알 수 있듯이 CPU 시간 말고도 다른 특수한 작업들의 디테일한 사항을 볼 수 있다. 실시간으로 렌더링 되는 것들을 체크할 수 있는 &lt;strong&gt;Rendering&lt;/strong&gt; 모드, 메모리를 얼마나 쓰는지 확인할 수 있는 &lt;strong&gt;Memory&lt;/strong&gt; 모드, Unity 에서 가져다 쓰는 물리엔진 &lt;em&gt;PhysX&lt;/em&gt; 에서 주로퍼포먼스에 영향을 끼치는 것들에 대하여 정보를 나타내주는 &lt;strong&gt;Physics&lt;/strong&gt; 모드 등 꽤 많은 것들이 있다. 실시간으로 대부분의 문제를 찾을 수 있기 때문에 꽤 많은 시간들을 줄여준다.&lt;/p&gt;
-
-&lt;p&gt;게다가 더욱더 강력하다고 생각되는 사실은 &lt;strong&gt;Android&lt;/strong&gt; 플랫폼에서 이 &lt;em&gt;Profiler&lt;/em&gt; 를 사용가능 하다는 것이다. &lt;em&gt;ADB&lt;/em&gt; 라는 디버깅 유닛이 있는데, Unity 에서는 이 유닛을 직접 사용하여 연결만 잘 되어있다면 프로파일러를 돌려볼 수 있다.&lt;/p&gt;
-
-&lt;p&gt;Unity 에서는 꽤나 좋은 &lt;em&gt;Profiler&lt;/em&gt; 를 지원한다. 시간이 난다면 게임을 처음부터 끝까지 몇번 돌려보길 바란다. 문제가 생겼을 때 돌려보는 것 보단 되도록 자주 체크하여 항상 문제가 있는지 없는지 체크해보는 것이 좋다. 시간이 없을 떄 처리하려면 골치아픈 문제가 되겠지만 시간이 여유로울 떄 발견하면 아주 큰 문제가 아닌 이상 처리하기는 편할 것이다. 또한 &lt;em&gt;Profiler&lt;/em&gt; 는 자신의 컴퓨터의 처리 속도를 체크하는 것이다. 그러므로 자신의 컴퓨터가 아주 좋은 플랫폼이라면 안좋은 플랫폼에서도 디버깅을 해보는 것도 좋을 것이다.&lt;/p&gt;
-
-&lt;h2&gt;Hierachy and component based development&lt;/h2&gt;
-
-&lt;p&gt;Unity 는 &lt;em&gt;Scene&lt;/em&gt; 이라 불리는 데이터 안에 여러 &lt;em&gt;GameObject&lt;/em&gt; 의 세팅을 넣어놓고 저장된 &lt;em&gt;GameObject&lt;/em&gt; 에 붙어있는 &lt;em&gt;Component&lt;/em&gt; 의 동작에 의해 게임이 돌아간다. 실제로 Unity 에서 동작하는 것들은 &lt;em&gt;Component&lt;/em&gt; 들인데 이렇게 여러 오브젝트들에 각자 &lt;em&gt;Component&lt;/em&gt; 를 붙여 동작하는 개발 방식을 CBD(Comnent based development) 라고 한다. Unity 는 CBD 를 근본적인 개념으로 차용해 정해져 있는 형식 없이 개발하도록 지원한다.&lt;/p&gt;
-
-&lt;p&gt;Unity 는 CBD 를 밑바닥부터 구현하도록 지원하지만 이게 꼭 좋은 것은 아니다. 특히 성능상으로 따졌을 떄 컴포넌트가 많이 존재하면 존재할수록 컴포넌트들 안에 Unity 시스템에서 받는 메세지 메소드들이 많이 구현되어 있을수록 약간의 부하가 발생한다. (물론 절대적인 몇천개, 몇백개의 갯수를 뜻한다. CPU 의 성능에 따라 모바일에서는 간단한 수학 연산을 하는 몇십개의 메소드도 부담스러울수도 있다.) 제일 문제가 되는 부분은 &lt;em&gt;MonoBehaviour.Update&lt;/em&gt; 류의 메소드들이다.(&lt;em&gt;MonoBehaviour.LateUpdate&lt;/em&gt;, &lt;em&gt;MonoBehaviour.FixedUpdate&lt;/em&gt;) 이 메소드들은 매 프레임마다 호출되어야 하는 메소드들인데 이 메소드를 받는 컴포넌트들이 많으면 많을수록 부담되는 것은 사실이다.&lt;/p&gt;
-
-&lt;p&gt;일반적인 상황에서는 한 메소드가 같은 프레임에 몇백번 이상 호출될 일은 없겠지만 그럴 일이 있다면 미리 합쳐주는 것을 추천한다.&lt;/p&gt;
-
-&lt;h2&gt;PhysX&lt;/h2&gt;
-
-&lt;p&gt;Unity 의 물리 기능은 서드파티 라이브러리인 &lt;em&gt;PhysX&lt;/em&gt; 를 탑재하여 기본으로 물리 기능을 지원한다. &lt;em&gt;PhysX&lt;/em&gt; 는 GameWorks 라는 게임 개발을 위한 미들웨어 제품 그룹에 있던 라이브러리 중 하나다. 그래서 우리는 About Unity 창을 열면 꽤 큼지막하게 자리를 차지하는 &lt;em&gt;PhysX&lt;/em&gt; 의 로고를 볼 수 있다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/about_unity.png&quot; alt=&quot;About Unity&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Unity 에서 PhsyX 는 물리 엔진으로서 자리 잡고 있는 것을 볼 수 있다. 하지만 PhsyX 는 자원이 한정되어 있는 플랫폼에서는 잘 사용해주어야 한다. 몇가지를 세팅해주어 한정적으로 돌아가게 해야되는데 해주어야 세팅들을 살펴보자.&lt;/p&gt;
-
-&lt;h4&gt;Physics Setting : layer collision matrix&lt;/h4&gt;
-
-&lt;p&gt;Unity 에서는 &lt;strong&gt;GameObject&lt;/strong&gt; 별로 &lt;em&gt;layer&lt;/em&gt; 를 설정해주어 여러가지 설정을 한다. 대표적인 예는 카메라에서 어떤 오브젝트를 그릴지 &lt;em&gt;layer&lt;/em&gt; 마스크를 통하는 것이다. 그리고 PhsyX 에서 돌아가는 물리 세팅도 &lt;em&gt;layer&lt;/em&gt; 기반으로 검사를 한다. 충돌 검사를 하는 연산이 많으면 많을수록 성능에 그다지 안좋은 영향을 끼치기에 &lt;em&gt;layer&lt;/em&gt; 별로 검사할 것들을 설정해 줄 수 있다. 아래 그림을 보자.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/physics_settings.png&quot; alt=&quot;Physics setting&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;여기는 Edit -&amp;gt; Project Settings -&amp;gt; Physics 으로 들어올 수 있는 프로젝트 별로 물리 관련된 옵션을 세팅해주는 곳이다. 여기서 Layer Collision Matrix 를 보면 된다. 이 이상하게 생긴 체크박스들은 해당 레이어와 충돌 체크를 하여 물리 연산을 하는지 안하는지에 대한 세팅 값이다. 이 부분만 체크해주어도 쓸데없는 연산을 없엘 수 있으니 신경써서 잘 체크해주길 바란다.&lt;/p&gt;
-
-&lt;h4&gt;Time Setting : Fixed Timestamp&lt;/h4&gt;
-
-&lt;p&gt;이제 언급하려는 부분은 상당히 게임에서 민감한 부분이다. 물리 기능을 하는 루프는 정확한 계산을 위해 일정 시간마다 체크를 하는데 이 체크를 하는 시간 주기를 Edit -&amp;gt; Project Settings -&amp;gt; Time 에서 변경할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/setting_timer.png&quot; alt=&quot;Timer Setting&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;맨 처음에 보이는 Fixed Timestep 을 직접 바꾸어줄 수 있다. 이 숫자를 늘리면 매 프레임별 부하는 줄어들지만 정확성이 줄어든다. 이 숫자를 줄이면 매 프레임별 부하는 커지지만 물리 계산 결과는 정확해진다. 하지만 한가지 명심할 것이 있다. 이 부분은 실제 체크하는 부분을 담당하기 때문에 이미 만들어진 게임에서 이 숫자를 바꾸면 무슨일이 일어날지 모른다. 반드시 만들어진 게임에서, 특히 Collider 를 많이 쓰는 게임에서는 이 숫자를 철저한 검사후에 바꿔주어야 한다. 물론 Unity 의 물리 계산을 아예 안쓸거라면 엄청 크게 해주면 된다.&lt;/p&gt;
-
-&lt;h4&gt;절대적인 Collider 의 갯수&lt;/h4&gt;
-
-&lt;p&gt;위에서 GameObject 의 갯수에 대해서 말했었다. 이와 같이 Collider 의 갯수는 많으면 많을 수록 다른 레이어의 오브젝트들과 비교하는 대상이 많아지므로 더욱더 부하가 커진다. 즉 적절한 Collider 의 갯수도 중요하다.&lt;/p&gt;
-
-&lt;h2&gt;Garbage Collection&lt;/h2&gt;
-
-&lt;p&gt;Unity 는 개발 언어와 여러 환경을 위해 &lt;strong&gt;Mono&lt;/strong&gt; 프레임워크를 사용한다. 그리고 &lt;strong&gt;Mono&lt;/strong&gt; 프레임워크에서는 메모리 관리를 위해 &lt;strong&gt;Garbage Collector&lt;/strong&gt; 를 사용한다. GC 를 사용하게 되면 가끔씩 &lt;strong&gt;Garbage Collection&lt;/strong&gt; 이 발생하는데 이 &lt;strong&gt;Garbage Collection&lt;/strong&gt; 은 게이밍 환경에서는 정말 최악의 행동이다. 대부분 &lt;strong&gt;Garbage Collection&lt;/strong&gt; 은 꽤나 시간이 걸리기 때문에 잠깐 끊기는 현상이 발생할 수 밖에 없다. 결국 게임 중에는 절~~대로 쓰레기(Garbage) 메모리를 만들면 안된다. 게임 시간이 얼마나 길어질지 모르고 플랫폼의 특성도 모르기 때문에 게임 중에는 쓰레기 메모리를 절대 안 만드는게 가장 안전하다. 위에서 언급한 &lt;em&gt;Profiler&lt;/em&gt; 를 통해 쓰레기 메모리들이 얼마나 발생하는지 GC Alloc 탭에서 체크할 수 있다.  &lt;strong&gt;Deep Profile&lt;/strong&gt; 기능까지 사용하면 메소드 단위로 알 수 있기 때문에 쓰레기 메모리를 만드는 부분을 하나하나 체크하여 없에는 것이 중요하다. 쓰레기를 발생시키는 코드의 유형은 꽤나 많기 때문에 여기서는 언급하지 않겠다.&lt;/p&gt;
-
-&lt;h2&gt;Drawcall and Batching&lt;/h2&gt;
-
-&lt;p&gt;Graphics API 에서는 물체를 그릴려면 여러 준비를 해야한다. 이 준비는 어느 정도의 시간이 걸리기 때문에 많으면 많을수록 상당히 부담스럽다. 준비를 마치면 GPU 에 그려달라는 명령을 한다. 이 명령을 &lt;em&gt;Draw Call&lt;/em&gt; 이라고 한다. &lt;em&gt;Draw Call&lt;/em&gt; 의 숫자는 모바일 게임의 경우 아무리 많아도 몇십개로 유지해야하며 고사양 PC 게임은 몇백단위로 유지해야 한다고 한다. 왜냐하면 &lt;em&gt;Draw Call&lt;/em&gt; 의 횟수가 많으면 많을수록 CPU 에서 부담하는 것들이 많아지기 때문에 결국 FPS 하락으로 이어질 수밖에 없다. 그런데 Unity 에서는 &lt;em&gt;Draw Call&lt;/em&gt; 이라는 단어는 엔진을 사용할 때 볼일이 하나도 없다. 이렇게 중요한데 왜 없냐하면 Unity 는 이 &lt;em&gt;Draw Call&lt;/em&gt; 을 줄이기 위해 엔진 내부에서 처리를 하는데 이를 &lt;em&gt;Batching&lt;/em&gt; 이라고 한다. 결국 &lt;em&gt;Draw Call&lt;/em&gt; 과 같은 단어지만 일정한 조건만 지키면 알아서 &lt;em&gt;Batching&lt;/em&gt; 카운트를 줄여준다. Unity 에서 최대한 &lt;em&gt;Batching&lt;/em&gt; 카운트를 줄이는 방법에 대하여 알아보자. 우선은 엔진에서 지원하는 것들에 대하여 알아보자.&lt;/p&gt;
-
-&lt;p&gt;Unity 에서는 &lt;em&gt;Draw Call&lt;/em&gt; 을 줄이기 위해 &lt;em&gt;Static Batching&lt;/em&gt; 과 &lt;em&gt;Dynamic Batching&lt;/em&gt; 이 두가지 기능을 지원한다.  &lt;em&gt;Static Batching&lt;/em&gt; 은 움직이지 않는 오브젝트들을 세팅할 때 한꺼번에 그리는 기능이다. 만약 움직이는 오브젝트라면 항상 위치를 갱신해주어야 하기 때문에 준비를 다시해야 하지만 움직이지 않는 오브젝트라면 미리 움직이지 않는다고 체크를 하고 그대로 위치를 가지고 GPU 에서 그려주면 되기 때문이다.&lt;/p&gt;
-
-&lt;p&gt;또한 전제조건으로 메터리얼을 공유해야 한다는 조건이 있다. 메터리얼에는 여러 인자와 쉐이더가 세팅되어 있는데 이 메터리얼을 공유해야 한다는 조건은 같은 쉐이더를 사용해야 &lt;em&gt;Batching&lt;/em&gt; 카운트를 합칠 수 있다는 이야기다.&lt;/p&gt;
-
-&lt;p&gt;아래는 &lt;em&gt;Static Batching&lt;/em&gt; 을 에디터에서 세팅해주는 사진이다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://docs.unity3d.com/kr/current/uploads/Main/StaticTagInspector.png&quot; alt=&quot;Static Tag Inspector&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Dynamic Batching&lt;/em&gt; 움직이는 오브젝트들이 같은 메터리얼을 공유하면 한꺼번에 그려주는 기능이다. 하지만 &lt;em&gt;Dynamic Batching&lt;/em&gt; 은 약간의 기능상의 한계가 있다. 아래 레퍼런스 링크로 들어가서 확인해보면 알 수 있다.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://docs.unity3d.com/kr/current/Manual/DrawCallBatching.html&quot;&gt;DrawCallBatching&lt;/a&gt; 에서 자세한 내용을 확인할 수 있다.&lt;/p&gt;
-
-&lt;h2&gt;참조&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.slideshare.net/AlexanderDolbilov/google-i-o-2014&quot;&gt;Google IO 2014 : Optimizing unity games&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://shimans.tistory.com/41&quot;&gt;Optimize shader&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/PhysX&quot;&gt;Wikipedia : PhysX&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="unity" />
-      
-        <category term="try" />
-      
-
-      
-
-      
-        <summary type="html">일반적인 응용 프로그램들은 중간중간에 잠시 멈춰도 원하는 결과를 유저에게 보여주면 상관이 없다. 하지만 게임은 ‘게임중’ 에는 어떤 경우에도 렉을 허용하지 않는다. 그만큼 ‘게임중’ 상태에서 렉을 아예 발생시키지 않는 것이 게임 프로그래머의 중요한 능력중 하나다. 게임은 일반적으로 1초에 60번 이상 업데이트하는 루틴을 유지해야 유저에게 원활한 환경을 제공한다. 여기서 급작스럽게 프레임수가 하락하면 그때 유저들은 순간적으로 끊기거나 부드럽지 않은 경험을 하게된다. 유저들은 그런 것들을 랙으로 통칭한다. 랙이 반복되면 유저들은 게이밍 환경에 불만을 느끼게 된다. 일반적인 랙은 프로그래머의 실수인 경우가 많다. 런타임에서 많은 것을 한꺼번에 처리하는 경우가 대표적이다. 하지만 이는 여러 리팩토링을 거치면 충분히 해결할 수 있다. 경험이 적은 사람들에게 가장 문제가 되는 것은 엔진을 사용하는 방법이 문제가 되는 경우가 많다. 엔진의 자세한 구현 사항을 파악하지 못했기 때문에 한계를 생각하지 않고 코딩하는 경우 말이다. 몇가지 사항들만 주의하며 코딩한다면 꽤 많은 병목들을 피해갈 수 있다. 이제 Unity 엔진을 사용할 때 퍼포먼스에 영향을 끼치는 것들과 해결 방안에 대해서 알아보자.</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Using Texture2darray In Unity</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/06/04/using-texture2darray-in-unity/" rel="alternate" type="text/html" title="Using Texture2darray In Unity" />
-      <published>2017-06-04T00:00:00+00:00</published>
-      <updated>2017-06-04T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/06/04/using-texture2darray-in-unity</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/06/04/using-texture2darray-in-unity/">&lt;p&gt;Unity 에서 렌더링에 관련된 최적화를 할때는 &lt;em&gt;TextureArray&lt;/em&gt; 를 사용할 수 밖에 없다. 이는 Unity 에서 &lt;em&gt;DrawCall&lt;/em&gt; 을 줄이기 위해 써먹는 &lt;em&gt;Batching&lt;/em&gt; 이라는 개념 때문인데 단순하게 말하면 그리는 새로운 매터리얼과 메쉬의 종류가 많으면 많을 수록 &lt;em&gt;DrawCall&lt;/em&gt; 을 많이 하게 된다. 하지만 이 &lt;em&gt;DrawCall&lt;/em&gt; 의 비용은 싼편이 아니기 때문에 CPU 의 성능을 꽤나 잡아먹게 된다. 그래서 Unity 는 자동으로 &lt;em&gt;Batching&lt;/em&gt; 을 해주게 된다. 같은 메터리얼을 쓰면 자동으로 묶어주고, 같은 메쉬를 쓰면 또 자동으로 묶어준다. 결국 &lt;em&gt;Batching&lt;/em&gt; 이 &lt;em&gt;DrawCall&lt;/em&gt; 의 횟수와 같은 개념이 되는 것이다.&lt;/p&gt;
-
-&lt;p&gt;그래서 &lt;em&gt;Batching&lt;/em&gt; 의 횟수를 줄이기 위해 매터리얼을 줄이는 방법에 대한 것이 &lt;em&gt;TextureArray&lt;/em&gt; 다. 이것보다 일반적으로 알려진 기법은 &lt;em&gt;TexutreAtlas&lt;/em&gt; 인데, 이 방법은 상당히 단순하다. 그냥 텍스쳐 한장에 모든 그림을 때려박고 UV 를 수정해주는 작업을 할때 쓰인다. 보통은 UI 이미지에서 스프라이트를 설정할 때 쓰이며, Unity 는 UGUI 기능에 &lt;em&gt;Sprite&lt;/em&gt; 들을 합쳐서 &lt;em&gt;TextureAtlas&lt;/em&gt; 로 만들어주는 기능이 있다. 하지만 3D 오브젝트의 UV 에서는 말이 조금 달라진다. UV 좌표는 0과 1사이의 값으로 이루어지는데 텍스쳐 여러장과 세팅되어 있던 UV 좌표들을 한장으로 통합해 다시 세팅하려면 굉장히 귀찮아진다. 그리고 합쳐지기전의 텍스쳐의 갯수가 합쳐진 후에 추가된다면 그것또한 굉장히 귀찮아질 것이다. 결국 생산성의 문제가 된다.  그래서 다른 방법을 쓸 수 있는데, 이 방법이 바로 &lt;em&gt;TextureArray&lt;/em&gt; 다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;TextureArray&lt;/em&gt; 의 개념은 단순하게 텍스쳐를 배열로 묶은 것으로, 인덱스만 있으면 그냥 하나하나 참조하여 사용가능하다. 즉 UV 의 2차원 좌표와 함께 인덱스 한개만 더 있으면 된다. 그리고 &lt;em&gt;TextureArray&lt;/em&gt; 의 장점은 &lt;em&gt;TextureAtlas&lt;/em&gt; 마냥 합쳐주고 UV 를 수정할 일이 없고, 메쉬별로 인덱스를 따로 설정해주는 작업만 해주면 상당히 편하게 할 수 있다. 또한 텍스쳐 갯수가 몇개가 되던간에 메터리얼을 한개로 유지할 수 있기 때문에 굉장히 편하다. 근데 Unity 에서 사용하려면 몇가지 단점이 있다. Asset 생성을 지원하지 않기 때문에 굉장히 불편하고, 보여주는 GUI 또한 Unity 내부에서 지원하지 않는다. 편하게 사용하기 위해선 에디터 코드를 직접 만져야 한다. 물론 직접 생성해주는 것도 상관없지만 생산성 자체만 놓고보면 그다지 좋은 편은 아니다. 또한 &lt;em&gt;Shader&lt;/em&gt; 코드들도 직접 바꿔주어야 하기 때문에 이것저것 세팅해줘야 할것이 많다. 즉 사용하기에 비용이 많이 든다.&lt;/p&gt;
-
-&lt;p&gt;이제 직접 Unity 에서 적용시켜보자.&lt;/p&gt;
-
-&lt;!-- more --&gt;
-
-&lt;p&gt;할것들은 세가지다.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Mesh 안의 단순한 2차원 UV 좌표를 (UV + 텍스쳐 인덱스)를 좌표로 가진 3차원 좌표로 바꾸기&lt;/li&gt;
-  &lt;li&gt;TextureArray 생성 및 적용하기&lt;/li&gt;
-  &lt;li&gt;Shader 코드에서 TextureArray 를 사용하고 UV 좌표를 3차원 좌표로 바꾸기&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/hrmrzizon/TextureArrayExample&quot;&gt;예제&lt;/a&gt;를 짜놓았으니 볼사람들은 참조하길 바란다.&lt;/p&gt;
-
-&lt;p&gt;UV 좌표를 바꾸는 것은 경우에 따라 다르다. 보통은 2차원 UV 좌표로 설정해놓았으니 프로그래머가 합치는 것만 생각하면 &lt;em&gt;Mesh&lt;/em&gt; 별로 텍스쳐 인덱스를 심어주는 컴포넌트를 넣어주는게 편할 것이다. 시작시에만 UV 정보를 수정해주면 되니 로딩시간이 길어지는 것과 GPU 메모리를 조금 더 먹는 것 외에는 문제 될것은 없다. 초기 로드 시간이 걱정된다면 에디터에서 넣어주면 된다. 예제에서는 처음에 전부 생성하기 때문에 Vector2 로 저장하던 UV좌표를 Vector3 로 바꾸고 텍스쳐 인덱스만 끼워 넣었다.&lt;/p&gt;
-
-&lt;p&gt;TextureArray 부분을 작업하는게 제일 귀찮다. 그냥 컴포넌트에서 동적으로 생성해주면 장땡이긴 하지만 그런식이면 매번 컴포넌트를 건드려야하니 여간 귀찮은게 아니다. 그래서 예제를 보면 알겠지만 간단하게 래핑한 에셋을 만들었다. 근데 귀찮은 점이 하나 있다. 생성후에 에디터에서 텍스쳐 갯수나 여러것들을 수정하는게 안되서 몇가지 조건 중 하나가 문제면 다시 생성한다. 그러면 매터리얼과 연결이 끊기는데.. 혐오스럽지만 여기까지만 해놓았다. 혹시 이 방법 해결책을 아시면 댓글 부탁드립니다.&lt;/p&gt;
-
-&lt;p&gt;그리고 &lt;strong&gt;Texture2D&lt;/strong&gt; 클래스와 &lt;strong&gt;Texture2DArray&lt;/strong&gt; 에 &lt;em&gt;SetPixel&lt;/em&gt; 류 함수들은 픽셀별로 접근하기 때문에 여러 텍스쳐 압축포맷이 먹힌 텍스쳐 복사는 안된다. &lt;a href=&quot;https://docs.unity3d.com/ScriptReference/Graphics.CopyTexture.html&quot;&gt;&lt;em&gt;Graphics.CopyTexture&lt;/em&gt;&lt;/a&gt; 로 하라고 여러 포럼들에 적혀있었다. 조건에 맞아야 사용이 가능하니 레퍼런스에 있는 상세한 설명을 참고바란다. 근데 우리가 사용하려는 간단한 전체복사는 전부 된다.&lt;/p&gt;
-
-&lt;p&gt;쉐이더 코드에서 TextureArray 를 사용하는건 굉장히 간단하다. &lt;a href=&quot;https://docs.unity3d.com/Manual/SL-TextureArrays.html&quot;&gt;Unity Manual : TextureArray&lt;/a&gt;를 참조하면 된다. 크게 어려울 것 없이 예제에 나온대로만 하면 된다.&lt;/p&gt;
-
-&lt;p&gt;전체적으로 사용하기에는 어렵지않다. 하지만 그에 비해 얻는 이득은 많으니 어떤 게임이든 당연히 쓰는게 좋을 것이다.&lt;/p&gt;
-
-&lt;h2&gt;참조&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/Manual/SL-TextureArrays.html&quot;&gt;Unity Manual : TextureArray&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="unity" />
-      
-        <category term="shader" />
-      
-        <category term="rendering" />
-      
-        <category term="try" />
-      
-
-      
-
-      
-        <summary type="html">Unity 에서 렌더링에 관련된 최적화를 할때는 TextureArray 를 사용할 수 밖에 없다. 이는 Unity 에서 DrawCall 을 줄이기 위해 써먹는 Batching 이라는 개념 때문인데 단순하게 말하면 그리는 새로운 매터리얼과 메쉬의 종류가 많으면 많을 수록 DrawCall 을 많이 하게 된다. 하지만 이 DrawCall 의 비용은 싼편이 아니기 때문에 CPU 의 성능을 꽤나 잡아먹게 된다. 그래서 Unity 는 자동으로 Batching 을 해주게 된다. 같은 메터리얼을 쓰면 자동으로 묶어주고, 같은 메쉬를 쓰면 또 자동으로 묶어준다. 결국 Batching 이 DrawCall 의 횟수와 같은 개념이 되는 것이다. 그래서 Batching 의 횟수를 줄이기 위해 매터리얼을 줄이는 방법에 대한 것이 TextureArray 다. 이것보다 일반적으로 알려진 기법은 TexutreAtlas 인데, 이 방법은 상당히 단순하다. 그냥 텍스쳐 한장에 모든 그림을 때려박고 UV 를 수정해주는 작업을 할때 쓰인다. 보통은 UI 이미지에서 스프라이트를 설정할 때 쓰이며, Unity 는 UGUI 기능에 Sprite 들을 합쳐서 TextureAtlas 로 만들어주는 기능이 있다. 하지만 3D 오브젝트의 UV 에서는 말이 조금 달라진다. UV 좌표는 0과 1사이의 값으로 이루어지는데 텍스쳐 여러장과 세팅되어 있던 UV 좌표들을 한장으로 통합해 다시 세팅하려면 굉장히 귀찮아진다. 그리고 합쳐지기전의 텍스쳐의 갯수가 합쳐진 후에 추가된다면 그것또한 굉장히 귀찮아질 것이다. 결국 생산성의 문제가 된다. 그래서 다른 방법을 쓸 수 있는데, 이 방법이 바로 TextureArray 다. TextureArray 의 개념은 단순하게 텍스쳐를 배열로 묶은 것으로, 인덱스만 있으면 그냥 하나하나 참조하여 사용가능하다. 즉 UV 의 2차원 좌표와 함께 인덱스 한개만 더 있으면 된다. 그리고 TextureArray 의 장점은 TextureAtlas 마냥 합쳐주고 UV 를 수정할 일이 없고, 메쉬별로 인덱스를 따로 설정해주는 작업만 해주면 상당히 편하게 할 수 있다. 또한 텍스쳐 갯수가 몇개가 되던간에 메터리얼을 한개로 유지할 수 있기 때문에 굉장히 편하다. 근데 Unity 에서 사용하려면 몇가지 단점이 있다. Asset 생성을 지원하지 않기 때문에 굉장히 불편하고, 보여주는 GUI 또한 Unity 내부에서 지원하지 않는다. 편하게 사용하기 위해선 에디터 코드를 직접 만져야 한다. 물론 직접 생성해주는 것도 상관없지만 생산성 자체만 놓고보면 그다지 좋은 편은 아니다. 또한 Shader 코드들도 직접 바꿔주어야 하기 때문에 이것저것 세팅해줘야 할것이 많다. 즉 사용하기에 비용이 많이 든다. 이제 직접 Unity 에서 적용시켜보자.</summary>
       
 
       

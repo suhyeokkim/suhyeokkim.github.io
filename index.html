@@ -105,6 +105,1529 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2017/11/15/hbao-plus-analysis-3/">Hbao Plus Analysis 3</a>
+          </h1>
+
+          <p class="post-meta">Nov 15, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/render/">render</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/hlsl/">hlsl</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/analysis/">analysis</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/hbaoplus/">hbaoplus</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p><strong>HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다.</strong></p>
+
+<p>이전 <a href="/2017/11/15/hbao-plus-analysis-2/">hbao plus analysis 2</a> 글에서 <em>Horizon based ambient occlusion</em> 와 <em>Cross Bilateral Filter</em> 대해서 알아보았다. 이번 글에서는 부록의 느낌으로 <em>HLSL</em> 코드를 읽으면서 생소했던 기타 기법들에 대해서 써볼 것이다.</p>
+
+<p>첫번째로 <em>Full Screen Triangle</em> 이라는 기법이다. 알고마면 굉장히 단순한 개념으로, 화면을 모두 덮는 한개의 삼각형을 그려서 모든 픽셀에 쉐이더를 돌릴 수 있게 해주는 기법이다. 아래 슬라이드를 보면 쉽게 이해가 갈것이다.</p>
+
+<p><br />
+<img src="/images/vertex-shader-tricks-by-bill-bilodeau-amd-at-gdc14-14-638.jpg" alt="Full Screen Triangle" class="center-image" /></p>
+<center>출처 : <a href="https://www.gdcvault.com/play/1020624/Advanced-Visual-Effects-with-DirectX">GDC 2014 : Vertex Sahder Tricks</a>
+</center>
+<p><br /></p>
+
+<p>단순하지만 처음 봤을 때는 조금 신박하게 느껴질 수도 있다. 두번째로는 모든 계산에 최대한 <em>HLSL Intrisic</em> 을 사용한다. 특히 벡터와 벡터사이의 거리를 계산할때 <em>dot product</em> 를 써서 하는게 정말 많았다. 어셈블리 레벨에서 달라지는것 같긴하나 정확한 이유는 알지 못했다. 추측해보면 GPU 에서 해당 명령어가 있지 않을까.. 라고 생각한다.</p>
+
+<p>세번째도 위의 것과 비슷하다. 대부분의 데이터에 <em>MAD</em> 방식을 사용해서 계산한다. 하지만 이는 거의 공식적으로 정해진게 있다. <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff471418.aspx">MSDN : mad  function</a> 레퍼런스에서도 나오듯이 어떤 GPU 에서는 위에서 추측한대로 하드웨어에서 지원하는 명령어라고 한다.</p>
+
+<blockquote>
+  <p>…
+Shaders can then take advantage of potential performance improvements by using a native mad instruction (versus mul + add) on some hardware.
+…</p>
+</blockquote>
+
+<p>또한 <em>HBAO+</em> 소스에서 찾은 주석에는 <em>GK104</em> 부터 특정 구간에서 10% 퍼포먼스 이득이 있다고 쓰여져 있다.</p>
+
+<p>네번째는 나누기를 절대 쓰지 않는다. 나머지 연산(mod, A % B)는 간혹 쓰이지만 나누기는 절대로 쓰이지 않았었다. 혹시라도 필요하다면 전부 <em>Constant Buffer</em> 에 CPU 에서 역수를 취해서 넘겨주는 방식으로 되어 있었다. 이도 역시 하드웨어에서 동작하는 부분을 알고 짠듯하다.</p>
+
+<p>다섯번째는 <em>HLSL</em> 코드를 <em>cpp</em> 소스에 <em>include</em> 하여 <em>Constant Buffer</em> 값을 갱신하는 코드였다. 여태까지 예전의 <em>DirectX</em> 소스만 보거나 <em>Unity</em> 에서만 작업을 해서 그런지 이런 기능은 굉장히 낯설었다.</p>
+
+<h1>참조 자료</h1>
+
+<ul>
+  <li><a href="http://docs.nvidia.com/gameworks/content/gameworkslibrary/visualfx/hbao/index.html">NVIDIA HBAO+</a></li>
+  <li><a href="https://www.gdcvault.com/play/1020624/Advanced-Visual-Effects-with-DirectX">GDC 2014 : Vertex Sahder Tricks</a></li>
+  <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff471418.aspx">MSDN : mad function</a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/11/15/hbao-plus-analysis-2/">Hbao Plus Analysis 2</a>
+          </h1>
+
+          <p class="post-meta">Nov 15, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/render/">render</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/analysis/">analysis</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/hbaoplus/">hbaoplus</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/hbao/">hbao</a>,
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/bilateral-filter/">bilateral_filter</a>
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p><strong>HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다.</strong></p>
+
+<p>이전 <a href="/2017/11/15/hbao-plus-analysis-1/">hbao plus analysis 1</a> 글에서 <em>HBAO+</em> 에서 <em>Linearize Depth</em> 와 <em>Deinterleaved Texturing</em> 에 대해서 알아보았다. 이번 글에서는 <em>HBAO+</em> 의 핵심 알고리즘인 <em>Horizon Based Ambient Occlusion</em> 와 AO 블러에 사용되는 <em>Cross Bilateral Filter</em> 에 대해서 알아볼것이다.</p>
+
+<h2>Horizon Based Ambient Occlusion</h2>
+
+<p><em>Horizon Based Ambient Occlusion</em> 은 xy 평면과(horizon) Depth 값을 사용해서 <em>AO</em> 를 계산한다. 슬라이드에서 가져온 일부를 보자.</p>
+
+<p><br />
+<img src="/images/hbao_siggraph08_05.png" alt="Horizon Mapping" class="center-image" /></p>
+<center>출처 : <a href="http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf">Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion</a>
+</center>
+<p><br /></p>
+
+<p>해당 슬라이드에서는 xy평면을 단순하게 1차원인 x축만으로 나타냈다. <em>HBAO</em> 는 그림에 나오는 <em>horizon angle</em> 을 사용하여 <em>AO</em> 값을 구한다. 자세한 방법은 아래 슬라이드를 보자.</p>
+
+<p><br />
+<img src="/images/hbao_siggraph08_12.png" alt="Horizon-Based AO" class="center-image" /></p>
+<center>출처 : <a href="http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf">Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion</a>
+</center>
+<p><br /></p>
+
+<p>슬라이드에서는 표면의 접선을 나타내는 <em>Tangent</em> 벡터와 <em>Horizon</em> 벡터를 사용해서 <em>sin</em> 의 차이로 <em>AO</em> 를 계산한다고 설명되어 있다. <em>Horizon</em> 벡터는 <em>Depth</em> 와 화면의 좌표를 구해서 샘플링하는 위치값을 구하고 기준이 되는 위치값의 차이를 통해 구한다. <em>HBAO+</em> 코드에서는 입력을 받은 <em>Normal</em> 벡터와 <em>Horizon</em> 벡터에 <em>dot</em> 을 사용해 <em>cos</em> 값을 구하고 변환해준다. 이렇게 한번 <em>AO</em> 값을 구한다.</p>
+
+<p>보다 정확한 <em>AO</em> 값을 구하기 위해서는 전방위로 탐색할 필요가 있다. 정해진 방향으로 샘플링을 해도 오차가 생길 수 있고 완전히 랜덤하게 방향을 정해도 부정확한 결과를 얻을 수 있다. 그래서 <em>HBAO</em> 는 랜덤하게 방향을 정하나 그 방향 벡터를 정해진 각도로 돌려주어 그나마 정확한 결과를 얻으려 한다. 슬라이드를 보고 넘어가자.</p>
+
+<p><br />
+<img src="/images/hbao_siggraph08_14.png" alt="Sampling the Depth Image" class="center-image" /></p>
+<center>출처 : <a href="http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf">Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion</a>
+</center>
+<p><br /></p>
+
+<p>핵심적인 개념은 모두 설명했지만 만족할만한 결과를 얻기 위해 여러가지 보정 방법들이 필요하다. 그래서 <em>HBAO</em> 에서는 두가지 보정을 해주는 개념을 설명한다. <em>HBAO</em> 는 방향을 설정해주고 해당 방향으로 한번만 샘플링 하는게 아니라 여러번 샘플링 한다. 그러므로 거리에 따른 감쇠(attenuation)가 필요하다. 방법은 간단하다. <em>AO</em> 를 계산할때 구했던 <em>Horizon</em> 벡터의 크기에 따라서 <em>AO</em> 값을 줄여준다. 나머지 한가지는 <em>Horizon</em> 벡터와 <em>Tangent</em> 벡터를 이용해 구하는 실질적인 <em>AO</em> 값에 <em>Bias</em> 로 낮은 <em>AO</em> 값들을 무시하는 방법이다. <em>Bias</em> 가 없이 <em>AO</em> 를 생성하게 되면 노이즈가 생기기 때문이다. 또한 <em>Bias</em> 로 생긴 수학적 오차는 코드에서 따로 보정해주기 때문에 크게 문제는 없다.</p>
+
+<h2>Cross Bilateral Filter</h2>
+
+<p><em>SSAO</em> 의 결과에는 일반적으로 블러를 먹이게 된다. 대부분 근사에 기반한 계산이기 때문이다. <em>HBAO</em> 에서는 <em>Depth</em> 를 이용한 방법을 소개한다. 바로 <em>Cross Bilateral Filter</em> 다.</p>
+
+<p><em>Cross Bilateral Filter</em> 은 <em>Gaussian Filter</em> 와 비슷한 필터로, <em>Gaussian Filter</em> 는 샘플링할 위치의 거리에 따라 점차 가중치가 줄어드는 필터라면, <em>Bilateral Filter</em> 는 위치에 따라 가중치가 줄어드는게 아닌 각 위치별로 가지고 있는 한개의 스칼라값에 차이에 따라서 가중치를 정하는 필터다. <em>Cross</em> 단어를 붙인 이유는 왼쪽과 오른쪽 방향의 필터와 위와 아래의 필터를 따로하기 때문에 <em>Cross</em> 라는 단어를 붙인 듯 하다. <em>HBAO+</em> 코드에서도 X 축과 Y 축을 기준으로 하는 블러 소스가 나누어져 있다. <em>HBAO</em> 에는 한개의 스칼라 값을 <em>Depth</em> 를 기준으로 계산한다. 그래서 크게 튀는 부분의 결과는 많이 반영하지 않아 전체적으로 뿌옇게 바뀐다.</p>
+
+<p><br />
+<img src="/images/hbao_siggraph08_28.png" alt="Sampling the Depth Image" class="center-image" /></p>
+<center>출처 : <a href="http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf">Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion</a>
+</center>
+<p><br /></p>
+
+<h1>참조 자료</h1>
+
+<ul>
+  <li><a href="http://docs.nvidia.com/gameworks/content/gameworkslibrary/visualfx/hbao/index.html">NVidia HBAO+</a></li>
+  <li><a href="http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf">Image-Space Horizon Based Ambient Occlusion</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Gaussian_filter">Wikipedia : Gaussian Filter</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Bilateral_filter">Wikipedia : Bilateral Filter</a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/11/15/hbao-plus-analysis-1/">Hbao Plus Analysis 1</a>
+          </h1>
+
+          <p class="post-meta">Nov 15, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/render/">render</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/analysis/">analysis</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/hbaoplus/">hbaoplus</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/linearize-depth/">linearize_depth</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/deintereaved-texturing/">deintereaved_texturing</a>
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p><strong>HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다.</strong></p>
+
+<p>이전 <a href="/2017/11/15/hbao-plus-analysis-0/">hbao plus analysis 0</a> 글에서 <em>HBAO+</em> 을 알기위한 기본적인 개념들에 대해서 살펴보았다. 이번 글에서는 <em>HBAO+</em> 의 구조와 <em>Linearize Depth</em> 와 <em>Deinterleaved Texturing</em> 에 대해서 알아보겠다.</p>
+
+<h2><em>HBAO+</em> Pipeline</h2>
+
+<p><br />
+<img src="/images/hbao+_pipeline_with_input_normals.png" alt="hbao+ with input normal" class="center-image" /></p>
+<center>출처 : <a href="http://docs.nvidia.com/gameworks/content/gameworkslibrary/visualfx/hbao/index.html">NVIDIA HBAO+</a>
+</center>
+
+<p><br />
+<img src="/images/hbao+_pipeline_without_input_normals.png" alt="hbao+ without input normal" class="center-image" /></p>
+<center>출처 : <a href="http://docs.nvidia.com/gameworks/content/gameworkslibrary/visualfx/hbao/index.html">NVIDIA HBAO+</a>
+</center>
+<p><br /></p>
+
+<p>그림이 두개가 있다. 하나는 <em>GBuffer</em> 를 사용할 시 <em>World-Space Normal</em> 버퍼와 <em>Depth Buffer</em> 를 넘겨주어 계산하는 방식과 입력으로 <em>Depth Buffer</em> 만 넘겨서 <em>Normal</em> 데이터를 계산하는 두가지 방식에 대한 파이프라인이다. 두가지의 차이는 <em>Normal</em> 데이터에 대한 처리방식만 다르다. 나머지 계산은 다를게 없다.</p>
+
+<h2>Linearize Depths</h2>
+
+<p>코드를 보면 가장 처음에 시작하는 단계는 바로 <em>Linearize Depths</em> 다. 이는 꽤나 알려진 방법이다. 하지만 필자는 <em>HBAO+</em> 를 볼때 처음 봤기에 어느 정도의 설명을 해놓아야겠다. <em>Linearize Depths</em> 를 알기 위해선 입력된 정점의 위치를 <em>Clipping-Space</em> 로 변환하는 방법이 어떻게 이루어지는지 알고 있어야 한다.</p>
+
+<p>일반적인 오브젝트를 렌더링 할때는 <em>Shader</em> 에 입력으로 들어오는 정점의 기준 공간은 <em>Model-Space</em>(또는 <em>Local-Space</em>) <em>Position</em> 이다. 그래서 <em>MVP</em> 변환을 통해 <em>Rasterizer</em> 가 처리할 수 있도록 <em>Clipping-Space</em> 로 <em>Rasterizer</em> 로 넘어가기 전에 변환해주어야 한다.(전체적인 내용은 <a href="https://docs.google.com/presentation/d/10VzsjfifKJlRTHDlBq7e8vNBTu4D5jOWUF87KYYGwlk/edit#slide=id.g25f88339be_0_0">Model, View, Projection 변환</a> 에서 확인할 수 있다.
+) 그래서 <em>Pixel Shader</em> 로 넘어간 데이터들은 픽셀별로 들어가고, 픽셀별로 들어간 정점들의 위치는 <em>Clipping-Space</em> 로 되어있다. 여기까지 이해했으면 아래 그림을 보자.</p>
+
+<p><br />
+<img src="/images/Graphics3D_ClipVolume.png" alt="Frustom vs Clipping" class="center-image" /></p>
+<center>출처 : <a href="https://www.ntu.edu.sg/home/ehchua/programming/opengl/CG_BasicsTheory.html">3D Graphics with OpenGL Basic Theory</a>
+</center>
+<p><br /></p>
+
+<p>위 그림은 <em>View Frustom</em> 과 <em>Clipping Volume</em> 을 보여준다. <em>View Frustom</em> 은 <em>Perspective</em> 방식으로 카메라가 실제로 보여주는 공간을 시각화 한것이고, <em>Clipping Volume</em> 은 <em>MVP</em> 변환에서 <em>Projection</em> 행렬을 사용할시 <em>View Frustom</em> 에서 <em>Clipping Volume</em> 으로 변환되는 볼륨을 시각화 한것이다. <em>Projection</em> 변환은 아래와 같다.</p>
+
+<p><br />
+<img src="/images/projection_matrix.png" alt="perspective projection matrix" class="center-image" /></p>
+<center>출처 : <a href="https://stackoverflow.com/questions/6652253/getting-the-true-z-value-from-the-depth-buffer
+">Stackoverflow : Getting the true z value from the depth buffer</a>
+</center>
+<p><br /></p>
+
+<p><em>Perspective Projection</em> 은 <em>Frustom</em> 기준 위치를 <em>Cube</em> 기준 위치로 바꾸는 연산이기 때문에 실제 좌표의 왜곡이 발생한다. 우리는 Z(Detph) 값이 어떤식으로 왜곡되는지 알아야 한다. 우선 <em>Clipping-Space</em> 로 변환할때, <em>Perspective</em> 형식의 <em>View Frustom</em> 의 <em>zNear</em>, <em>zFar</em> 사이의 Z 값을 [0~1] 값으로 매핑한다. 그러면 <em>zNear</em>, <em>zFar</em> 값을에 따라서 실제 좌표가 바뀐다. 그리고 값 자체가 실제 Z 값과 선형적으로 매핑되지 않는다. 아래 그림을 보자.</p>
+
+<p><br />
+<img src="/images/nonlinearDepth.png" alt="non linear depth" class="center-image" /></p>
+<center>출처 : <a href="https://computergraphics.stackexchange.com/questions/5116/how-am-i-able-to-perform-perspective-projection-without-a-near-plane">Computer Graphics StackExchange : How am I able to perform perspective projection without a near plane?</a>
+</center>
+<p><br /></p>
+
+<p>그림이 조금 헷갈릴수도 있다. 세로축의 <em>d</em> 값은 <em>Projection</em> 을 한 Z, <em>Depth</em> 값이고 가로축은 <em>World-Space</em> 의 Z 값이다. 조금 헷갈릴수도 있는 부분은 세로축의 기준값이 윗부분이 0이고 아랫부분이 1이다. 이 부분은 신경써서 봐야한다. 이해했다면 변경된 <em>Depth</em> 값은 실제 Z 값과 선형적인 관계가 아니고, 실제 Z 값으로 복원하려면 여러 연산을 해야하기에 <em>HBAO+</em> 에서는 <em>Depth</em> 값들을 <em>Linearize</em> 하는 과정을 맨 처음에 넣은 것이다. 실제 Z 값으로 복원하는 이유는 간단하다. <em>Linear</em> 하지 않은 <em>Depth</em> 값을 연산시에 사용하면 보다 부정확한 결과가 나오기 때문이다. 특히 <em>SSAO</em> 연산을 할때는 <em>Depth</em> 값이 기본이 되기 때문에 해주어야 한다.</p>
+
+<p>이 단계에서의 결론은 간단하다. <em>Clipping-Space</em> 의 <em>Depth</em> 값을 <em>View-Space</em> 의 Z 값으로 변환하는 단계다. 처리하는 코드는 다른 단계에 비해 짧다. 만약에 넘겨준 <em>Depth</em> 데이터들이 <em>View-Space</em> 인 경우에는 옵션을 통해 처리할 수 있다.</p>
+
+<h2>Deintereaved Texturing</h2>
+
+<p>위의 그림에는 <em>Generate HBAO+</em> 라고 단순히 뭉뚱그려서 표현했지만 그 안에는 단순한 <em>Horizon based ambient occlusion(HBAO)</em> 계산만 있지는 않다. <em>Deintereaved Texturing</em> 이라는 테크닉과 함께 <em>HBAO</em> 를 계산한다. <em>Computer Engineering</em> 분야의 지식을 응용한 이론으로 개인적으로 이 이론을 접했을 떄 꽤나 충격이였다. 자세한 설명은 <a href="https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf">GDC2013 : Particle Shadows &amp; Cache-Efficient Post-Processing</a> 슬라이드의 몇장과 함께 보자.</p>
+
+<p><br />
+<img src="/images/gdc2013_ParticleShadowsAndCacheEfficientPost_51.png" alt="gdc2013_ParticleShadowsAndCacheEfficientPost_51" class="center-image" /></p>
+<center>출처 : <a href="https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf">GDC2013 : Particle Shadows &amp; Cache-Efficient Post-Processing</a>
+</center>
+<p><br /></p>
+
+<p><em>Deintereaved Texturing</em> 의 방법은 간단하다. 텍스쳐를 여러장으로 나누어 샘플링을 한 후 각각의 나눠진 텍스쳐를 샘플링한 결과를 하나로 합친다. 슬라이드에는 <em>Post-Processing</em> 을 기준으로 설명이 되어있다. 이점은 생각하면서 보자.</p>
+
+<p><br />
+<img src="/images/gdc2013_ParticleShadowsAndCacheEfficientPost_52.png" alt="gdc2013_ParticleShadowsAndCacheEfficientPost_52" class="center-image" /></p>
+<center>출처 : <a href="https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf">GDC2013 : Particle Shadows &amp; Cache-Efficient Post-Processing</a>
+</center>
+<p><br /></p>
+
+<p>한 텍스쳐를 여러장으로 나누는건 <em>Multiple Render Target</em> 을 사용해서 나눈다. 슬라이드는 4개를 기준으로 설명했지만 <em>DirectX10</em> 부터는 최대 8개까지 지원하기 때문에 16개로 나누어 샘플링한다.</p>
+
+<p><br />
+<img src="/images/gdc2013_ParticleShadowsAndCacheEfficientPost_53.png" alt="gdc2013_ParticleShadowsAndCacheEfficientPost_53" class="center-image" /></p>
+<center>출처 : <a href="https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf">GDC2013 : Particle Shadows &amp; Cache-Efficient Post-Processing</a>
+</center>
+<p><br /></p>
+
+<p>다음은 나누어진 각각의 텍스쳐를 샘플링하여 원하는 알고리즘으로 결과를 낸다. 조각난 텍스쳐 한개당 한번 <em>DrawCall</em> 을 걸어준다.</p>
+
+<p><br />
+<img src="/images/gdc2013_ParticleShadowsAndCacheEfficientPost_54.png" alt="gdc2013_ParticleShadowsAndCacheEfficientPost_54" class="center-image" /></p>
+<center>출처 : <a href="https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf">GDC2013 : Particle Shadows &amp; Cache-Efficient Post-Processing</a>
+</center>
+<p><br /></p>
+
+<p><em>Deintereave</em> 를 하기전까지는 넓은 범위의 텍스쳐를 샘플링하여 캐시 효율이 많이 떨어졌지만 텍스쳐를 나누어 각각 할때마다 처리를 하게되니 캐시 효율의 이득을 얻었다. 또한 각각의 <em>DrawCall</em> 마다 텍스쳐의 용량이 조금만 필요하게 되니 대역폭의 이득도 얻게 된다.</p>
+
+<p><br />
+<img src="/images/gdc2013_ParticleShadowsAndCacheEfficientPost_55.png" alt="gdc2013_ParticleShadowsAndCacheEfficientPost_55" class="center-image" /></p>
+<center>출처 : <a href="https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf">GDC2013 : Particle Shadows &amp; Cache-Efficient Post-Processing</a>
+</center>
+<p><br /></p>
+
+<p>한번의 <em>DrawCall</em> 로 나누어진 결과들을 합친다. <em>Deintereaved Texturing</em> 은 여기서 끝이다. 실제로 <em>HBAO+</em> 는 16개의 텍스쳐로 나누어 샘플링한다. <em>Multiple Render Target</em> 이 8개까지 지원되어 16개로 <em>Deintereave</em> 하려면 2번 <em>DrawCall</em> 을 해야한다. 또한 샘플링은 16번 <em>DrawCall</em> 을 하여 계산한다. 그래서 한번 <em>Deintereaved Texturing</em> 을 사용하여 <em>Post-Processing</em> 처리하려면 약 20번의 <em>DrawCall</em> 을 계산해야 한다. 절대적으로 큰 숫자가 아니기 때문에 크게 신경쓸 필요는 없어보인다.</p>
+
+<p><br />
+<img src="/images/gdc2013_ParticleShadowsAndCacheEfficientPost_62.png" alt="gdc2013_ParticleShadowsAndCacheEfficientPost_62" class="center-image" /></p>
+<center>출처 : <a href="https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf">GDC2013 : Particle Shadows &amp; Cache-Efficient Post-Processing</a>
+</center>
+<p><br /></p>
+
+<p>엄청난 성과를 거둔게 보인다. 캐시 히트 확률이 굉장히 올라갔고, 시간도 많이 절약했다. <em>HBAO+</em> 의 성능향상을 시켜준 것이 이 <em>Deinterleaved Texturing</em> 인듯하다.</p>
+
+<h2>Reconstruction of Normal</h2>
+
+<p><em>HBAO+</em> 는 기본적으로 <em>Depth</em> 와 <em>Normal</em> 을 통해서 계산한다. 그렇기 때문에 외부에서 <em>Normal</em> 데이터를 넣어주거나 직접 만들어야 한다. 보통 <em>Deffered Rendering</em> 을 차용하는 시스템들은 간단하게 <em>GBuffer</em> 의 <em>Normal</em> 데이터만 넣어주면 된다. <em>Normal</em> 데이터를 가져오는 코드가 있으니 조금만 수정하여 사용하면 된다.</p>
+
+<p><em>Normal</em> 데이터가 없는 경우에는 라이브러리 내에 직접 계산한다. 계산하는 픽셀을 기준으로 상하,좌우별로 <em>Depth</em> 와 화면상의 좌표계를 이용하여 <em>View-Space</em> 의 위치를 구한다음 위치가 상하, 좌우별로 가까운 픽셀의 위치 오프셋을 사용해 외적하여 <em>Normal</em> 값을 구한다.</p>
+
+<h1>참조 자료</h1>
+
+<ul>
+  <li><a href="http://docs.nvidia.com/gameworks/content/gameworkslibrary/visualfx/hbao/index.html">NVidia HBAO+</a></li>
+  <li><a href="https://developer.nvidia.com/sites/default/files/akamai/gameworks/samples/DeinterleavedTexturing.pdf">NVidia : Deintereaved Texturing</a></li>
+  <li><a href="https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf">GDC2013 : Particle Shadows &amp; Cache-Efficient Post-Processing</a></li>
+  <li><a href="http://www.gdcvault.com/play/1017623/Advanced-Visual-Effects-with-DirectX">GDCVault : Particle Shadows &amp; Cache-Efficient Post-Processing Video</a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/11/15/hbao-plus-analysis-0/">Hbao Plus Analysis 0</a>
+          </h1>
+
+          <p class="post-meta">Nov 15, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/render/">render</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/analysis/">analysis</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/hbaoplus/">hbaoplus</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>게임에서 쓰이는 실시간 렌더링에서 빛과 물체들의 상호작용을 완벽하게 현실적으로 표현하는 거의 불가능하다. 하지만 이를 위해 수십년동안 많은 엔지니어와 연구자들이 노력하여 부분적이고 제한된 환경에서의 빛과 물체의 상호작용을 현실 세계와 비슷하게 따라잡고 있다. 이번 글에서 살펴볼 것은 <em>Screen-Space Ambient Occlusion(SSAO)</em> 기반의 <em>HBAO+</em> 라는 라이브러리에 대해서 알아볼 것이다.</p>
+
+<p><em>HBAO+</em> 는 NVidia 에서 만든 라이브러리로써, 현재 <a href="https://developer.nvidia.com/shadowworks"><em>ShadowWorks</em></a> 라는 프로젝트에 포함되어 있다. <a href="https://developer.nvidia.com/shadowworks"><em>ShadowWorks</em></a> 에는 <em>HBAO+</em> 뿐만 아니라 <em>ShadowLib</em> 이라는 그림자 렌더링을 위한 라이브러리로써 HFTS, PCSS, CSM 등 많은 기능들을 포함하고 있는 라이브러리가 있다. 현재 <em>ShadowLib</em> 은 오픈소스가 아니지만 이번에 알아볼 <em>HBAO+</em> 는 <em>Github</em> 에서 소스를 받을 수 있다. 이에 대한 자세한 사항은 <a href="https://developer.nvidia.com/gameworks-source-github">“Access GameWorks Source on Github”</a> 에서 확인할 수 있다.</p>
+
+<h3>Ambient Occlusion?</h3>
+
+<p><em>Ambient Occlusion</em> 이란 말은 처음 들어본 사람에게는 생소한 말이지만 한번이라도 들어본 사람들에게는 꽤나 익숙한 말일 것이다. 빠른 이해를 위해 아래 그림을 보자.</p>
+
+<p><br />
+<img src="/images/220px-AmbientOcclusion_German.jpg" alt="Wikipedia : Ambient Occlusion Image" class="center-image" /></p>
+<center>출처 : <a href="https://en.wikipedia.org/wiki/Ambient_occlusion">Wikipedia : Ambient Occlusion</a>
+</center>
+<p><br /></p>
+
+<p>가장 위의 이미지를 보자. 단순한 렌더링이 아니라 반사를 구현해놓아서 꽤나 사실적이다. 하지만 여기서 더욱더 사실적으로 표현이 가능하다. 중간의 이미지를 보면 <em>Ambient Occlusion</em> 이 무엇인지 쉽게 알 수 있다. 흰색 물체와 흰색 배경과 함께 아래 구석에 어두워진 것을 볼 수 있다. 이를 <em>Ambient Occlusion</em> 이라고 한다.</p>
+
+<p>글로 간단하게 설명하자면 물체가 모이면 좁은 공간이 생기게 되고, 구석이면 구석일 수록 직접 들어오는 빛은 있으나 반사되어 오는 빛이 적어지므로 어두워진다. 이를 말하는 것이바로 <em>Ambient Occlusion</em> 이다. <em>Ambient</em> 는 주변을 뜻하고, <em>Occlusion</em> 은 무언가 가리는 것을 뜻한다. 빛을 가려서 주변에 보이는 것이 어두워지는 것을 말하는 것이다.</p>
+
+<p>보통 <em>Ambient Occlusion</em> 은 개발시에 미리 시간을 들여 계산해 미리 저장해놓은 다음 실시간으로 저장된 데이터를 읽어서 사용하는 <em>precomputed AO</em> 방식으로 사용한다. 이유는 간단하다. 실시간으로 계산되기에는 요즘 컴퓨터로는 연산량을 버틸 수 없어서 그렇다. 월드가 복잡할수록, 넓을수록, 고퀄리티의 <em>AO</em> 를 계산할수록 시간이 대폭 증가한다. 하지만 이는 물체와 물체간의 <em>AO</em> 를 계산할때의 이야기이다.</p>
+
+<h3>Screen-Space AO?</h3>
+
+<p><em>Deffered Rendering</em> 이 많이 쓰이면서 이를 위한 많은 기술들이 연구되었다. <em>Deffered Rendering</em> 의 대부분의 기술들은 이름앞에 보통 <em>Screen-Space</em> 라는 단어를 달고 나왔다. <em>Screen-Space</em> 란 <em>Geometry Stage</em> 아닌 <em>Rasterizer Stage</em> 로 넘어가서 처리되는 부분을 말한다. 말 뜻대로 해석한다면 2D 이미지의 공간이라는 뜻도 되겠다. 다만 <em>Pixel Shader</em> 로 넘어간다고 해서 <em>Depth(Z value)</em> 가 사라지지는 않기 때문에 이를 온전히 2D 공간이라고도 볼 수는 없다. 실제 좌표계는 <em>Clipping-Space</em> 로 되어 있을 것이다.(x,y,z 가 -1 ~ 1 범위의 좌표로 되어있는 공간, Driver API 에 따라 조금씩 다르다.) 쉽게 이해하기 위해 아래 그림을 보자.</p>
+
+<p><br />
+<img src="/images/DeferredLighting.jpg" alt="Deffered Rendering" class="center-image" /></p>
+<center>출처 : <a href="http://tower22.blogspot.kr/2010/11/from-deferred-to-inferred-part-uno.html">From Deferred to Inferred, part uno</a>
+</center>
+<p><br /></p>
+
+<p>위 그림은 <em>Deffered Rendering</em> 의 중요한 특징을 나타내는 그림이다. 이 데이터들을 <em>GBuffer</em> 라고 한다. 저 결과들은 <em>Multi Render Target</em> 을 통해 한 <em>Pixel Shader</em> 에서 나온 결과물들이다. 즉 한 장면을 렌더링해서 2D 버퍼안에 데이터들을 픽셀별로 저장한 것이다. 각각 저마다 필요한 정보들을 담고 있다. 우리가 알아볼 <em>Screen-Space AO</em> 또한 이런식으로 데이터를 처리한다. 위 그림에는 나와있지 않지만 하드웨어 차원에서 <em>Depth Buffer</em> 를 지원한다. <em>Pixel Shader</em> 를 실행한 후 알아서 <em>Depth Buffer</em> 에 Z 값을 저장해준다. <em>Screen-Space AO</em> 는 <em>Depth Buffer</em> 를 이용하여 계산한다. 물론 <em>Depth Buffer</em> 뿐만아니라 <em>GBuffer</em> 에서 <em>Normal</em> 데이터까지 사용하여 할 수도 있다.</p>
+
+<p>하지만 <em>SSAO</em> 는 정공법이 아니다. 모든 <em>AO</em> 를 표현할 수 없으며 디테일한 <em>AO</em> 밖에 표현하지 못한다. 그렇기에 이는 부가적인 방법으로 사용되어야 한다. <em>SSAO</em> 를 활용하기 가장 좋은 장면은 화면에서 작게 표시되는 오브젝트들이 조밀하게 많이 있을 떄나 그려지는 오브젝트의 디테일이 많을 때다. 이럴때 <em>SSAO</em> 를 표현하면 괜찮은 결과가 나온다.</p>
+
+<p><br />
+<img src="/images/0cf69542-8ff5-422a-8d01-f11bd65ab62e_scaled.jpg" alt="Unity Technology : SSAO" class="center-image" /></p>
+<center>출처 : <a href="https://forum.unity.com/threads/ssao-pro-high-quality-screen-space-ambient-occlusion.274003/page-5">Unity Forum</a>
+</center>
+<center></center>
+<p><br /></p>
+
+<p>게임에서는 조금이라도 복잡한 메시를 쓸 수 밖에 없기 때문에 결국 왠만한 게임에는 <em>SSAO</em> 를 넣는 것이 괜찮은 선택이 된것이다. 하지만 초기에 제안된 <em>SSAO</em> 구현물들은 대부분 꽤나 시간을 잡아먹었었다. 그래서 시간에 따른 선택이 되었지만 <em>HBAO+</em> 와 같은 개량된 기법이 여러개 등장하여 퍼포먼스를 다른 곳에 쓸 수 있게 되었다. <a href="https://www.geforce.com/hardware/technology/hbao-plus/technology">Geforce : HBAO+ Technology</a> 에서 <em>SSAO</em> 테크닉에 따른 벤치마킹을 볼 수 있다.</p>
+
+<p><br />
+<img src="/images/hbao_bench.png" alt="benchmark" class="center-image" /></p>
+<center>출처 : <a href="https://www.geforce.com/hardware/technology/hbao-plus/technology">Geforce : HBAO+ Technology</a>
+</center>
+<center></center>
+<p><br /></p>
+
+<p>우리가 살펴볼 것은 가장 아래에 있는 <em>HBAO+</em> 에 대한 것들이다. <em>Resolution</em> 은 <em>Depth Buffer</em> 의 해상도를 뜻한다. 당연히 큰 사이즈여야 디테일한 것까지 표현할 수 있다. 가장 왼쪽에 있는 것은 시간이다. <em>HBAO+</em> 가 2.4ms 로 조금 느리지만 그 오른쪽에 있는 <em>Occlusion Samples Per AO Pixel</em> 의 숫자와 같이 비교하면 이야기가 다르다. 이는 한 픽셀별로 몇번 다른 텍스쳐의 데이터 샘플링 숫자다. <em>HBAO</em> 는 4번만 하지만, <em>HBAO+</em> 는 이의 9배인 36번이다. 샘플링을 많이하게 되면 더욱더 사실적인 <em>SSAO</em> 를 표현할 수 있다. 샘플링 숫자에 비하면 시간은 내어줄 수 있는 자원인 것이다.</p>
+
+<p>이 글에서는 <em>HBAO+</em> 를 분석하기 전 배경이 되는 개념에 대해서 알아보았다. 다음 <a href="/2017/11/15/hbao-plus-analysis-1/">hbao plus analysis 1</a> 에서는 <em>HBAO+</em> 라이브러리에 대한 본격적인 분석을 해보려고 한다.</p>
+
+<h1>참조 자료</h1>
+
+<ul>
+  <li><a href="https://en.wikipedia.org/wiki/Ambient_occlusion">Wikipedia : Ambient Occlusion</a></li>
+  <li><a href="https://developer.nvidia.com/developer-program">NVidia Developer Program</a></li>
+  <li><a href="https://www.geforce.com/hardware/technology/hbao-plus/technology">Geforce : HBAO+ Technology</a></li>
+  <li><a href="https://forums.geforce.co.kr/index.php?document_srl=12616&amp;mid=geforce">한국 지포스 포럼 : HBAO+</a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2017/10/31/shader-pipeline-4-geometry-shader/">Shader Pipeline 4 Geometry Shader</a>
           </h1>
 
@@ -167,6 +1690,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -204,6 +1737,16 @@
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -285,12 +1828,22 @@
       <a href="/categories/hlsl/">hlsl</a>
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
 </p>
         </header>
 
         <div class="post-content">
-          <p>“<a href="/2017/10/31/shader-pipeline-3-fragment-shader0/">Fragemnt Shader</a>” 에서 <em>Fragment Shader</em> 에 대해 알아보았다. 다음은 <em>Geometry Shader</em> 에 대해서 써보려 한다.</p>
+          <p>“<a href="/2017/10/31/shader-pipeline-3-fragment-shader/">Fragemnt Shader</a>” 에서 <em>Fragment Shader</em> 에 대해 알아보았다. 다음은 <em>Geometry Shader</em> 에 대해서 써보려 한다.</p>
 
 <p><em>Geometry Shader</em> 는 쉐이더 파이프라인에서 <em>Rasterizer Stage</em> 넘어가기 전의 <em>Geometry Stage</em> 의 마지막 단계로써 이전 쉐이더에서 넘긴  <em>Primitive</em> 데이터(point, line, triangle..)를 프로그래머가 원하는 복수의 <em>Primitive</em> 데이터로 변환할 수 있다. 삼각형을 삼각형의 중심을 나타내는 점으로 변환하는 쉐이더를 보자.</p>
 
@@ -348,7 +1901,7 @@ void geom(vertexOutput input[3], uint InstanceID : SV_GSInstanceID, inout PointS
       <li>
         <header class="post-header">
           <h1 class="post-title">
-            <a class="post-link" href="/2017/10/31/shader-pipeline-3-fragment-shader0/">Shader Pipeline 3 Fragment Shader0</a>
+            <a class="post-link" href="/2017/10/31/shader-pipeline-3-fragment-shader/">Shader Pipeline 3 Fragment Shader</a>
           </h1>
 
           <p class="post-meta">Oct 31, 2017 • 
@@ -410,6 +1963,16 @@ void geom(vertexOutput input[3], uint InstanceID : SV_GSInstanceID, inout PointS
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -447,6 +2010,16 @@ void geom(vertexOutput input[3], uint InstanceID : SV_GSInstanceID, inout PointS
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -526,6 +2099,16 @@ void geom(vertexOutput input[3], uint InstanceID : SV_GSInstanceID, inout PointS
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
 
@@ -646,6 +2229,16 @@ fixed4 frag(v2f i)
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -703,6 +2296,16 @@ fixed4 frag(v2f i)
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
 
@@ -799,6 +2402,16 @@ fixed4 frag(v2f i)
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -836,6 +2449,16 @@ fixed4 frag(v2f i)
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -917,6 +2540,16 @@ fixed4 frag(v2f i)
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -976,6 +2609,16 @@ fixed4 frag(v2f i)
       <a href="/categories/hlsl/">hlsl</a>,
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -987,6 +2630,16 @@ fixed4 frag(v2f i)
   
     
       <a href="/categories/unity/">unity</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1182,6 +2835,16 @@ v2f vert(appdata i)
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1219,6 +2882,16 @@ v2f vert(appdata i)
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1298,6 +2971,16 @@ v2f vert(appdata i)
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
 
@@ -1402,6 +3085,16 @@ v2f vert(appdata i)
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1439,6 +3132,16 @@ v2f vert(appdata i)
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1520,6 +3223,16 @@ v2f vert(appdata i)
       <a href="/categories/hlsl/">hlsl</a>
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
 </p>
         </header>
@@ -1575,784 +3288,6 @@ for(int i = 0; i &lt; 5; i++)
   <li><a href="https://www.gamedev.net/forums/topic/649408-can-someone-explain-loop-and-unroll-to-me/">GameDev : Can someone explain [loop] and [unroll] to me?</a></li>
   <li><a href="https://www.gamedev.net/forums/topic/543541-hlsl-warning-gradient-based-operations-must-be-moved-out-of-flow-control-to-prevent/">GameDev : HLSL warning: Gradient-based operations must be moved out of flow control to prevent
  </a></li>
-</ul>
-
-        </div>
-
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/10/16/introduce-of-wave-programming/">Introduce Of Wave Programming</a>
-          </h1>
-
-          <p class="post-meta">Oct 16, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/render/">render</a>,
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/shader/">shader</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>Windows 10 Fall Creators Update 가 나오면서 <em>Shader Model 6.0</em> 이 추가되었다. 여태까지의 <em>Shader Model</em> 업데이트는 대부분 DirectX 버젼이 올라가면서 같이 업데이트 된 경우가 많으나 이번의 <em>Shader Model 6.0</em> 은 따로 업데이트 되었다. <em>Shader Model 6.0</em> 에서의 가장 큰 기능 추가는 당연히 <em>Wave Intrisic</em> 이라고 할 수 있겠다. <em>Wave Intrisic</em> 을 제외하면 <em>Shader Model 6.0</em> 은 바뀐게 없다.</p>
-
-<p>여태까지의 HLSL 을 사용한 쉐이더 작성은 거의 대부분 <em>Single-Threading</em> 으로 작동되었다. <em>Pixel Shader</em> 에서 ddx, ddy instrisic 을 사용하여 Gradient 데이터를 가져올 수 있긴 했지만 이 것을 제외하면 거의 없었다고 보면 되겠다. 그래서 <em>Shader Model 6.0</em> 에서는 다른 <em>Thread</em> 와 인터렉션 할 수 있는 <em>Wave Intrisic</em> 을 지원한다. <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/mt733232.aspx">MSDN : HLSL Shader Model 6.0</a> 을 살펴보면 알겠지만 단순한 API 들을 제공하는 것이다. 하지만 내부에서 동작하는 것은 조금 다르다.</p>
-
-<p><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/mt733232.aspx">MSDN : HLSL Shader Model 6.0</a> 에서 나온 용어에 대한 설명이 필요하다. <em>Lane</em> 은 일반적으로 생각되는 한개의 <em>Thread</em> 가 실행되는 것이다. <em>Shader Model 6.0</em> 이전의 쉐이더 모델은 단순히 <em>Lane</em> 개념 안에서 코딩을 해야 했다. <em>Lane</em> 은 상황에 따라 실행되고 있는 상태일 수도 있고, 쉬고 있는 상태일 수도 있다. <em>Wave Intrisic</em> 을 사용해 이를 각각의 <em>Lane</em> 에서도 알 수 있다. <em>Wave</em> 는 GPU 에서 실행되는 <em>Lane</em> 의 묶음을 뜻한다. 즉 여러개의 <em>Lane</em> 이라고 할 수 있겠다. 같은 <em>Wave</em> 안의 <em>Lane</em> 들은 <em>Barrier</em> 라는게 없다. 필자가 알고 있는 <em>Barrier</em> 는 <em>Memory Barrier</em> 인데, 이는 <em>Thread</em>(<em>Lane</em>)끼리의 같은 메모리에 접근하는 것에 대한 동기화를 위해 있는 개념이다. 동기화를 위한 <em>Barrier</em> 는 속도를 늦출 수 밖에 없다. 하지만 <em>Wave</em> 로 묶여진 <em>Lane</em> 들은 서로 <em>Barrier</em> 가 명시적으로 존재하지 않기 때문에 <em>Wave</em> 별로 빠른 메모리 접근이 가능하다는 것이다. <em>Wave</em> 는 <em>Warp</em>, <em>WaveFront</em> 라고도 불리울 수 있다고 한다.</p>
-
-<p>그리고 이 API 들을 통해 약간의 드라이버 내부를 엿볼 수 있다. <em>Pixel Shader</em> 에서 <em>Render Lane</em> 과 <em>Helper Lane</em> 이 구분되어져 있는데, 이는 ddx,ddy 를 통해 픽셀의 Gradient 를 계산하는 것에 대한 보다 디테일한 개념을 생각할 수 있게 해준다. GPU 드라이버 시스템에서는 픽셀을 처리하기 위해 단순히 한개의 픽셀만 처리하는게 아닌 2x2 의 픽셀을 엮어 계산한다. 이를 MSDN 문서에서는 2x2 의 픽셀 뭉치를 <em>Quad</em> 라고 명칭한다. <em>Quad</em> 는 두가지 종류에 스레드가 실행된다. 하나는 우리가 잘 알고 있는 <em>Pixel Shader</em> 를 실행하는 <em>Render Lane</em> 이다. <em>Render Lane</em> 은 화면에 보여주는 색을 결과로 내놓게 된다. 그리고 나머지 한가지는 <em>Helper Lane</em> 인데, 이는 Pixel 별로 Gradient 를 계산하기 위해 실행되는 <em>Lane</em> 으로써 아무런 결과를 내놓지 않고 단순히 계산을 위한 <em>Lane</em> 이다.</p>
-
-<p><em>Shader Model 6.0</em> 은 DirectX12 과 Vulkan 에서 지원한다. DirectX 에서는 <em>Pixel Shader</em> 와 <em>Computer Shader</em> 에서 지원한다. Vulkan 에서는 모든 쉐이더 단계에서 지원한다. 그래픽 카드 벤더별로 조금씩 다른게 있으니 <a href="http://32ipi028l5q82yhj72224m8j.wpengine.netdna-cdn.com/wp-content/uploads/2017/07/GDC2017-Wave-Programming-D3D12-Vulkan.pdf">GDCVault(GDC 2017) : Wave Programming D3D12 Vulkan </a> 에서 참고 바란다.</p>
-
-<p>이 API 는 여러 쓰레드들 끼리 쉽게 협력하여 보다 효율적인 쉐이더 병렬 프로그래밍을 가능하게 해줄듯하다. 다만 <em>Shader Model 5.0</em> 에서 소개된 <em>ComputeShader</em> 만큼의 임팩트는 없다. 패러다임의 아주 큰 변화는 없다는 뜻이다. DirectX12 가 지향하는 드라이버 시스템에서의 부담을 줄이는 것과 <em>Shader Model 6.0</em> 은 서로 방향이 비슷하다고 생각된다.</p>
-
-<h1>참조 자료</h1>
-
-<ul>
-  <li><a href="http://www.gdcvault.com/play/1024732/Advanced-Graphics-Tech-D3D12-and">GDCVault(GDC 2017) : D3D12 &amp; Vulkan Done Right</a></li>
-  <li><a href="http://32ipi028l5q82yhj72224m8j.wpengine.netdna-cdn.com/wp-content/uploads/2017/07/GDC2017-Wave-Programming-D3D12-Vulkan.pdf">GDCVault(GDC 2017) : Wave Programming D3D12 Vulkan </a></li>
-  <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/mt733232.aspx">MSDN : HLSL Shader Model 6.0</a></li>
-  <li><a href="http://optocrypto.com/2017/09/20/microsofts-program-shader-model-6-0-completed/">Optocrypto : Microsoft’s first example program for shader model 6.0 was completed</a></li>
-</ul>
-
-        </div>
-
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/09/29/using-rendering-to-cubemap/">Using Rendering To Cubemap</a>
-          </h1>
-
-          <p class="post-meta">Sep 29, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/render/">render</a>
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p><a href="/2017/09/29/using-relplacement-shader/">using replacement shader</a> 에서 <em>Camera.RenderWithShader</em> 와 같은 렌더링을 코드에서 직접해주면서 기능을 커스터마이징 할 수 있는 것을 살펴보았는데, 이 게시물에서는 비슷한 메서드인 <em>Camera.RenderToCubemap</em> 에 대해서 알아볼 것이다.</p>
-
-<p>Unity 에서는 여러 렌더링 커스터마이징 기능을 제공하는데, 이 게시물에서는 그 중 하나인 <em>Camera.RenderToCubemap</em> 에 대해서 알아볼 것이다. 일반적으로 <em>Cubemap</em> 은 SkyBox 나 주변의 Irradiance 를 나타낼 때 쓴다. 다만 이를 직접 구현할 때의 문제점은 각 모서리별로 <em>Aliasing</em> 이 일어나는 경우다. 매우 매끄러운 표면의 Specular 에서 <em>Aliasing</em> 이 나타난 Irradiance 를 표현하면 굉장히 티가 많이 나기 때문에 이는 굉장히 신경써야할 문제다.</p>
-
-<p>그래서 Unity 에서는 <em>Cubemap</em> 에 렌더링을 하는 기능인 <em>Camera.RenderToCubemap</em> 을 지원한다. 이를 통해 할 수 있는 것은 실시간으로 <em>Cubemap</em> 에 렌더링된 결과를 저장해 <em>Irradiance</em> 의 소스로 쓰거나, 실시간으로 바뀌는 <em>Skybox</em> 렌더링을 할 수도 있다. 사용 방법은 아래와 같다.</p>
-
-<pre><code class="language-C#">RenderTexture cubmapRT = ...;
-camera.RenderToCubemap(cubemapRT, 63);
-</code></pre>
-
-<p><em>Camera.RenderToCubemap</em> 의 두번째로 들어가는 인자는 어떤 면을 그릴건지에 대한 비트마스크다. <em>Camera.RenderToCubemap</em> 를 쓸때 주의할 점은 일부 하드웨어에서는 동작하지 않는 기능이라고 한다. 다만 특정한 하드웨어를 기술해 놓지않아서 추측하기는 어렵다. 단순히 추측할 수 있는 것은 MRT 를 지원하지 않거나 아니면 다른 <em>ComputeShader</em> 같은 기능을 사용해 일부 하드웨어에서 안된다고 하는 정도 밖에 없다.</p>
-
-<p>위 예제에서는 RenderTexture 를 사용하였는데, 저렇게 코드에서 처리할 수도 있지만 CustomRenderTexture 를 통해 간편하게 처리할 수도 있다. CustomRenderTexture 는 업데이트 주기를 사용자 임의대로 정할 수 있으므로 꽤나 유용하게 쓰일 수 있다.</p>
-
-<h1>참조 자료</h1>
-
-<ul>
-  <li><a href="https://docs.unity3d.com/kr/current/ScriptReference/Camera.RenderToCubemap.html">Unity Reference : Camera.RenderToCubemap</a></li>
-</ul>
-
-        </div>
-
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/09/29/using-relplacement-shader/">Using Relplacement Shader</a>
-          </h1>
-
-          <p class="post-meta">Sep 29, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/render/">render</a>
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>Unity 는 <em>Replacement Shader</em> 라는 렌더링 기능을 지원한다. 이는 Unity 가 Rendering 기능에서 지원하는 약간 Hack 한 테크닉이며 이 기능을 잘 사용하면 쉐이더를 바꿔치기 해서 재미있는 것들을 할 수 있다. <em>Replacement Shader</em> 는 렌더링할 MeshRenderer 들이 가지고 있는 <strong>Material</strong> 의 Shader 를 사용자가 원하는 것으로 바꾸는 기능이다. 이 기능을 통해 그림자 같은 여러 부가적인 처리를 할 수 있다.</p>
-
-<p>사용하는 방법은 아래와 같다.</p>
-
-<pre><code class="language-C#">Shader shader = Shader.Find("CustomShaderName");
-string replacementTag = "replace";
-
-// tag is optional. if dont need tag, insert null.
-camera.RenderWithShader(shader, replacementTag);
-</code></pre>
-
-<p>위의 간단한 예제는 <em>Replacement Shader</em> 를 사용해 한번 그려주는 예제다. 단순히 <em>Camera.RenderWithShader</em> 를 사용하기 때문에 직접 값을 컨트롤할 때 사용하기 좋다. <em>Replacement Shader</em> 를 영구적으로 세팅하여 자동으로 그려주면 아래와 같이 하면된다.</p>
-
-<pre><code class="language-C#">Shader shader = Shader.Find("CustomShaderName");
-string replacementTag = "replace";
-
-// tag is optional. if dont need tag, insert null.
-camera.SetReplacementShader(shader, replacementTag);
-</code></pre>
-
-<p>사용 방법은 굉장히 단순하다. 다만 이 <em>Replacement Shader</em> 기능에서 중요한 것은 쉐이더를 단순히 치환하는 것만 포인트가 아니다. 치환된 쉐이더들은 기존 <strong>Material</strong> 이 가지고 있던 데이터들과 쉐이더 코드에서 이름만 똑같이 맞추어주면 자동으로 데이터들이 쉐이더로 들어온다. 즉 쉐이더를 갈아치우지 않고도 데이터를 공유할 수 있는 것이다. 이는 Unity 의 렌더링에서 굉장히 강력한 시스템으로 초기에는 이해하기도 힘들고 잔머리가 필요하지만 이를 잘 사용만 한다면 굉장히 유용하게 쓰일 수 있다.</p>
-
-<p>필자는 Github 에서 OIT 예제를 보면서 처음 보았다. <a href="https://github.com/candycat1992/OIT_Lab">Github : OIT_Lab</a> 에서 OIT 를 처리하는 코드에서 구경할 수 있다. 또한 일본 Unity 지사에서 일하는 유명한 keijiro 의 <a href="https://github.com/keijiro/Skinner">Skinner</a> 에서 위치를 처리하는데 쓰이기도 한다.</p>
-
-<h1>참조 자료</h1>
-
-<ul>
-  <li><a href="https://docs.unity3d.com/kr/current/Manual/SL-ShaderReplacement.html">Unity Reference : Replaced Shaders 에서의 렌더링</a></li>
-</ul>
-
-        </div>
-
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/08/01/using-compute-buffer-in-unity/">Using Compute Buffer In Unity</a>
-          </h1>
-
-          <p class="post-meta">Aug 1, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/shader/">shader</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/gpuinstancing/">gpuinstancing</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/try/">try</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>Unity 에서의 확실한 GPU Instancing 은 <strong>ComputeBuffer</strong> 라는 구현체에서 시작될 것이다. 이 구현체는 <strong>UnityEngine.ComputeBuffer</strong> 라는 Unity 의 구현체이며 하는 역할은 GPU 메모리를 사용하게 해주는 역할을 한다. <strong>ComputeBuffer</strong> 는 <strong>ComputeShader</strong> 와 함께 등장했다. <strong>ComputeShader</strong> 에서 데이터를 읽고 쓰는것을 요구하기 때문에 Unity 는 GPU 메모리를 사용하는 컨테이너로서 <strong>ComputeBuffer</strong> 를 구현해 놓았다. 하지만 이 <strong>ComputeBuffer</strong> 는 <strong>ComputeShader</strong> 뿐만아니라 일반 쉐이더에서도 폭넓게 사용가능하다. 이 말의 뜻은 우리가 생각하는 Unity 에서 지원하는 일반적인 메쉬 데이터를 사용하지 않아도 사용자가 직접 메쉬 데이터를 커스터마이징해서 사용할 수 있다는 이야기이다. 지원하는 플랫폼은 일반적으로 말하는 <em>Shader Model 5.0</em> 이상이다. PC 플랫폼에서는 당연히 사용 가능하다.</p>
-
-<p>사용하는 방법 자체는 어렵지 않다. 스크립트에서 <em>size</em> 와 <em>stride</em> 를 설정해주고, 데이터의 배열을 만들어 GPU 메모리 안에 있는 데이터를 읽거나 쓸 수 있다. 메모리 단위에서 하는것처럼 보이기 때문에 크기와 타입은 맞춰주어야 한다. C# 에서는 <strong>System.Array</strong> 형으로 넣어주니 형태에 주의하기 바란다. 방법은 아래와 같다.</p>
-
-<pre><code class="language-C#">int dataLen = ...;  // length of data
-int[] dataArray = new int[dataLen];
-
-// record data in dataArray..
-
-ComputeShader computeShader = ...;
-ComptueBuffer dataBuffer = new ComputeBuffer(dataLen, sizeof(int));
-dataBuffer.SetData(dataArray);
-
-computeShader.SetBuffer("dataBuffer", dataBuffer);
-</code></pre>
-
-<p>위 코드는 <strong>ComputeShader</strong> 에서 <strong>ComputeBuffer</strong> 를 사용하기 위해 세팅하는 코드다. 가장 맨처음에는 초기에 세팅할 정수 배열을 만들고, 그 다음 <strong>ComputeBuffer</strong> 인스턴스를 생성한다. 생성자에서 넣어주는 인자는 데이터의 길이(<em>length</em>)와 각 데이터별 크기(<em>stride</em>)이다. 그 다음 같은 크기의 배열의 데이터를 GPU 메모리로 쓴다.(<em>write</em>) 그리고 마지막으로 데이터가 세팅된 <strong>ComputeBuffer</strong> 를 <strong>ComputeShader</strong> 에 연결해준다. 이러면 <strong>ComputeShader</strong> 코드에서 <em>dataBuffer</em> 라는 변수명을 가진 변수에 <strong>ComputeBuffer</strong> 가 연결된다. 아래에 <strong>ComputeShader</strong> 코드가 있다.</p>
-
-<pre><code class="language-HLSL">StructuredBuffer&lt;int&gt; dataBuffer;
-
-[numthreads(8,8,1)]
-void Process (uint3 id : SV_DispatchThreadID)
-{
-  ...
-}
-</code></pre>
-
-<p>맨 처음에 있는 <em>dataBuffer</em> 에 연결된다. <a href="{ post_url 2017-07-06-structured-buffer-vs-constant-buffer }">StructuredBuffer vs ConstantBuffer</a> 에서본 <em>StructuredBuffer</em> 타입이 가능하다. 또한 <em>RWStructuredBuffer</em>, <em>ConsumeStructuredBuffer</em>, <em>AppendStructuredBuffer</em> 가능하다. 다른 렌더러 쉐이더 코드에서도 사용가능하다. 그래서 일반적으로 고려되는 파이프라인은 아래와 같다.</p>
-
-<p><img src="/images/data-process-pipeline.png" alt="data process" class="center-image" /></p>
-
-<p>앞의 두가지 <strong>ComputeBuffer</strong> 를 세팅하고 <strong>ComputeShader</strong> 를 실행하는 코드는 대충 보았다, 뒷 부분의 <strong>ComputeBuffer</strong> 를 통해 렌더링을 하는 것은 그다지 어렵지 않다. 중요한 것은 참신하게, 효율적으로 렌더링하는 것이다.</p>
-
-<p><a href="https://github.com/hrmrzizon/CustomSkinningExample">Github : CustomSkinningExample</a> 에서 스키닝의 계산을 <strong>ComputeShader</strong> 로 넘겨서 계산한다. 또한 메시 데이터 전체를 <strong>ComputeBuffer</strong> 로 넘겨서 렌더링하기 때문에 꽤나 괜찮은 예가 될것이다.</p>
-
-<h2>참조</h2>
-
-<ul>
-  <li><a href="https://docs.unity3d.com/ScriptReference/ComputeBuffer.html">Unity Reference : ComptuteBuffer</a></li>
 </ul>
 
         </div>
