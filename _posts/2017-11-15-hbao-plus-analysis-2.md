@@ -12,7 +12,7 @@ categories:
 
 __HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다.__
 
-이전 [hbao plus anatomy 1]({{ site.baseurl }}{% post_url 2017-11-15-hbao-plus-anatomy-1 %}) 글에서 _HBAO+_ 에서 _Linearize Depth_ 와 _Deinterleaved Texturing_ 에 대해서 알아보았다. 이번 글에서는 _HBAO+_ 의 핵심 알고리즘인 _Horizon Based Ambient Occlusion_ 와 AO 블러에 사용되는 _Cross Bilateral Filter_ 에 대해서 알아볼것이다.
+이전 [hbao plus analysis 1]({{ site.baseurl }}{% post_url 2017-11-15-hbao-plus-analysis-1 %}) 글에서 _HBAO+_ 에서 _Linearize Depth_ 와 _Deinterleaved Texturing_ 에 대해서 알아보았다. 이번 글에서는 _HBAO+_ 의 핵심 알고리즘인 _Horizon Based Ambient Occlusion_ 와 AO 블러에 사용되는 _Cross Bilateral Filter_ 에 대해서 알아볼것이다.
 
 ## Horizon Based Ambient Occlusion
 

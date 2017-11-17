@@ -12,7 +12,7 @@ categories:
 
 __HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다.__
 
-이전 [hbao plus anatomy 0]({{ site.baseurl }}{% post_url 2017-11-15-hbao-plus-anatomy-0 %}) 글에서 _HBAO+_ 을 알기위한 기본적인 개념들에 대해서 살펴보았다. 이번 글에서는 _HBAO+_ 의 구조와 _Linearize Depth_ 와 _Deinterleaved Texturing_ 에 대해서 알아보겠다.
+이전 [hbao plus analysis 0]({{ site.baseurl }}{% post_url 2017-11-15-hbao-plus-analysis-0 %}) 글에서 _HBAO+_ 을 알기위한 기본적인 개념들에 대해서 살펴보았다. 이번 글에서는 _HBAO+_ 의 구조와 _Linearize Depth_ 와 _Deinterleaved Texturing_ 에 대해서 알아보겠다.
 
 ## _HBAO+_ Pipeline
 

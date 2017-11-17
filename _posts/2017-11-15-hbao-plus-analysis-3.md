@@ -11,7 +11,7 @@ categories:
 
 __HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다.__
 
-이전 [hbao plus anatomy 2]({{ site.baseurl }}{% post_url 2017-11-15-hbao-plus-anatomy-2 %}) 글에서 _Horizon based ambient occlusion_ 와 _Cross Bilateral Filter_ 대해서 알아보았다. 이번 글에서는 부록의 느낌으로 _HLSL_ 코드를 읽으면서 생소했던 기타 기법들에 대해서 써볼 것이다.
+이전 [hbao plus analysis 2]({{ site.baseurl }}{% post_url 2017-11-15-hbao-plus-analysis-2 %}) 글에서 _Horizon based ambient occlusion_ 와 _Cross Bilateral Filter_ 대해서 알아보았다. 이번 글에서는 부록의 느낌으로 _HLSL_ 코드를 읽으면서 생소했던 기타 기법들에 대해서 써볼 것이다.
 
 첫번째로 _Full Screen Triangle_ 이라는 기법이다. 알고마면 굉장히 단순한 개념으로, 화면을 모두 덮는 한개의 삼각형을 그려서 모든 픽셀에 쉐이더를 돌릴 수 있게 해주는 기법이다. 아래 슬라이드를 보면 쉽게 이해가 갈것이다.
 

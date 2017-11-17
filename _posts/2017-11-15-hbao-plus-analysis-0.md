@@ -60,7 +60,7 @@ _Deffered Rendering_ 이 많이 쓰이면서 이를 위한 많은 기술들이 �
 
 우리가 살펴볼 것은 가장 아래에 있는 _HBAO+_ 에 대한 것들이다. _Resolution_ 은 _Depth Buffer_ 의 해상도를 뜻한다. 당연히 큰 사이즈여야 디테일한 것까지 표현할 수 있다. 가장 왼쪽에 있는 것은 시간이다. _HBAO+_ 가 2.4ms 로 조금 느리지만 그 오른쪽에 있는 _Occlusion Samples Per AO Pixel_ 의 숫자와 같이 비교하면 이야기가 다르다. 이는 한 픽셀별로 몇번 다른 텍스쳐의 데이터 샘플링 숫자다. _HBAO_ 는 4번만 하지만, _HBAO+_ 는 이의 9배인 36번이다. 샘플링을 많이하게 되면 더욱더 사실적인 _SSAO_ 를 표현할 수 있다. 샘플링 숫자에 비하면 시간은 내어줄 수 있는 자원인 것이다.
 
-이 글에서는 _HBAO+_ 를 분석하기 전 배경이 되는 개념에 대해서 알아보았다. 다음 [hbao plus anatomy 1]({{ site.baseurl }}{% post_url 2017-11-15-hbao-plus-anatomy-1 %}) 에서는 _HBAO+_ 라이브러리에 대한 본격적인 분석을 해보려고 한다.
+이 글에서는 _HBAO+_ 를 분석하기 전 배경이 되는 개념에 대해서 알아보았다. 다음 [hbao plus analysis 1]({{ site.baseurl }}{% post_url 2017-11-15-hbao-plus-analysis-1 %}) 에서는 _HBAO+_ 라이브러리에 대한 본격적인 분석을 해보려고 한다.
 
 # 참조 자료
 
