@@ -4,12 +4,11 @@ author: "Su-Hyeok Kim"
 comments: true
 categories:
   - render
-  - hlsl
   - analysis
-  - hbao+
+  - hbaoplus
 ---
 
-게임에서 쓰이는 실시간 렌더링에서 빛과 물체들의 상호작용을 완벽하게 현실적으로 표현하는 것은 불가능하다. 하지만 이를 위해 수십년동안 많은 엔지니어와 연구자들이 노력하여 부분적이고 제한된 환경에서의 빛과 물체의 상호작용을 현실 세계와 비슷하게 따라잡고 있다. 이번 글에서 살펴볼 것은 _Screen-Space Ambient Occlusion(SSAO)_ 기반의 _HBAO+_ 라는 라이브러리에 대해서 알아볼 것이다.
+게임에서 쓰이는 실시간 렌더링에서 빛과 물체들의 상호작용을 완벽하게 현실적으로 표현하는 거의 불가능하다. 하지만 이를 위해 수십년동안 많은 엔지니어와 연구자들이 노력하여 부분적이고 제한된 환경에서의 빛과 물체의 상호작용을 현실 세계와 비슷하게 따라잡고 있다. 이번 글에서 살펴볼 것은 _Screen-Space Ambient Occlusion(SSAO)_ 기반의 _HBAO+_ 라는 라이브러리에 대해서 알아볼 것이다.
 
 _HBAO+_ 는 NVidia 에서 만든 라이브러리로써, 현재 [_ShadowWorks_](https://developer.nvidia.com/shadowworks) 라는 프로젝트에 포함되어 있다. [_ShadowWorks_](https://developer.nvidia.com/shadowworks) 에는 _HBAO+_ 뿐만 아니라 _ShadowLib_ 이라는 그림자 렌더링을 위한 라이브러리로써 HFTS, PCSS, CSM 등 많은 기능들을 포함하고 있는 라이브러리가 있다. 현재 _ShadowLib_ 은 오픈소스가 아니지만 이번에 알아볼 _HBAO+_ 는 _Github_ 에서 소스를 받을 수 있다. 이에 대한 자세한 사항은 ["Access GameWorks Source on Github"](https://developer.nvidia.com/gameworks-source-github) 에서 확인할 수 있다.
 

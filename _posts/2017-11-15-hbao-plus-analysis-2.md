@@ -4,9 +4,10 @@ author: "Su-Hyeok Kim"
 comments: true
 categories:
   - render
-  - hlsl
   - analysis
-  - hbao+
+  - hbaoplus
+  - hbao
+  - bilateral_filter
 ---
 
 __HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다.__
