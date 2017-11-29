@@ -1,6 +1,9 @@
 # Practical Rendering
 
- - rendering pipeline 의 각각의 단계에 대해서 자세히 쓰기(진행중)
+ - rendering pipeline 의 각각의 단계에 대해서 자세히 쓰기 - hull shader, domain shdaer 남음
+ - visibility buffer
+ - Terrain(GPU Pro 3,4,6)
+
  - Forward, Differed, Forward+, Differed+ 쓰기(inffered lighting, light pre-pass)
 
  - Scriptable Render Loop 분석하기
@@ -37,21 +40,15 @@
 
 <!-- Unknowns -->
 
- - anistropy specular : 카지야 케이?
  - motion blur?
- - bsdf vs brdf vs btdf
  - Hi-Z
  - CSM
- - GPU-interporator
  - fft convolution
  - mesh to mesh skinning or proxy skinnning
  - procedural animation
  - atmospheric scattering
- - asynchronous rendering
  - alembic impoter
  - Unity : Granite, Scriptable rendering loop
  - Bipad : character animation
  - PBR : https://www.youtube.com/watch?v=0mxr6bFenfE
- - light shaft? : robert 의 깃헙에 있어용
- - volumetric fog
  - Unity : Per-Vertex Baked AO
