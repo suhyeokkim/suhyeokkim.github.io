@@ -6,7 +6,7 @@ categories:
   - unity
   - shader
   - rendering
-  - try
+  
 ---
 
 __이 글은 Unity 5.6.1f 버젼에서 작성되었습니다. 다른 버젼에서는 에러가 날 수 있으니 참고 바랍니다.__

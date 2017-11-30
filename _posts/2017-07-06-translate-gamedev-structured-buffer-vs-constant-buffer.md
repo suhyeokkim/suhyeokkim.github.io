@@ -4,7 +4,7 @@ author: "Su-Hyeok Kim"
 comments: true
 categories:
   - translate
-  - try
+  
 ---
 
 [GameDev : structured buffer vs constant buffer](https://www.gamedev.net/forums/topic/624529-structured-buffers-vs-constant-buffers/)의 답변 해석 글이다.

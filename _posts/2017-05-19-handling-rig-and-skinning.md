@@ -6,7 +6,7 @@ categories:
   - unity
   - rig
   - animate
-  - try
+  
 ---
 
 앞서 오브젝트들을 그리는 방법에 대해서 알아보았다.([hnalding vertices]({{ site.baseurl }}{% post_url 2017-05-14-handling-vertices-and-indices-in-unity %}), [handling uvs]({{ site.baseurl }}{% post_url 2017-05-15-handling-uv-and-material-in-unity %})) 폴리곤을 그리고 색을 칠하는 방법이었다. 하지만 이런 기능만 가지고 게임을 만들기에는 약간 부족하다. 보통 게임을 만들때 케릭터들의 부드러운 움직임을 표현해야 한다. 2D 게임은 보통 그림을 여러장을 그려서 움직이게 보이게 한다. 하지만 3D 게임에서의 부드러운 움직임은 2D 게임의 표현과는 다르게 표현한다. 일단 부드럽게 움직여야할 단위가 다르다. 메쉬의 정점들을 부드럽게 움직여야하기 때문에 2D 게임의 움직임과는 다른 무언가가 필요하다.

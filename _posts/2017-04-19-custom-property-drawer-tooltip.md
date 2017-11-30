@@ -4,7 +4,6 @@ author: "Su-Hyeok Kim"
 comments: true
 categories:
   - unity
-  - try
 ---
 
 CustomPropertyDrawer 를 사용할 때 필드에 설정한 __Tooltip__ 정보가 전달이 안될 때가 있다. 이때는 아래와 같이 하면 된다.

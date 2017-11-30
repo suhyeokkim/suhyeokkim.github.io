@@ -5,7 +5,6 @@ comments: true
 categories:
   - common
   - game
-  - try
 ---
 
 ## Graphics?

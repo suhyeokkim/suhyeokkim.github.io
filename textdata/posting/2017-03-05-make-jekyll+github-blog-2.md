@@ -5,7 +5,7 @@ comments: true
 categories:
   - jekyll
   - makeblog
-  - try
+
 ---
 
 블로그를 만들고 나니 설정해주어야 할 것들이 많았다. 많이 헤멘 부분도 있어 경험들을 적어둔다.

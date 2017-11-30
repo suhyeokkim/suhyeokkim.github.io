@@ -5,7 +5,7 @@ comments: true
 categories:
   - unity
   - computeshader
-  - try
+
 ---
 
 

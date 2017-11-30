@@ -5,7 +5,7 @@ comments: true
 categories:
   - unity
   - rendering
-  - try
+  
 ---
 
 여태까지 많은 게임들은 Graphics API 를 사용하여 만들어졌다. 1992년에 OpenGL 의 첫버젼이 릴리즈 되었고 이어서 1995년에 DirectX 가 Windows Game SDK 안에 포함되어 릴리즈 되었다. 그 이후로 수많은 게임들이 이 두가지의 Graphics API 를 사용하여 개발되었다. 다만 Graphics API 를 직접 사용하려면 꽤 많은 배경지식과(선형대수학, Graphics 이론 등) 해당 Graphics API 에 대한 경험이 많이 필요했다. 즉 일반적인 프로그래머들이 접근하기 조금 어려운 분야였다. 하지만 이를 꽤 뚫어본 많은 사람들이 게임을 만들기 위한 소프트웨어 이른바 게임 엔진이라는 소프트웨어를 개발하면서 널리 퍼지게 되었고  요즘에는 많은 지식 없이 게임을 만들 수 있게 되었다.

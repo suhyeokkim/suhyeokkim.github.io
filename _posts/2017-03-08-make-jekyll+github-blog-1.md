@@ -5,7 +5,6 @@ comments: true
 categories:
     - jekyll
     - makeblog
-    - try
 ---
 
 아는 지인이 좋다고 추천해서 jekyll+github 으로 블로그를 만들게 되었다.

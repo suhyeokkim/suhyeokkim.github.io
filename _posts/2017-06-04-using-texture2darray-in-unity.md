@@ -6,7 +6,7 @@ categories:
   - unity
   - shader
   - rendering
-  - try
+  
 ---
 
 Unity 에서 렌더링에 관련된 최적화를 할때는 _TextureArray_ 를 사용할 수 밖에 없다. 이는 Unity 에서 _DrawCall_ 을 줄이기 위해 써먹는 _Batching_ 이라는 개념 때문인데 단순하게 말하면 그리는 새로운 매터리얼과 메쉬의 종류가 많으면 많을 수록 _DrawCall_ 을 많이 하게 된다. 하지만 이 _DrawCall_ 의 비용은 싼편이 아니기 때문에 CPU 의 성능을 꽤나 잡아먹게 된다. 그래서 Unity 는 자동으로 _Batching_ 을 해주게 된다. 같은 메터리얼을 쓰면 자동으로 묶어주고, 같은 메쉬를 쓰면 또 자동으로 묶어준다. 결국 _Batching_ 이 _DrawCall_ 의 횟수와 같은 개념이 되는 것이다.

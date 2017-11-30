@@ -6,7 +6,6 @@ categories:
   - unity
   - mono
   - c#
-  - try
 ---
 
 ## 이름으로 메소드를 호출하다. SendMessage

@@ -4,7 +4,6 @@ author: "Su-hyeok Kim"
 comments: true
 categories:
   - makeblog
-  - try
 ---
 
 ## Travis-CI : Continuous Intergration

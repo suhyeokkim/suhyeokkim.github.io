@@ -5,7 +5,7 @@ comments: true
 categories:
   - gpu
   - rendering
-  - try
+
 ---
 
 # 참조

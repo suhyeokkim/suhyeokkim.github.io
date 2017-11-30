@@ -5,7 +5,7 @@ comments: true
 categories:
   - unity
   - rendering
-  - try
+  
 ---
 
 Unity 에서는 Mesh 를 활용하기 위해 몇가지의 컴포넌트를 지원한다. 간단하게 알아보자.

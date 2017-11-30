@@ -8,7 +8,7 @@ categories:
   - rendering
   - cg
   - shaderlab
-  - try
+  
 ---
 
 이전에 쓴 글([handling uvs and material]({{ site.baseurl }}{% post_url 2017-05-15-handling-uv-and-material-in-unity %}))에서 쉐이더에 대한 언급을 한적이 있다. 간단하게 전체적인 의미와 역할에 대해서 설명했었다. 이 글에서는 조금 더 자세하게 알아보고 CG 를 이용해서 직접 다루는 방법에 대해서 알아보겠다.

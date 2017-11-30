@@ -5,7 +5,7 @@ comments: true
 categories:
   - skinning
   - vertex deformation
-  - try
+
 ---
 
 이전 [dual quaternion skinning]({{ site.baseurl }}{% post_url 2017-07-20-dual-quaternion-skinning %}) 글에서 _dual quaternion skinning_ 에 대해서 설명해 보았다. 이전 글에서는 단순히 _dual quaternion skinning_ 에 대해서 알아보고 장점에 대해서 알아보았다. 단점에 대해서는 언급을 하지않았는데 사실 단점도 존재하긴 한다. 새로 소개할 방법의 논문에서 _dual quaternion skinning_ 의 단점에 대해서 언급했다.

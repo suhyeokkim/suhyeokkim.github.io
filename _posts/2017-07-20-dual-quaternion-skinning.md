@@ -5,7 +5,7 @@ comments: true
 categories:
   - skinning
   - vertex deformation
-  - try
+  
 ---
 
 이전 [Introduce of skinning]({{ site.baseurl }}{% post_url 2017-07-07-introduce-of-skinning %}) 글에서 Skinning 에 대한 설명과 LBS 에 관한 내용을 간단하게 다루어 보았다. 하지만 글 마지막에 해결되지 않은 문제가 하나 있었다. _Linear Blend Skinning_ 의 _"Candy Wrapper"_ 라는 현상이였는데, 이 글에서는 그 문제를 위해 2008년에 고안된 방법에 대해서 알아볼 것이다.

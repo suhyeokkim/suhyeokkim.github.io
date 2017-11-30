@@ -6,7 +6,7 @@ categories:
   - unity
   - shader
   - hlsl
-  - try
+
 ---
 
 _Compute Shader_ 는 _DirectX 11_ 의 등장과 함께 본격적으로 쓰이기 시작했다. 지금은 _GPGPU_ 의 본격적인 기능으로 CPU 에서 처리하기 힘든 계산량을 책임지는 중요한 기능으로 자리잡았다. 실시간으로 현실적인 그래픽을 구현하기 위해 요즘의 게임들은 _Compute Shader_ 를 사용해서 여러 계산을 한다. 조금이라도 퍼포먼스가 필요하다면 당연히 쓰게되는 것이다.

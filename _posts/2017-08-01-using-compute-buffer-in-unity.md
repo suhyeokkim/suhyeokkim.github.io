@@ -6,7 +6,7 @@ categories:
   - unity
   - shader
   - gpuinstancing
-  - try
+
 ---
 
 Unity 에서의 확실한 GPU Instancing 은 __ComputeBuffer__ 라는 구현체에서 시작될 것이다. 이 구현체는 __UnityEngine.ComputeBuffer__ 라는 Unity 의 구현체이며 하는 역할은 GPU 메모리를 사용하게 해주는 역할을 한다. __ComputeBuffer__ 는 __ComputeShader__ 와 함께 등장했다. __ComputeShader__ 에서 데이터를 읽고 쓰는것을 요구하기 때문에 Unity 는 GPU 메모리를 사용하는 컨테이너로서 __ComputeBuffer__ 를 구현해 놓았다. 하지만 이 __ComputeBuffer__ 는 __ComputeShader__ 뿐만아니라 일반 쉐이더에서도 폭넓게 사용가능하다. 이 말의 뜻은 우리가 생각하는 Unity 에서 지원하는 일반적인 메쉬 데이터를 사용하지 않아도 사용자가 직접 메쉬 데이터를 커스터마이징해서 사용할 수 있다는 이야기이다. 지원하는 플랫폼은 일반적으로 말하는 _Shader Model 5.0_ 이상이다. PC 플랫폼에서는 당연히 사용 가능하다.

@@ -5,7 +5,7 @@ comments: true
 categories:
   - unity
   - rendering
-  - try
+  
 ---
 
 [Handling vertices and indices]({{ site.baseurl }}{% post_url 2017-05-14-handling-vertices-and-indices-in-unity %}) 글에서 Unity 에서 정점과 인덱스를 사용해 물체를 그리는 방법에 대해서 알아보았다. 그런데 뭔가 설정해야 할것들이 빠진 것처럼 보인다. 실제로 그려지는 모습은 Unity 에서 아무것도 설정이 안되어 있을 때 나오는 분홍색으로 전부 칠해져 있다. 일반적으로 게임에서 나오는 3D 물체들은 전부 색이 칠해져 있거나 그림이 그려져 있다. 거기다가 빛을 받아서 반짝반짝이기도 할때도 있다. 이번 글에서는 3D 오브젝트에 색을 입히거나 그림을 입히는 방법에 대해서 알아보자.
