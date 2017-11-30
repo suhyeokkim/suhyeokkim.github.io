@@ -13,7 +13,7 @@ _Compute Shader_ 는 _DirectX 11_ 의 등장과 함께 본격적으로 쓰이기
 
 사용하는 방법 자체는 간단하지만 _Compute Shader_ 를 사용해 어떤 기능을 구현하는지가 중요하다. 간단하게 사용방법부터 알아보자. Unity 에서는 _Compute Shader_ 를 위한 파일을 생성해야 한다.
 
-![create computeshader](/images/create_computeshader.png)
+![create computeshader](/images/create_computeshader.png){: .center-image}
 
 프로젝트창에서 위 그림과 같이 생성해주면 된다. 그러면 아래와 같은 기본소스로 파일이 생성된다.
 
@@ -47,7 +47,23 @@ RenderTexture rt = ...;
 shader.SetTexture("Result", rt);
 ```
 
-코드에서의 변수명을 맞추어 넣어주거나 해쉬값을 미리 가져와 넣어주면 된다. 다른 유형의 데이터들도 이런 방법으로 넣을 수 있다.
+코드에서의 변수명을 맞추어 넣어주거나 해쉬값을 미리 가져와 넣어주면 된다. 다른 유형의 데이터들도 이런 방법으로 넣을 수 있다. 데이터를 넣어주면 다음은 _Compute Shader_ 를 실행하여 결과를 얻어야 한다. 간단하게 함수호출만 해주면 된다. 방법은 아래와 같다.
+
+``` C#
+ComputeShader shader = ...;
+RenderTexture rt = ...;
+int kernelIndex = shader.FindKernel("CSMain");
+
+shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
+```
+
+해당 _Compute Shader_ 소스는 텍스쳐안에 값을 채우는 코드이기 때문에 위와같이 해주었다. [Unity Reference : ComputeShader.Dispatch](https://docs.unity3d.com/ScriptReference/ComputeShader.Dispatch.html) 와 위의 _Compute Shader_ 소스를 참고하면 알겠지만 최대 3차원의 방식으로 _Compute Shader_ 의 그룹을 설정하여 계산이 가능하다.  _Compute Shader_ 소스의 _[numthreads(8,8,1)]_ 는 한 그룹의 _Thread_ 갯수를 나타내고, _ComputeShader.Dispatch_ 메소드는 몇개의 그룹을 실행시키는지 넘겨주는 메소드다. 아래 그림을 보면 조금더 쉽게 이해가 가능하다.
+
+<br/>
+![](https://msdn.microsoft.com/dynimg/IC520438.png){: .center-image}
+<center>출처 : <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff471569.aspx">MSDN</a>
+</center>
+<br/>
 
 _Compute Shader_ 는 _DirectX 11_ 이상, _Vulkan_,  _OpenGL 4.3_ 이상, _OpenGL ES 3.0_ 이상, _Metal_ 에서 사용가능하다. 그 아래의 플랫폼은 지원하지 않는다. 또 유의해야 할점은 그래픽 드라이버별로 지원 기능이 조금씩 다를 수 있으니 기능을 유의하며 사용해야한다. [Unity Manual : ComptuteShader](https://docs.unity3d.com/Manual/ComputeShaders.html) 에서 조금 참고할 수 있다.
 
