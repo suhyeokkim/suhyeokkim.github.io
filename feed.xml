@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-11-30T03:04:20+00:00</updated>
+  <updated>2017-11-30T04:16:53+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -119,8 +119,6 @@ shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
         <category term="shader" />
       
         <category term="hlsl" />
-      
-        <category term="try" />
       
 
       
@@ -1420,8 +1418,6 @@ void Process (uint3 id : SV_DispatchThreadID)
       
         <category term="gpuinstancing" />
       
-        <category term="try" />
-      
 
       
 
@@ -1636,8 +1632,6 @@ void Process (uint3 id : SV_DispatchThreadID)
       
         <category term="vertex deformation" />
       
-        <category term="try" />
-      
 
       
 
@@ -1704,8 +1698,6 @@ void Process (uint3 id : SV_DispatchThreadID)
         <category term="skinning" />
       
         <category term="vertex deformation" />
-      
-        <category term="try" />
       
 
       
