@@ -287,16 +287,13 @@
 <loc>https://hrmrzizon.github.io/categories/hlsl/</loc>
 </url>
 <url>
-<loc>https://hrmrzizon.github.io/categories/hbaoplus/</loc>
+<loc>https://hrmrzizon.github.io/categories/hbao/</loc>
 </url>
 <url>
 <loc>https://hrmrzizon.github.io/categories/linearize-depth/</loc>
 </url>
 <url>
 <loc>https://hrmrzizon.github.io/categories/deintereaved-texturing/</loc>
-</url>
-<url>
-<loc>https://hrmrzizon.github.io/categories/hbao/</loc>
 </url>
 <url>
 <loc>https://hrmrzizon.github.io/categories/bilateral-filter/</loc>
@@ -318,6 +315,6 @@
 </url>
 <url>
 <loc>https://hrmrzizon.github.io/files/CgUsersManual.pdf</loc>
-<lastmod>2017-12-08T06:14:13+00:00</lastmod>
+<lastmod>2017-12-08T07:02:50+00:00</lastmod>
 </url>
 </urlset>

@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2017-12-08T06:14:57+00:00</updated>
+  <updated>2017-12-08T07:03:36+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -433,7 +433,7 @@ Shaders can then take advantage of potential performance improvements by using a
       
         <category term="analysis" />
       
-        <category term="hbaoplus" />
+        <category term="hbao+" />
       
 
       
@@ -530,9 +530,7 @@ Shaders can then take advantage of potential performance improvements by using a
       
         <category term="analysis" />
       
-        <category term="hbaoplus" />
-      
-        <category term="hbao" />
+        <category term="hbao+" />
       
         <category term="bilateral_filter" />
       
@@ -696,7 +694,7 @@ Shaders can then take advantage of potential performance improvements by using a
       
         <category term="analysis" />
       
-        <category term="hbaoplus" />
+        <category term="hbao+" />
       
         <category term="linearize_depth" />
       
@@ -805,7 +803,7 @@ Shaders can then take advantage of potential performance improvements by using a
       
         <category term="analysis" />
       
-        <category term="hbaoplus" />
+        <category term="hbao+" />
       
 
       
