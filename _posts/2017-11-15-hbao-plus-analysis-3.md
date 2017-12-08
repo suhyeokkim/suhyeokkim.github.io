@@ -6,7 +6,7 @@ categories:
   - render
   - hlsl
   - analysis
-  - hbaoplus
+  - hbao+
 ---
 
 __HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다.__

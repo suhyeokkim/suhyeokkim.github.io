@@ -5,8 +5,7 @@ comments: true
 categories:
   - render
   - analysis
-  - hbaoplus
-  - hbao
+  - hbao+
   - bilateral_filter
 ---
 

@@ -5,7 +5,7 @@ comments: true
 categories:
   - render
   - analysis
-  - hbaoplus
+  - hbao+
 ---
 
 게임에서 쓰이는 실시간 렌더링에서 빛과 물체들의 상호작용을 완벽하게 현실적으로 표현하는 거의 불가능하다. 하지만 이를 위해 수십년동안 많은 엔지니어와 연구자들이 노력하여 부분적이고 제한된 환경에서의 빛과 물체의 상호작용을 현실 세계와 비슷하게 따라잡고 있다. 이번 글에서 살펴볼 것은 _Screen-Space Ambient Occlusion(SSAO)_ 기반의 _HBAO+_ 라는 라이브러리에 대해서 알아볼 것이다.

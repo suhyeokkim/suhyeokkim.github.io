@@ -5,7 +5,7 @@ comments: true
 categories:
   - render
   - analysis
-  - hbaoplus
+  - hbao+
   - linearize_depth
   - deintereaved_texturing
 ---
