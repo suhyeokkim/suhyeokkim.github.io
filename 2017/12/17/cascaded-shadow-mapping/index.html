@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Cascaded Shadow Mapping</title>
+  <meta name="description" content="What is Shadow Mapping 에서 Shadow Mapping 에 대한 간단한 번역 &amp;amp; 설명을 적어놓았다. 이번 글에서는 Shadow Mapping 을 효과적으로 사용하기 위한 Cascaded Shadow Mapping 에 대하여 적어보겠다. Cascaded Shadow Mapping 을 구글 번역기에 돌려보면 “계단식 그림자 매핑” 이라고 나온다. 조금 직관적이지 않은 말이지만 뜻 자체는 맞다. 간단하게 Cascaded Shadow Mapping 에 대하여 말하자면 넓은 환경의 그림자를 위해 거리에(거의 Depth) 따라서 여러개의 Shadow Map 을 생성하는 방법이다. 넓은 범위의 Directional Light 가 닿는 그림자를 정확하게 표현하려면 꽤나 큰 크기의 Shadow Map 을 사용해야 한다. 하지만 Cascaded Shadow Mapping 을 사용한다면 여러개의 Shadow Map 을 사용하여 보다 조금의 메모리를 사용하여 넓은 범위의 그림자를 표현할 수 있다. Shadow-map generation Cascaded Shadow Mapping 을 위한 Shadow Map 생성은 앞서쓴 글에서 설명한 방법과 거의 유사하다. 앞서 여러개의 Shadow Map 을 생성하여 그림자를 표현한다고 언급했었다. 여러개의 Shaodw Map 을 생성하는 기준은 View Frustom 을 Depth 를 기준으로 여러개로 쪼개어 각 쪼개진 Frustom 을 기준으로 Shadow Map 을 그린다. Frustom 은 보통 Depth 값을 정하거나 어떤 알고리즘을 사용하여 쪼갠다. 이는 다음 포스팅에서 언급할 예정이다. Frustom 을 쪼개주면 다음은 쪼개진 Camera View Frustom 의 각각의 8개의 꼭지점들을 Light-Space 로 변환한다. 변환된 각각 꼭지점으로 2차원의 aligned axis bounding box 의 위치를 구해준다. 가장 작은 X,Y 값과 가장 큰 X, Y 값을 구해주면 된다. 출처 : NVidia : Cascaded Shadow Mapping 위 그림에서 XY 평면에서의 빨간색 선으로 되어있는 사각형이 언급한 aligned axis bounding box 를 말한다. 이 AABB 는 아래에서 특정한 행렬을 만들때 쓰인다. NVidia : Cascaded Shadow Maps 에서는 이 Light-Space 로 변환하는 MVP 변환 에서 Projection 변환을 바꿔준다고 설명한다. 두개의 행렬이 나오는데, 하나는 직교 투영 행렬로(orthogonal projection) 나눠진 Frustom 의 Far 값과 Near 값을 통해 생성해준다. 그리고 나머지 하나는 Crop Matrix 라는 변환 행렬이다. 위에서 구한 Light-Space 의 AABB 값을 통해 Crop Matrix 를 계산한다. 아래 그림에서나오는 Mx, My 와 mx, my 는 각각 Maximum X,Y, Minimum X,Y 를 뜻한다. 출처 : NVidia : Cascaded Shadow Mapping 이렇게 계산된 Crop Matrix 의 역할은 해당 AABB 로 Shadow Map 이 그려질 범위를 결정해주는 역할을 한다. 다만 범위가 아주 정확하지는 않다. 아래 그림을 보자. 출처 : OGLdev : Cascaded Shadow Mapping 위 그림과 같이 보통은 겹치는 부분이 생긴다. 사용시에는 Depth 에 따라서 다르게 사용하기 때문에 크게 문제는 없다. 사용시에는 Depth 값에 따라서 다른 텍스쳐를 가져오는 것과 텍스쳐를 샘플링할때 UV 값을 정점의 위치를 Light-Space 로 변환해서 변환된 정점의 위치의 X,Y 좌표를 UV 값으로 사용하면 된다. 다만 각각의 Shadow Map 마다 변환 행렬은 Crop Matrix 때문에 다르기 때문에 따로 접근해야 한다. 자세한 사용법을 알고 싶으면 NVidia : Cascaded Shadow Map Example에서 소스를 받아 보면 된다. 참조 NVidia : Cascaded Shadow Maps MSDN : Cascaded Shadow Maps Github : TheRealMJP - Shadows OGLDev : Cascaded Shadow Mapping">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://hrmrzizon.github.io/2017/12/17/cascaded-shadow-mapping/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
+
+  <meta name="google-site-verification" content="f8AsB97UC1pp_K4EwkRaJYJZVC0P4j36RK_TGOPPGAU" />
+
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Cascaded Shadow Mapping">
+  <meta name="twitter:description" content="What is Shadow Mapping 에서 Shadow Mapping 에 대한 간단한 번역 &amp;amp; 설명을 적어놓았다. 이번 글에서는 Shadow Mapping 을 효과적으로 사용하기 위한 Cascaded Shadow Mapping 에 대하여 적어보겠다. Cascaded Shadow Mapping 을 구글 번역기에 돌려보면 “계단식 그림자...">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Appocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="/edu">Edu</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Cascaded Shadow Mapping</h1>
+    
+    <p class="post-meta"><time datetime="2017-12-17T00:00:00+00:00" itemprop="datePublished">Dec 17, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shadow/">shadow</a>,
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/csm/">csm</a>
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p><a href="{ post_url 2017-11-30-what-is-shadow-mapping }">What is Shadow Mapping</a> 에서 <em>Shadow Mapping</em> 에 대한 간단한 번역 &amp; 설명을 적어놓았다. 이번 글에서는 <em>Shadow Mapping</em> 을 효과적으로 사용하기 위한 <em>Cascaded Shadow Mapping</em> 에 대하여 적어보겠다.</p>
+
+<p><em>Cascaded Shadow Mapping</em> 을 구글 번역기에 돌려보면 <em>“계단식 그림자 매핑”</em> 이라고 나온다. 조금 직관적이지 않은 말이지만 뜻 자체는 맞다. 간단하게 <em>Cascaded Shadow Mapping</em> 에 대하여 말하자면 넓은 환경의 그림자를 위해 거리에(거의 <em>Depth</em>) 따라서 여러개의 <em>Shadow Map</em> 을 생성하는 방법이다.</p>
+
+<p>넓은 범위의 <em>Directional Light</em> 가 닿는 그림자를 정확하게 표현하려면 꽤나 큰 크기의 <em>Shadow Map</em> 을 사용해야 한다. 하지만 <em>Cascaded Shadow Mapping</em> 을 사용한다면 여러개의 <em>Shadow Map</em> 을 사용하여 보다 조금의 메모리를 사용하여 넓은 범위의 그림자를 표현할 수 있다.</p>
+
+<h2>Shadow-map generation</h2>
+
+<p><em>Cascaded Shadow Mapping</em> 을 위한 <em>Shadow Map</em> 생성은 앞서쓴 <a href="{ post_url 2017-11-30-what-is-shadow-mapping }">글</a>에서 설명한 방법과 거의 유사하다. 앞서 여러개의 <em>Shadow Map</em> 을 생성하여 그림자를 표현한다고 언급했었다. 여러개의 <em>Shaodw Map</em> 을 생성하는 기준은 <em>View Frustom</em> 을 <em>Depth</em> 를 기준으로 여러개로 쪼개어 각 쪼개진 <em>Frustom</em> 을 기준으로 <em>Shadow Map</em> 을 그린다.</p>
+
+<p><em>Frustom</em> 은 보통 <em>Depth</em> 값을 정하거나 어떤 알고리즘을 사용하여 쪼갠다. 이는 다음 포스팅에서 언급할 예정이다. <em>Frustom</em> 을 쪼개주면 다음은 쪼개진 <em>Camera View Frustom</em> 의 각각의 8개의 꼭지점들을 <em>Light-Space</em> 로 변환한다. 변환된 각각 꼭지점으로 2차원의 <em>aligned axis bounding box</em> 의 위치를 구해준다. 가장 작은 X,Y 값과 가장 큰 X, Y 값을 구해주면 된다.</p>
+
+<p><br />
+<img src="/images/CSM_EffectOfCropMatrix.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf">NVidia : Cascaded Shadow Mapping</a>
+</center>
+<p><br /></p>
+
+<p>위 그림에서 XY 평면에서의 빨간색 선으로 되어있는 사각형이 언급한 <em>aligned axis bounding box</em> 를 말한다. 이 <em>AABB</em> 는 아래에서 특정한 행렬을 만들때 쓰인다.</p>
+
+<p><a href="http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf">NVidia : Cascaded Shadow Maps  </a> 에서는 이 <em>Light-Space</em> 로 변환하는 <em>MVP 변환</em> 에서 <em>Projection</em> 변환을 바꿔준다고 설명한다. 두개의 행렬이 나오는데, 하나는 직교 투영 행렬로(<em>orthogonal projection</em>) 나눠진 <em>Frustom</em> 의 <em>Far</em> 값과 <em>Near</em> 값을 통해 생성해준다. 그리고 나머지 하나는 <em>Crop Matrix</em> 라는 변환 행렬이다.</p>
+
+<p>위에서 구한 <em>Light-Space</em> 의 <em>AABB</em> 값을 통해 <em>Crop Matrix</em> 를 계산한다. 아래 그림에서나오는 Mx, My 와 mx, my 는 각각 Maximum X,Y, Minimum X,Y 를 뜻한다.</p>
+
+<p><br />
+<img src="/images/CSM_CropMatrixCalc.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf">NVidia : Cascaded Shadow Mapping</a>
+</center>
+<p><br /></p>
+
+<p>이렇게 계산된 <em>Crop Matrix</em> 의 역할은 해당 <em>AABB</em> 로 <em>Shadow Map</em> 이 그려질 범위를 결정해주는 역할을 한다. 다만 범위가 아주 정확하지는 않다. 아래 그림을 보자.</p>
+
+<p><br />
+<img src="/images/CSM_FarMiddleNear.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="http://ogldev.atspace.co.uk/www/tutorial49/tutorial49.html">OGLdev : Cascaded Shadow Mapping</a>
+</center>
+<p><br /></p>
+
+<p>위 그림과 같이 보통은 겹치는 부분이 생긴다. 사용시에는 <em>Depth</em> 에 따라서 다르게 사용하기 때문에 크게 문제는 없다. 사용시에는 <em>Depth</em> 값에 따라서 다른 텍스쳐를 가져오는 것과 텍스쳐를 샘플링할때 UV 값을 정점의 위치를 <em>Light-Space</em> 로 변환해서 변환된 정점의 위치의 X,Y 좌표를 UV 값으로 사용하면 된다. 다만 각각의 <em>Shadow Map</em> 마다 변환 행렬은 <em>Crop Matrix</em> 때문에 다르기 때문에 따로 접근해야 한다.</p>
+
+<p>자세한 사용법을 알고 싶으면 <a href="http://developer.download.nvidia.com/SDK/10/Samples/cascaded_shadow_maps.zip">NVidia : Cascaded Shadow Map Example</a>에서 소스를 받아 보면 된다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf">NVidia : Cascaded Shadow Maps  </a></li>
+  <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ee416307.aspx">MSDN : Cascaded Shadow Maps</a></li>
+  <li><a href="https://github.com/TheRealMJP/Shadows">Github : TheRealMJP - Shadows</a></li>
+  <li><a href="http://ogldev.atspace.co.uk/www/tutorial49/tutorial49.html">OGLDev : Cascaded Shadow Mapping</a></li>
+</ul>
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://zizon.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy; Su-Hyeok Kim - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
