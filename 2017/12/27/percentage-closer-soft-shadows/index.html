@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Percentage Closer Soft Shadows</title>
+  <meta name="description" content="Shadow Map Filtering 에서 PCF 와 VSM 에 대하여 간단히 알아보았다. 이번 글에서 설명할 것은 PCF 를 활용한 PCSS 다. PCSS 는 Soft Shadow 를 구현하는 기법 중 하나로써 2005년에 발표되어 여태까지도 꽤나 알려진 기법이다. 우선 Soft Shadow 가 무엇인지 알아보자. 출처 : assignmentpoint.com : Real Time Soft Shadow Rendering 위와 같이 빛을 가린 물체와 거리가 멀어지면 멀어질수록 밝아지는 그림자를 Soft Shadow 라고 한다. 완전한 Hard Shadow 는 어색하기 때문에 보통 PCF 를 사용하여 끝부분을 부드럽게 처리했으나, 태양광 처럼 길게 그림자를 만드는 경우가 있으면 끝 부분이 가면 갈수록 부드러워져야 한다. 출처 : Youtube 태양 빛에의해 만들어진 나무의 그림자다. 짧은 길이의 그림자는 적당히 PCF 로 대략 표현이 가능하나 이런 길은 그림자를 고정된 사이즈의 PCF 로 표현하기엔 무리가 있다. 그래서 나온것이 PCSS 다. PCSS 를 보기전에, 우리가 알아야할 용어들이 있다. 바로 Umbra 와 Penumbra 다. 출처 : Wikipedia : Umbra, penumbra and antumbra Soft Shadow 가 표현하는 부드러운 부분의 그림자는 위 그림에서도 보이듯이 Penumbra 라고 한다. PCSS 에서는 부드러운 부분의 그림자를 Penumbra 라고 한다. PCSS 에서는 Penumbra 의 크기를 사용하여 PCF 의 샘플링 범위를 정해준다. 우선 PCSS 의 Penumbra 를 계산하는 방법을 보자. 출처 : Siggraph 2005 : Percentage-Closer Soft Shadows 맨위의 노란색으로 표시된 부분은 광원을 뜻하며, 일정한 범위로 빛을 비추는 Area Light 로 가정한 후 계산한다. W - light 는 Area Light 의 범위를 뜻한다. 중간에 있는 Blocker 는 빛을 가리는 물체를 뜻하며, d blocker 는 가리는 물체와 빛과의 거리, d receiver 는 그림자가 비추는 물체와 광원 사이의 거리를 뜻한다. 그림자를 받는 부분과 빛을 가리는 물체와 광원을 서로 평행하다고 가정해서 계산한다. 2차원의 그림을 3차원으로 바꿔보자. 출처 : NVidia : Percentage-Closer Soft Shadows 보통 Pixel Shader 에서 그림자의 비춘 정도를 계산하기 때문에 Receiver 의 작은 부분을 기준으로 그림이 그려져 있다. 작은 부분을 기준으로 Area Light 와의 Frustom 과 Blocker 가 얼마나 충돌되는지 체크한다. 우리는 Shadow Map 을 사용하기 때문에 아래 그림이 조금 더 실제 계산과 비슷하다. 출처 : NVidia : Percentage-Closer Soft Shadows 그래서 Shadow Map 의 빨간색으로 하이라이트 된 부분을 샘플링해 얼마나 가리고 있는지를 확인한다. 그러면 빛을 받는 정도를 알 수 있게 되는것이다. 해당 부분을 적당히 샘플링한 다음 평균을 구해서 PCF 로 샘플링하는 범위를 계산한다. 계산하여 PCF 에서 범위를 사용해 계산한다. 코드를 보면서 이해해보자. float PCSS_Shadow(float2 uv, float z, float2 dz_duv, float zEye) { // ------------------------ // STEP 1: blocker search // ------------------------ float accumBlockerDepth = 0; float numBlockers = 0; float2 searchRegionRadiusUV = SearchRegionRadiusUV(zEye); FindBlocker(accumBlockerDepth, numBlockers, g_shadowMap, uv, z, dz_duv, searchRegionRadiusUV); // Early out if not in the penumbra if (numBlockers == 0) return 1.0; else if (numBlockers == BLOCKER_SEARCH_COUNT) return 0.0; // ------------------------ // STEP 2: penumbra size // ------------------------ float avgBlockerDepth = accumBlockerDepth / numBlockers; float avgBlockerDepthWorld = ZClipToZEye(avgBlockerDepth); float2 penumbraRadiusUV = PenumbraRadiusUV(zEye, avgBlockerDepthWorld); float2 filterRadiusUV = ProjectToLightUV(penumbraRadiusUV, zEye); // ------------------------ // STEP 3: filtering // ------------------------ return PCF_Filter(uv, z, dz_duv, filterRadiusUV); } 출처 : Github NVIDIAGameWorks : D3DSamples 해당 픽셀이 어두워지는 정도를 반환하는 PCSS 계산 함수다. 코드의 주석에서는 계산을 세단계로 나눈다. 첫번째로는 Shadow Map 을 샘플링해서 얼마나 빛이 얼마나 가려지는지 계산한다. 이를 STEP 1: blocker search 라고 표기해놓았고, 두번째는 PCF 에서 샘플링할 범위를 결정하는 넓이를 계산한다. 이를 STEP 2: penumbra size 라고 한다. 세번째로는 PCF 를 계산해서 가려지는 정도를 반환한다. 자세한 코드는 출처에서 SoftShadows 항목을 들어가면 볼 수 있다. PCSS 의 장점은 아무래도 확실한 Soft Shadow 를 구현했다는 점이다. 비록 대략적으로 가정한 부분이 많지만 장면별로 잘 맞춰주기만 한다면 괜찮은 결과가 나올것 같다. 하지만 샘플링 횟수가 꽤나 된다. PCF 만 하더라도 가볍지는 않은 편인데, Blocker 를 계산하느라 더 많이 샘플링을 한다. 하지만 잘 만들어진 게임과 요즘의 GPU 에서는 아주 큰 오버헤드는 없는걸로 보인다. (Redit : Nvidia HFTS (The Division)) 참조 Siggraph 2005 : Percentage-Closer Soft Shadows NVidia : Percentage-Closer Soft Shadows Github NVidiaGameWorks : D3DSample">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://hrmrzizon.github.io/2017/12/27/percentage-closer-soft-shadows/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
+
+  <meta name="google-site-verification" content="f8AsB97UC1pp_K4EwkRaJYJZVC0P4j36RK_TGOPPGAU" />
+
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Percentage Closer Soft Shadows">
+  <meta name="twitter:description" content="Shadow Map Filtering 에서 PCF 와 VSM 에 대하여 간단히 알아보았다. 이번 글에서 설명할 것은 PCF 를 활용한 PCSS 다. PCSS 는 Soft Shadow 를 구현하는 기법 중 하나로써 2005년에 발표되어 여태까지도 꽤나 알려진 기법이다. 우선 Soft Shadow 가 무엇인지 알아보자. 출처 : assignmentpoin...">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Appocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="/edu">Edu</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Percentage Closer Soft Shadows</h1>
+    
+    <p class="post-meta"><time datetime="2017-12-27T00:00:00+00:00" itemprop="datePublished">Dec 27, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shadow/">shadow</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/pcss/">pcss</a>
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p><a href="{ post_url 2017-12-19-shadow-map-filtering }">Shadow Map Filtering</a> 에서 <em>PCF</em> 와 <em>VSM</em> 에 대하여 간단히 알아보았다. 이번 글에서 설명할 것은 <em>PCF</em> 를 활용한 <em>PCSS</em> 다.</p>
+
+<p><em>PCSS</em> 는 <em>Soft Shadow</em> 를 구현하는 기법 중 하나로써 2005년에 발표되어 여태까지도 꽤나 알려진 기법이다. 우선 <em>Soft Shadow</em> 가 무엇인지 알아보자.</p>
+
+<p><br /></p>
+
+<p><img src="/images/soft_vs_hardshadow.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="http://www.assignmentpoint.com/science/computer/real-time-soft-shadow-rendering.html">assignmentpoint.com : Real Time Soft Shadow Rendering</a>
+</center>
+<p><br /></p>
+
+<p>위와 같이 빛을 가린 물체와 거리가 멀어지면 멀어질수록 밝아지는 그림자를 <em>Soft Shadow</em> 라고 한다. 완전한 <em>Hard Shadow</em> 는 어색하기 때문에 보통 <em>PCF</em> 를 사용하여 끝부분을 부드럽게 처리했으나, 태양광 처럼 길게 그림자를 만드는 경우가 있으면 끝 부분이 가면 갈수록 부드러워져야 한다.</p>
+
+<p><br /></p>
+
+<p><img src="/images/tree_shadow.jpg" alt="" class="center-image" /></p>
+<center>출처 : <a href="https://www.youtube.com/watch?v=Ax8G8P3tA28">Youtube
+</a>
+</center>
+<p><br /></p>
+
+<p>태양 빛에의해 만들어진 나무의 그림자다. 짧은 길이의 그림자는 적당히 <em>PCF</em> 로 대략 표현이 가능하나 이런 길은 그림자를 고정된 사이즈의 <em>PCF</em> 로 표현하기엔 무리가 있다. 그래서 나온것이 <em>PCSS</em> 다.</p>
+
+<p><em>PCSS</em> 를 보기전에, 우리가 알아야할 용어들이 있다. 바로 <em>Umbra</em> 와 <em>Penumbra</em> 다.</p>
+
+<p><br /></p>
+
+<p><img src="/images/umbra_penumbra_antumbra.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="https://en.wikipedia.org/wiki/Umbra,_penumbra_and_antumbra">Wikipedia : Umbra, penumbra and antumbra </a>
+</center>
+<p><br /></p>
+
+<p><em>Soft Shadow</em> 가 표현하는 부드러운 부분의 그림자는 위 그림에서도 보이듯이 <em>Penumbra</em> 라고 한다. <em>PCSS</em> 에서는 부드러운 부분의 그림자를 <em>Penumbra</em> 라고 한다. <em>PCSS</em> 에서는 <em>Penumbra</em> 의 크기를 사용하여 <em>PCF</em> 의 샘플링 범위를 정해준다. 우선 <em>PCSS</em> 의 <em>Penumbra</em> 를 계산하는 방법을 보자.</p>
+
+<p><br /></p>
+
+<p><img src="/images/PCSS_PenumbraSizeEstimation.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="https://http.download.nvidia.com/developer/presentations/2005/SIGGRAPH/Percentage_Closer_Soft_Shadows.pdf">Siggraph 2005 : Percentage-Closer Soft Shadows</a>
+</center>
+<p><br /></p>
+
+<p>맨위의 노란색으로 표시된 부분은 광원을 뜻하며, 일정한 범위로 빛을 비추는 <em>Area Light</em> 로 가정한 후 계산한다. W - light 는 <em>Area Light</em> 의 범위를 뜻한다. 중간에 있는 <em>Blocker</em> 는 빛을 가리는 물체를 뜻하며, d blocker 는 가리는 물체와 빛과의 거리, d receiver 는 그림자가 비추는 물체와 광원 사이의 거리를 뜻한다. 그림자를 받는 부분과 빛을 가리는 물체와 광원을 서로 평행하다고 가정해서 계산한다. 2차원의 그림을 3차원으로 바꿔보자.</p>
+
+<p><br /></p>
+
+<p><img src="/images/PCSS_Scheme.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="http://developer.download.nvidia.com/shaderlibrary/docs/shadow_PCSS.pdf">NVidia : Percentage-Closer Soft Shadows</a>
+</center>
+<p><br /></p>
+
+<p>보통 <em>Pixel Shader</em> 에서 그림자의 비춘 정도를 계산하기 때문에 <em>Receiver</em> 의 작은 부분을 기준으로 그림이 그려져 있다. 작은 부분을 기준으로 <em>Area Light</em> 와의 <em>Frustom</em> 과 <em>Blocker</em> 가 얼마나 충돌되는지 체크한다. 우리는 <em>Shadow Map</em> 을 사용하기 때문에 아래 그림이 조금 더 실제 계산과 비슷하다.</p>
+
+<p><br /></p>
+
+<p><img src="/images/PCSS_Scheme2.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="http://developer.download.nvidia.com/shaderlibrary/docs/shadow_PCSS.pdf">NVidia : Percentage-Closer Soft Shadows</a>
+</center>
+<p><br /></p>
+
+<p>그래서 <em>Shadow Map</em> 의 빨간색으로 하이라이트 된 부분을 샘플링해 얼마나 가리고 있는지를 확인한다. 그러면 빛을 받는 정도를 알 수 있게 되는것이다. 해당 부분을 적당히 샘플링한 다음 평균을 구해서 <em>PCF</em> 로 샘플링하는 범위를 계산한다. 계산하여 <em>PCF</em> 에서 범위를 사용해 계산한다. 코드를 보면서 이해해보자.</p>
+
+<p><br /></p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">float</span> <span class="nf">PCSS_Shadow</span><span class="p">(</span><span class="n">float2</span> <span class="n">uv</span><span class="p">,</span> <span class="kt">float</span> <span class="n">z</span><span class="p">,</span> <span class="n">float2</span> <span class="n">dz_duv</span><span class="p">,</span> <span class="kt">float</span> <span class="n">zEye</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// ------------------------
+</span>	<span class="c1">// STEP 1: blocker search
+</span>	<span class="c1">// ------------------------
+</span>	<span class="kt">float</span> <span class="n">accumBlockerDepth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="kt">float</span> <span class="n">numBlockers</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="n">float2</span> <span class="n">searchRegionRadiusUV</span> <span class="o">=</span> <span class="n">SearchRegionRadiusUV</span><span class="p">(</span><span class="n">zEye</span><span class="p">);</span>
+	<span class="n">FindBlocker</span><span class="p">(</span><span class="n">accumBlockerDepth</span><span class="p">,</span> <span class="n">numBlockers</span><span class="p">,</span> <span class="n">g_shadowMap</span><span class="p">,</span> <span class="n">uv</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">dz_duv</span><span class="p">,</span> <span class="n">searchRegionRadiusUV</span><span class="p">);</span>
+
+	<span class="c1">// Early out if not in the penumbra
+</span>	<span class="k">if</span> <span class="p">(</span><span class="n">numBlockers</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+		<span class="k">return</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">numBlockers</span> <span class="o">==</span> <span class="n">BLOCKER_SEARCH_COUNT</span><span class="p">)</span>
+		<span class="k">return</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+
+	<span class="c1">// ------------------------
+</span>	<span class="c1">// STEP 2: penumbra size
+</span>	<span class="c1">// ------------------------
+</span>	<span class="kt">float</span> <span class="n">avgBlockerDepth</span> <span class="o">=</span> <span class="n">accumBlockerDepth</span> <span class="o">/</span> <span class="n">numBlockers</span><span class="p">;</span>
+	<span class="kt">float</span> <span class="n">avgBlockerDepthWorld</span> <span class="o">=</span> <span class="n">ZClipToZEye</span><span class="p">(</span><span class="n">avgBlockerDepth</span><span class="p">);</span>
+	<span class="n">float2</span> <span class="n">penumbraRadiusUV</span> <span class="o">=</span> <span class="n">PenumbraRadiusUV</span><span class="p">(</span><span class="n">zEye</span><span class="p">,</span> <span class="n">avgBlockerDepthWorld</span><span class="p">);</span>
+	<span class="n">float2</span> <span class="n">filterRadiusUV</span> <span class="o">=</span> <span class="n">ProjectToLightUV</span><span class="p">(</span><span class="n">penumbraRadiusUV</span><span class="p">,</span> <span class="n">zEye</span><span class="p">);</span>
+
+	<span class="c1">// ------------------------
+</span>	<span class="c1">// STEP 3: filtering
+</span>	<span class="c1">// ------------------------
+</span>	<span class="k">return</span> <span class="n">PCF_Filter</span><span class="p">(</span><span class="n">uv</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">dz_duv</span><span class="p">,</span> <span class="n">filterRadiusUV</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<center>출처 : <a href="https://github.com/NVIDIAGameWorks/D3DSamples">Github NVIDIAGameWorks : D3DSamples</a>
+</center>
+<p><br /></p>
+
+<p>해당 픽셀이 어두워지는 정도를 반환하는 <em>PCSS</em> 계산 함수다. 코드의 주석에서는 계산을 세단계로 나눈다. 첫번째로는 <em>Shadow Map</em> 을 샘플링해서 얼마나 빛이 얼마나 가려지는지 계산한다. 이를 <em>STEP 1: blocker search</em> 라고 표기해놓았고, 두번째는 <em>PCF</em> 에서 샘플링할 범위를 결정하는 넓이를 계산한다. 이를 <em>STEP 2: penumbra size</em> 라고 한다. 세번째로는 <em>PCF</em> 를 계산해서 가려지는 정도를 반환한다. 자세한 코드는 출처에서 <em>SoftShadows</em> 항목을 들어가면 볼 수 있다.</p>
+
+<p><em>PCSS</em> 의 장점은 아무래도 확실한 <em>Soft Shadow</em> 를 구현했다는 점이다. 비록 대략적으로 가정한 부분이 많지만 장면별로 잘 맞춰주기만 한다면 괜찮은 결과가 나올것 같다. 하지만 샘플링 횟수가 꽤나 된다. <em>PCF</em> 만 하더라도 가볍지는 않은 편인데, <em>Blocker</em> 를 계산하느라 더 많이 샘플링을 한다. 하지만 잘 만들어진 게임과 요즘의 GPU 에서는 아주 큰 오버헤드는 없는걸로 보인다. (<a href="https://www.reddit.com/r/nvidia/comments/49idz3/nvidia_hfts_the_division/">Redit : Nvidia HFTS (The Division)</a>)</p>
+
+<h2>참조</h2>
+<ul>
+  <li><a href="https://http.download.nvidia.com/developer/presentations/2005/SIGGRAPH/Percentage_Closer_Soft_Shadows.pdf">Siggraph 2005 : Percentage-Closer Soft Shadows</a></li>
+  <li><a href="http://developer.download.nvidia.com/shaderlibrary/docs/shadow_PCSS.pdf">NVidia : Percentage-Closer Soft Shadows</a></li>
+  <li><a href="https://github.com/NVIDIAGameWorks/D3DSamples">Github NVidiaGameWorks : D3DSample</a></li>
+</ul>
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://zizon.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy; Su-Hyeok Kim - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
