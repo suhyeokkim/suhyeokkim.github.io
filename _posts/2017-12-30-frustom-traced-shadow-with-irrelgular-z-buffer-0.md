@@ -26,24 +26,69 @@ _Shadow Volume_ 은 3차원상으로 _Shadow_ 가 생기는 부분을 정해 그
 </center>
 <br/>
 
-
-_Ray-Tracing_ 은 빛을 직선 단위로 시뮬레이팅을 하는 기법으로, 계산 비용 자체가 비싸기 때문에 하드웨어와 구조에 굉장히 의존적이라고 한다. 게임에서도 쓰일 수 있는 기법이 있었지만 다른 후보에 밀려났다. 바로 _Irregular Z-Buffer_ 다.
-
-_Shadow Map_ 은 _Light-Space_ 에서 만들어진 _Z-Buffer_ 다. _IZB_ 는 여러가지 형태로 구현될 수 있지만 이 기법에서는 _Z-Buffer_ 의 변형된 기법 : _Accumulate Buffers_, _A-Buffer_ 를 선택했다. 기존의 _Z-Buffer_ 가 _Depth_ 한가지만 가지고 있는 _Buffer_ 를 말한다면 _A-Buffer_ 는 두개 이상의 데이터를 저장해 누적시키는(_Accumulate_) _Buffer_ 를 말한다. 이 기법에서 _IZB_ 는 _Light-Space A-Buffer_ 형태를 가지게 했다. 이 선택은 꽤나 중요한 이유가 있다. _A-Buffer_(_IZB_) 의 각각의 텍셀들은 실제 그려질 픽셀에 대한 정보들이 저장한다. 데이터가 _Irregular_ 하고, 접근도 불규칙적이기 때문에 퍼포먼스도 굉장히 편차가 크다고 한다. [^1]
-
-### Irregular Z-Buffer
-
-이름를 보면 _Irregular Z-Buffer_ 는 _Z-Buffer_ 의 조금 다른 버젼이라고 추정할 수 있다. 하지만
+_Ray-Tracing_ 은 빛을 직선 단위로 시뮬레이팅을 하는 기법으로, 계산 비용 자체가 비싸기 때문에 하드웨어와 구조에 굉장히 의존적이라고 한다. 게임에서도 쓰일 수 있는 기법이 있었지만 다른 후보에 밀려났다. 바로 _Irregular Z-Buffer_ 다. 현대 GPU 의 _Geometry_ -> _Rasterize_ 구조에 맞춰 가장 걸맞는 방법이라고 한다. 자세한 설명은 아래에서 보자.
 
 <!--
-    Irregular Z-Buffer
-    Frustom Test for AntiAliasing
+_Shadow Map_ 은 _Light-Space_ 에서 만들어진 _Z-Buffer_ 다. _IZB_ 는 여러가지 형태로 구현될 수 있지만 이 기법에서는 _Z-Buffer_ 의 변형된 기법 : _Accumulate Buffers_, _A-Buffer_ 를 선택했다. 기존의 _Z-Buffer_ 가 _Depth_ 한가지만 가지고 있는 _Buffer_ 를 말한다면 _A-Buffer_ 는 두개 이상의 데이터를 저장해 누적시키는(_Accumulate_) _Buffer_ 를 말한다. 이 기법에서 _IZB_ 는 _Light-Space A-Buffer_ 형태를 가지게 했다. 이 선택은 꽤나 중요한 이유가 있다. _A-Buffer_(_IZB_) 의 각각의 텍셀들은 실제 그려질 픽셀에 대한 정보들이 저장한다. 데이터가 _Irregular_ 하고, 접근도 불규칙적이기 때문에 퍼포먼스도 굉장히 편차가 크다고 한다. [^1]
 -->
+
+### Key Idea
+
+이 기법의 중요한 아이디어는 앞에서 소개한 _Irregular Z-Buffer_ 와 _Frustom-Triangle Test_ 이 두가지다. _Irregular Z-Buffer_ 는 앞서 _Shadow Map_ 의 단점중에 공간적 괴리를 해결하는 데이터 구조이고, _Frustom-Triangle Test_ 는 논문에서 한 말을 이용하면 _Sub-Pixel Accurate Pixel_ 을 구성하기 위한 시뮬레이션 테스트다. 이 두가지를 간단하게 살펴보자.
+
+첫번째로는 바로 위에서 언급했던 _Irregular Z-Buffer_ 다. 여기서의 _IZB_ 는 우리가 알던 일반적인 _Buffer_ 의 쓰임새와는 조금 다르게 쓰인다. 이 기법에서의 _IZB_ 는 일반적인 _Shadow Map_ 에서의 _Eye-Space_ 와 _Light-Space_ 의 괴리를 없에기 위해 _Light-Space_ 를 기준으로 _Depth_ 를 쭉 저장하는게 아닌, _Eye-Space_ 의 각각 픽셀별로 표현하는 물체에 영향을 미치는 광원을 방향으로 _Ray_ 를 쏜다. 그리고 _Light-Space_ 를 기준으로 만든 _Grid_ 버퍼에 _Ray_ 가 부딫치고, 부딫친 부분에서 가장 가까운 텍셀에 데이터를 저장한다. 위에서 설명한 _IZB_ 를 구성하는 방법에 대한 그림이 아래에 있다.
+
+<br/>
+![](/images/fts_IZB.png){: .center-image}
+<center>출처 : <a href="http://cwyman.org/papers/tvcg16_ftizbExtended.pdf">Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows</a>
+</center>
+<br/>
+
+간단하게 이런식으로 _IZB_ 가 구성되는 것을 알 수 있다. 이제 _Geometry_ 와 비교하는 _Visibility Test_ 가 필요하다. 일반적인 _Shadow Mapping_ 의 _Visibility Test_ 와는 조금 다르다. 기존의 _Shadow Mapping_ 은 정점을 _Light-Space_ 로 바꾸어 _Z_ 값을 비교하여 _Visibility Test_ 를 한다. 하지만 이 기법에서의 _Visibility Test_ 는 다르다. 위에서 언급한 것과 같이 _IZB_ 를 만든다. 그 다음 _Occlluder Geometry_ 들을 _Light-Space_ 를 기준으로 _Conservative Rasterization_ 을 해준다.[^C1] 그렇게 나온 결과를 통해 _IZB_ 와 함께 _Visibility Test_ 를 한다. _Conservative Rasterization_ 의 결과는 거의 _Flag_ 로 사용될것으로 예측되고, _Eye-Space_ 픽셀의 그림자 계산은 복잡한 계산을 통해 구한다. 아래는 논문에 있던 _IZB_ 를 기준으로 쓰여진 수도 코드다.
+
+<br/>
+
+```
+// Step 1: Identify pixel locations we need to shadow
+G(x, y) ← RenderGBufferFromEye()
+
+// Step 2: Add pixels to our light-space IZB data structure
+for pixel p ∈ G(x, y) do
+    lsTexelp ← ShadowMapXform[ GetEyeSpacePos( p ) ]
+    izbNodep ← CreateIZBNode[ p ]
+    AddNodeToLightSpaceList[ lsTexelp, izbNodep ]
+end for
+
+// Step 3: Test each triangle with pixels in lists it covers
+for tri t ∈ SceneTriangles do
+    for frag f ∈ ConservateLightSpaceRaster( t ) do
+        lsTexelf ← FragmentLocationInRasterGrid[ f ]
+        for node n ∈ IZBNodeList( lsTexelf ) do
+            p ← GetEyeSpacePixel( n )
+            visMask[p] = visMask[p] | TestVisibility[ p, t ]
+        end for
+    end for
+end for
+```
+
+<center>출처 : <a href="http://cwyman.org/papers/tvcg16_ftizbExtended.pdf">Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows</a>
+</center>
+<br/>
+
+다음은 _Visibility Test_ 다. 논문에서는 _Frustom-Triangle Test_ 라고 부르는데, 이는 조금 복잡한 과정으로 구성된다.
+
+<br/>
+![](/images/fts_VisibilityTest.png){: .center-image}
+<center>출처 : <a href="http://cwyman.org/papers/tvcg16_ftizbExtended.pdf">Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows</a>
+</center>
+<br/>
 
 ## 참조
 
  - [Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows](http://cwyman.org/papers/tvcg16_ftizbExtended.pdf)
  - [Wikipedia : Irregular Z-Buffer](https://en.wikipedia.org/wiki/Irregular_Z-buffer)
  - [cywman.org : HFTS Presentation Video](http://cwyman.org/videos/sig1657-chris-wyman-magic-behind-gameworks-hybrid-frustum-traced-shadows-hfts.mp4)
+ - [NVidia : Don't be conservative with Conservative Rasterization](https://developer.nvidia.com/content/dont-be-conservative-conservative-rasterization)
 
-[^1]: 각각의 텍셀들이 여러 픽셀들의 정보를 저장하게 되면 텍셀별로 데이터가 다르고, GPU 에서 병렬적으로 데이터를 처리할 때, 각각의 데이터의 처리량이 다르게 되면 결국 가장 처리시간이 긴걸로 맞춰지게 된다. 이를 Stall 이라고 부른다.
+[^C1]: 일반적으로 오브젝트를 그리는 것과 다른 _Conservative Rasterization_ 을 해주는 이유는 일반적인 _Rasterization_ 은 픽셀의 반이상을 차지해야 해당 픽셀을 처리해준다. 하지만 정확한 _Visibility_ 를 계산하기 위해서는 폴리곤이 해당되는 모든 픽셀들을 처리해주어야 한다. _Conservative Rasterization_ 은 앞에서 말한바와 같이 모든 부분을 픽셀로 처리한다. _Conservative Rasterization_ 에 대한 자세한 정보는 [NVidia : Don't be conservative with Conservative Rasterization](https://developer.nvidia.com/content/dont-be-conservative-conservative-rasterization) 에서 확인할 수 있다.
+[^10]: 각각의 텍셀들이 여러 픽셀들의 정보를 저장하게 되면 텍셀별로 데이터가 다르고, GPU 에서 병렬적으로 데이터를 처리할 때, 각각의 데이터의 처리량이 다르게 되면 결국 가장 처리시간이 긴걸로 맞춰지게 된다. 이를 Stall 이라고 부른다.
