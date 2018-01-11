@@ -458,32 +458,32 @@
 
 <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">float</span> <span class="nf">PCSS_Shadow</span><span class="p">(</span><span class="n">float2</span> <span class="n">uv</span><span class="p">,</span> <span class="kt">float</span> <span class="n">z</span><span class="p">,</span> <span class="n">float2</span> <span class="n">dz_duv</span><span class="p">,</span> <span class="kt">float</span> <span class="n">zEye</span><span class="p">)</span>
 <span class="p">{</span>
-	<span class="c1">// ------------------------
-</span>	<span class="c1">// STEP 1: blocker search
-</span>	<span class="c1">// ------------------------
-</span>	<span class="kt">float</span> <span class="n">accumBlockerDepth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="c1">// ------------------------</span>
+	<span class="c1">// STEP 1: blocker search</span>
+	<span class="c1">// ------------------------</span>
+	<span class="kt">float</span> <span class="n">accumBlockerDepth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 	<span class="kt">float</span> <span class="n">numBlockers</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 	<span class="n">float2</span> <span class="n">searchRegionRadiusUV</span> <span class="o">=</span> <span class="n">SearchRegionRadiusUV</span><span class="p">(</span><span class="n">zEye</span><span class="p">);</span>
 	<span class="n">FindBlocker</span><span class="p">(</span><span class="n">accumBlockerDepth</span><span class="p">,</span> <span class="n">numBlockers</span><span class="p">,</span> <span class="n">g_shadowMap</span><span class="p">,</span> <span class="n">uv</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">dz_duv</span><span class="p">,</span> <span class="n">searchRegionRadiusUV</span><span class="p">);</span>
 
-	<span class="c1">// Early out if not in the penumbra
-</span>	<span class="k">if</span> <span class="p">(</span><span class="n">numBlockers</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="c1">// Early out if not in the penumbra</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">numBlockers</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
 		<span class="k">return</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
 	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">numBlockers</span> <span class="o">==</span> <span class="n">BLOCKER_SEARCH_COUNT</span><span class="p">)</span>
 		<span class="k">return</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
 
-	<span class="c1">// ------------------------
-</span>	<span class="c1">// STEP 2: penumbra size
-</span>	<span class="c1">// ------------------------
-</span>	<span class="kt">float</span> <span class="n">avgBlockerDepth</span> <span class="o">=</span> <span class="n">accumBlockerDepth</span> <span class="o">/</span> <span class="n">numBlockers</span><span class="p">;</span>
+	<span class="c1">// ------------------------</span>
+	<span class="c1">// STEP 2: penumbra size</span>
+	<span class="c1">// ------------------------</span>
+	<span class="kt">float</span> <span class="n">avgBlockerDepth</span> <span class="o">=</span> <span class="n">accumBlockerDepth</span> <span class="o">/</span> <span class="n">numBlockers</span><span class="p">;</span>
 	<span class="kt">float</span> <span class="n">avgBlockerDepthWorld</span> <span class="o">=</span> <span class="n">ZClipToZEye</span><span class="p">(</span><span class="n">avgBlockerDepth</span><span class="p">);</span>
 	<span class="n">float2</span> <span class="n">penumbraRadiusUV</span> <span class="o">=</span> <span class="n">PenumbraRadiusUV</span><span class="p">(</span><span class="n">zEye</span><span class="p">,</span> <span class="n">avgBlockerDepthWorld</span><span class="p">);</span>
 	<span class="n">float2</span> <span class="n">filterRadiusUV</span> <span class="o">=</span> <span class="n">ProjectToLightUV</span><span class="p">(</span><span class="n">penumbraRadiusUV</span><span class="p">,</span> <span class="n">zEye</span><span class="p">);</span>
 
-	<span class="c1">// ------------------------
-</span>	<span class="c1">// STEP 3: filtering
-</span>	<span class="c1">// ------------------------
-</span>	<span class="k">return</span> <span class="n">PCF_Filter</span><span class="p">(</span><span class="n">uv</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">dz_duv</span><span class="p">,</span> <span class="n">filterRadiusUV</span><span class="p">);</span>
+	<span class="c1">// ------------------------</span>
+	<span class="c1">// STEP 3: filtering</span>
+	<span class="c1">// ------------------------</span>
+	<span class="k">return</span> <span class="n">PCF_Filter</span><span class="p">(</span><span class="n">uv</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">dz_duv</span><span class="p">,</span> <span class="n">filterRadiusUV</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div></div>
 <center>출처 : <a href="https://github.com/NVIDIAGameWorks/D3DSamples">Github NVIDIAGameWorks : D3DSamples</a>

@@ -403,8 +403,8 @@
 
 <figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span><span class="o">*</span> <span class="n">pt</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
 
-<span class="c1">// 사용 코드..
-</span>
+<span class="c1">// 사용 코드..</span>
+
 <span class="n">free</span><span class="p">(</span><span class="n">pt</span><span class="p">);</span></code></pre></figure>
 
 <p>위처럼 시스템에 메모리를 요청해 직접 가져오고, 사용을 끝낸 메모리 공간들을 반환하는 관리 방식은 소프트웨어의 빠른 개발을 방해한다. 메모리를 직접 관리해야 하기 때문에 메모리 관리 코드를 일일히 만들어 주어야 한다. 게다가 잘못 사용하게 되면 프로그램의 크래쉬를 유발하기까지 한다.</p>

@@ -105,6 +105,285 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2017/08/01/using-compute-buffer-in-unity/">Using Compute Buffer In Unity</a>
+          </h1>
+
+          <p class="post-meta">Aug 1, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/gpuinstancing/">gpuinstancing</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>Unity 에서의 확실한 GPU Instancing 은 <strong>ComputeBuffer</strong> 라는 구현체에서 시작될 것이다. 이 구현체는 <strong>UnityEngine.ComputeBuffer</strong> 라는 Unity 의 구현체이며 하는 역할은 GPU 메모리를 사용하게 해주는 역할을 한다. <strong>ComputeBuffer</strong> 는 <strong>ComputeShader</strong> 와 함께 등장했다. <strong>ComputeShader</strong> 에서 데이터를 읽고 쓰는것을 요구하기 때문에 Unity 는 GPU 메모리를 사용하는 컨테이너로서 <strong>ComputeBuffer</strong> 를 구현해 놓았다. 하지만 이 <strong>ComputeBuffer</strong> 는 <strong>ComputeShader</strong> 뿐만아니라 일반 쉐이더에서도 폭넓게 사용가능하다. 이 말의 뜻은 우리가 생각하는 Unity 에서 지원하는 일반적인 메쉬 데이터를 사용하지 않아도 사용자가 직접 메쉬 데이터를 커스터마이징해서 사용할 수 있다는 이야기이다. 지원하는 플랫폼은 일반적으로 말하는 <em>Shader Model 5.0</em> 이상이다. PC 플랫폼에서는 당연히 사용 가능하다.</p>
+
+<p>사용하는 방법 자체는 어렵지 않다. 스크립트에서 <em>size</em> 와 <em>stride</em> 를 설정해주고, 데이터의 배열을 만들어 GPU 메모리 안에 있는 데이터를 읽거나 쓸 수 있다. 메모리 단위에서 하는것처럼 보이기 때문에 크기와 타입은 맞춰주어야 한다. C# 에서는 <strong>System.Array</strong> 형으로 넣어주니 형태에 주의하기 바란다. 방법은 아래와 같다.</p>
+
+<pre><code class="language-C#">int dataLen = ...;  // length of data
+int[] dataArray = new int[dataLen];
+
+// record data in dataArray..
+
+ComputeShader computeShader = ...;
+ComptueBuffer dataBuffer = new ComputeBuffer(dataLen, sizeof(int));
+dataBuffer.SetData(dataArray);
+
+computeShader.SetBuffer("dataBuffer", dataBuffer);
+</code></pre>
+
+<p>위 코드는 <strong>ComputeShader</strong> 에서 <strong>ComputeBuffer</strong> 를 사용하기 위해 세팅하는 코드다. 가장 맨처음에는 초기에 세팅할 정수 배열을 만들고, 그 다음 <strong>ComputeBuffer</strong> 인스턴스를 생성한다. 생성자에서 넣어주는 인자는 데이터의 길이(<em>length</em>)와 각 데이터별 크기(<em>stride</em>)이다. 그 다음 같은 크기의 배열의 데이터를 GPU 메모리로 쓴다.(<em>write</em>) 그리고 마지막으로 데이터가 세팅된 <strong>ComputeBuffer</strong> 를 <strong>ComputeShader</strong> 에 연결해준다. 이러면 <strong>ComputeShader</strong> 코드에서 <em>dataBuffer</em> 라는 변수명을 가진 변수에 <strong>ComputeBuffer</strong> 가 연결된다. 아래에 <strong>ComputeShader</strong> 코드가 있다.</p>
+
+<pre><code class="language-HLSL">StructuredBuffer&lt;int&gt; dataBuffer;
+
+[numthreads(8,8,1)]
+void Process (uint3 id : SV_DispatchThreadID)
+{
+  ...
+}
+</code></pre>
+
+<p>맨 처음에 있는 <em>dataBuffer</em> 에 연결된다. <a href="{ post_url 2017-07-06-structured-buffer-vs-constant-buffer }">StructuredBuffer vs ConstantBuffer</a> 에서본 <em>StructuredBuffer</em> 타입이 가능하다. 또한 <em>RWStructuredBuffer</em>, <em>ConsumeStructuredBuffer</em>, <em>AppendStructuredBuffer</em> 가능하다. 다른 렌더러 쉐이더 코드에서도 사용가능하다. 그래서 일반적으로 고려되는 파이프라인은 아래와 같다.</p>
+
+<p><img src="/images/data-process-pipeline.png" alt="data process" class="center-image" /></p>
+
+<p>앞의 두가지 <strong>ComputeBuffer</strong> 를 세팅하고 <strong>ComputeShader</strong> 를 실행하는 코드는 대충 보았다, 뒷 부분의 <strong>ComputeBuffer</strong> 를 통해 렌더링을 하는 것은 그다지 어렵지 않다. 중요한 것은 참신하게, 효율적으로 렌더링하는 것이다.</p>
+
+<p><a href="https://github.com/hrmrzizon/CustomSkinningExample">Github : CustomSkinningExample</a> 에서 스키닝의 계산을 <strong>ComputeShader</strong> 로 넘겨서 계산한다. 또한 메시 데이터 전체를 <strong>ComputeBuffer</strong> 로 넘겨서 렌더링하기 때문에 꽤나 괜찮은 예가 될것이다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="https://docs.unity3d.com/ScriptReference/ComputeBuffer.html">Unity Reference : ComptuteBuffer</a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2017/08/01/darboux-frame/">Darboux Frame</a>
           </h1>
 
@@ -1661,257 +1940,6 @@
         
           <p class="post-continue">
             <a href="/2017/06/08/performence-and-optimization/">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/06/04/using-texture2darray-in-unity/">Using Texture2darray In Unity</a>
-          </h1>
-
-          <p class="post-meta">Jun 4, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/shader/">shader</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/rendering/">rendering</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>Unity 에서 렌더링에 관련된 최적화를 할때는 <em>TextureArray</em> 를 사용할 수 밖에 없다. 이는 Unity 에서 <em>DrawCall</em> 을 줄이기 위해 써먹는 <em>Batching</em> 이라는 개념 때문인데 단순하게 말하면 그리는 새로운 매터리얼과 메쉬의 종류가 많으면 많을 수록 <em>DrawCall</em> 을 많이 하게 된다. 하지만 이 <em>DrawCall</em> 의 비용은 싼편이 아니기 때문에 CPU 의 성능을 꽤나 잡아먹게 된다. 그래서 Unity 는 자동으로 <em>Batching</em> 을 해주게 된다. 같은 메터리얼을 쓰면 자동으로 묶어주고, 같은 메쉬를 쓰면 또 자동으로 묶어준다. 결국 <em>Batching</em> 이 <em>DrawCall</em> 의 횟수와 같은 개념이 되는 것이다.</p>
-
-<p>그래서 <em>Batching</em> 의 횟수를 줄이기 위해 매터리얼을 줄이는 방법에 대한 것이 <em>TextureArray</em> 다. 이것보다 일반적으로 알려진 기법은 <em>TexutreAtlas</em> 인데, 이 방법은 상당히 단순하다. 그냥 텍스쳐 한장에 모든 그림을 때려박고 UV 를 수정해주는 작업을 할때 쓰인다. 보통은 UI 이미지에서 스프라이트를 설정할 때 쓰이며, Unity 는 UGUI 기능에 <em>Sprite</em> 들을 합쳐서 <em>TextureAtlas</em> 로 만들어주는 기능이 있다. 하지만 3D 오브젝트의 UV 에서는 말이 조금 달라진다. UV 좌표는 0과 1사이의 값으로 이루어지는데 텍스쳐 여러장과 세팅되어 있던 UV 좌표들을 한장으로 통합해 다시 세팅하려면 굉장히 귀찮아진다. 그리고 합쳐지기전의 텍스쳐의 갯수가 합쳐진 후에 추가된다면 그것또한 굉장히 귀찮아질 것이다. 결국 생산성의 문제가 된다.  그래서 다른 방법을 쓸 수 있는데, 이 방법이 바로 <em>TextureArray</em> 다.</p>
-
-<p><em>TextureArray</em> 의 개념은 단순하게 텍스쳐를 배열로 묶은 것으로, 인덱스만 있으면 그냥 하나하나 참조하여 사용가능하다. 즉 UV 의 2차원 좌표와 함께 인덱스 한개만 더 있으면 된다. 그리고 <em>TextureArray</em> 의 장점은 <em>TextureAtlas</em> 마냥 합쳐주고 UV 를 수정할 일이 없고, 메쉬별로 인덱스를 따로 설정해주는 작업만 해주면 상당히 편하게 할 수 있다. 또한 텍스쳐 갯수가 몇개가 되던간에 메터리얼을 한개로 유지할 수 있기 때문에 굉장히 편하다. 근데 Unity 에서 사용하려면 몇가지 단점이 있다. Asset 생성을 지원하지 않기 때문에 굉장히 불편하고, 보여주는 GUI 또한 Unity 내부에서 지원하지 않는다. 편하게 사용하기 위해선 에디터 코드를 직접 만져야 한다. 물론 직접 생성해주는 것도 상관없지만 생산성 자체만 놓고보면 그다지 좋은 편은 아니다. 또한 <em>Shader</em> 코드들도 직접 바꿔주어야 하기 때문에 이것저것 세팅해줘야 할것이 많다. 즉 사용하기에 비용이 많이 든다.</p>
-
-<p>이제 직접 Unity 에서 적용시켜보자.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/06/04/using-texture2darray-in-unity/">Read on &rarr;</a>
           </p>
         
       </li>
