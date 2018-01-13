@@ -28,10 +28,6 @@ _Shadow Volume_ 은 3차원상으로 _Shadow_ 가 생기는 부분을 정해 그
 
 _Ray-Tracing_ 은 빛을 직선 단위로 시뮬레이팅을 하는 기법으로, 계산 비용 자체가 비싸기 때문에 하드웨어와 구조에 굉장히 의존적이라고 한다. 게임에서도 쓰일 수 있는 기법이 있었지만 다른 후보에 밀려났다. 바로 _Irregular Z-Buffer_ 다. 현대 GPU 의 _Geometry_ -> _Rasterize_ 구조에 맞춰 가장 걸맞는 방법이라고 한다. 자세한 설명은 아래에서 보자.
 
-<!--
-_Shadow Map_ 은 _Light-Space_ 에서 만들어진 _Z-Buffer_ 다. _IZB_ 는 여러가지 형태로 구현될 수 있지만 이 기법에서는 _Z-Buffer_ 의 변형된 기법 : _Accumulate Buffers_, _A-Buffer_ 를 선택했다. 기존의 _Z-Buffer_ 가 _Depth_ 한가지만 가지고 있는 _Buffer_ 를 말한다면 _A-Buffer_ 는 두개 이상의 데이터를 저장해 누적시키는(_Accumulate_) _Buffer_ 를 말한다. 이 기법에서 _IZB_ 는 _Light-Space A-Buffer_ 형태를 가지게 했다. 이 선택은 꽤나 중요한 이유가 있다. _A-Buffer_(_IZB_) 의 각각의 텍셀들은 실제 그려질 픽셀에 대한 정보들이 저장한다. 데이터가 _Irregular_ 하고, 접근도 불규칙적이기 때문에 퍼포먼스도 굉장히 편차가 크다고 한다. [^1]
--->
-
 ### Key Idea
 
 이 기법의 중요한 아이디어는 앞에서 소개한 _Irregular Z-Buffer_ 와 _Frustom-Triangle Test_ 이 두가지다. _Irregular Z-Buffer_ 는 앞서 _Shadow Map_ 의 단점중에 공간적 괴리를 해결하는 데이터 구조이고, _Frustom-Triangle Test_ 는 논문에서 한 말을 이용하면 _Sub-Pixel Accurate Pixel_ 을 구성하기 위한 시뮬레이션 테스트다. 이 두가지를 간단하게 살펴보자.
@@ -75,7 +71,7 @@ end for
 </center>
 <br/>
 
-다음은 _Visibility Test_ 다. 논문에서는 _Frustom-Triangle Test_ 라고 부르는데, 이는 조금 복잡한 과정으로 구성된다.
+다음은 _Visibility Test_ 다. 논문에서는 _Frustom-Triangle Test_ 라고 부르는데, 이는 조금 복잡한 과정으로 구성된다. 아래 그림을 보면서 알아보자.
 
 <br/>
 ![](/images/fts_VisibilityTest.png){: .center-image}
@@ -83,12 +79,40 @@ end for
 </center>
 <br/>
 
+가장 처음에는 _μQuad_ 라는 것을 생성한다. _μQuad_ 는 _Tangent-Space_ 를 기준으로 설정하며 각 픽셀별로 생성한다. 위 그림에서는 중간 그림에 구 위에있는 평면을 뜻한다. 그 다음 가리는 _Geometry_ 의 폴리곤들의 각각의 _Edge_ 를 사용하여 _Shadow Plane_ 을 생성한다. 마지막으로 만들어진 _Shadow Plane_ 을 _μQuad_ 에 _Projection_ 한다. 이때 가지고 있던 _LUT_ 를 통해 가려짐을 계산한다. 그리고 다른 _Edge_ 들도 계속해서 누적시킨다.
+
+간단하게 _Frustom-Triangle Test_ 의 단계에 대해 설명해보았다. 이제 각각의 과정 : _μQuad Construction_, _Shadow Plane Construction_, _Visibility Computation_ 에 대해 조금 더 자세히 써보겠다.
+
+_μQuad_ 의 생성은 _Geometry_ 의 _Tangent-Space_ 를 기준으로 계산되는 것 빼고는 특이한 점이 없다. 하지만 생성되는 시기에 대해선 조금 특별한게 있다. 가시성을 계산할 때 생성할 수도 있지만 _G-Buffer_ 를 생성할 때 미리 계산하는 것이 더 효율적이라고 한다.
+
+가시성을 계산할 때 _ray-triangle intersection_ 을 계산하기 보다는 앖에서 언급한 각각의 폴리곤의 _Shadow Volume_ 을 각 점마다 계산한다고 한다. _Shadow Volume_ 은 그림자를 생성하는 _Occluder Triangle_ 을 기준으로 각각의 _Edge_ 에서 뻗어나오는 직사각형 면으로 구성된다. 아래 그림을 보면 쉽게 이해할 수 있다. 그리고 _μQuad_ 에서 샘플링한 각각의 점들을 기준으로 가시성을 계산한다면 한다면, 4번의 내적으로 가시성을 테스트할 수 있다는 것을 의미한다.
+
+<br/>
+![](/images/HFTS_FrustomTracing.png){: .center-image}
+<center>출처 : <a href="http://developer.download.nvidia.com/gameworks/events/  GDC2016/jstory_hfts.pdf">NVidia : Advanced Geometrically Correct Shadows for Modern Game Engines</a>
+</center>
+<br/>
+
+또한 그림자를 멀티샘플링 하기 위해서는 여기서 언급한 _Shadow Volume_ 의 _Shadow Plane_ 들을 이용한다고 한다.
+
+마지막으로 _Visibility Computation_ 이 남아있다. 이 부분의 대략적인 것은 위에서 언급했다. 자세한 계산방식을 말해보겠다. 위에서 언급한 _μQuad_ 와 _Shadow Plane_ 사용해서 해당 폴리곤들의 데이터 누적을 위해서는 _μQuad_ 에서 이산화된 _binary_ 샘플링이 필요하다. 논문의 저자는 32 번의 _Halton sampling_[^C2] 을 사용했다고 한다.
+
+가시성을 계산하기 위해서는 _Shadow Plane_ 을 _μQuad_ 에 _Projection_ 해줘야 한다. 그러면 _μQuad_ 는 최대 3개의 _line_ 을 얻게 된다. 논문에서는 이 _line_ 을 _μQuad_ 를 기준으로 극좌표계[^C3] 데이터로 저장한다고 한다. 반지름과 각도가 5bit 크기로 저장된다. 해당 10bit 데이터를 사용하여 미리 계산된 테이블에서 32개의 이진 가시성 샘플을 가져온다. 결과와  bit 단위의 and 연산을 통해 _μQuad_ 의 가시성을 계산할 수 있다고 한다.
+
+해당 기법을 고안한 사람은 두가지의 아이디어 : _Irregular Z-Buffer_ 와 _Frustom-Triangle Test_ 를 통해  _Sub-pixel Hard Shadow_ 의 이론을 만들었다. 하지만 이 아이디어들과 구현을 위한 노력의 차이는 꽤 큰듯하다. 논문을 보면 아이디어에 대한 텍스트보다 최적화를 위한 텍스트가 2배가 될정도로 많다. 다음 글에서는 논문에서 나온 전체 과정과 디테일한 구현 사항에 대해 적어보겠다.
+
 ## 참조
 
  - [Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows](http://cwyman.org/papers/tvcg16_ftizbExtended.pdf)
  - [Wikipedia : Irregular Z-Buffer](https://en.wikipedia.org/wiki/Irregular_Z-buffer)
  - [cywman.org : HFTS Presentation Video](http://cwyman.org/videos/sig1657-chris-wyman-magic-behind-gameworks-hybrid-frustum-traced-shadows-hfts.mp4)
  - [NVidia : Don't be conservative with Conservative Rasterization](https://developer.nvidia.com/content/dont-be-conservative-conservative-rasterization)
+ - [NVidia : Advanced Geometrically Correct Shadows for Modern Game Engines](http://developer.download.nvidia.com/gameworks/events/GDC2016/jstory_hfts.pdf)
 
 [^C1]: 일반적으로 오브젝트를 그리는 것과 다른 _Conservative Rasterization_ 을 해주는 이유는 일반적인 _Rasterization_ 은 픽셀의 반이상을 차지해야 해당 픽셀을 처리해준다. 하지만 정확한 _Visibility_ 를 계산하기 위해서는 폴리곤이 해당되는 모든 픽셀들을 처리해주어야 한다. _Conservative Rasterization_ 은 앞에서 말한바와 같이 모든 부분을 픽셀로 처리한다. _Conservative Rasterization_ 에 대한 자세한 정보는 [NVidia : Don't be conservative with Conservative Rasterization](https://developer.nvidia.com/content/dont-be-conservative-conservative-rasterization) 에서 확인할 수 있다.
+
+[^C2]: 몬테카를로 시뮬레이션과 같은 방식의 점을 생성하는 방식이다. 쉽게 말하면 랜덤하게 생성하는 것이라고 생각하면 된다. 자세한 정보는 [Wikipedia : Halton sequence](https://en.wikipedia.org/wiki/Halton_sequence) 에서 확인할 수 있다.
+
+[^C3]: 여기서는 각도와 반지름(거리)를 사용하여 나나탠다. 극좌표계에 대한 자세한 정보는 [위키피디아 : 극좌표계](https://ko.wikipedia.org/wiki/%EA%B7%B9%EC%A2%8C%ED%91%9C%EA%B3%84) 에서 확인할 수 있다.
+
 [^10]: 각각의 텍셀들이 여러 픽셀들의 정보를 저장하게 되면 텍셀별로 데이터가 다르고, GPU 에서 병렬적으로 데이터를 처리할 때, 각각의 데이터의 처리량이 다르게 되면 결국 가장 처리시간이 긴걸로 맞춰지게 된다. 이를 Stall 이라고 부른다.
