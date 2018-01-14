@@ -401,11 +401,11 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <p><a href="{ post_url 2018-01-13-frustom-traced-shadow-with-irrelgular-z-buffer-0 }">Frustom Traced Shadow with Irregular Z-Buffer 0</a> 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다.</p>
+    <p><a href="/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-0/">Frustom Traced Shadow with Irregular Z-Buffer 0</a> 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다.</p>
 
 <h3>전체 시스템</h3>
 
-<p><a href="{ post_url 2018-01-13-frustom-traced-shadow-with-irrelgular-z-buffer-0 }">이전 글</a>에서 두가지 단계에 대해서 자세한 설명을 했었다. <em>Irregular Z-Buffer</em> 를 생성하고 <em>Visibility Test</em> 를 하는 것이였다. 실제 구현된 단계는 총 6개의 단계로 이루어진다고 한다.</p>
+<p><a href="/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-0/">이전 글</a>에서 두가지 단계에 대해서 자세한 설명을 했었다. <em>Irregular Z-Buffer</em> 를 생성하고 <em>Visibility Test</em> 를 하는 것이였다. 실제 구현된 단계는 총 6개의 단계로 이루어진다고 한다.</p>
 
 <p>첫번째로는 <em>Eye-Space Z-Prepass</em> 를 해준다. 요즘의 엔진들이나 큰 규모가 아닌 게임이더라도 <em>Z-Prepass</em><sup id="fnref:L1"><a href="#fn:L1" class="footnote">1</a></sup> 는 거의 대부분 해준다. <em>Geometry Pass</em> 가 두번 걸리기는 하지만 <em>Fill Rate</em> 의 부하가 <em>Geometry Pass</em> 의 부하보다 많이 커서 그런 듯하다. 중요한건 단순히 언급한 <em>Eye-Space Z-Prepass</em> 를 뜻하는게 아니다. 이전에 언급한 <em>μQuad</em> 의 빠른 계산을 위해 <em>G-Buffer</em> 에 3개의 실수 값들을 넣는다. 이 3개의 실수는 실제 그려지는 카메라의 위치와 <em>Tangent Plane</em> 의 4개의 코너중에 3개의 거리를 나타낸다. 이는 <em>μQuad</em> 를 다시 계산하기에 충분하다고 한다.</p>
 

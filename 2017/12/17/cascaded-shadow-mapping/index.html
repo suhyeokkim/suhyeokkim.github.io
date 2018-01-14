@@ -401,7 +401,7 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <p><a href="{ post_url 2017-11-30-what-is-shadow-mapping }">What is Shadow Mapping</a> 에서 <em>Shadow Mapping</em> 에 대한 간단한 번역 &amp; 설명을 적어놓았다. 이번 글에서는 <em>Shadow Mapping</em> 을 효과적으로 사용하기 위한 <em>Cascaded Shadow Mapping</em> 에 대하여 적어보겠다.</p>
+    <p><a href="/2017/11/30/what-is-shadow-mapping/">What is Shadow Mapping</a> 에서 <em>Shadow Mapping</em> 에 대한 간단한 번역 &amp; 설명을 적어놓았다. 이번 글에서는 <em>Shadow Mapping</em> 을 효과적으로 사용하기 위한 <em>Cascaded Shadow Mapping</em> 에 대하여 적어보겠다.</p>
 
 <p><em>Cascaded Shadow Mapping</em> 을 구글 번역기에 돌려보면 <em>“계단식 그림자 매핑”</em> 이라고 나온다. 조금 직관적이지 않은 말이지만 뜻 자체는 맞다. 간단하게 <em>Cascaded Shadow Mapping</em> 에 대하여 말하자면 넓은 환경의 그림자를 위해 거리에(거의 <em>Depth</em>) 따라서 여러개의 <em>Shadow Map</em> 을 생성하는 방법이다.</p>
 
@@ -409,7 +409,7 @@
 
 <h2>Shadow-map generation</h2>
 
-<p><em>Cascaded Shadow Mapping</em> 을 위한 <em>Shadow Map</em> 생성은 앞서쓴 <a href="{ post_url 2017-11-30-what-is-shadow-mapping }">글</a>에서 설명한 방법과 거의 유사하다. 앞서 여러개의 <em>Shadow Map</em> 을 생성하여 그림자를 표현한다고 언급했었다. 여러개의 <em>Shaodw Map</em> 을 생성하는 기준은 <em>View Frustom</em> 을 <em>Depth</em> 를 기준으로 여러개로 쪼개어 각 쪼개진 <em>Frustom</em> 을 기준으로 <em>Shadow Map</em> 을 그린다.</p>
+<p><em>Cascaded Shadow Mapping</em> 을 위한 <em>Shadow Map</em> 생성은 앞서쓴 <a href="/2017/11/30/what-is-shadow-mapping/">글</a>에서 설명한 방법과 거의 유사하다. 앞서 여러개의 <em>Shadow Map</em> 을 생성하여 그림자를 표현한다고 언급했었다. 여러개의 <em>Shaodw Map</em> 을 생성하는 기준은 <em>View Frustom</em> 을 <em>Depth</em> 를 기준으로 여러개로 쪼개어 각 쪼개진 <em>Frustom</em> 을 기준으로 <em>Shadow Map</em> 을 그린다.</p>
 
 <p><em>Frustom</em> 은 보통 <em>Depth</em> 값을 정하거나 어떤 알고리즘을 사용하여 쪼갠다. 이는 다음 포스팅에서 언급할 예정이다. <em>Frustom</em> 을 쪼개주면 다음은 쪼개진 <em>Camera View Frustom</em> 의 각각의 8개의 꼭지점들을 <em>Light-Space</em> 로 변환한다. 변환된 각각 꼭지점으로 2차원의 <em>aligned axis bounding box</em> 의 위치를 구해준다. 가장 작은 X,Y 값과 가장 큰 X, Y 값을 구해주면 된다.</p>
 

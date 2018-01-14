@@ -413,7 +413,7 @@
         </header>
 
         <div class="post-content">
-          <p><a href="{ post_url 2018-01-13-frustom-traced-shadow-with-irrelgular-z-buffer-1 }">Frustom Traced Shadow with Irregular Z-Buffer 1</a> 에서 포괄적인 전체 시스템과 복잡도에 대하여 알아보았다. 이번 글에서는 시스템 구현에 관한 디테일한 사항들을 알아볼 것이다.</p>
+          <p><a href="/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-1/">Frustom Traced Shadow with Irregular Z-Buffer 1</a> 에서 포괄적인 전체 시스템과 복잡도에 대하여 알아보았다. 이번 글에서는 시스템 구현에 관한 디테일한 사항들을 알아볼 것이다.</p>
 
 <p>첫번째로는 <em>Irregular Z-Buffer</em> 와 <em>Sampling Rate</em> 간의 최적화다. 논문의 저자는 기본적으로 <em>32spp</em> (<em>sampling per pixel</em>) 를 제안했다. 정확히 짚자면, <em>Light-Space</em> 에서 <em>Occluder Geometry</em> 를 <em>Conservative Rasterization</em> 을 하면 <em>Visibility Test</em> 를 계산하는 것이, 한번 <em>Visibility Test</em> 를 할때 32번을 하는게 가장 신경쓰이는 부분이다. 이의 결과를 저장하기 위해 두가지 방법이 있다고 한다. 하나는 <em>μQuad</em> 를 <em>Light-Space</em> 에서 <em>IZB</em> 를 만들 떄 <em>Rasterize</em> 하는 것, 다른 방법은 32 번의 <em>Visibility Test</em> 샘플링 결과를 <em>IZB</em> 에 저장하는 것이다. 전자는 비용이 크기 때문에 안쓰고, 후자를 선택했다고 한다. 이를 <em>Sample-based insertion</em> 이라고 명명했다. 그래서 이 방식으로 <em>Prototype</em> 을 만들어 보니, <em>IZB</em> 의 중복을 위한 최적화를 했음에도 불구하고 한 픽셀당 8개 이상의 <em>IZB Node</em> 가 생성되었다고 한다.</p>
 
@@ -504,7 +504,7 @@
       <p>여기서의 동기화는 <em>atomic</em> 의 개념을 말한다. 성능상의 단점은 다른 쓰레드에서 선점하는 경우에는 기다리는 것이다. <a href="#fnref:C1" class="reversefootnote">&#8617;</a> <a href="#fnref:C1:1" class="reversefootnote">&#8617;<sup>2</sup></a></p>
     </li>
     <li id="fn:P1">
-      <p>이 블로그에서 <em>Cascaded Shadow Mapping</em> 에 대한 내용을 다루었었다. <a href="{ post_url 2017-12-17-cascaded-shadow-mapping }">여기</a>에서 볼 수 있다. <a href="#fnref:P1" class="reversefootnote">&#8617;</a></p>
+      <p>이 블로그에서 <em>Cascaded Shadow Mapping</em> 에 대한 내용을 다루었었다. <a href="/2017/12/17/cascaded-shadow-mapping/">여기</a>에서 볼 수 있다. <a href="#fnref:P1" class="reversefootnote">&#8617;</a></p>
     </li>
     <li id="fn:C3">
       <p><a href="https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f">https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f</a> <a href="#fnref:C3" class="reversefootnote">&#8617;</a></p>
@@ -831,11 +831,11 @@
         </header>
 
         <div class="post-content">
-          <p><a href="{ post_url 2018-01-13-frustom-traced-shadow-with-irrelgular-z-buffer-0 }">Frustom Traced Shadow with Irregular Z-Buffer 0</a> 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다.</p>
+          <p><a href="/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-0/">Frustom Traced Shadow with Irregular Z-Buffer 0</a> 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다.</p>
 
 <h3>전체 시스템</h3>
 
-<p><a href="{ post_url 2018-01-13-frustom-traced-shadow-with-irrelgular-z-buffer-0 }">이전 글</a>에서 두가지 단계에 대해서 자세한 설명을 했었다. <em>Irregular Z-Buffer</em> 를 생성하고 <em>Visibility Test</em> 를 하는 것이였다. 실제 구현된 단계는 총 6개의 단계로 이루어진다고 한다.</p>
+<p><a href="/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-0/">이전 글</a>에서 두가지 단계에 대해서 자세한 설명을 했었다. <em>Irregular Z-Buffer</em> 를 생성하고 <em>Visibility Test</em> 를 하는 것이였다. 실제 구현된 단계는 총 6개의 단계로 이루어진다고 한다.</p>
 
 <p>첫번째로는 <em>Eye-Space Z-Prepass</em> 를 해준다. 요즘의 엔진들이나 큰 규모가 아닌 게임이더라도 <em>Z-Prepass</em><sup id="fnref:L1"><a href="#fn:L1" class="footnote">1</a></sup> 는 거의 대부분 해준다. <em>Geometry Pass</em> 가 두번 걸리기는 하지만 <em>Fill Rate</em> 의 부하가 <em>Geometry Pass</em> 의 부하보다 많이 커서 그런 듯하다. 중요한건 단순히 언급한 <em>Eye-Space Z-Prepass</em> 를 뜻하는게 아니다. 이전에 언급한 <em>μQuad</em> 의 빠른 계산을 위해 <em>G-Buffer</em> 에 3개의 실수 값들을 넣는다. 이 3개의 실수는 실제 그려지는 카메라의 위치와 <em>Tangent Plane</em> 의 4개의 코너중에 3개의 거리를 나타낸다. 이는 <em>μQuad</em> 를 다시 계산하기에 충분하다고 한다.</p>
 
@@ -1232,7 +1232,7 @@
         </header>
 
         <div class="post-content">
-          <p><a href="{ post_url 2017-12-27-percentage-closer-soft-shadows }">Percentage-Closer Filtering Shadows</a> 에서 <em>PCF</em> 를 응용한 <em>PCSS</em> 라는 <em>Soft Shadow</em> 를 나타내는 기법에 대해서 알아보았다. 이번 글에서는 여태까지 알아본 것들에 비해 굉장히 최근에 나온 기법인 <em>Frustom-Traced Shadow</em> 에 대해서 알아볼것이다.</p>
+          <p><a href="/2017/12/27/percentage-closer-soft-shadows/">Percentage-Closer Filtering Shadows</a> 에서 <em>PCF</em> 를 응용한 <em>PCSS</em> 라는 <em>Soft Shadow</em> 를 나타내는 기법에 대해서 알아보았다. 이번 글에서는 여태까지 알아본 것들에 비해 굉장히 최근에 나온 기법인 <em>Frustom-Traced Shadow</em> 에 대해서 알아볼것이다.</p>
 
 <p>해당 기법은 2015년에 <em>Siggraph</em>, <em>Interactive 3D</em> 같은 컨퍼런스에서 발표되었으며, 현재 <em>Tom Clansy’s the Division</em> 에 <em>PCSS</em> 와 혼합된 형태(<em>Hybrid Frustom Traced Shadow</em>)로 적용되어 있다. <em>Frame Rate</em> 에 조금 영향을 미쳐 대부분의 게이머들은 아직은 <em>HFTS</em> 를 사용하지 않는듯 하다.(<a href="https://www.reddit.com/r/nvidia/comments/49idz3/nvidia_hfts_the_division/">Reddit : Nvidia HFTS (The Division)</a>) 하지만 컴퓨팅 파워가 늘어나는 것을 가정한다면 앞으로 하이엔드 게임의 주 옵션이 될수도 있겠다.</p>
 
@@ -1775,7 +1775,7 @@ end for
         </header>
 
         <div class="post-content">
-          <p><a href="{ post_url 2017-12-19-shadow-map-filtering }">Shadow Map Filtering</a> 에서 <em>PCF</em> 와 <em>VSM</em> 에 대하여 간단히 알아보았다. 이번 글에서 설명할 것은 <em>PCF</em> 를 활용한 <em>PCSS</em> 다.</p>
+          <p><a href="/2017/12/19/shadow-map-filtering/">Shadow Map Filtering</a> 에서 <em>PCF</em> 와 <em>VSM</em> 에 대하여 간단히 알아보았다. 이번 글에서 설명할 것은 <em>PCF</em> 를 활용한 <em>PCSS</em> 다.</p>
 
 <p><em>PCSS</em> 는 <em>Soft Shadow</em> 를 구현하는 기법 중 하나로써 2005년에 발표되어 여태까지도 꽤나 알려진 기법이다. 우선 <em>Soft Shadow</em> 가 무엇인지 알아보자.</p>
 
@@ -2202,7 +2202,7 @@ end for
         </header>
 
         <div class="post-content">
-          <p><a href="{ post_url 2017-11-30-what-is-shadow-mapping }">What is Shadow Mapping</a> 에서 <em>Shadow Mapping</em> 에 대한 간단한 번역 &amp; 설명을 적어놓았다. 해당 글에서 <em>PCF</em> 를 잠깐 언급했었다. 이 글에서는 <em>PCF</em> 를 포함해서 <em>Shadow Map</em> 을 필터링하는 방법에 대해서 알아보겠다.</p>
+          <p><a href="/2017/11/30/what-is-shadow-mapping/">What is Shadow Mapping</a> 에서 <em>Shadow Mapping</em> 에 대한 간단한 번역 &amp; 설명을 적어놓았다. 해당 글에서 <em>PCF</em> 를 잠깐 언급했었다. 이 글에서는 <em>PCF</em> 를 포함해서 <em>Shadow Map</em> 을 필터링하는 방법에 대해서 알아보겠다.</p>
 
 <p>첫번째는 <em>PCF</em> 다. 풀어쓰면 <em>Percentage Closer Filtering</em> 이라는 단어가 되며, <em>Shadow Map</em> 을 여러번 샘플링해 <em>Percentage</em> 를 소숫점으로 나타내서 <em>Shadow</em> 가 생긴 정도를 나타내주는 <em>Filtering</em> 기법이다. 쉽게 이해할 수 있도록 아래 그림을 보자.</p>
 
@@ -2618,7 +2618,7 @@ end for
         </header>
 
         <div class="post-content">
-          <p><a href="{ post_url 2017-11-30-what-is-shadow-mapping }">What is Shadow Mapping</a> 에서 <em>Shadow Mapping</em> 에 대한 간단한 번역 &amp; 설명을 적어놓았다. 이번 글에서는 <em>Shadow Mapping</em> 을 효과적으로 사용하기 위한 <em>Cascaded Shadow Mapping</em> 에 대하여 적어보겠다.</p>
+          <p><a href="/2017/11/30/what-is-shadow-mapping/">What is Shadow Mapping</a> 에서 <em>Shadow Mapping</em> 에 대한 간단한 번역 &amp; 설명을 적어놓았다. 이번 글에서는 <em>Shadow Mapping</em> 을 효과적으로 사용하기 위한 <em>Cascaded Shadow Mapping</em> 에 대하여 적어보겠다.</p>
 
 <p><em>Cascaded Shadow Mapping</em> 을 구글 번역기에 돌려보면 <em>“계단식 그림자 매핑”</em> 이라고 나온다. 조금 직관적이지 않은 말이지만 뜻 자체는 맞다. 간단하게 <em>Cascaded Shadow Mapping</em> 에 대하여 말하자면 넓은 환경의 그림자를 위해 거리에(거의 <em>Depth</em>) 따라서 여러개의 <em>Shadow Map</em> 을 생성하는 방법이다.</p>
 
@@ -2626,7 +2626,7 @@ end for
 
 <h2>Shadow-map generation</h2>
 
-<p><em>Cascaded Shadow Mapping</em> 을 위한 <em>Shadow Map</em> 생성은 앞서쓴 <a href="{ post_url 2017-11-30-what-is-shadow-mapping }">글</a>에서 설명한 방법과 거의 유사하다. 앞서 여러개의 <em>Shadow Map</em> 을 생성하여 그림자를 표현한다고 언급했었다. 여러개의 <em>Shaodw Map</em> 을 생성하는 기준은 <em>View Frustom</em> 을 <em>Depth</em> 를 기준으로 여러개로 쪼개어 각 쪼개진 <em>Frustom</em> 을 기준으로 <em>Shadow Map</em> 을 그린다.</p>
+<p><em>Cascaded Shadow Mapping</em> 을 위한 <em>Shadow Map</em> 생성은 앞서쓴 <a href="/2017/11/30/what-is-shadow-mapping/">글</a>에서 설명한 방법과 거의 유사하다. 앞서 여러개의 <em>Shadow Map</em> 을 생성하여 그림자를 표현한다고 언급했었다. 여러개의 <em>Shaodw Map</em> 을 생성하는 기준은 <em>View Frustom</em> 을 <em>Depth</em> 를 기준으로 여러개로 쪼개어 각 쪼개진 <em>Frustom</em> 을 기준으로 <em>Shadow Map</em> 을 그린다.</p>
 
 <p><em>Frustom</em> 은 보통 <em>Depth</em> 값을 정하거나 어떤 알고리즘을 사용하여 쪼갠다. 이는 다음 포스팅에서 언급할 예정이다. <em>Frustom</em> 을 쪼개주면 다음은 쪼개진 <em>Camera View Frustom</em> 의 각각의 8개의 꼭지점들을 <em>Light-Space</em> 로 변환한다. 변환된 각각 꼭지점으로 2차원의 <em>aligned axis bounding box</em> 의 위치를 구해준다. 가장 작은 X,Y 값과 가장 큰 X, Y 값을 구해주면 된다.</p>
 
@@ -3335,7 +3335,7 @@ shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
 
 <p><em>Compute Shader</em> 는 <em>DirectX 11</em> 이상, <em>Vulkan</em>,  <em>OpenGL 4.3</em> 이상, <em>OpenGL ES 3.0</em> 이상, <em>Metal</em> 에서 사용가능하다. 그 아래의 플랫폼은 지원하지 않는다. 또 유의해야 할점은 그래픽 드라이버별로 지원 기능이 조금씩 다를 수 있으니 기능을 유의하며 사용해야한다. <a href="https://docs.unity3d.com/Manual/ComputeShaders.html">Unity Manual : ComptuteShader</a> 에서 조금 참고할 수 있다.</p>
 
-<p><a href="{ post_url 2017-08-01-using-compute-buffer-in-unity }">Using Compute Buffer in Unity</a> 에서 관련된 내용을 언급했으니 같이 보면 좋을듯 하다.</p>
+<p><a href="/2017/08/01/using-compute-buffer-in-unity/">Using Compute Buffer in Unity</a> 에서 관련된 내용을 언급했으니 같이 보면 좋을듯 하다.</p>
 
 <h2>참조</h2>
 

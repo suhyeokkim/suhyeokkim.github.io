@@ -943,7 +943,7 @@ void Process (uint3 id : SV_DispatchThreadID)
 }
 </code></pre>
 
-<p>맨 처음에 있는 <em>dataBuffer</em> 에 연결된다. <a href="{ post_url 2017-07-06-structured-buffer-vs-constant-buffer }">StructuredBuffer vs ConstantBuffer</a> 에서본 <em>StructuredBuffer</em> 타입이 가능하다. 또한 <em>RWStructuredBuffer</em>, <em>ConsumeStructuredBuffer</em>, <em>AppendStructuredBuffer</em> 가능하다. 다른 렌더러 쉐이더 코드에서도 사용가능하다. 그래서 일반적으로 고려되는 파이프라인은 아래와 같다.</p>
+<p>맨 처음에 있는 <em>dataBuffer</em> 에 연결된다. <a href="/2017/07/06/structured-buffer-vs-constant-buffer/">StructuredBuffer vs ConstantBuffer</a> 에서본 <em>StructuredBuffer</em> 타입이 가능하다. 또한 <em>RWStructuredBuffer</em>, <em>ConsumeStructuredBuffer</em>, <em>AppendStructuredBuffer</em> 가능하다. 다른 렌더러 쉐이더 코드에서도 사용가능하다. 그래서 일반적으로 고려되는 파이프라인은 아래와 같다.</p>
 
 <p><img src="/images/data-process-pipeline.png" alt="data process" class="center-image" /></p>
 

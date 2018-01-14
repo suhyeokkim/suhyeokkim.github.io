@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2018-01-14T12:06:12+00:00</updated>
+  <updated>2018-01-14T12:11:16+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -34,7 +34,7 @@
       <published>2018-01-14T00:00:00+00:00</published>
       <updated>2018-01-14T00:00:00+00:00</updated>
       <id>https://hrmrzizon.github.io/2018/01/14/frustom-traced-shadow-with-irrelgular-z-buffer-2</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2018/01/14/frustom-traced-shadow-with-irrelgular-z-buffer-2/">&lt;p&gt;&lt;a href=&quot;{ post_url 2018-01-13-frustom-traced-shadow-with-irrelgular-z-buffer-1 }&quot;&gt;Frustom Traced Shadow with Irregular Z-Buffer 1&lt;/a&gt; 에서 포괄적인 전체 시스템과 복잡도에 대하여 알아보았다. 이번 글에서는 시스템 구현에 관한 디테일한 사항들을 알아볼 것이다.&lt;/p&gt;
+      <content type="html" xml:base="https://hrmrzizon.github.io/2018/01/14/frustom-traced-shadow-with-irrelgular-z-buffer-2/">&lt;p&gt;&lt;a href=&quot;/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-1/&quot;&gt;Frustom Traced Shadow with Irregular Z-Buffer 1&lt;/a&gt; 에서 포괄적인 전체 시스템과 복잡도에 대하여 알아보았다. 이번 글에서는 시스템 구현에 관한 디테일한 사항들을 알아볼 것이다.&lt;/p&gt;
 
 &lt;p&gt;첫번째로는 &lt;em&gt;Irregular Z-Buffer&lt;/em&gt; 와 &lt;em&gt;Sampling Rate&lt;/em&gt; 간의 최적화다. 논문의 저자는 기본적으로 &lt;em&gt;32spp&lt;/em&gt; (&lt;em&gt;sampling per pixel&lt;/em&gt;) 를 제안했다. 정확히 짚자면, &lt;em&gt;Light-Space&lt;/em&gt; 에서 &lt;em&gt;Occluder Geometry&lt;/em&gt; 를 &lt;em&gt;Conservative Rasterization&lt;/em&gt; 을 하면 &lt;em&gt;Visibility Test&lt;/em&gt; 를 계산하는 것이, 한번 &lt;em&gt;Visibility Test&lt;/em&gt; 를 할때 32번을 하는게 가장 신경쓰이는 부분이다. 이의 결과를 저장하기 위해 두가지 방법이 있다고 한다. 하나는 &lt;em&gt;μQuad&lt;/em&gt; 를 &lt;em&gt;Light-Space&lt;/em&gt; 에서 &lt;em&gt;IZB&lt;/em&gt; 를 만들 떄 &lt;em&gt;Rasterize&lt;/em&gt; 하는 것, 다른 방법은 32 번의 &lt;em&gt;Visibility Test&lt;/em&gt; 샘플링 결과를 &lt;em&gt;IZB&lt;/em&gt; 에 저장하는 것이다. 전자는 비용이 크기 때문에 안쓰고, 후자를 선택했다고 한다. 이를 &lt;em&gt;Sample-based insertion&lt;/em&gt; 이라고 명명했다. 그래서 이 방식으로 &lt;em&gt;Prototype&lt;/em&gt; 을 만들어 보니, &lt;em&gt;IZB&lt;/em&gt; 의 중복을 위한 최적화를 했음에도 불구하고 한 픽셀당 8개 이상의 &lt;em&gt;IZB Node&lt;/em&gt; 가 생성되었다고 한다.&lt;/p&gt;
 
@@ -125,7 +125,7 @@
       &lt;p&gt;여기서의 동기화는 &lt;em&gt;atomic&lt;/em&gt; 의 개념을 말한다. 성능상의 단점은 다른 쓰레드에서 선점하는 경우에는 기다리는 것이다. &lt;a href=&quot;#fnref:C1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt; &lt;a href=&quot;#fnref:C1:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;sup&gt;2&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
     &lt;li id=&quot;fn:P1&quot;&gt;
-      &lt;p&gt;이 블로그에서 &lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt; 에 대한 내용을 다루었었다. &lt;a href=&quot;{ post_url 2017-12-17-cascaded-shadow-mapping }&quot;&gt;여기&lt;/a&gt;에서 볼 수 있다. &lt;a href=&quot;#fnref:P1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;이 블로그에서 &lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt; 에 대한 내용을 다루었었다. &lt;a href=&quot;/2017/12/17/cascaded-shadow-mapping/&quot;&gt;여기&lt;/a&gt;에서 볼 수 있다. &lt;a href=&quot;#fnref:P1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
     &lt;li id=&quot;fn:C3&quot;&gt;
       &lt;p&gt;&lt;a href=&quot;https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f&quot;&gt;https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f&lt;/a&gt; &lt;a href=&quot;#fnref:C3&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
@@ -177,11 +177,11 @@
       <published>2018-01-13T00:00:00+00:00</published>
       <updated>2018-01-13T00:00:00+00:00</updated>
       <id>https://hrmrzizon.github.io/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-1</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-1/">&lt;p&gt;&lt;a href=&quot;{ post_url 2018-01-13-frustom-traced-shadow-with-irrelgular-z-buffer-0 }&quot;&gt;Frustom Traced Shadow with Irregular Z-Buffer 0&lt;/a&gt; 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다.&lt;/p&gt;
+      <content type="html" xml:base="https://hrmrzizon.github.io/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-1/">&lt;p&gt;&lt;a href=&quot;/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-0/&quot;&gt;Frustom Traced Shadow with Irregular Z-Buffer 0&lt;/a&gt; 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다.&lt;/p&gt;
 
 &lt;h3&gt;전체 시스템&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&quot;{ post_url 2018-01-13-frustom-traced-shadow-with-irrelgular-z-buffer-0 }&quot;&gt;이전 글&lt;/a&gt;에서 두가지 단계에 대해서 자세한 설명을 했었다. &lt;em&gt;Irregular Z-Buffer&lt;/em&gt; 를 생성하고 &lt;em&gt;Visibility Test&lt;/em&gt; 를 하는 것이였다. 실제 구현된 단계는 총 6개의 단계로 이루어진다고 한다.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-0/&quot;&gt;이전 글&lt;/a&gt;에서 두가지 단계에 대해서 자세한 설명을 했었다. &lt;em&gt;Irregular Z-Buffer&lt;/em&gt; 를 생성하고 &lt;em&gt;Visibility Test&lt;/em&gt; 를 하는 것이였다. 실제 구현된 단계는 총 6개의 단계로 이루어진다고 한다.&lt;/p&gt;
 
 &lt;p&gt;첫번째로는 &lt;em&gt;Eye-Space Z-Prepass&lt;/em&gt; 를 해준다. 요즘의 엔진들이나 큰 규모가 아닌 게임이더라도 &lt;em&gt;Z-Prepass&lt;/em&gt;&lt;sup id=&quot;fnref:L1&quot;&gt;&lt;a href=&quot;#fn:L1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 는 거의 대부분 해준다. &lt;em&gt;Geometry Pass&lt;/em&gt; 가 두번 걸리기는 하지만 &lt;em&gt;Fill Rate&lt;/em&gt; 의 부하가 &lt;em&gt;Geometry Pass&lt;/em&gt; 의 부하보다 많이 커서 그런 듯하다. 중요한건 단순히 언급한 &lt;em&gt;Eye-Space Z-Prepass&lt;/em&gt; 를 뜻하는게 아니다. 이전에 언급한 &lt;em&gt;μQuad&lt;/em&gt; 의 빠른 계산을 위해 &lt;em&gt;G-Buffer&lt;/em&gt; 에 3개의 실수 값들을 넣는다. 이 3개의 실수는 실제 그려지는 카메라의 위치와 &lt;em&gt;Tangent Plane&lt;/em&gt; 의 4개의 코너중에 3개의 거리를 나타낸다. 이는 &lt;em&gt;μQuad&lt;/em&gt; 를 다시 계산하기에 충분하다고 한다.&lt;/p&gt;
 
@@ -303,7 +303,7 @@
       <published>2018-01-13T00:00:00+00:00</published>
       <updated>2018-01-13T00:00:00+00:00</updated>
       <id>https://hrmrzizon.github.io/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-0</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-0/">&lt;p&gt;&lt;a href=&quot;{ post_url 2017-12-27-percentage-closer-soft-shadows }&quot;&gt;Percentage-Closer Filtering Shadows&lt;/a&gt; 에서 &lt;em&gt;PCF&lt;/em&gt; 를 응용한 &lt;em&gt;PCSS&lt;/em&gt; 라는 &lt;em&gt;Soft Shadow&lt;/em&gt; 를 나타내는 기법에 대해서 알아보았다. 이번 글에서는 여태까지 알아본 것들에 비해 굉장히 최근에 나온 기법인 &lt;em&gt;Frustom-Traced Shadow&lt;/em&gt; 에 대해서 알아볼것이다.&lt;/p&gt;
+      <content type="html" xml:base="https://hrmrzizon.github.io/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-0/">&lt;p&gt;&lt;a href=&quot;/2017/12/27/percentage-closer-soft-shadows/&quot;&gt;Percentage-Closer Filtering Shadows&lt;/a&gt; 에서 &lt;em&gt;PCF&lt;/em&gt; 를 응용한 &lt;em&gt;PCSS&lt;/em&gt; 라는 &lt;em&gt;Soft Shadow&lt;/em&gt; 를 나타내는 기법에 대해서 알아보았다. 이번 글에서는 여태까지 알아본 것들에 비해 굉장히 최근에 나온 기법인 &lt;em&gt;Frustom-Traced Shadow&lt;/em&gt; 에 대해서 알아볼것이다.&lt;/p&gt;
 
 &lt;p&gt;해당 기법은 2015년에 &lt;em&gt;Siggraph&lt;/em&gt;, &lt;em&gt;Interactive 3D&lt;/em&gt; 같은 컨퍼런스에서 발표되었으며, 현재 &lt;em&gt;Tom Clansy’s the Division&lt;/em&gt; 에 &lt;em&gt;PCSS&lt;/em&gt; 와 혼합된 형태(&lt;em&gt;Hybrid Frustom Traced Shadow&lt;/em&gt;)로 적용되어 있다. &lt;em&gt;Frame Rate&lt;/em&gt; 에 조금 영향을 미쳐 대부분의 게이머들은 아직은 &lt;em&gt;HFTS&lt;/em&gt; 를 사용하지 않는듯 하다.(&lt;a href=&quot;https://www.reddit.com/r/nvidia/comments/49idz3/nvidia_hfts_the_division/&quot;&gt;Reddit : Nvidia HFTS (The Division)&lt;/a&gt;) 하지만 컴퓨팅 파워가 늘어나는 것을 가정한다면 앞으로 하이엔드 게임의 주 옵션이 될수도 있겠다.&lt;/p&gt;
 
@@ -515,7 +515,7 @@ end for
       <published>2017-12-27T00:00:00+00:00</published>
       <updated>2017-12-27T00:00:00+00:00</updated>
       <id>https://hrmrzizon.github.io/2017/12/27/percentage-closer-soft-shadows</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/12/27/percentage-closer-soft-shadows/">&lt;p&gt;&lt;a href=&quot;{ post_url 2017-12-19-shadow-map-filtering }&quot;&gt;Shadow Map Filtering&lt;/a&gt; 에서 &lt;em&gt;PCF&lt;/em&gt; 와 &lt;em&gt;VSM&lt;/em&gt; 에 대하여 간단히 알아보았다. 이번 글에서 설명할 것은 &lt;em&gt;PCF&lt;/em&gt; 를 활용한 &lt;em&gt;PCSS&lt;/em&gt; 다.&lt;/p&gt;
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/12/27/percentage-closer-soft-shadows/">&lt;p&gt;&lt;a href=&quot;/2017/12/19/shadow-map-filtering/&quot;&gt;Shadow Map Filtering&lt;/a&gt; 에서 &lt;em&gt;PCF&lt;/em&gt; 와 &lt;em&gt;VSM&lt;/em&gt; 에 대하여 간단히 알아보았다. 이번 글에서 설명할 것은 &lt;em&gt;PCF&lt;/em&gt; 를 활용한 &lt;em&gt;PCSS&lt;/em&gt; 다.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;PCSS&lt;/em&gt; 는 &lt;em&gt;Soft Shadow&lt;/em&gt; 를 구현하는 기법 중 하나로써 2005년에 발표되어 여태까지도 꽤나 알려진 기법이다. 우선 &lt;em&gt;Soft Shadow&lt;/em&gt; 가 무엇인지 알아보자.&lt;/p&gt;
 
@@ -667,7 +667,7 @@ end for
       <published>2017-12-19T00:00:00+00:00</published>
       <updated>2017-12-19T00:00:00+00:00</updated>
       <id>https://hrmrzizon.github.io/2017/12/19/shadow-map-filtering</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/12/19/shadow-map-filtering/">&lt;p&gt;&lt;a href=&quot;{ post_url 2017-11-30-what-is-shadow-mapping }&quot;&gt;What is Shadow Mapping&lt;/a&gt; 에서 &lt;em&gt;Shadow Mapping&lt;/em&gt; 에 대한 간단한 번역 &amp;amp; 설명을 적어놓았다. 해당 글에서 &lt;em&gt;PCF&lt;/em&gt; 를 잠깐 언급했었다. 이 글에서는 &lt;em&gt;PCF&lt;/em&gt; 를 포함해서 &lt;em&gt;Shadow Map&lt;/em&gt; 을 필터링하는 방법에 대해서 알아보겠다.&lt;/p&gt;
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/12/19/shadow-map-filtering/">&lt;p&gt;&lt;a href=&quot;/2017/11/30/what-is-shadow-mapping/&quot;&gt;What is Shadow Mapping&lt;/a&gt; 에서 &lt;em&gt;Shadow Mapping&lt;/em&gt; 에 대한 간단한 번역 &amp;amp; 설명을 적어놓았다. 해당 글에서 &lt;em&gt;PCF&lt;/em&gt; 를 잠깐 언급했었다. 이 글에서는 &lt;em&gt;PCF&lt;/em&gt; 를 포함해서 &lt;em&gt;Shadow Map&lt;/em&gt; 을 필터링하는 방법에 대해서 알아보겠다.&lt;/p&gt;
 
 &lt;p&gt;첫번째는 &lt;em&gt;PCF&lt;/em&gt; 다. 풀어쓰면 &lt;em&gt;Percentage Closer Filtering&lt;/em&gt; 이라는 단어가 되며, &lt;em&gt;Shadow Map&lt;/em&gt; 을 여러번 샘플링해 &lt;em&gt;Percentage&lt;/em&gt; 를 소숫점으로 나타내서 &lt;em&gt;Shadow&lt;/em&gt; 가 생긴 정도를 나타내주는 &lt;em&gt;Filtering&lt;/em&gt; 기법이다. 쉽게 이해할 수 있도록 아래 그림을 보자.&lt;/p&gt;
 
@@ -808,7 +808,7 @@ end for
       <published>2017-12-17T00:00:00+00:00</published>
       <updated>2017-12-17T00:00:00+00:00</updated>
       <id>https://hrmrzizon.github.io/2017/12/17/cascaded-shadow-mapping</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/12/17/cascaded-shadow-mapping/">&lt;p&gt;&lt;a href=&quot;{ post_url 2017-11-30-what-is-shadow-mapping }&quot;&gt;What is Shadow Mapping&lt;/a&gt; 에서 &lt;em&gt;Shadow Mapping&lt;/em&gt; 에 대한 간단한 번역 &amp;amp; 설명을 적어놓았다. 이번 글에서는 &lt;em&gt;Shadow Mapping&lt;/em&gt; 을 효과적으로 사용하기 위한 &lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt; 에 대하여 적어보겠다.&lt;/p&gt;
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/12/17/cascaded-shadow-mapping/">&lt;p&gt;&lt;a href=&quot;/2017/11/30/what-is-shadow-mapping/&quot;&gt;What is Shadow Mapping&lt;/a&gt; 에서 &lt;em&gt;Shadow Mapping&lt;/em&gt; 에 대한 간단한 번역 &amp;amp; 설명을 적어놓았다. 이번 글에서는 &lt;em&gt;Shadow Mapping&lt;/em&gt; 을 효과적으로 사용하기 위한 &lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt; 에 대하여 적어보겠다.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt; 을 구글 번역기에 돌려보면 &lt;em&gt;“계단식 그림자 매핑”&lt;/em&gt; 이라고 나온다. 조금 직관적이지 않은 말이지만 뜻 자체는 맞다. 간단하게 &lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt; 에 대하여 말하자면 넓은 환경의 그림자를 위해 거리에(거의 &lt;em&gt;Depth&lt;/em&gt;) 따라서 여러개의 &lt;em&gt;Shadow Map&lt;/em&gt; 을 생성하는 방법이다.&lt;/p&gt;
 
@@ -816,7 +816,7 @@ end for
 
 &lt;h2&gt;Shadow-map generation&lt;/h2&gt;
 
-&lt;p&gt;&lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt; 을 위한 &lt;em&gt;Shadow Map&lt;/em&gt; 생성은 앞서쓴 &lt;a href=&quot;{ post_url 2017-11-30-what-is-shadow-mapping }&quot;&gt;글&lt;/a&gt;에서 설명한 방법과 거의 유사하다. 앞서 여러개의 &lt;em&gt;Shadow Map&lt;/em&gt; 을 생성하여 그림자를 표현한다고 언급했었다. 여러개의 &lt;em&gt;Shaodw Map&lt;/em&gt; 을 생성하는 기준은 &lt;em&gt;View Frustom&lt;/em&gt; 을 &lt;em&gt;Depth&lt;/em&gt; 를 기준으로 여러개로 쪼개어 각 쪼개진 &lt;em&gt;Frustom&lt;/em&gt; 을 기준으로 &lt;em&gt;Shadow Map&lt;/em&gt; 을 그린다.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt; 을 위한 &lt;em&gt;Shadow Map&lt;/em&gt; 생성은 앞서쓴 &lt;a href=&quot;/2017/11/30/what-is-shadow-mapping/&quot;&gt;글&lt;/a&gt;에서 설명한 방법과 거의 유사하다. 앞서 여러개의 &lt;em&gt;Shadow Map&lt;/em&gt; 을 생성하여 그림자를 표현한다고 언급했었다. 여러개의 &lt;em&gt;Shaodw Map&lt;/em&gt; 을 생성하는 기준은 &lt;em&gt;View Frustom&lt;/em&gt; 을 &lt;em&gt;Depth&lt;/em&gt; 를 기준으로 여러개로 쪼개어 각 쪼개진 &lt;em&gt;Frustom&lt;/em&gt; 을 기준으로 &lt;em&gt;Shadow Map&lt;/em&gt; 을 그린다.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Frustom&lt;/em&gt; 은 보통 &lt;em&gt;Depth&lt;/em&gt; 값을 정하거나 어떤 알고리즘을 사용하여 쪼갠다. 이는 다음 포스팅에서 언급할 예정이다. &lt;em&gt;Frustom&lt;/em&gt; 을 쪼개주면 다음은 쪼개진 &lt;em&gt;Camera View Frustom&lt;/em&gt; 의 각각의 8개의 꼭지점들을 &lt;em&gt;Light-Space&lt;/em&gt; 로 변환한다. 변환된 각각 꼭지점으로 2차원의 &lt;em&gt;aligned axis bounding box&lt;/em&gt; 의 위치를 구해준다. 가장 작은 X,Y 값과 가장 큰 X, Y 값을 구해주면 된다.&lt;/p&gt;
 
@@ -1123,7 +1123,7 @@ shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
 
 &lt;p&gt;&lt;em&gt;Compute Shader&lt;/em&gt; 는 &lt;em&gt;DirectX 11&lt;/em&gt; 이상, &lt;em&gt;Vulkan&lt;/em&gt;,  &lt;em&gt;OpenGL 4.3&lt;/em&gt; 이상, &lt;em&gt;OpenGL ES 3.0&lt;/em&gt; 이상, &lt;em&gt;Metal&lt;/em&gt; 에서 사용가능하다. 그 아래의 플랫폼은 지원하지 않는다. 또 유의해야 할점은 그래픽 드라이버별로 지원 기능이 조금씩 다를 수 있으니 기능을 유의하며 사용해야한다. &lt;a href=&quot;https://docs.unity3d.com/Manual/ComputeShaders.html&quot;&gt;Unity Manual : ComptuteShader&lt;/a&gt; 에서 조금 참고할 수 있다.&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;{ post_url 2017-08-01-using-compute-buffer-in-unity }&quot;&gt;Using Compute Buffer in Unity&lt;/a&gt; 에서 관련된 내용을 언급했으니 같이 보면 좋을듯 하다.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/2017/08/01/using-compute-buffer-in-unity/&quot;&gt;Using Compute Buffer in Unity&lt;/a&gt; 에서 관련된 내용을 언급했으니 같이 보면 좋을듯 하다.&lt;/p&gt;
 
 &lt;h2&gt;참조&lt;/h2&gt;
 

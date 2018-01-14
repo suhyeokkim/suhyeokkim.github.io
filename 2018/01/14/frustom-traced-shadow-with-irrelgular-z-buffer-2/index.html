@@ -401,7 +401,7 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <p><a href="{ post_url 2018-01-13-frustom-traced-shadow-with-irrelgular-z-buffer-1 }">Frustom Traced Shadow with Irregular Z-Buffer 1</a> 에서 포괄적인 전체 시스템과 복잡도에 대하여 알아보았다. 이번 글에서는 시스템 구현에 관한 디테일한 사항들을 알아볼 것이다.</p>
+    <p><a href="/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-1/">Frustom Traced Shadow with Irregular Z-Buffer 1</a> 에서 포괄적인 전체 시스템과 복잡도에 대하여 알아보았다. 이번 글에서는 시스템 구현에 관한 디테일한 사항들을 알아볼 것이다.</p>
 
 <p>첫번째로는 <em>Irregular Z-Buffer</em> 와 <em>Sampling Rate</em> 간의 최적화다. 논문의 저자는 기본적으로 <em>32spp</em> (<em>sampling per pixel</em>) 를 제안했다. 정확히 짚자면, <em>Light-Space</em> 에서 <em>Occluder Geometry</em> 를 <em>Conservative Rasterization</em> 을 하면 <em>Visibility Test</em> 를 계산하는 것이, 한번 <em>Visibility Test</em> 를 할때 32번을 하는게 가장 신경쓰이는 부분이다. 이의 결과를 저장하기 위해 두가지 방법이 있다고 한다. 하나는 <em>μQuad</em> 를 <em>Light-Space</em> 에서 <em>IZB</em> 를 만들 떄 <em>Rasterize</em> 하는 것, 다른 방법은 32 번의 <em>Visibility Test</em> 샘플링 결과를 <em>IZB</em> 에 저장하는 것이다. 전자는 비용이 크기 때문에 안쓰고, 후자를 선택했다고 한다. 이를 <em>Sample-based insertion</em> 이라고 명명했다. 그래서 이 방식으로 <em>Prototype</em> 을 만들어 보니, <em>IZB</em> 의 중복을 위한 최적화를 했음에도 불구하고 한 픽셀당 8개 이상의 <em>IZB Node</em> 가 생성되었다고 한다.</p>
 
@@ -492,7 +492,7 @@
       <p>여기서의 동기화는 <em>atomic</em> 의 개념을 말한다. 성능상의 단점은 다른 쓰레드에서 선점하는 경우에는 기다리는 것이다. <a href="#fnref:C1" class="reversefootnote">&#8617;</a> <a href="#fnref:C1:1" class="reversefootnote">&#8617;<sup>2</sup></a></p>
     </li>
     <li id="fn:P1">
-      <p>이 블로그에서 <em>Cascaded Shadow Mapping</em> 에 대한 내용을 다루었었다. <a href="{ post_url 2017-12-17-cascaded-shadow-mapping }">여기</a>에서 볼 수 있다. <a href="#fnref:P1" class="reversefootnote">&#8617;</a></p>
+      <p>이 블로그에서 <em>Cascaded Shadow Mapping</em> 에 대한 내용을 다루었었다. <a href="/2017/12/17/cascaded-shadow-mapping/">여기</a>에서 볼 수 있다. <a href="#fnref:P1" class="reversefootnote">&#8617;</a></p>
     </li>
     <li id="fn:C3">
       <p><a href="https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f">https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f</a> <a href="#fnref:C3" class="reversefootnote">&#8617;</a></p>
