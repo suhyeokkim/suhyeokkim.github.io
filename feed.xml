@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2018-01-11T03:12:02+00:00</updated>
+  <updated>2018-01-14T11:58:38+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -24,6 +24,434 @@
     </author>
   
 
+  
+  
+    <entry>
+      
+      <title type="html">Frustom Traced Shadow With Irrelgular Z Buffer 2</title>
+      
+      <link href="https://hrmrzizon.github.io/2018/01/14/frustom-traced-shadow-with-irrelgular-z-buffer-2/" rel="alternate" type="text/html" title="Frustom Traced Shadow With Irrelgular Z Buffer 2" />
+      <published>2018-01-14T00:00:00+00:00</published>
+      <updated>2018-01-14T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2018/01/14/frustom-traced-shadow-with-irrelgular-z-buffer-2</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2018/01/14/frustom-traced-shadow-with-irrelgular-z-buffer-2/">&lt;p&gt;&lt;a href=&quot;{ post_url 2018-01-13-frustom-traced-shadow-with-irrelgular-z-buffer-1 }&quot;&gt;Frustom Traced Shadow with Irregular Z-Buffer 1&lt;/a&gt; 에서 포괄적인 전체 시스템과 복잡도에 대하여 알아보았다. 이번 글에서는 시스템 구현에 관한 디테일한 사항들을 알아볼 것이다.&lt;/p&gt;
+
+&lt;p&gt;첫번째로는 &lt;em&gt;Irregular Z-Buffer&lt;/em&gt; 와 &lt;em&gt;Sampling Rate&lt;/em&gt; 간의 최적화다. 논문의 저자는 기본적으로 &lt;em&gt;32spp&lt;/em&gt; (&lt;em&gt;sampling per pixel&lt;/em&gt;) 를 제안했다. 정확히 짚자면, &lt;em&gt;Light-Space&lt;/em&gt; 에서 &lt;em&gt;Occluder Geometry&lt;/em&gt; 를 &lt;em&gt;Conservative Rasterization&lt;/em&gt; 을 하면 &lt;em&gt;Visibility Test&lt;/em&gt; 를 계산하는 것이, 한번 &lt;em&gt;Visibility Test&lt;/em&gt; 를 할때 32번을 하는게 가장 신경쓰이는 부분이다. 이의 결과를 저장하기 위해 두가지 방법이 있다고 한다. 하나는 &lt;em&gt;μQuad&lt;/em&gt; 를 &lt;em&gt;Light-Space&lt;/em&gt; 에서 &lt;em&gt;IZB&lt;/em&gt; 를 만들 떄 &lt;em&gt;Rasterize&lt;/em&gt; 하는 것, 다른 방법은 32 번의 &lt;em&gt;Visibility Test&lt;/em&gt; 샘플링 결과를 &lt;em&gt;IZB&lt;/em&gt; 에 저장하는 것이다. 전자는 비용이 크기 때문에 안쓰고, 후자를 선택했다고 한다. 이를 &lt;em&gt;Sample-based insertion&lt;/em&gt; 이라고 명명했다. 그래서 이 방식으로 &lt;em&gt;Prototype&lt;/em&gt; 을 만들어 보니, &lt;em&gt;IZB&lt;/em&gt; 의 중복을 위한 최적화를 했음에도 불구하고 한 픽셀당 8개 이상의 &lt;em&gt;IZB Node&lt;/em&gt; 가 생성되었다고 한다.&lt;/p&gt;
+
+&lt;p&gt;그래서 고안해낸 간단한 근사(&lt;em&gt;approximate&lt;/em&gt;)하는 방법을 언급한다. &lt;em&gt;μQuad&lt;/em&gt; 의 &lt;em&gt;Normal&lt;/em&gt; 벡터와 &lt;em&gt;View Ray&lt;/em&gt;(&lt;em&gt;Eye Direction&lt;/em&gt;) 벡터의 내적 값이 0에 가까워질수록(90도에 가까워질수록) &lt;em&gt;μQuad&lt;/em&gt; 를 늘리는 것이다. 아래 그림의 왼쪽 그림을 보면 쉽게 이해할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/fts_microquad_elongate.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://cwyman.org/papers/tvcg16_ftizbExtended.pdf&quot;&gt;Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;보다 정확하게 계산 방법을 설명하자면, &lt;em&gt;μQuad&lt;/em&gt; 의 넓이는 표면의 방향과 상관없이 상수로 정해주고 &lt;em&gt;View Ray&lt;/em&gt; 의 앞뒤 방향으로 &lt;em&gt;μQuad&lt;/em&gt; 의 길이가 늘어나고, 그 방향을 따라서 1줄로 샘플링을 한다. 1차원이라고도 할 수 있겠다. 1 ~ 8 개의 샘플링을 해준다고한다. 위 그림의 오른쪽 그림을 보면 쉽게 이해할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;다만 이는 단지 &lt;em&gt;Irregular Z-Buffer&lt;/em&gt; 를 &lt;em&gt;Approximate&lt;/em&gt;(근사) 하는 것이기 때문에 오차가 생길 수 있다. &lt;em&gt;μQuad&lt;/em&gt; 가 커질수록 &lt;em&gt;IZB Node&lt;/em&gt; 를 넣는 것을 놓치고, &lt;em&gt;Light Leak&lt;/em&gt; 을 발생시킬 수 있다. 보통 가리는 물체가 작거나, 멀리있는 경우에 해당된다. &lt;em&gt;Light Leak&lt;/em&gt; 을 없에는 방법은 몇가지가 존재하는데, 가장 쉬운 방법은 &lt;em&gt;IZB&lt;/em&gt; 의 기본적인 모토인 1:1 샘플링을 맞춰주는 것이다. 하지만 이는 정확히 해주기에 어려운 경우가 있다고 한다. 그래서 다른 방법을 제시한다. &lt;em&gt;Conservative Rasterization&lt;/em&gt; 은 보통 결과에서 0.5 픽셀을 늘려준다. 하지만 1 픽셀 팽창(&lt;em&gt;dilation&lt;/em&gt;)을 해주는 &lt;em&gt;Conservative Rasterization&lt;/em&gt; 을 사용하면 &lt;em&gt;Light Leak&lt;/em&gt; 을 막을 수 있다. 원래 &lt;em&gt;μQuad&lt;/em&gt; 2차원으로 샘플링을 했었으나 기준을 1차원으로 줄이면서 각각의 폴리곤의 넓이을 늘리는 방식으로 보완한 것이라고 생각하면 되겠다. 아래 그림에 적용을 한 사례가 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/fts_approx-insert_vs_over-conserv-raster.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://cwyman.org/papers/tvcg16_ftizbExtended.pdf&quot;&gt;Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;이전 글에서 언급한 복잡도는 O(&lt;em&gt;La&lt;/em&gt; * &lt;em&gt;F&lt;/em&gt;) 이다. 우선 평균적인 리스트의 길이는 줄어든다고 한다. 샘플링을 하는 횟수가 최소 1/4 정도 줄었기 때문이다.(8 / 32) 그리고 더 넓은 &lt;em&gt;Conservative Rasterization&lt;/em&gt; 의 결과로 &lt;em&gt;Fragment&lt;/em&gt; 의 갯수는 최대 60% 증가했다고 한다. 이는 성능상 엄청난 이득을 가져온다.&lt;/p&gt;
+
+&lt;p&gt;하지만 이 방법은 &lt;em&gt;Approximate&lt;/em&gt; 하는 방법이란 것을 알아야 한다. 아주 극성맞은 경우와 안좋은 파라미터 설정에는 &lt;em&gt;Light Leak&lt;/em&gt; 이 발생할 수 있다고 한다. 아래 그림에서 그 경우를 볼 수 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/fts_lightleaks.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://cwyman.org/papers/tvcg16_ftizbExtended.pdf&quot;&gt;Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;왼쪽의 그림은 정상적으로 그림자가 보일 때, 두번째는 정말 안좋은 경우들이 겹친 &lt;em&gt;Light Leak&lt;/em&gt; 이 발생하는 경우, 세번째 경우는 세팅값을 맞춰주어 &lt;em&gt;Light Leak&lt;/em&gt; 을 없엔 장면이다. 하지만 결과를 잘 모르는 경우에는 이 결과들이 맞는지 아닌지 쉽게 구별할 수 있는 정도는 아니다. 즉 아주 정확한 결과를 원하는게 아니라면 그냥 써도 된다는 말이다.&lt;/p&gt;
+
+&lt;p&gt;두번째는 데이터 구조와 메모리 레이아웃 최적화다. 가장 맨처음 이를 구현할 때는 링크드 리스트의 2D 그리드의 형태로 만들었다고 한다. 각각의 리스트의 노드는 다음노드를 가리키는 포인터와 &lt;em&gt;G-Buffer&lt;/em&gt; 를 참조하기 위한 명시적인&lt;sup id=&quot;fnref:C2&quot;&gt;&lt;a href=&quot;#fn:C2&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 인덱스로 구성되었다고 한다. 하지만 이 구조는 &lt;em&gt;GPU&lt;/em&gt; 에서의 두가지 쓰레드 동기화를 필요로 했다. 하나는 &lt;em&gt;Global Node Pool&lt;/em&gt; 에서 비어있는 노드를 찾기위한 &lt;em&gt;Global&lt;/em&gt; 동기화&lt;sup id=&quot;fnref:C1&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;, 나머지는 헤드 포인터(&lt;em&gt;Light-Space Data&lt;/em&gt;)를 업데이트하기 위한 &lt;em&gt;Per-Texel&lt;/em&gt; 동기화&lt;sup id=&quot;fnref:C1:1&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;였다. 동기화를 많이 걸면 걸수록 성능상으로는 그다지 좋지않다. 그렇기 때문에 데이터 구조를 바꾸었다고 한다.&lt;/p&gt;
+
+&lt;p&gt;여러 시도 끝에 가장 성공적인 결과는 리스트의 각 노드의 크기를 줄이는 것이였다. 이를 위한 준비는 노드를 저장하기 위한 &lt;em&gt;Screen-Space Grid&lt;/em&gt; 버퍼를 미리 할당한다. 그리고 각 노드들은 자신을 기준으로한 다음 노드의 오프셋을 저장한다. 이는 &lt;em&gt;Linked-List&lt;/em&gt; 의 기준으로 보자면 &lt;em&gt;Next Pointer&lt;/em&gt; 가 된다. 이를 논문에서는 간접적인(&lt;em&gt;Implcit&lt;/em&gt;) &lt;em&gt;G-Buffer&lt;/em&gt; 인덱스라고 부른다. 이렇게 계속 픽셀의 노드 정보를 참조하면서 픽셀의 위치를 &lt;em&gt;Linked-List&lt;/em&gt; 의 형태로 나타낼 수 있는 것이다. 아래 중간의 그림의 노란색 화살표는 이를 간단하게 나타냈다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/fts_SimpleLayout.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://cwyman.org/papers/tvcg16_ftizbExtended.pdf&quot;&gt;Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;이는 &lt;em&gt;IZB Node&lt;/em&gt; 의 크기도 반으로 줄이고, 위에서 언급한 두가지의 동기화 중 &lt;em&gt;Global&lt;/em&gt; 동기화를 안할 수 있게 되었다. 32spp 그림자를 보여주기 위해서는 적어도 픽셀별로 8개의 노드가 필요했다. 이렇게 반으로 노드의 크기를 줄임으로써 큰 퍼포먼스 향상을 얻게 되었다.&lt;/p&gt;
+
+&lt;p&gt;세번째는 헤드 포인터를 가지고 있는 &lt;em&gt;Light-Space Buffer&lt;/em&gt; 의 해상도다. 일반적인 &lt;em&gt;Shadow Mapping&lt;/em&gt; 기법의 &lt;em&gt;Shadow Map&lt;/em&gt; 의 해상도는 보여지는 정도를 결정하지만, 여기서의 해상도는 퍼포먼스를 결정한다.(&lt;em&gt;La&lt;/em&gt;) 1920 x 1080 을 기준으로 추천하는 해상도는 1400 ~ 2500 사이라고 한다.&lt;/p&gt;
+
+&lt;p&gt;네번째로는 기존의 &lt;em&gt;Shadow Mapping&lt;/em&gt; 의 잘 알려진 기법인 &lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt;&lt;sup id=&quot;fnref:P1&quot;&gt;&lt;a href=&quot;#fn:P1&quot; class=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt; 을 이 기법에 적용시키는 것이다. 이 기법의 원리는 &lt;em&gt;View Frustom&lt;/em&gt; 을 원하는 갯수대로 쪼갠 후, 쪼개진 &lt;em&gt;Frustom&lt;/em&gt; 안의 오브젝트들의 &lt;em&gt;Shadow&lt;/em&gt; 를 계산한다. 논문에서 쪼개는 방법은 &lt;em&gt;Sample Distribution Shadow Map&lt;/em&gt; 과 &lt;em&gt;Logarithm Partitioning&lt;/em&gt; 을 언급했다. 여기서는 쪼개진 &lt;em&gt;Frustom&lt;/em&gt; 마다 전부 &lt;em&gt;IZB&lt;/em&gt; 를 생성한다. 이때 각각의 쪼개진 &lt;em&gt;Frustom&lt;/em&gt; 의 끝부분이 잘 맞도록 신경써야줘야 한다고 언급했다. 논문의 저자는 구현할때 &lt;em&gt;2D Texture Array&lt;/em&gt; 를 사용하여 &lt;em&gt;IZB&lt;/em&gt; 를 저장하고, 병렬로 각각의 &lt;em&gt;Detph Texture&lt;/em&gt; 마다 &lt;em&gt;Light-Space Culling Prepass&lt;/em&gt; 를 넣어줬다고 한다. 일반적으로 각각의 &lt;em&gt;Cascade&lt;/em&gt; 를 계산할때는 한개당 하나의 &lt;em&gt;Pass&lt;/em&gt; 를 사용하여 계산하는데, 여기서는 1 Pass 로 적절히 프리미티브를 나누어 성능 향상을 고려했다고 한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Cascade&lt;/em&gt; 의 적용은 &lt;em&gt;Occluder Geometry&lt;/em&gt; 의 &lt;em&gt;Rasterize&lt;/em&gt; 퍼포먼스를 안고 가면서 &lt;em&gt;Thread Divergence&lt;/em&gt; 의 시간을 줄여준다. 이는 사용시 적절한 타협점을 찾아야 한다는 뜻으로, 보통은 두개의 &lt;em&gt;Cascade&lt;/em&gt; 를 사용하고, 복잡한 게임에서는 3개나 4개의 &lt;em&gt;Cascade&lt;/em&gt; 를 사용하여 상황에 따라 뜀뛰는 시간을 최소화 시킨다. 아래 그림은 &lt;em&gt;Cascade&lt;/em&gt; 의 효과를 증명해준다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/fts_cascaded-izb.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://cwyman.org/papers/tvcg16_ftizbExtended.pdf&quot;&gt;Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;다섯번째로는 &lt;em&gt;N dot L Culling&lt;/em&gt; 이다. 일반적으로 &lt;em&gt;N dot L&lt;/em&gt; 의 값이 음수가 되는 경우에는 0으로 클램핑하여 사용한다. 이 말은 값이 음수나 0 인 경우에는 무조건 &lt;em&gt;Shadow&lt;/em&gt; 가 비춘다는 말이다. 이때는 &lt;em&gt;La&lt;/em&gt; : 평균적인 &lt;em&gt;IZB&lt;/em&gt; 리스트의 길이를 줄여 성능 향상을 해줄 수 있다고 한다. 보통은 10 ~ 15% 의 성능향상을 해준다고 한다.&lt;/p&gt;
+
+&lt;p&gt;여섯번째로는 &lt;em&gt;Early-Z&lt;/em&gt; 의 개념을 응용한 &lt;em&gt;Early-Out&lt;/em&gt; 이다. &lt;em&gt;Visibility Test&lt;/em&gt; 에서 한 픽셀을 완전하게 그림자를 드리우는 경우, 다음 후속으로 같은 픽셀에 &lt;em&gt;Node&lt;/em&gt; 가 추가될 필요가 없다. 그러므로 완전히 그림자 처리가 되는 부분은 &lt;em&gt;Node&lt;/em&gt; 를 지워준다. 이때 &lt;em&gt;atomic&lt;/em&gt; 연산을 사용하지 않는데, 최악에 경우에는 &lt;em&gt;Visibility Test&lt;/em&gt; 를 다시할 수도 있다. &lt;em&gt;Early-Out&lt;/em&gt; 은 추가적인 시간과 메모리를 요구함에도 불구하고 10 ~ 15% 의 성능향상을 보인다.&lt;/p&gt;
+
+&lt;p&gt;일곱번째로는 &lt;em&gt;Unchanged Mask&lt;/em&gt; 를 이용한 메모리 동기화다. &lt;em&gt;Visibility Test&lt;/em&gt; 는 메모리 대역폭, 처리량, 동기화로 인하여 병목이 일어난다. 픽셀 각각의 &lt;em&gt;Visibility Mask&lt;/em&gt; 를 사용해 동기화를 한다. 정확히 말하면 각각의 폴리곤들이 픽셀의 가시성을 테스트 할때 &lt;em&gt;Race Condition&lt;/em&gt; 을 피하기 위하여 동기화를 하여 &lt;em&gt;Visibility&lt;/em&gt; 를 기록한다. 그러므로 &lt;em&gt;Visibility Mask&lt;/em&gt; 는 반드시 폴리곤이 기존의 &lt;em&gt;Visibility&lt;/em&gt; 를 바꿀 때만 업데이트된다. 바뀌는지 비교를 하기위해 이전에 사용한 마스크를 써야하지만, 이는 최고 14% 의 성능 향상을 보여준다고 한다.&lt;/p&gt;
+
+&lt;p&gt;마지막으로는 코드를 통한 &lt;em&gt;Latency Hiding&lt;/em&gt; 이다. 단계가 복잡하여 &lt;em&gt;Memory Latency&lt;/em&gt; 가 꽤나 긴편인데, GPU 에서는 이 &lt;em&gt;Latency&lt;/em&gt; 를 감출 방법이 없다. 다행히 사전에 루프를 돌면서 &lt;em&gt;G-Buffer&lt;/em&gt; 좌표를 계산하여 &lt;em&gt;Latency Hiding&lt;/em&gt; 이 가능하다고 한다. 이는 5 ~ 15% 성능 향상을 보였다고 한다.&lt;/p&gt;
+
+&lt;p&gt;시스템 구현에 대한 디테일한 사항은 여기까지가 끝이다.&lt;/p&gt;
+
+&lt;p&gt;마지막으로 &lt;em&gt;Transparency Geometry&lt;/em&gt; 를 처리하는 방법에 대해서 써보겠다. 이 기법의 &lt;em&gt;per-pixel&lt;/em&gt; 테스트는 &lt;em&gt;Visibility Mask Buffer&lt;/em&gt; 에 결과가 저장된다. &lt;em&gt;Visibility Mask Buffer&lt;/em&gt; 의 효율적인 사용을 위해 항상 각 픽셀의 여러개의 32bit 데이터를 저장해준다고 한다. 이정도의 크기라면 단지 &lt;em&gt;Visibility&lt;/em&gt; 만을 사용하는게 아니라 &lt;em&gt;Opacity&lt;/em&gt; 또한 저장이 가능하다. 통상적인 가시성을 위한 투명 오브젝트의 처리 방법은 &lt;em&gt;Alpha to Coverage&lt;/em&gt;&lt;sup id=&quot;fnref:C3&quot;&gt;&lt;a href=&quot;#fn:C3&quot; class=&quot;footnote&quot;&gt;4&lt;/a&gt;&lt;/sup&gt; 를 쓴다고 한다. 그리고 여기에서도 비슷한 방법을 사용할 수 있다고한다.&lt;/p&gt;
+
+&lt;p&gt;처음에는 &lt;em&gt;Coverage&lt;/em&gt; 를 계산하기 위해 &lt;em&gt;Visibility Test&lt;/em&gt; 를 해준다. 그리고 해당 알파가 저장된 텍스쳐를 참조하여 투명도를 가져오고, 해당 투명도를 사용하여 &lt;em&gt;Alpha to Coverage&lt;/em&gt; 를 실행하여 투명도 마스크를 얻는다. 이를 비트 AND 연산으로 합쳐서 &lt;em&gt;Coverage&lt;/em&gt; 를 &lt;em&gt;Visibility Buffer&lt;/em&gt; 에 저장한다.&lt;/p&gt;
+
+&lt;p&gt;이 기법에서 알파 데이터를 처리하는 방법은 두가지로 나뉜다. 적은 비용으로 &lt;em&gt;Aliasing&lt;/em&gt; 을 생기게 하는 방법과 높은 비용으로 완벽하게 구현하는 방법으로 나뉜다. 적은 비용의 방식은 &lt;em&gt;Alpha&lt;/em&gt; 텍스쳐의 값을 &lt;em&gt;IZB Node&lt;/em&gt; 를 순회하기 전에 가져와서 계산하는 방식이다. &lt;em&gt;Light-Space Texel&lt;/em&gt; 을 기준으로 계산하므로 &lt;em&gt;Aliasing&lt;/em&gt; 이 생길 것으롸 예상된다. 하지만 이 논문의 저자는 구현물을 이 방식으로 구현했다고 한다. 나머지 한개의 방식은 &lt;em&gt;IZB Node&lt;/em&gt; 를 하나하나 순회하면서 &lt;em&gt;Alpha&lt;/em&gt; 텍스쳐의 값을 가져와 계산하는 것이다. 이는 일반적으로 생각되는 텍스쳐 샘플링의 부하와 &lt;em&gt;Varing&lt;/em&gt; 부하를 생기게 한다. 이는 꽤나 큰 비용이라고 한다.&lt;/p&gt;
+
+&lt;p&gt;여기까지가 끝이다. 논문에 그 다음 내용들은 전부 퍼포먼스들의 분석밖에 없다. 다음으로 쓸 내용은 &lt;em&gt;HFTS&lt;/em&gt; 에 대한 내용이다.&lt;/p&gt;
+
+&lt;h2&gt;참조&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://cwyman.org/papers/tvcg16_ftizbExtended.pdf&quot;&gt;Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://software.intel.com/en-us/articles/sample-distribution-shadow-maps&quot;&gt;Intel Developer Zone : Sample Distribution Shadow Maps&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:C2&quot;&gt;
+      &lt;p&gt;명시적이란 뜻은 바로 넣어서 계산할 수 있는 절대적인 위치의 텍셀 인덱스를 뜻한다. &lt;a href=&quot;#fnref:C2&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:C1&quot;&gt;
+      &lt;p&gt;여기서의 동기화는 &lt;em&gt;atomic&lt;/em&gt; 의 개념을 말한다. 성능상의 단점은 다른 쓰레드에서 선점하는 경우에는 기다리는 것이다. &lt;a href=&quot;#fnref:C1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt; &lt;a href=&quot;#fnref:C1:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;sup&gt;2&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:P1&quot;&gt;
+      &lt;p&gt;이 블로그에서 &lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt; 에 대한 내용을 다루었었다. &lt;a href=&quot;{ post_url 2017-12-17-cascaded-shadow-mapping }&quot;&gt;여기&lt;/a&gt;에서 볼 수 있다. &lt;a href=&quot;#fnref:P1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:C3&quot;&gt;
+      &lt;p&gt;&lt;a href=&quot;https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f&quot;&gt;https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f&lt;/a&gt; &lt;a href=&quot;#fnref:C3&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="shader" />
+      
+        <category term="shadow" />
+      
+        <category term="rendering" />
+      
+        <category term="fts" />
+      
+
+      
+
+      
+        <summary type="html">Frustom Traced Shadow with Irregular Z-Buffer 1 에서 포괄적인 전체 시스템과 복잡도에 대하여 알아보았다. 이번 글에서는 시스템 구현에 관한 디테일한 사항들을 알아볼 것이다. 첫번째로는 Irregular Z-Buffer 와 Sampling Rate 간의 최적화다. 논문의 저자는 기본적으로 32spp (sampling per pixel) 를 제안했다. 정확히 짚자면, Light-Space 에서 Occluder Geometry 를 Conservative Rasterization 을 하면 Visibility Test 를 계산하는 것이, 한번 Visibility Test 를 할때 32번을 하는게 가장 신경쓰이는 부분이다. 이의 결과를 저장하기 위해 두가지 방법이 있다고 한다. 하나는 μQuad 를 Light-Space 에서 IZB 를 만들 떄 Rasterize 하는 것, 다른 방법은 32 번의 Visibility Test 샘플링 결과를 IZB 에 저장하는 것이다. 전자는 비용이 크기 때문에 안쓰고, 후자를 선택했다고 한다. 이를 Sample-based insertion 이라고 명명했다. 그래서 이 방식으로 Prototype 을 만들어 보니, IZB 의 중복을 위한 최적화를 했음에도 불구하고 한 픽셀당 8개 이상의 IZB Node 가 생성되었다고 한다. 그래서 고안해낸 간단한 근사(approximate)하는 방법을 언급한다. μQuad 의 Normal 벡터와 View Ray(Eye Direction) 벡터의 내적 값이 0에 가까워질수록(90도에 가까워질수록) μQuad 를 늘리는 것이다. 아래 그림의 왼쪽 그림을 보면 쉽게 이해할 수 있다. 출처 : Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows 보다 정확하게 계산 방법을 설명하자면, μQuad 의 넓이는 표면의 방향과 상관없이 상수로 정해주고 View Ray 의 앞뒤 방향으로 μQuad 의 길이가 늘어나고, 그 방향을 따라서 1줄로 샘플링을 한다. 1차원이라고도 할 수 있겠다. 1 ~ 8 개의 샘플링을 해준다고한다. 위 그림의 오른쪽 그림을 보면 쉽게 이해할 수 있다. 다만 이는 단지 Irregular Z-Buffer 를 Approximate(근사) 하는 것이기 때문에 오차가 생길 수 있다. μQuad 가 커질수록 IZB Node 를 넣는 것을 놓치고, Light Leak 을 발생시킬 수 있다. 보통 가리는 물체가 작거나, 멀리있는 경우에 해당된다. Light Leak 을 없에는 방법은 몇가지가 존재하는데, 가장 쉬운 방법은 IZB 의 기본적인 모토인 1:1 샘플링을 맞춰주는 것이다. 하지만 이는 정확히 해주기에 어려운 경우가 있다고 한다. 그래서 다른 방법을 제시한다. Conservative Rasterization 은 보통 결과에서 0.5 픽셀을 늘려준다. 하지만 1 픽셀 팽창(dilation)을 해주는 Conservative Rasterization 을 사용하면 Light Leak 을 막을 수 있다. 원래 μQuad 2차원으로 샘플링을 했었으나 기준을 1차원으로 줄이면서 각각의 폴리곤의 넓이을 늘리는 방식으로 보완한 것이라고 생각하면 되겠다. 아래 그림에 적용을 한 사례가 있다. 출처 : Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows 이전 글에서 언급한 복잡도는 O(La * F) 이다. 우선 평균적인 리스트의 길이는 줄어든다고 한다. 샘플링을 하는 횟수가 최소 1/4 정도 줄었기 때문이다.(8 / 32) 그리고 더 넓은 Conservative Rasterization 의 결과로 Fragment 의 갯수는 최대 60% 증가했다고 한다. 이는 성능상 엄청난 이득을 가져온다. 하지만 이 방법은 Approximate 하는 방법이란 것을 알아야 한다. 아주 극성맞은 경우와 안좋은 파라미터 설정에는 Light Leak 이 발생할 수 있다고 한다. 아래 그림에서 그 경우를 볼 수 있다. 출처 : Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows 왼쪽의 그림은 정상적으로 그림자가 보일 때, 두번째는 정말 안좋은 경우들이 겹친 Light Leak 이 발생하는 경우, 세번째 경우는 세팅값을 맞춰주어 Light Leak 을 없엔 장면이다. 하지만 결과를 잘 모르는 경우에는 이 결과들이 맞는지 아닌지 쉽게 구별할 수 있는 정도는 아니다. 즉 아주 정확한 결과를 원하는게 아니라면 그냥 써도 된다는 말이다. 두번째는 데이터 구조와 메모리 레이아웃 최적화다. 가장 맨처음 이를 구현할 때는 링크드 리스트의 2D 그리드의 형태로 만들었다고 한다. 각각의 리스트의 노드는 다음노드를 가리키는 포인터와 G-Buffer 를 참조하기 위한 명시적인1 인덱스로 구성되었다고 한다. 하지만 이 구조는 GPU 에서의 두가지 쓰레드 동기화를 필요로 했다. 하나는 Global Node Pool 에서 비어있는 노드를 찾기위한 Global 동기화2, 나머지는 헤드 포인터(Light-Space Data)를 업데이트하기 위한 Per-Texel 동기화2였다. 동기화를 많이 걸면 걸수록 성능상으로는 그다지 좋지않다. 그렇기 때문에 데이터 구조를 바꾸었다고 한다. 여러 시도 끝에 가장 성공적인 결과는 리스트의 각 노드의 크기를 줄이는 것이였다. 이를 위한 준비는 노드를 저장하기 위한 Screen-Space Grid 버퍼를 미리 할당한다. 그리고 각 노드들은 자신을 기준으로한 다음 노드의 오프셋을 저장한다. 이는 Linked-List 의 기준으로 보자면 Next Pointer 가 된다. 이를 논문에서는 간접적인(Implcit) G-Buffer 인덱스라고 부른다. 이렇게 계속 픽셀의 노드 정보를 참조하면서 픽셀의 위치를 Linked-List 의 형태로 나타낼 수 있는 것이다. 아래 중간의 그림의 노란색 화살표는 이를 간단하게 나타냈다. 출처 : Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows 이는 IZB Node 의 크기도 반으로 줄이고, 위에서 언급한 두가지의 동기화 중 Global 동기화를 안할 수 있게 되었다. 32spp 그림자를 보여주기 위해서는 적어도 픽셀별로 8개의 노드가 필요했다. 이렇게 반으로 노드의 크기를 줄임으로써 큰 퍼포먼스 향상을 얻게 되었다. 세번째는 헤드 포인터를 가지고 있는 Light-Space Buffer 의 해상도다. 일반적인 Shadow Mapping 기법의 Shadow Map 의 해상도는 보여지는 정도를 결정하지만, 여기서의 해상도는 퍼포먼스를 결정한다.(La) 1920 x 1080 을 기준으로 추천하는 해상도는 1400 ~ 2500 사이라고 한다. 네번째로는 기존의 Shadow Mapping 의 잘 알려진 기법인 Cascaded Shadow Mapping3 을 이 기법에 적용시키는 것이다. 이 기법의 원리는 View Frustom 을 원하는 갯수대로 쪼갠 후, 쪼개진 Frustom 안의 오브젝트들의 Shadow 를 계산한다. 논문에서 쪼개는 방법은 Sample Distribution Shadow Map 과 Logarithm Partitioning 을 언급했다. 여기서는 쪼개진 Frustom 마다 전부 IZB 를 생성한다. 이때 각각의 쪼개진 Frustom 의 끝부분이 잘 맞도록 신경써야줘야 한다고 언급했다. 논문의 저자는 구현할때 2D Texture Array 를 사용하여 IZB 를 저장하고, 병렬로 각각의 Detph Texture 마다 Light-Space Culling Prepass 를 넣어줬다고 한다. 일반적으로 각각의 Cascade 를 계산할때는 한개당 하나의 Pass 를 사용하여 계산하는데, 여기서는 1 Pass 로 적절히 프리미티브를 나누어 성능 향상을 고려했다고 한다. Cascade 의 적용은 Occluder Geometry 의 Rasterize 퍼포먼스를 안고 가면서 Thread Divergence 의 시간을 줄여준다. 이는 사용시 적절한 타협점을 찾아야 한다는 뜻으로, 보통은 두개의 Cascade 를 사용하고, 복잡한 게임에서는 3개나 4개의 Cascade 를 사용하여 상황에 따라 뜀뛰는 시간을 최소화 시킨다. 아래 그림은 Cascade 의 효과를 증명해준다. 출처 : Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows 다섯번째로는 N dot L Culling 이다. 일반적으로 N dot L 의 값이 음수가 되는 경우에는 0으로 클램핑하여 사용한다. 이 말은 값이 음수나 0 인 경우에는 무조건 Shadow 가 비춘다는 말이다. 이때는 La : 평균적인 IZB 리스트의 길이를 줄여 성능 향상을 해줄 수 있다고 한다. 보통은 10 ~ 15% 의 성능향상을 해준다고 한다. 여섯번째로는 Early-Z 의 개념을 응용한 Early-Out 이다. Visibility Test 에서 한 픽셀을 완전하게 그림자를 드리우는 경우, 다음 후속으로 같은 픽셀에 Node 가 추가될 필요가 없다. 그러므로 완전히 그림자 처리가 되는 부분은 Node 를 지워준다. 이때 atomic 연산을 사용하지 않는데, 최악에 경우에는 Visibility Test 를 다시할 수도 있다. Early-Out 은 추가적인 시간과 메모리를 요구함에도 불구하고 10 ~ 15% 의 성능향상을 보인다. 일곱번째로는 Unchanged Mask 를 이용한 메모리 동기화다. Visibility Test 는 메모리 대역폭, 처리량, 동기화로 인하여 병목이 일어난다. 픽셀 각각의 Visibility Mask 를 사용해 동기화를 한다. 정확히 말하면 각각의 폴리곤들이 픽셀의 가시성을 테스트 할때 Race Condition 을 피하기 위하여 동기화를 하여 Visibility 를 기록한다. 그러므로 Visibility Mask 는 반드시 폴리곤이 기존의 Visibility 를 바꿀 때만 업데이트된다. 바뀌는지 비교를 하기위해 이전에 사용한 마스크를 써야하지만, 이는 최고 14% 의 성능 향상을 보여준다고 한다. 마지막으로는 코드를 통한 Latency Hiding 이다. 단계가 복잡하여 Memory Latency 가 꽤나 긴편인데, GPU 에서는 이 Latency 를 감출 방법이 없다. 다행히 사전에 루프를 돌면서 G-Buffer 좌표를 계산하여 Latency Hiding 이 가능하다고 한다. 이는 5 ~ 15% 성능 향상을 보였다고 한다. 시스템 구현에 대한 디테일한 사항은 여기까지가 끝이다. 마지막으로 Transparency Geometry 를 처리하는 방법에 대해서 써보겠다. 이 기법의 per-pixel 테스트는 Visibility Mask Buffer 에 결과가 저장된다. Visibility Mask Buffer 의 효율적인 사용을 위해 항상 각 픽셀의 여러개의 32bit 데이터를 저장해준다고 한다. 이정도의 크기라면 단지 Visibility 만을 사용하는게 아니라 Opacity 또한 저장이 가능하다. 통상적인 가시성을 위한 투명 오브젝트의 처리 방법은 Alpha to Coverage4 를 쓴다고 한다. 그리고 여기에서도 비슷한 방법을 사용할 수 있다고한다. 처음에는 Coverage 를 계산하기 위해 Visibility Test 를 해준다. 그리고 해당 알파가 저장된 텍스쳐를 참조하여 투명도를 가져오고, 해당 투명도를 사용하여 Alpha to Coverage 를 실행하여 투명도 마스크를 얻는다. 이를 비트 AND 연산으로 합쳐서 Coverage 를 Visibility Buffer 에 저장한다. 이 기법에서 알파 데이터를 처리하는 방법은 두가지로 나뉜다. 적은 비용으로 Aliasing 을 생기게 하는 방법과 높은 비용으로 완벽하게 구현하는 방법으로 나뉜다. 적은 비용의 방식은 Alpha 텍스쳐의 값을 IZB Node 를 순회하기 전에 가져와서 계산하는 방식이다. Light-Space Texel 을 기준으로 계산하므로 Aliasing 이 생길 것으롸 예상된다. 하지만 이 논문의 저자는 구현물을 이 방식으로 구현했다고 한다. 나머지 한개의 방식은 IZB Node 를 하나하나 순회하면서 Alpha 텍스쳐의 값을 가져와 계산하는 것이다. 이는 일반적으로 생각되는 텍스쳐 샘플링의 부하와 Varing 부하를 생기게 한다. 이는 꽤나 큰 비용이라고 한다. 여기까지가 끝이다. 논문에 그 다음 내용들은 전부 퍼포먼스들의 분석밖에 없다. 다음으로 쓸 내용은 HFTS 에 대한 내용이다. 참조 Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows Intel Developer Zone : Sample Distribution Shadow Maps 명시적이란 뜻은 바로 넣어서 계산할 수 있는 절대적인 위치의 텍셀 인덱스를 뜻한다. &amp;#8617; 여기서의 동기화는 atomic 의 개념을 말한다. 성능상의 단점은 다른 쓰레드에서 선점하는 경우에는 기다리는 것이다. &amp;#8617; &amp;#8617;2 이 블로그에서 Cascaded Shadow Mapping 에 대한 내용을 다루었었다. 여기에서 볼 수 있다. &amp;#8617; https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f &amp;#8617;</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Frustom Traced Shadow With Irrelgular Z Buffer 1</title>
+      
+      <link href="https://hrmrzizon.github.io/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-1/" rel="alternate" type="text/html" title="Frustom Traced Shadow With Irrelgular Z Buffer 1" />
+      <published>2018-01-13T00:00:00+00:00</published>
+      <updated>2018-01-13T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-1</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-1/">&lt;p&gt;&lt;a href=&quot;{ post_url 2018-01-13-frustom-traced-shadow-with-irrelgular-z-buffer-0 }&quot;&gt;Frustom Traced Shadow with Irregular Z-Buffer 0&lt;/a&gt; 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다.&lt;/p&gt;
+
+&lt;h3&gt;전체 시스템&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;{ post_url 2018-01-13-frustom-traced-shadow-with-irrelgular-z-buffer-0 }&quot;&gt;이전 글&lt;/a&gt;에서 두가지 단계에 대해서 자세한 설명을 했었다. &lt;em&gt;Irregular Z-Buffer&lt;/em&gt; 를 생성하고 &lt;em&gt;Visibility Test&lt;/em&gt; 를 하는 것이였다. 실제 구현된 단계는 총 6개의 단계로 이루어진다고 한다.&lt;/p&gt;
+
+&lt;p&gt;첫번째로는 &lt;em&gt;Eye-Space Z-Prepass&lt;/em&gt; 를 해준다. 요즘의 엔진들이나 큰 규모가 아닌 게임이더라도 &lt;em&gt;Z-Prepass&lt;/em&gt;&lt;sup id=&quot;fnref:L1&quot;&gt;&lt;a href=&quot;#fn:L1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 는 거의 대부분 해준다. &lt;em&gt;Geometry Pass&lt;/em&gt; 가 두번 걸리기는 하지만 &lt;em&gt;Fill Rate&lt;/em&gt; 의 부하가 &lt;em&gt;Geometry Pass&lt;/em&gt; 의 부하보다 많이 커서 그런 듯하다. 중요한건 단순히 언급한 &lt;em&gt;Eye-Space Z-Prepass&lt;/em&gt; 를 뜻하는게 아니다. 이전에 언급한 &lt;em&gt;μQuad&lt;/em&gt; 의 빠른 계산을 위해 &lt;em&gt;G-Buffer&lt;/em&gt; 에 3개의 실수 값들을 넣는다. 이 3개의 실수는 실제 그려지는 카메라의 위치와 &lt;em&gt;Tangent Plane&lt;/em&gt; 의 4개의 코너중에 3개의 거리를 나타낸다. 이는 &lt;em&gt;μQuad&lt;/em&gt; 를 다시 계산하기에 충분하다고 한다.&lt;/p&gt;
+
+&lt;p&gt;이 방법은 &lt;em&gt;Visibility Test&lt;/em&gt; 의 속도를 빠르게 하는데 도움이 되지만, 당연히 &lt;em&gt;G-Buffer&lt;/em&gt; 의 공간이 부족한 경우에는 쓰지 못한다. AAA 급의 게임들은 &lt;em&gt;G-Buffer&lt;/em&gt; 를 bit 단위로 최대한 아껴쓰기 경우가 많기 때문에 이와 같은 상황이 일어날 수도 있다. 이런 경우에는 명시적으로 &lt;em&gt;Visibility Test&lt;/em&gt; 를 할때 &lt;em&gt;μQuad&lt;/em&gt; 를 계산한다고 한다. 아래 그림은 2009년에 발매된 &lt;em&gt;KillZone 2&lt;/em&gt; 의 &lt;em&gt;G-Buffer&lt;/em&gt; 사용을 나타내는 PT의 한 부분이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/killzone2_g-buffer.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://www.slideshare.net/guerrillagames/deferred-rendering-in-killzone-2-9691589&quot;&gt;Deferred Rendering in Killzone 2&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;두번째로는 씬의 경계를 설정해주는 것이다. &lt;em&gt;Shadow Mapping&lt;/em&gt; 에서 &lt;em&gt;Light-Space Projection&lt;/em&gt; 행렬은 씬에 딱 맞게 해주어야 한다.&lt;sup id=&quot;fnref:C1&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; 딱 맞지 않는 경우에는 &lt;em&gt;IZB&lt;/em&gt; 에 쓸모없는 텍셀을 생기게 하기 때문이다. 그래서 &lt;em&gt;Light-Space Projection&lt;/em&gt; 행렬을 계산하기 위해 &lt;em&gt;Compute Shader&lt;/em&gt; 와 &lt;em&gt;Z-Buffer&lt;/em&gt; 를 사용하여 &lt;em&gt;Bounding Box&lt;/em&gt; 를 계산한다. 이 계산은 화면의 해상도에 따라서 달라진다. 하지만 논문의 저자는 이 비용이 병목의 큰 원인이 아니기 때문에 특별한 해결 방법을 제시하지는 않는다.&lt;/p&gt;
+
+&lt;p&gt;세번째는 &lt;em&gt;Irregular Z-Buffer&lt;/em&gt; 를 만드는 것이다. 이전 글에서 &lt;em&gt;IZB&lt;/em&gt; 에 대한 대략적인 아이디어는 언급했었다. 더 디테일하게 이를 말해보면, 우선 &lt;em&gt;Eye-Space Z Buffer&lt;/em&gt; 를 참조해 &lt;em&gt;Light-Space&lt;/em&gt; 로 변환한 후에 &lt;em&gt;Light-Space A-Buffer&lt;/em&gt; 의 텍셀의 &lt;em&gt;Linked-List&lt;/em&gt; 에 넣는다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;IZB&lt;/em&gt; 의 발상은 &lt;em&gt;Eye-Space&lt;/em&gt; 의 픽셀과 &lt;em&gt;Light-Space&lt;/em&gt; 의 텍셀이 1:1 로 매칭되지 않고 하나의 텍셀이 참조당하는 횟수가 1을 넘을때 &lt;em&gt;allasing&lt;/em&gt; 이 발생하는 것에서 시작되었다. 그래서 여기서 구현된 &lt;em&gt;IZB&lt;/em&gt; 는 텍셀에 &lt;em&gt;Linked-List&lt;/em&gt; 의 개념을 도입하여 보다 정확히 계산할 수 있게 하였다.&lt;/p&gt;
+
+&lt;p&gt;아래 그림은 &lt;em&gt;IZB&lt;/em&gt; 의 데이터를 나타낸다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/fts_depth_length_cull.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://cwyman.org/papers/tvcg16_ftizbExtended.pdf&quot;&gt;Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;왼쪽의 그림은 일반적인 &lt;em&gt;Shadow Map&lt;/em&gt; 을 나타내고, 중간의 그림은 &lt;em&gt;Linked-List&lt;/em&gt; 의 크기를 나타낸다. 흰색은 &lt;em&gt;Linked-List&lt;/em&gt; 의 크기가 0인 텍셀을 나타내고, 검은색에 가까워질수록 &lt;em&gt;Linked-List&lt;/em&gt; 의 크기가 점점 커지는 것을 나타낸다. 오른쪽의 그림은 필요없는 부분을 0으로 나타내고, 나머지 부분은 0 이상의 숫자를 나타내는 방식이다. 이는 아래에서 언급할 &lt;em&gt;Light-Space Culling Prepass&lt;/em&gt; 에서 쓰인다.&lt;/p&gt;
+
+&lt;p&gt;픽셀별로 여러개의 가시성(가려진 정도)를 나타내는 픽셀은 여러개의 &lt;em&gt;IZB Node&lt;/em&gt; 를 필요로 한다. 일반적인 &lt;em&gt;Shadow Map&lt;/em&gt; 과는 다르게 &lt;em&gt;μQuad&lt;/em&gt; 는 다른 &lt;em&gt;Light-Space Texel&lt;/em&gt; 에 &lt;em&gt;Projection&lt;/em&gt; 이 가능하다.&lt;/p&gt;
+
+&lt;p&gt;대충 생각해보면, &lt;em&gt;N&lt;/em&gt; 개의 픽셀별 쉐도우가 필요하면, &lt;em&gt;N&lt;/em&gt; 개의 &lt;em&gt;IZB Node&lt;/em&gt; 가 필요하다. 하지만 쓸데없는 데이터를(&lt;em&gt;Geometry&lt;/em&gt; 가 없는 경우) 넣지 않을 수 있으므로 &lt;em&gt;M&lt;/em&gt; 개의 &lt;em&gt;Light-Space Texel&lt;/em&gt; 에 &lt;em&gt;μQuad&lt;/em&gt; 를 투영한다면, 우리는 min(&lt;em&gt;N&lt;/em&gt;, &lt;em&gt;M&lt;/em&gt;)개의 &lt;em&gt;IZB Node&lt;/em&gt; 가 필요하다고 알 수 있다.&lt;/p&gt;
+
+&lt;p&gt;아래 그림은 &lt;em&gt;IZB&lt;/em&gt; 를 사용하는 디테일한 구조를 나타낸다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/fts_SimpleLayout.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://cwyman.org/papers/tvcg16_ftizbExtended.pdf&quot;&gt;Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;IZB&lt;/em&gt; 의 데이터 구조는 &lt;em&gt;Light-Space A-Buffer&lt;/em&gt; : &lt;em&gt;Eye-Space A-Buffer&lt;/em&gt; 의 &lt;em&gt;Node&lt;/em&gt; 를 찾아가기 위한 데이터, &lt;em&gt;Eye-Space A-Buffer&lt;/em&gt; : 리스트의 크기를 나타내는 버퍼와 같다. 출력되는 결과 : &lt;em&gt;Visibility Buffer&lt;/em&gt; 또한 따로 존재한다. 이게 최종적으로 그려질때 사용된다.&lt;/p&gt;
+
+&lt;p&gt;다음은 &lt;em&gt;Light-Space Culling Prepass&lt;/em&gt; 다. &lt;em&gt;Visibility Test&lt;/em&gt; 를 위해 &lt;em&gt;Geometry&lt;/em&gt; 의 &lt;em&gt;Light-Space Conservative Rasterization&lt;/em&gt; 을 하게 되는데, GPU 에서 &lt;em&gt;Early-Z&lt;/em&gt; 기능을 제공한다면 쓸데없는 부분(아무것도 없는 텍셀, 가장 끝)을 컬링할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;하지만 &lt;em&gt;Early-Z&lt;/em&gt; 하드웨어를 사용할때는 &lt;em&gt;Light-Space Z-Buffer&lt;/em&gt; 를 필요로 한다. 이는 조금 당황스러운 상황을 만든다. 그래서 이 단계에서는 반드시 스텐실 버퍼를 만들어야 한다. 위에서 언급한 쓸데없는 부분(아무것도 없는 텍셀, 가장 끝)의 &lt;em&gt;Depth&lt;/em&gt; 를 0으로 세팅한다. 나머지는 0 이상의 숫자로 세팅한다.&lt;/p&gt;
+
+&lt;p&gt;논문의 저자에 따르면, 엄청 큰 씬을 제외하고는 30% ~ 50% 의 성능 향상을 보였다고 한다. 이는 &lt;em&gt;Conservative Rasterization&lt;/em&gt; 으로 생성된 &lt;em&gt;Fragment&lt;/em&gt; 의 절대적인 숫자를 줄이고, 아무것도 없는 리스트를 스킵하면서 길이의 다양성을 없엔 효과다.&lt;/p&gt;
+
+&lt;p&gt;컬링을 된 이후에는 픽셀별로 &lt;em&gt;Visibility Test&lt;/em&gt; 를 해준다. 이때 각각의 폴리곤들은 임의의 텍셀 집합을 가리기 된다. 그리고 각각의 텍셀이 가진 리스트를 순회하면서 &lt;em&gt;Visibility Test&lt;/em&gt; 를 한다. 이때 &lt;em&gt;atomic OR&lt;/em&gt; 을 사용하여 &lt;em&gt;Visibility Buffer&lt;/em&gt; 에 기록한다. 여기서 가장 병목이 되는 구간은 각각의 폴리곤이 임의의 서로다른 길이를 가진 텍셀의 리스트를 커버링하여 각각의 쓰레드별로 실행되는 시간이 제각각이 된다. 문제는 시간이 제각각인 경우, 가장 느린 시간을 소모한 쓰레드를 기준으로 &lt;em&gt;divergence&lt;/em&gt; 하여 각각의 텍셀의 리스트의 길이 중 가장 긴 길이의 시간으로 맞춰진다. 이는 최악의 상황을 유발할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;마지막으로 &lt;em&gt;Visibility Buffer&lt;/em&gt; 를 사용하여 실제 오브젝트들을 렌더링하면 된다.&lt;/p&gt;
+
+&lt;h3&gt;복잡도 계산&lt;/h3&gt;
+
+&lt;p&gt;위에서도 언급햇다시피 이 기법은 &lt;em&gt;N&lt;/em&gt; 번의 &lt;em&gt;Visibility Test&lt;/em&gt; 한다면, 시간 복잡도는 O(&lt;em&gt;N&lt;/em&gt;) 과 같다. 여기서 &lt;em&gt;N&lt;/em&gt; 을 분해하면 다음과 같다. O(&lt;em&gt;La&lt;/em&gt; * &lt;em&gt;F&lt;/em&gt;), &lt;em&gt;F&lt;/em&gt; 는 &lt;em&gt;Light-Space&lt;/em&gt; 의 &lt;em&gt;Fragment&lt;/em&gt; 갯수이고, &lt;em&gt;La&lt;/em&gt; 는 &lt;em&gt;Linked-List&lt;/em&gt; 의 평균 길이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;La&lt;/em&gt; 또한 다른 요소로 나타낼 수 있다. &lt;em&gt;Visibility Test&lt;/em&gt; 는 &lt;em&gt;Eye-Space&lt;/em&gt; 에서 한다. 그래서 &lt;em&gt;IZB Node&lt;/em&gt; 의 갯수는 &lt;em&gt;Eye-Space&lt;/em&gt; 의 해상도에 비례한다. 그리고 &lt;em&gt;Eye-Space&lt;/em&gt; 의 데이터는 전부 &lt;em&gt;Light-Space&lt;/em&gt; 에 기록되므로 &lt;em&gt;La&lt;/em&gt; ≈ (&lt;em&gt;Eye-Space Resolution&lt;/em&gt;) / (&lt;em&gt;Light-Space Resolution&lt;/em&gt;) 으로 계산될 수 있다.&lt;/p&gt;
+
+&lt;p&gt;하지만 위에서 언급했던 것과 같이 &lt;em&gt;SIMT&lt;/em&gt; 기반의 GPU 에서는 O(&lt;em&gt;La&lt;/em&gt; * &lt;em&gt;F&lt;/em&gt;) 가 아닌 O(&lt;em&gt;Lm&lt;/em&gt; * &lt;em&gt;F&lt;/em&gt;) 이 될 수 밖에 없다. &lt;em&gt;Lm&lt;/em&gt; 은 &lt;em&gt;Linked-List&lt;/em&gt; 의 최대 길이다. 결국 퍼포먼스를 내기 위해선 &lt;em&gt;Lm&lt;/em&gt; 의 길이를 줄이는 것이 가장 중요하다는 것이 된다.&lt;/p&gt;
+
+&lt;p&gt;이번 글에서는 전체 시스템과 복잡도에 대해서 알아보았다. 다음은 더 디테일한 구현 부분의 내용을과 &lt;em&gt;Alpha&lt;/em&gt; 처리에 대한 부분을 알아볼것이다.&lt;/p&gt;
+
+&lt;h2&gt;참조&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://cwyman.org/papers/tvcg16_ftizbExtended.pdf&quot;&gt;Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:L1&quot;&gt;
+      &lt;p&gt;https://ypchoi.gitbooks.io/rendering-techniques/content/z_prepass.html &lt;a href=&quot;#fnref:L1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:C1&quot;&gt;
+      &lt;p&gt;Cascaded Shadow Map 의 Crop Matrix 를 떠올리면 된다. &lt;a href=&quot;#fnref:C1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="shader" />
+      
+        <category term="shadow" />
+      
+        <category term="rendering" />
+      
+        <category term="fts" />
+      
+
+      
+
+      
+        <summary type="html">Frustom Traced Shadow with Irregular Z-Buffer 0 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다. 전체 시스템 이전 글에서 두가지 단계에 대해서 자세한 설명을 했었다. Irregular Z-Buffer 를 생성하고 Visibility Test 를 하는 것이였다. 실제 구현된 단계는 총 6개의 단계로 이루어진다고 한다. 첫번째로는 Eye-Space Z-Prepass 를 해준다. 요즘의 엔진들이나 큰 규모가 아닌 게임이더라도 Z-Prepass1 는 거의 대부분 해준다. Geometry Pass 가 두번 걸리기는 하지만 Fill Rate 의 부하가 Geometry Pass 의 부하보다 많이 커서 그런 듯하다. 중요한건 단순히 언급한 Eye-Space Z-Prepass 를 뜻하는게 아니다. 이전에 언급한 μQuad 의 빠른 계산을 위해 G-Buffer 에 3개의 실수 값들을 넣는다. 이 3개의 실수는 실제 그려지는 카메라의 위치와 Tangent Plane 의 4개의 코너중에 3개의 거리를 나타낸다. 이는 μQuad 를 다시 계산하기에 충분하다고 한다. 이 방법은 Visibility Test 의 속도를 빠르게 하는데 도움이 되지만, 당연히 G-Buffer 의 공간이 부족한 경우에는 쓰지 못한다. AAA 급의 게임들은 G-Buffer 를 bit 단위로 최대한 아껴쓰기 경우가 많기 때문에 이와 같은 상황이 일어날 수도 있다. 이런 경우에는 명시적으로 Visibility Test 를 할때 μQuad 를 계산한다고 한다. 아래 그림은 2009년에 발매된 KillZone 2 의 G-Buffer 사용을 나타내는 PT의 한 부분이다. 출처 : Deferred Rendering in Killzone 2 두번째로는 씬의 경계를 설정해주는 것이다. Shadow Mapping 에서 Light-Space Projection 행렬은 씬에 딱 맞게 해주어야 한다.2 딱 맞지 않는 경우에는 IZB 에 쓸모없는 텍셀을 생기게 하기 때문이다. 그래서 Light-Space Projection 행렬을 계산하기 위해 Compute Shader 와 Z-Buffer 를 사용하여 Bounding Box 를 계산한다. 이 계산은 화면의 해상도에 따라서 달라진다. 하지만 논문의 저자는 이 비용이 병목의 큰 원인이 아니기 때문에 특별한 해결 방법을 제시하지는 않는다. 세번째는 Irregular Z-Buffer 를 만드는 것이다. 이전 글에서 IZB 에 대한 대략적인 아이디어는 언급했었다. 더 디테일하게 이를 말해보면, 우선 Eye-Space Z Buffer 를 참조해 Light-Space 로 변환한 후에 Light-Space A-Buffer 의 텍셀의 Linked-List 에 넣는다. IZB 의 발상은 Eye-Space 의 픽셀과 Light-Space 의 텍셀이 1:1 로 매칭되지 않고 하나의 텍셀이 참조당하는 횟수가 1을 넘을때 allasing 이 발생하는 것에서 시작되었다. 그래서 여기서 구현된 IZB 는 텍셀에 Linked-List 의 개념을 도입하여 보다 정확히 계산할 수 있게 하였다. 아래 그림은 IZB 의 데이터를 나타낸다. 출처 : Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows 왼쪽의 그림은 일반적인 Shadow Map 을 나타내고, 중간의 그림은 Linked-List 의 크기를 나타낸다. 흰색은 Linked-List 의 크기가 0인 텍셀을 나타내고, 검은색에 가까워질수록 Linked-List 의 크기가 점점 커지는 것을 나타낸다. 오른쪽의 그림은 필요없는 부분을 0으로 나타내고, 나머지 부분은 0 이상의 숫자를 나타내는 방식이다. 이는 아래에서 언급할 Light-Space Culling Prepass 에서 쓰인다. 픽셀별로 여러개의 가시성(가려진 정도)를 나타내는 픽셀은 여러개의 IZB Node 를 필요로 한다. 일반적인 Shadow Map 과는 다르게 μQuad 는 다른 Light-Space Texel 에 Projection 이 가능하다. 대충 생각해보면, N 개의 픽셀별 쉐도우가 필요하면, N 개의 IZB Node 가 필요하다. 하지만 쓸데없는 데이터를(Geometry 가 없는 경우) 넣지 않을 수 있으므로 M 개의 Light-Space Texel 에 μQuad 를 투영한다면, 우리는 min(N, M)개의 IZB Node 가 필요하다고 알 수 있다. 아래 그림은 IZB 를 사용하는 디테일한 구조를 나타낸다. 출처 : Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows IZB 의 데이터 구조는 Light-Space A-Buffer : Eye-Space A-Buffer 의 Node 를 찾아가기 위한 데이터, Eye-Space A-Buffer : 리스트의 크기를 나타내는 버퍼와 같다. 출력되는 결과 : Visibility Buffer 또한 따로 존재한다. 이게 최종적으로 그려질때 사용된다. 다음은 Light-Space Culling Prepass 다. Visibility Test 를 위해 Geometry 의 Light-Space Conservative Rasterization 을 하게 되는데, GPU 에서 Early-Z 기능을 제공한다면 쓸데없는 부분(아무것도 없는 텍셀, 가장 끝)을 컬링할 수 있다. 하지만 Early-Z 하드웨어를 사용할때는 Light-Space Z-Buffer 를 필요로 한다. 이는 조금 당황스러운 상황을 만든다. 그래서 이 단계에서는 반드시 스텐실 버퍼를 만들어야 한다. 위에서 언급한 쓸데없는 부분(아무것도 없는 텍셀, 가장 끝)의 Depth 를 0으로 세팅한다. 나머지는 0 이상의 숫자로 세팅한다. 논문의 저자에 따르면, 엄청 큰 씬을 제외하고는 30% ~ 50% 의 성능 향상을 보였다고 한다. 이는 Conservative Rasterization 으로 생성된 Fragment 의 절대적인 숫자를 줄이고, 아무것도 없는 리스트를 스킵하면서 길이의 다양성을 없엔 효과다. 컬링을 된 이후에는 픽셀별로 Visibility Test 를 해준다. 이때 각각의 폴리곤들은 임의의 텍셀 집합을 가리기 된다. 그리고 각각의 텍셀이 가진 리스트를 순회하면서 Visibility Test 를 한다. 이때 atomic OR 을 사용하여 Visibility Buffer 에 기록한다. 여기서 가장 병목이 되는 구간은 각각의 폴리곤이 임의의 서로다른 길이를 가진 텍셀의 리스트를 커버링하여 각각의 쓰레드별로 실행되는 시간이 제각각이 된다. 문제는 시간이 제각각인 경우, 가장 느린 시간을 소모한 쓰레드를 기준으로 divergence 하여 각각의 텍셀의 리스트의 길이 중 가장 긴 길이의 시간으로 맞춰진다. 이는 최악의 상황을 유발할 수 있다. 마지막으로 Visibility Buffer 를 사용하여 실제 오브젝트들을 렌더링하면 된다. 복잡도 계산 위에서도 언급햇다시피 이 기법은 N 번의 Visibility Test 한다면, 시간 복잡도는 O(N) 과 같다. 여기서 N 을 분해하면 다음과 같다. O(La * F), F 는 Light-Space 의 Fragment 갯수이고, La 는 Linked-List 의 평균 길이다. La 또한 다른 요소로 나타낼 수 있다. Visibility Test 는 Eye-Space 에서 한다. 그래서 IZB Node 의 갯수는 Eye-Space 의 해상도에 비례한다. 그리고 Eye-Space 의 데이터는 전부 Light-Space 에 기록되므로 La ≈ (Eye-Space Resolution) / (Light-Space Resolution) 으로 계산될 수 있다. 하지만 위에서 언급했던 것과 같이 SIMT 기반의 GPU 에서는 O(La * F) 가 아닌 O(Lm * F) 이 될 수 밖에 없다. Lm 은 Linked-List 의 최대 길이다. 결국 퍼포먼스를 내기 위해선 Lm 의 길이를 줄이는 것이 가장 중요하다는 것이 된다. 이번 글에서는 전체 시스템과 복잡도에 대해서 알아보았다. 다음은 더 디테일한 구현 부분의 내용을과 Alpha 처리에 대한 부분을 알아볼것이다. 참조 Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows https://ypchoi.gitbooks.io/rendering-techniques/content/z_prepass.html &amp;#8617; Cascaded Shadow Map 의 Crop Matrix 를 떠올리면 된다. &amp;#8617;</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Frustom Traced Shadow With Irrelgular Z Buffer 0</title>
+      
+      <link href="https://hrmrzizon.github.io/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-0/" rel="alternate" type="text/html" title="Frustom Traced Shadow With Irrelgular Z Buffer 0" />
+      <published>2018-01-13T00:00:00+00:00</published>
+      <updated>2018-01-13T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-0</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-0/">&lt;p&gt;&lt;a href=&quot;{ post_url 2017-12-27-percentage-closer-soft-shadows }&quot;&gt;Percentage-Closer Filtering Shadows&lt;/a&gt; 에서 &lt;em&gt;PCF&lt;/em&gt; 를 응용한 &lt;em&gt;PCSS&lt;/em&gt; 라는 &lt;em&gt;Soft Shadow&lt;/em&gt; 를 나타내는 기법에 대해서 알아보았다. 이번 글에서는 여태까지 알아본 것들에 비해 굉장히 최근에 나온 기법인 &lt;em&gt;Frustom-Traced Shadow&lt;/em&gt; 에 대해서 알아볼것이다.&lt;/p&gt;
+
+&lt;p&gt;해당 기법은 2015년에 &lt;em&gt;Siggraph&lt;/em&gt;, &lt;em&gt;Interactive 3D&lt;/em&gt; 같은 컨퍼런스에서 발표되었으며, 현재 &lt;em&gt;Tom Clansy’s the Division&lt;/em&gt; 에 &lt;em&gt;PCSS&lt;/em&gt; 와 혼합된 형태(&lt;em&gt;Hybrid Frustom Traced Shadow&lt;/em&gt;)로 적용되어 있다. &lt;em&gt;Frame Rate&lt;/em&gt; 에 조금 영향을 미쳐 대부분의 게이머들은 아직은 &lt;em&gt;HFTS&lt;/em&gt; 를 사용하지 않는듯 하다.(&lt;a href=&quot;https://www.reddit.com/r/nvidia/comments/49idz3/nvidia_hfts_the_division/&quot;&gt;Reddit : Nvidia HFTS (The Division)&lt;/a&gt;) 하지만 컴퓨팅 파워가 늘어나는 것을 가정한다면 앞으로 하이엔드 게임의 주 옵션이 될수도 있겠다.&lt;/p&gt;
+
+&lt;p&gt;이 기법의 저자는 &lt;em&gt;Shadow Map&lt;/em&gt; 처럼 따로 붙은 기법없이 &lt;em&gt;Aliasing&lt;/em&gt; 이 없어야 했으며, 현세대의 GPU 와 해상도를 &lt;em&gt;Interactive&lt;/em&gt; 하게 지원하는 것이 완벽한 &lt;em&gt;Hard Shadow&lt;/em&gt; 를 목표로 &lt;em&gt;FTS&lt;/em&gt; 를 고안했다. 가장 많이 쓰이는 &lt;em&gt;Shadow Map&lt;/em&gt; 기법은 공간적(&lt;em&gt;Light-Space&lt;/em&gt; 와 &lt;em&gt;Clipping-Space&lt;/em&gt; 의 &lt;em&gt;Discretize&lt;/em&gt; 된 결과의 차이), 일시적인(필터링이 필요한 &lt;em&gt;Aliasing&lt;/em&gt;)인 문제들이 산재한다. 이는 이 기법을 고안한 시발점이였다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;FTS&lt;/em&gt; 의 이론적인 뿌리를 정하기 위해 저자는 여태까지 존재하는 여러 기법을 언급한다. 빛을 하나의 직선단위로 시뮬레이팅 하는 &lt;em&gt;Ray-Tracing&lt;/em&gt;, 볼륨을 통한 각각의 폴리곤들을 테스트 하는 &lt;em&gt;Shadow Volume&lt;/em&gt;, &lt;em&gt;Irregular Z-Buffers&lt;/em&gt; 를 언급했다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Shadow Volume&lt;/em&gt; 은 3차원상으로 &lt;em&gt;Shadow&lt;/em&gt; 가 생기는 부분을 정해 그 부분을 테스트해서 &lt;em&gt;Shadow&lt;/em&gt; 를 정해주는 기법이다. 이는 &lt;em&gt;Shadow Map&lt;/em&gt; 보다 픽셀 단위로 처리할 수 있지만, 여러 단점이 있다고 한다. 한번에 해결되는 깔끔한 방법이 없으며, 보이지 않는 부분도 처리하기 때문에 &lt;em&gt;Fill-Rate&lt;/em&gt; 를 많이 소모한다. 게다가 처리 자체가 간단하지 않기 때문에 개발자들도 많이 쓰는 기법이 아니라고 한다. 필자도 &lt;em&gt;Shadow Map&lt;/em&gt; 에 대한 자료는 굉장히 많이 봤지만 &lt;em&gt;Shadow Volume&lt;/em&gt; 은 거의 본적이 없다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/NVidia_ShadowVolume.jpg&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://developer.download.nvidia.com/books/HTML/gpugems/gpugems_ch09.html&quot;&gt;GPU Gems : Efficient Shadow Volume Rendering&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Ray-Tracing&lt;/em&gt; 은 빛을 직선 단위로 시뮬레이팅을 하는 기법으로, 계산 비용 자체가 비싸기 때문에 하드웨어와 구조에 굉장히 의존적이라고 한다. 게임에서도 쓰일 수 있는 기법이 있었지만 다른 후보에 밀려났다. 바로 &lt;em&gt;Irregular Z-Buffer&lt;/em&gt; 다. 현대 GPU 의 &lt;em&gt;Geometry&lt;/em&gt; -&amp;gt; &lt;em&gt;Rasterize&lt;/em&gt; 구조에 맞춰 가장 걸맞는 방법이라고 한다. 자세한 설명은 아래에서 보자.&lt;/p&gt;
+
+&lt;h3&gt;Key Idea&lt;/h3&gt;
+
+&lt;p&gt;이 기법의 중요한 아이디어는 앞에서 소개한 &lt;em&gt;Irregular Z-Buffer&lt;/em&gt; 와 &lt;em&gt;Frustom-Triangle Test&lt;/em&gt; 이 두가지다. &lt;em&gt;Irregular Z-Buffer&lt;/em&gt; 는 앞서 &lt;em&gt;Shadow Map&lt;/em&gt; 의 단점중에 공간적 괴리를 해결하는 데이터 구조이고, &lt;em&gt;Frustom-Triangle Test&lt;/em&gt; 는 논문에서 한 말을 이용하면 &lt;em&gt;Sub-Pixel Accurate Pixel&lt;/em&gt; 을 구성하기 위한 시뮬레이션 테스트다. 이 두가지를 간단하게 살펴보자.&lt;/p&gt;
+
+&lt;p&gt;첫번째로는 바로 위에서 언급했던 &lt;em&gt;Irregular Z-Buffer&lt;/em&gt; 다. 여기서의 &lt;em&gt;IZB&lt;/em&gt; 는 우리가 알던 일반적인 &lt;em&gt;Buffer&lt;/em&gt; 의 쓰임새와는 조금 다르게 쓰인다. 이 기법에서의 &lt;em&gt;IZB&lt;/em&gt; 는 일반적인 &lt;em&gt;Shadow Map&lt;/em&gt; 에서의 &lt;em&gt;Eye-Space&lt;/em&gt; 와 &lt;em&gt;Light-Space&lt;/em&gt; 의 괴리를 없에기 위해 &lt;em&gt;Light-Space&lt;/em&gt; 를 기준으로 &lt;em&gt;Depth&lt;/em&gt; 를 쭉 저장하는게 아닌, &lt;em&gt;Eye-Space&lt;/em&gt; 의 각각 픽셀별로 표현하는 물체에 영향을 미치는 광원을 방향으로 &lt;em&gt;Ray&lt;/em&gt; 를 쏜다. 그리고 &lt;em&gt;Light-Space&lt;/em&gt; 를 기준으로 만든 &lt;em&gt;Grid&lt;/em&gt; 버퍼에 &lt;em&gt;Ray&lt;/em&gt; 가 부딫치고, 부딫친 부분에서 가장 가까운 텍셀에 데이터를 저장한다. 위에서 설명한 &lt;em&gt;IZB&lt;/em&gt; 를 구성하는 방법에 대한 그림이 아래에 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/fts_IZB.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://cwyman.org/papers/tvcg16_ftizbExtended.pdf&quot;&gt;Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;간단하게 이런식으로 &lt;em&gt;IZB&lt;/em&gt; 가 구성되는 것을 알 수 있다. 이제 &lt;em&gt;Geometry&lt;/em&gt; 와 비교하는 &lt;em&gt;Visibility Test&lt;/em&gt; 가 필요하다. 일반적인 &lt;em&gt;Shadow Mapping&lt;/em&gt; 의 &lt;em&gt;Visibility Test&lt;/em&gt; 와는 조금 다르다. 기존의 &lt;em&gt;Shadow Mapping&lt;/em&gt; 은 정점을 &lt;em&gt;Light-Space&lt;/em&gt; 로 바꾸어 &lt;em&gt;Z&lt;/em&gt; 값을 비교하여 &lt;em&gt;Visibility Test&lt;/em&gt; 를 한다. 하지만 이 기법에서의 &lt;em&gt;Visibility Test&lt;/em&gt; 는 다르다. 위에서 언급한 것과 같이 &lt;em&gt;IZB&lt;/em&gt; 를 만든다. 그 다음 &lt;em&gt;Occlluder Geometry&lt;/em&gt; 들을 &lt;em&gt;Light-Space&lt;/em&gt; 를 기준으로 &lt;em&gt;Conservative Rasterization&lt;/em&gt; 을 해준다.&lt;sup id=&quot;fnref:C1&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 그렇게 나온 결과를 통해 &lt;em&gt;IZB&lt;/em&gt; 와 함께 &lt;em&gt;Visibility Test&lt;/em&gt; 를 한다. &lt;em&gt;Conservative Rasterization&lt;/em&gt; 의 결과는 거의 &lt;em&gt;Flag&lt;/em&gt; 로 사용될것으로 예측되고, &lt;em&gt;Eye-Space&lt;/em&gt; 픽셀의 그림자 계산은 복잡한 계산을 통해 구한다. 아래는 논문에 있던 &lt;em&gt;IZB&lt;/em&gt; 를 기준으로 쓰여진 수도 코드다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// Step 1: Identify pixel locations we need to shadow
+G(x, y) ← RenderGBufferFromEye()
+
+// Step 2: Add pixels to our light-space IZB data structure
+for pixel p ∈ G(x, y) do
+    lsTexelp ← ShadowMapXform[ GetEyeSpacePos( p ) ]
+    izbNodep ← CreateIZBNode[ p ]
+    AddNodeToLightSpaceList[ lsTexelp, izbNodep ]
+end for
+
+// Step 3: Test each triangle with pixels in lists it covers
+for tri t ∈ SceneTriangles do
+    for frag f ∈ ConservateLightSpaceRaster( t ) do
+        lsTexelf ← FragmentLocationInRasterGrid[ f ]
+        for node n ∈ IZBNodeList( lsTexelf ) do
+            p ← GetEyeSpacePixel( n )
+            visMask[p] = visMask[p] | TestVisibility[ p, t ]
+        end for
+    end for
+end for
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;center&gt;출처 : &lt;a href=&quot;http://cwyman.org/papers/tvcg16_ftizbExtended.pdf&quot;&gt;Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;다음은 &lt;em&gt;Visibility Test&lt;/em&gt; 다. 논문에서는 &lt;em&gt;Frustom-Triangle Test&lt;/em&gt; 라고 부르는데, 이는 조금 복잡한 과정으로 구성된다. 아래 그림을 보면서 알아보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/fts_VisibilityTest.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://cwyman.org/papers/tvcg16_ftizbExtended.pdf&quot;&gt;Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;가장 처음에는 &lt;em&gt;μQuad&lt;/em&gt; 라는 것을 생성한다. &lt;em&gt;μQuad&lt;/em&gt; 는 &lt;em&gt;Tangent-Space&lt;/em&gt; 를 기준으로 설정하며 각 픽셀별로 생성한다. 위 그림에서는 중간 그림에 구 위에있는 평면을 뜻한다. 그 다음 가리는 &lt;em&gt;Geometry&lt;/em&gt; 의 폴리곤들의 각각의 &lt;em&gt;Edge&lt;/em&gt; 를 사용하여 &lt;em&gt;Shadow Plane&lt;/em&gt; 을 생성한다. 마지막으로 만들어진 &lt;em&gt;Shadow Plane&lt;/em&gt; 을 &lt;em&gt;μQuad&lt;/em&gt; 에 &lt;em&gt;Projection&lt;/em&gt; 한다. 이때 가지고 있던 &lt;em&gt;LUT&lt;/em&gt; 를 통해 가려짐을 계산한다. 그리고 다른 &lt;em&gt;Edge&lt;/em&gt; 들도 계속해서 누적시킨다.&lt;/p&gt;
+
+&lt;p&gt;간단하게 &lt;em&gt;Frustom-Triangle Test&lt;/em&gt; 의 단계에 대해 설명해보았다. 이제 각각의 과정 : &lt;em&gt;μQuad Construction&lt;/em&gt;, &lt;em&gt;Shadow Plane Construction&lt;/em&gt;, &lt;em&gt;Visibility Computation&lt;/em&gt; 에 대해 조금 더 자세히 써보겠다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;μQuad&lt;/em&gt; 의 생성은 &lt;em&gt;Geometry&lt;/em&gt; 의 &lt;em&gt;Tangent-Space&lt;/em&gt; 를 기준으로 계산되는 것 빼고는 특이한 점이 없다. 하지만 생성되는 시기에 대해선 조금 특별한게 있다. 가시성을 계산할 때 생성할 수도 있지만 &lt;em&gt;G-Buffer&lt;/em&gt; 를 생성할 때 미리 계산하는 것이 더 효율적이라고 한다.&lt;/p&gt;
+
+&lt;p&gt;가시성을 계산할 때 &lt;em&gt;ray-triangle intersection&lt;/em&gt; 을 계산하기 보다는 앖에서 언급한 각각의 폴리곤의 &lt;em&gt;Shadow Volume&lt;/em&gt; 을 각 점마다 계산한다고 한다. &lt;em&gt;Shadow Volume&lt;/em&gt; 은 그림자를 생성하는 &lt;em&gt;Occluder Triangle&lt;/em&gt; 을 기준으로 각각의 &lt;em&gt;Edge&lt;/em&gt; 에서 뻗어나오는 직사각형 면으로 구성된다. 아래 그림을 보면 쉽게 이해할 수 있다. 그리고 &lt;em&gt;μQuad&lt;/em&gt; 에서 샘플링한 각각의 점들을 기준으로 가시성을 계산한다면 한다면, 4번의 내적으로 가시성을 테스트할 수 있다는 것을 의미한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/HFTS_FrustomTracing.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://developer.download.nvidia.com/gameworks/events/  GDC2016/jstory_hfts.pdf&quot;&gt;NVidia : Advanced Geometrically Correct Shadows for Modern Game Engines&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;또한 그림자를 멀티샘플링 하기 위해서는 여기서 언급한 &lt;em&gt;Shadow Volume&lt;/em&gt; 의 &lt;em&gt;Shadow Plane&lt;/em&gt; 들을 이용한다고 한다.&lt;/p&gt;
+
+&lt;p&gt;마지막으로 &lt;em&gt;Visibility Computation&lt;/em&gt; 이 남아있다. 이 부분의 대략적인 것은 위에서 언급했다. 자세한 계산방식을 말해보겠다. 위에서 언급한 &lt;em&gt;μQuad&lt;/em&gt; 와 &lt;em&gt;Shadow Plane&lt;/em&gt; 사용해서 해당 폴리곤들의 데이터 누적을 위해서는 &lt;em&gt;μQuad&lt;/em&gt; 에서 이산화된 &lt;em&gt;binary&lt;/em&gt; 샘플링이 필요하다. 논문의 저자는 32 번의 &lt;em&gt;Halton sampling&lt;/em&gt;&lt;sup id=&quot;fnref:C2&quot;&gt;&lt;a href=&quot;#fn:C2&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; 을 사용했다고 한다.&lt;/p&gt;
+
+&lt;p&gt;가시성을 계산하기 위해서는 &lt;em&gt;Shadow Plane&lt;/em&gt; 을 &lt;em&gt;μQuad&lt;/em&gt; 에 &lt;em&gt;Projection&lt;/em&gt; 해줘야 한다. 그러면 &lt;em&gt;μQuad&lt;/em&gt; 는 최대 3개의 &lt;em&gt;line&lt;/em&gt; 을 얻게 된다. 논문에서는 이 &lt;em&gt;line&lt;/em&gt; 을 &lt;em&gt;μQuad&lt;/em&gt; 를 기준으로 극좌표계&lt;sup id=&quot;fnref:C3&quot;&gt;&lt;a href=&quot;#fn:C3&quot; class=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt; 데이터로 저장한다고 한다. 반지름과 각도가 5bit 크기로 저장된다. 해당 10bit 데이터를 사용하여 미리 계산된 테이블에서 32개의 이진 가시성 샘플을 가져온다. 결과와  bit 단위의 and 연산을 통해 &lt;em&gt;μQuad&lt;/em&gt; 의 가시성을 계산할 수 있다고 한다.&lt;/p&gt;
+
+&lt;p&gt;해당 기법을 고안한 사람은 두가지의 아이디어 : &lt;em&gt;Irregular Z-Buffer&lt;/em&gt; 와 &lt;em&gt;Frustom-Triangle Test&lt;/em&gt; 를 통해  &lt;em&gt;Sub-pixel Hard Shadow&lt;/em&gt; 의 이론을 만들었다. 하지만 이 아이디어들과 구현을 위한 노력의 차이는 꽤 큰듯하다. 논문을 보면 아이디어에 대한 텍스트보다 최적화를 위한 텍스트가 2배가 될정도로 많다. 다음 글에서는 논문에서 나온 전체 과정과 디테일한 구현 사항에 대해 적어보겠다.&lt;/p&gt;
+
+&lt;h2&gt;참조&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://cwyman.org/papers/tvcg16_ftizbExtended.pdf&quot;&gt;Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Irregular_Z-buffer&quot;&gt;Wikipedia : Irregular Z-Buffer&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://cwyman.org/videos/sig1657-chris-wyman-magic-behind-gameworks-hybrid-frustum-traced-shadows-hfts.mp4&quot;&gt;cywman.org : HFTS Presentation Video&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.nvidia.com/content/dont-be-conservative-conservative-rasterization&quot;&gt;NVidia : Don’t be conservative with Conservative Rasterization&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://developer.download.nvidia.com/gameworks/events/GDC2016/jstory_hfts.pdf&quot;&gt;NVidia : Advanced Geometrically Correct Shadows for Modern Game Engines&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:C1&quot;&gt;
+      &lt;p&gt;일반적으로 오브젝트를 그리는 것과 다른 &lt;em&gt;Conservative Rasterization&lt;/em&gt; 을 해주는 이유는 일반적인 &lt;em&gt;Rasterization&lt;/em&gt; 은 픽셀의 반이상을 차지해야 해당 픽셀을 처리해준다. 하지만 정확한 &lt;em&gt;Visibility&lt;/em&gt; 를 계산하기 위해서는 폴리곤이 해당되는 모든 픽셀들을 처리해주어야 한다. &lt;em&gt;Conservative Rasterization&lt;/em&gt; 은 앞에서 말한바와 같이 모든 부분을 픽셀로 처리한다. &lt;em&gt;Conservative Rasterization&lt;/em&gt; 에 대한 자세한 정보는 &lt;a href=&quot;https://developer.nvidia.com/content/dont-be-conservative-conservative-rasterization&quot;&gt;NVidia : Don’t be conservative with Conservative Rasterization&lt;/a&gt; 에서 확인할 수 있다. &lt;a href=&quot;#fnref:C1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:C2&quot;&gt;
+      &lt;p&gt;몬테카를로 시뮬레이션과 같은 방식의 점을 생성하는 방식이다. 쉽게 말하면 랜덤하게 생성하는 것이라고 생각하면 된다. 자세한 정보는 &lt;a href=&quot;https://en.wikipedia.org/wiki/Halton_sequence&quot;&gt;Wikipedia : Halton sequence&lt;/a&gt; 에서 확인할 수 있다. &lt;a href=&quot;#fnref:C2&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:C3&quot;&gt;
+      &lt;p&gt;여기서는 각도와 반지름(거리)를 사용하여 나나탠다. 극좌표계에 대한 자세한 정보는 &lt;a href=&quot;https://ko.wikipedia.org/wiki/%EA%B7%B9%EC%A2%8C%ED%91%9C%EA%B3%84&quot;&gt;위키피디아 : 극좌표계&lt;/a&gt; 에서 확인할 수 있다. &lt;a href=&quot;#fnref:C3&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="shader" />
+      
+        <category term="shadow" />
+      
+        <category term="rendering" />
+      
+        <category term="fts" />
+      
+
+      
+
+      
+        <summary type="html">Percentage-Closer Filtering Shadows 에서 PCF 를 응용한 PCSS 라는 Soft Shadow 를 나타내는 기법에 대해서 알아보았다. 이번 글에서는 여태까지 알아본 것들에 비해 굉장히 최근에 나온 기법인 Frustom-Traced Shadow 에 대해서 알아볼것이다. 해당 기법은 2015년에 Siggraph, Interactive 3D 같은 컨퍼런스에서 발표되었으며, 현재 Tom Clansy’s the Division 에 PCSS 와 혼합된 형태(Hybrid Frustom Traced Shadow)로 적용되어 있다. Frame Rate 에 조금 영향을 미쳐 대부분의 게이머들은 아직은 HFTS 를 사용하지 않는듯 하다.(Reddit : Nvidia HFTS (The Division)) 하지만 컴퓨팅 파워가 늘어나는 것을 가정한다면 앞으로 하이엔드 게임의 주 옵션이 될수도 있겠다. 이 기법의 저자는 Shadow Map 처럼 따로 붙은 기법없이 Aliasing 이 없어야 했으며, 현세대의 GPU 와 해상도를 Interactive 하게 지원하는 것이 완벽한 Hard Shadow 를 목표로 FTS 를 고안했다. 가장 많이 쓰이는 Shadow Map 기법은 공간적(Light-Space 와 Clipping-Space 의 Discretize 된 결과의 차이), 일시적인(필터링이 필요한 Aliasing)인 문제들이 산재한다. 이는 이 기법을 고안한 시발점이였다. FTS 의 이론적인 뿌리를 정하기 위해 저자는 여태까지 존재하는 여러 기법을 언급한다. 빛을 하나의 직선단위로 시뮬레이팅 하는 Ray-Tracing, 볼륨을 통한 각각의 폴리곤들을 테스트 하는 Shadow Volume, Irregular Z-Buffers 를 언급했다. Shadow Volume 은 3차원상으로 Shadow 가 생기는 부분을 정해 그 부분을 테스트해서 Shadow 를 정해주는 기법이다. 이는 Shadow Map 보다 픽셀 단위로 처리할 수 있지만, 여러 단점이 있다고 한다. 한번에 해결되는 깔끔한 방법이 없으며, 보이지 않는 부분도 처리하기 때문에 Fill-Rate 를 많이 소모한다. 게다가 처리 자체가 간단하지 않기 때문에 개발자들도 많이 쓰는 기법이 아니라고 한다. 필자도 Shadow Map 에 대한 자료는 굉장히 많이 봤지만 Shadow Volume 은 거의 본적이 없다. 출처 : GPU Gems : Efficient Shadow Volume Rendering Ray-Tracing 은 빛을 직선 단위로 시뮬레이팅을 하는 기법으로, 계산 비용 자체가 비싸기 때문에 하드웨어와 구조에 굉장히 의존적이라고 한다. 게임에서도 쓰일 수 있는 기법이 있었지만 다른 후보에 밀려났다. 바로 Irregular Z-Buffer 다. 현대 GPU 의 Geometry -&amp;gt; Rasterize 구조에 맞춰 가장 걸맞는 방법이라고 한다. 자세한 설명은 아래에서 보자. Key Idea 이 기법의 중요한 아이디어는 앞에서 소개한 Irregular Z-Buffer 와 Frustom-Triangle Test 이 두가지다. Irregular Z-Buffer 는 앞서 Shadow Map 의 단점중에 공간적 괴리를 해결하는 데이터 구조이고, Frustom-Triangle Test 는 논문에서 한 말을 이용하면 Sub-Pixel Accurate Pixel 을 구성하기 위한 시뮬레이션 테스트다. 이 두가지를 간단하게 살펴보자. 첫번째로는 바로 위에서 언급했던 Irregular Z-Buffer 다. 여기서의 IZB 는 우리가 알던 일반적인 Buffer 의 쓰임새와는 조금 다르게 쓰인다. 이 기법에서의 IZB 는 일반적인 Shadow Map 에서의 Eye-Space 와 Light-Space 의 괴리를 없에기 위해 Light-Space 를 기준으로 Depth 를 쭉 저장하는게 아닌, Eye-Space 의 각각 픽셀별로 표현하는 물체에 영향을 미치는 광원을 방향으로 Ray 를 쏜다. 그리고 Light-Space 를 기준으로 만든 Grid 버퍼에 Ray 가 부딫치고, 부딫친 부분에서 가장 가까운 텍셀에 데이터를 저장한다. 위에서 설명한 IZB 를 구성하는 방법에 대한 그림이 아래에 있다. 출처 : Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows 간단하게 이런식으로 IZB 가 구성되는 것을 알 수 있다. 이제 Geometry 와 비교하는 Visibility Test 가 필요하다. 일반적인 Shadow Mapping 의 Visibility Test 와는 조금 다르다. 기존의 Shadow Mapping 은 정점을 Light-Space 로 바꾸어 Z 값을 비교하여 Visibility Test 를 한다. 하지만 이 기법에서의 Visibility Test 는 다르다. 위에서 언급한 것과 같이 IZB 를 만든다. 그 다음 Occlluder Geometry 들을 Light-Space 를 기준으로 Conservative Rasterization 을 해준다.1 그렇게 나온 결과를 통해 IZB 와 함께 Visibility Test 를 한다. Conservative Rasterization 의 결과는 거의 Flag 로 사용될것으로 예측되고, Eye-Space 픽셀의 그림자 계산은 복잡한 계산을 통해 구한다. 아래는 논문에 있던 IZB 를 기준으로 쓰여진 수도 코드다. // Step 1: Identify pixel locations we need to shadow G(x, y) ← RenderGBufferFromEye() // Step 2: Add pixels to our light-space IZB data structure for pixel p ∈ G(x, y) do lsTexelp ← ShadowMapXform[ GetEyeSpacePos( p ) ] izbNodep ← CreateIZBNode[ p ] AddNodeToLightSpaceList[ lsTexelp, izbNodep ] end for // Step 3: Test each triangle with pixels in lists it covers for tri t ∈ SceneTriangles do for frag f ∈ ConservateLightSpaceRaster( t ) do lsTexelf ← FragmentLocationInRasterGrid[ f ] for node n ∈ IZBNodeList( lsTexelf ) do p ← GetEyeSpacePixel( n ) visMask[p] = visMask[p] | TestVisibility[ p, t ] end for end for end for 출처 : Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows 다음은 Visibility Test 다. 논문에서는 Frustom-Triangle Test 라고 부르는데, 이는 조금 복잡한 과정으로 구성된다. 아래 그림을 보면서 알아보자. 출처 : Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows 가장 처음에는 μQuad 라는 것을 생성한다. μQuad 는 Tangent-Space 를 기준으로 설정하며 각 픽셀별로 생성한다. 위 그림에서는 중간 그림에 구 위에있는 평면을 뜻한다. 그 다음 가리는 Geometry 의 폴리곤들의 각각의 Edge 를 사용하여 Shadow Plane 을 생성한다. 마지막으로 만들어진 Shadow Plane 을 μQuad 에 Projection 한다. 이때 가지고 있던 LUT 를 통해 가려짐을 계산한다. 그리고 다른 Edge 들도 계속해서 누적시킨다. 간단하게 Frustom-Triangle Test 의 단계에 대해 설명해보았다. 이제 각각의 과정 : μQuad Construction, Shadow Plane Construction, Visibility Computation 에 대해 조금 더 자세히 써보겠다. μQuad 의 생성은 Geometry 의 Tangent-Space 를 기준으로 계산되는 것 빼고는 특이한 점이 없다. 하지만 생성되는 시기에 대해선 조금 특별한게 있다. 가시성을 계산할 때 생성할 수도 있지만 G-Buffer 를 생성할 때 미리 계산하는 것이 더 효율적이라고 한다. 가시성을 계산할 때 ray-triangle intersection 을 계산하기 보다는 앖에서 언급한 각각의 폴리곤의 Shadow Volume 을 각 점마다 계산한다고 한다. Shadow Volume 은 그림자를 생성하는 Occluder Triangle 을 기준으로 각각의 Edge 에서 뻗어나오는 직사각형 면으로 구성된다. 아래 그림을 보면 쉽게 이해할 수 있다. 그리고 μQuad 에서 샘플링한 각각의 점들을 기준으로 가시성을 계산한다면 한다면, 4번의 내적으로 가시성을 테스트할 수 있다는 것을 의미한다. 출처 : NVidia : Advanced Geometrically Correct Shadows for Modern Game Engines 또한 그림자를 멀티샘플링 하기 위해서는 여기서 언급한 Shadow Volume 의 Shadow Plane 들을 이용한다고 한다. 마지막으로 Visibility Computation 이 남아있다. 이 부분의 대략적인 것은 위에서 언급했다. 자세한 계산방식을 말해보겠다. 위에서 언급한 μQuad 와 Shadow Plane 사용해서 해당 폴리곤들의 데이터 누적을 위해서는 μQuad 에서 이산화된 binary 샘플링이 필요하다. 논문의 저자는 32 번의 Halton sampling2 을 사용했다고 한다. 가시성을 계산하기 위해서는 Shadow Plane 을 μQuad 에 Projection 해줘야 한다. 그러면 μQuad 는 최대 3개의 line 을 얻게 된다. 논문에서는 이 line 을 μQuad 를 기준으로 극좌표계3 데이터로 저장한다고 한다. 반지름과 각도가 5bit 크기로 저장된다. 해당 10bit 데이터를 사용하여 미리 계산된 테이블에서 32개의 이진 가시성 샘플을 가져온다. 결과와 bit 단위의 and 연산을 통해 μQuad 의 가시성을 계산할 수 있다고 한다. 해당 기법을 고안한 사람은 두가지의 아이디어 : Irregular Z-Buffer 와 Frustom-Triangle Test 를 통해 Sub-pixel Hard Shadow 의 이론을 만들었다. 하지만 이 아이디어들과 구현을 위한 노력의 차이는 꽤 큰듯하다. 논문을 보면 아이디어에 대한 텍스트보다 최적화를 위한 텍스트가 2배가 될정도로 많다. 다음 글에서는 논문에서 나온 전체 과정과 디테일한 구현 사항에 대해 적어보겠다. 참조 Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows Wikipedia : Irregular Z-Buffer cywman.org : HFTS Presentation Video NVidia : Don’t be conservative with Conservative Rasterization NVidia : Advanced Geometrically Correct Shadows for Modern Game Engines 일반적으로 오브젝트를 그리는 것과 다른 Conservative Rasterization 을 해주는 이유는 일반적인 Rasterization 은 픽셀의 반이상을 차지해야 해당 픽셀을 처리해준다. 하지만 정확한 Visibility 를 계산하기 위해서는 폴리곤이 해당되는 모든 픽셀들을 처리해주어야 한다. Conservative Rasterization 은 앞에서 말한바와 같이 모든 부분을 픽셀로 처리한다. Conservative Rasterization 에 대한 자세한 정보는 NVidia : Don’t be conservative with Conservative Rasterization 에서 확인할 수 있다. &amp;#8617; 몬테카를로 시뮬레이션과 같은 방식의 점을 생성하는 방식이다. 쉽게 말하면 랜덤하게 생성하는 것이라고 생각하면 된다. 자세한 정보는 Wikipedia : Halton sequence 에서 확인할 수 있다. &amp;#8617; 여기서는 각도와 반지름(거리)를 사용하여 나나탠다. 극좌표계에 대한 자세한 정보는 위키피디아 : 극좌표계 에서 확인할 수 있다. &amp;#8617;</summary>
+      
+
+      
+      
+    </entry>
+  
   
   
     <entry>
@@ -1753,197 +2181,6 @@ for(int i = 0; i &amp;lt; 5; i++)
 
       
         <summary type="html">Programmable Shader 를 작성할 때에는 한가지 유의해야 할 점이 있다. 이는 Dynamic Branching 이라는 개념이다. Dynamic Branching 은 조건 분기문이 Programmable Shader 에서 사용될 때 나타나는 현상을 말한다. Programmable Shader 는 직렬이 아닌 병렬로 실행되기 때문에 나타나는 특성이다. 반복문에서도 조건 분기를 사용한다. 간단한 아래 코드를 보자. int i = 0; while(i &amp;lt; 5) { i++; } 위 코드는 프로그래밍을 입문할때 볼 수 있는 코드다. 중요한 것은 while 단어가 있는 줄에 있는 조건 식이다. (i &amp;lt; 5) 조건식 때문에 Dynamic Branching 이 발생한다. 이 Dynamic Branching 을 명시적으로 없에거나 만들기 위해 hlsl 에서 attribute 를 지원한다. 아래를 보자. [Attribute] for ( Initializer; Conditional; Iterator ) { Statement Block; } 해당 구문은 MSDN : for Statement 에서 가져왔다. 일반적으로 프로그래머이 정말 많이본 for 반복문이다. 우리가 봐야할 것은 for 구문 왼쪽의 [Attribute] 라는 구문이다. 이 부분에는 총 4가지의 옵션을 넣을 수 있는데, 이 글에서 언급할 [Attribute] 는 두가지다. unroll 과 loop 이 두가지이다. hlsl 로 정상적인 반복문 실행을 하게되면, 매번 반복을 할때 마다 조건식을 검사하게 되고, 해당 반복문의 범위를 마음대로 조정하여 코딩을 할 수 있다. 다만 조건식의 범위가 매번 달라진다면 Dynamic Branching 이 발생하게 된다. 그리고 반복문이 매번 Programmable Shader 가 실행될 때 상수로 반복을 한다면 쉐이더 컴파일러는 최적화를 위해 특정한 행동을 하게 된다. 아래 코드를 보자. for(int i = 0; i &amp;lt; 5; i++) { } 위의 코드는 루프를 다섯번 실행시키는 코드다. 따로 안에 인덱스 i 를 건드리지 않는다면 쉐이더 컴파일러는 컴파일 시점에 최적화를 한다. 이를 unroll 이라고 부를 수 있는데, 실행할 반복문을 반복문으로 해석하는게 아닌 5번 연속해서 같은 행동을 하게 하는 것이다. 조건 자체도 없어지고 그저 인덱스를 풀어쓰게 된다. 이는 상수(constant)로 반복문을 제어하면 쉐이더 컴파일러가 알아서 해주기 때문에 신경써주지 않아도 된다. 다만 unroll 이라는 키워드를 써서 바뀔 때는 변수를 사용해 반복문을 제어할 때다. 변수를 사용하면 컴파일 시점에서는 추측할 수 없기 때문에 암시적으로 unroll 을 할 수 없다. 이 때 unroll 키워드를 사용하여 제어할 수 있다. int count = ...; [unroll(5)] for(int i = 0; i &amp;lt; count; i++) { } 또한 암시적으로 unroll 된 반복문을 명시적으로 반복문으로 실행되게 할 수도 있다. [loop] for(int i = 0; i &amp;lt; 5; i++) { } 참조 자료 MSDN : for Statement GameDev : Can someone explain [loop] and [unroll] to me? GameDev : HLSL warning: Gradient-based operations must be moved out of flow control to prevent</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Introduce Of Wave Programming</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/10/16/introduce-of-wave-programming/" rel="alternate" type="text/html" title="Introduce Of Wave Programming" />
-      <published>2017-10-16T00:00:00+00:00</published>
-      <updated>2017-10-16T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/10/16/introduce-of-wave-programming</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/10/16/introduce-of-wave-programming/">&lt;p&gt;Windows 10 Fall Creators Update 가 나오면서 &lt;em&gt;Shader Model 6.0&lt;/em&gt; 이 추가되었다. 여태까지의 &lt;em&gt;Shader Model&lt;/em&gt; 업데이트는 대부분 DirectX 버젼이 올라가면서 같이 업데이트 된 경우가 많으나 이번의 &lt;em&gt;Shader Model 6.0&lt;/em&gt; 은 따로 업데이트 되었다. &lt;em&gt;Shader Model 6.0&lt;/em&gt; 에서의 가장 큰 기능 추가는 당연히 &lt;em&gt;Wave Intrisic&lt;/em&gt; 이라고 할 수 있겠다. &lt;em&gt;Wave Intrisic&lt;/em&gt; 을 제외하면 &lt;em&gt;Shader Model 6.0&lt;/em&gt; 은 바뀐게 없다.&lt;/p&gt;
-
-&lt;p&gt;여태까지의 HLSL 을 사용한 쉐이더 작성은 거의 대부분 &lt;em&gt;Single-Threading&lt;/em&gt; 으로 작동되었다. &lt;em&gt;Pixel Shader&lt;/em&gt; 에서 ddx, ddy instrisic 을 사용하여 Gradient 데이터를 가져올 수 있긴 했지만 이 것을 제외하면 거의 없었다고 보면 되겠다. 그래서 &lt;em&gt;Shader Model 6.0&lt;/em&gt; 에서는 다른 &lt;em&gt;Thread&lt;/em&gt; 와 인터렉션 할 수 있는 &lt;em&gt;Wave Intrisic&lt;/em&gt; 을 지원한다. &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/mt733232.aspx&quot;&gt;MSDN : HLSL Shader Model 6.0&lt;/a&gt; 을 살펴보면 알겠지만 단순한 API 들을 제공하는 것이다. 하지만 내부에서 동작하는 것은 조금 다르다.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/mt733232.aspx&quot;&gt;MSDN : HLSL Shader Model 6.0&lt;/a&gt; 에서 나온 용어에 대한 설명이 필요하다. &lt;em&gt;Lane&lt;/em&gt; 은 일반적으로 생각되는 한개의 &lt;em&gt;Thread&lt;/em&gt; 가 실행되는 것이다. &lt;em&gt;Shader Model 6.0&lt;/em&gt; 이전의 쉐이더 모델은 단순히 &lt;em&gt;Lane&lt;/em&gt; 개념 안에서 코딩을 해야 했다. &lt;em&gt;Lane&lt;/em&gt; 은 상황에 따라 실행되고 있는 상태일 수도 있고, 쉬고 있는 상태일 수도 있다. &lt;em&gt;Wave Intrisic&lt;/em&gt; 을 사용해 이를 각각의 &lt;em&gt;Lane&lt;/em&gt; 에서도 알 수 있다. &lt;em&gt;Wave&lt;/em&gt; 는 GPU 에서 실행되는 &lt;em&gt;Lane&lt;/em&gt; 의 묶음을 뜻한다. 즉 여러개의 &lt;em&gt;Lane&lt;/em&gt; 이라고 할 수 있겠다. 같은 &lt;em&gt;Wave&lt;/em&gt; 안의 &lt;em&gt;Lane&lt;/em&gt; 들은 &lt;em&gt;Barrier&lt;/em&gt; 라는게 없다. 필자가 알고 있는 &lt;em&gt;Barrier&lt;/em&gt; 는 &lt;em&gt;Memory Barrier&lt;/em&gt; 인데, 이는 &lt;em&gt;Thread&lt;/em&gt;(&lt;em&gt;Lane&lt;/em&gt;)끼리의 같은 메모리에 접근하는 것에 대한 동기화를 위해 있는 개념이다. 동기화를 위한 &lt;em&gt;Barrier&lt;/em&gt; 는 속도를 늦출 수 밖에 없다. 하지만 &lt;em&gt;Wave&lt;/em&gt; 로 묶여진 &lt;em&gt;Lane&lt;/em&gt; 들은 서로 &lt;em&gt;Barrier&lt;/em&gt; 가 명시적으로 존재하지 않기 때문에 &lt;em&gt;Wave&lt;/em&gt; 별로 빠른 메모리 접근이 가능하다는 것이다. &lt;em&gt;Wave&lt;/em&gt; 는 &lt;em&gt;Warp&lt;/em&gt;, &lt;em&gt;WaveFront&lt;/em&gt; 라고도 불리울 수 있다고 한다.&lt;/p&gt;
-
-&lt;p&gt;그리고 이 API 들을 통해 약간의 드라이버 내부를 엿볼 수 있다. &lt;em&gt;Pixel Shader&lt;/em&gt; 에서 &lt;em&gt;Render Lane&lt;/em&gt; 과 &lt;em&gt;Helper Lane&lt;/em&gt; 이 구분되어져 있는데, 이는 ddx,ddy 를 통해 픽셀의 Gradient 를 계산하는 것에 대한 보다 디테일한 개념을 생각할 수 있게 해준다. GPU 드라이버 시스템에서는 픽셀을 처리하기 위해 단순히 한개의 픽셀만 처리하는게 아닌 2x2 의 픽셀을 엮어 계산한다. 이를 MSDN 문서에서는 2x2 의 픽셀 뭉치를 &lt;em&gt;Quad&lt;/em&gt; 라고 명칭한다. &lt;em&gt;Quad&lt;/em&gt; 는 두가지 종류에 스레드가 실행된다. 하나는 우리가 잘 알고 있는 &lt;em&gt;Pixel Shader&lt;/em&gt; 를 실행하는 &lt;em&gt;Render Lane&lt;/em&gt; 이다. &lt;em&gt;Render Lane&lt;/em&gt; 은 화면에 보여주는 색을 결과로 내놓게 된다. 그리고 나머지 한가지는 &lt;em&gt;Helper Lane&lt;/em&gt; 인데, 이는 Pixel 별로 Gradient 를 계산하기 위해 실행되는 &lt;em&gt;Lane&lt;/em&gt; 으로써 아무런 결과를 내놓지 않고 단순히 계산을 위한 &lt;em&gt;Lane&lt;/em&gt; 이다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Shader Model 6.0&lt;/em&gt; 은 DirectX12 과 Vulkan 에서 지원한다. DirectX 에서는 &lt;em&gt;Pixel Shader&lt;/em&gt; 와 &lt;em&gt;Computer Shader&lt;/em&gt; 에서 지원한다. Vulkan 에서는 모든 쉐이더 단계에서 지원한다. 그래픽 카드 벤더별로 조금씩 다른게 있으니 &lt;a href=&quot;http://32ipi028l5q82yhj72224m8j.wpengine.netdna-cdn.com/wp-content/uploads/2017/07/GDC2017-Wave-Programming-D3D12-Vulkan.pdf&quot;&gt;GDCVault(GDC 2017) : Wave Programming D3D12 Vulkan &lt;/a&gt; 에서 참고 바란다.&lt;/p&gt;
-
-&lt;p&gt;이 API 는 여러 쓰레드들 끼리 쉽게 협력하여 보다 효율적인 쉐이더 병렬 프로그래밍을 가능하게 해줄듯하다. 다만 &lt;em&gt;Shader Model 5.0&lt;/em&gt; 에서 소개된 &lt;em&gt;ComputeShader&lt;/em&gt; 만큼의 임팩트는 없다. 패러다임의 아주 큰 변화는 없다는 뜻이다. DirectX12 가 지향하는 드라이버 시스템에서의 부담을 줄이는 것과 &lt;em&gt;Shader Model 6.0&lt;/em&gt; 은 서로 방향이 비슷하다고 생각된다.&lt;/p&gt;
-
-&lt;h1&gt;참조 자료&lt;/h1&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://www.gdcvault.com/play/1024732/Advanced-Graphics-Tech-D3D12-and&quot;&gt;GDCVault(GDC 2017) : D3D12 &amp;amp; Vulkan Done Right&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://32ipi028l5q82yhj72224m8j.wpengine.netdna-cdn.com/wp-content/uploads/2017/07/GDC2017-Wave-Programming-D3D12-Vulkan.pdf&quot;&gt;GDCVault(GDC 2017) : Wave Programming D3D12 Vulkan &lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/mt733232.aspx&quot;&gt;MSDN : HLSL Shader Model 6.0&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://optocrypto.com/2017/09/20/microsofts-program-shader-model-6-0-completed/&quot;&gt;Optocrypto : Microsoft’s first example program for shader model 6.0 was completed&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="render" />
-      
-        <category term="shader" />
-      
-
-      
-
-      
-        <summary type="html">Windows 10 Fall Creators Update 가 나오면서 Shader Model 6.0 이 추가되었다. 여태까지의 Shader Model 업데이트는 대부분 DirectX 버젼이 올라가면서 같이 업데이트 된 경우가 많으나 이번의 Shader Model 6.0 은 따로 업데이트 되었다. Shader Model 6.0 에서의 가장 큰 기능 추가는 당연히 Wave Intrisic 이라고 할 수 있겠다. Wave Intrisic 을 제외하면 Shader Model 6.0 은 바뀐게 없다. 여태까지의 HLSL 을 사용한 쉐이더 작성은 거의 대부분 Single-Threading 으로 작동되었다. Pixel Shader 에서 ddx, ddy instrisic 을 사용하여 Gradient 데이터를 가져올 수 있긴 했지만 이 것을 제외하면 거의 없었다고 보면 되겠다. 그래서 Shader Model 6.0 에서는 다른 Thread 와 인터렉션 할 수 있는 Wave Intrisic 을 지원한다. MSDN : HLSL Shader Model 6.0 을 살펴보면 알겠지만 단순한 API 들을 제공하는 것이다. 하지만 내부에서 동작하는 것은 조금 다르다. MSDN : HLSL Shader Model 6.0 에서 나온 용어에 대한 설명이 필요하다. Lane 은 일반적으로 생각되는 한개의 Thread 가 실행되는 것이다. Shader Model 6.0 이전의 쉐이더 모델은 단순히 Lane 개념 안에서 코딩을 해야 했다. Lane 은 상황에 따라 실행되고 있는 상태일 수도 있고, 쉬고 있는 상태일 수도 있다. Wave Intrisic 을 사용해 이를 각각의 Lane 에서도 알 수 있다. Wave 는 GPU 에서 실행되는 Lane 의 묶음을 뜻한다. 즉 여러개의 Lane 이라고 할 수 있겠다. 같은 Wave 안의 Lane 들은 Barrier 라는게 없다. 필자가 알고 있는 Barrier 는 Memory Barrier 인데, 이는 Thread(Lane)끼리의 같은 메모리에 접근하는 것에 대한 동기화를 위해 있는 개념이다. 동기화를 위한 Barrier 는 속도를 늦출 수 밖에 없다. 하지만 Wave 로 묶여진 Lane 들은 서로 Barrier 가 명시적으로 존재하지 않기 때문에 Wave 별로 빠른 메모리 접근이 가능하다는 것이다. Wave 는 Warp, WaveFront 라고도 불리울 수 있다고 한다. 그리고 이 API 들을 통해 약간의 드라이버 내부를 엿볼 수 있다. Pixel Shader 에서 Render Lane 과 Helper Lane 이 구분되어져 있는데, 이는 ddx,ddy 를 통해 픽셀의 Gradient 를 계산하는 것에 대한 보다 디테일한 개념을 생각할 수 있게 해준다. GPU 드라이버 시스템에서는 픽셀을 처리하기 위해 단순히 한개의 픽셀만 처리하는게 아닌 2x2 의 픽셀을 엮어 계산한다. 이를 MSDN 문서에서는 2x2 의 픽셀 뭉치를 Quad 라고 명칭한다. Quad 는 두가지 종류에 스레드가 실행된다. 하나는 우리가 잘 알고 있는 Pixel Shader 를 실행하는 Render Lane 이다. Render Lane 은 화면에 보여주는 색을 결과로 내놓게 된다. 그리고 나머지 한가지는 Helper Lane 인데, 이는 Pixel 별로 Gradient 를 계산하기 위해 실행되는 Lane 으로써 아무런 결과를 내놓지 않고 단순히 계산을 위한 Lane 이다. Shader Model 6.0 은 DirectX12 과 Vulkan 에서 지원한다. DirectX 에서는 Pixel Shader 와 Computer Shader 에서 지원한다. Vulkan 에서는 모든 쉐이더 단계에서 지원한다. 그래픽 카드 벤더별로 조금씩 다른게 있으니 GDCVault(GDC 2017) : Wave Programming D3D12 Vulkan 에서 참고 바란다. 이 API 는 여러 쓰레드들 끼리 쉽게 협력하여 보다 효율적인 쉐이더 병렬 프로그래밍을 가능하게 해줄듯하다. 다만 Shader Model 5.0 에서 소개된 ComputeShader 만큼의 임팩트는 없다. 패러다임의 아주 큰 변화는 없다는 뜻이다. DirectX12 가 지향하는 드라이버 시스템에서의 부담을 줄이는 것과 Shader Model 6.0 은 서로 방향이 비슷하다고 생각된다. 참조 자료 GDCVault(GDC 2017) : D3D12 &amp;amp; Vulkan Done Right GDCVault(GDC 2017) : Wave Programming D3D12 Vulkan MSDN : HLSL Shader Model 6.0 Optocrypto : Microsoft’s first example program for shader model 6.0 was completed</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Using Rendering To Cubemap</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/09/29/using-rendering-to-cubemap/" rel="alternate" type="text/html" title="Using Rendering To Cubemap" />
-      <published>2017-09-29T00:00:00+00:00</published>
-      <updated>2017-09-29T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/09/29/using-rendering-to-cubemap</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/09/29/using-rendering-to-cubemap/">&lt;p&gt;&lt;a href=&quot;/2017/09/29/using-relplacement-shader/&quot;&gt;using replacement shader&lt;/a&gt; 에서 &lt;em&gt;Camera.RenderWithShader&lt;/em&gt; 와 같은 렌더링을 코드에서 직접해주면서 기능을 커스터마이징 할 수 있는 것을 살펴보았는데, 이 게시물에서는 비슷한 메서드인 &lt;em&gt;Camera.RenderToCubemap&lt;/em&gt; 에 대해서 알아볼 것이다.&lt;/p&gt;
-
-&lt;p&gt;Unity 에서는 여러 렌더링 커스터마이징 기능을 제공하는데, 이 게시물에서는 그 중 하나인 &lt;em&gt;Camera.RenderToCubemap&lt;/em&gt; 에 대해서 알아볼 것이다. 일반적으로 &lt;em&gt;Cubemap&lt;/em&gt; 은 SkyBox 나 주변의 Irradiance 를 나타낼 때 쓴다. 다만 이를 직접 구현할 때의 문제점은 각 모서리별로 &lt;em&gt;Aliasing&lt;/em&gt; 이 일어나는 경우다. 매우 매끄러운 표면의 Specular 에서 &lt;em&gt;Aliasing&lt;/em&gt; 이 나타난 Irradiance 를 표현하면 굉장히 티가 많이 나기 때문에 이는 굉장히 신경써야할 문제다.&lt;/p&gt;
-
-&lt;p&gt;그래서 Unity 에서는 &lt;em&gt;Cubemap&lt;/em&gt; 에 렌더링을 하는 기능인 &lt;em&gt;Camera.RenderToCubemap&lt;/em&gt; 을 지원한다. 이를 통해 할 수 있는 것은 실시간으로 &lt;em&gt;Cubemap&lt;/em&gt; 에 렌더링된 결과를 저장해 &lt;em&gt;Irradiance&lt;/em&gt; 의 소스로 쓰거나, 실시간으로 바뀌는 &lt;em&gt;Skybox&lt;/em&gt; 렌더링을 할 수도 있다. 사용 방법은 아래와 같다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C#&quot;&gt;RenderTexture cubmapRT = ...;
-camera.RenderToCubemap(cubemapRT, 63);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;em&gt;Camera.RenderToCubemap&lt;/em&gt; 의 두번째로 들어가는 인자는 어떤 면을 그릴건지에 대한 비트마스크다. &lt;em&gt;Camera.RenderToCubemap&lt;/em&gt; 를 쓸때 주의할 점은 일부 하드웨어에서는 동작하지 않는 기능이라고 한다. 다만 특정한 하드웨어를 기술해 놓지않아서 추측하기는 어렵다. 단순히 추측할 수 있는 것은 MRT 를 지원하지 않거나 아니면 다른 &lt;em&gt;ComputeShader&lt;/em&gt; 같은 기능을 사용해 일부 하드웨어에서 안된다고 하는 정도 밖에 없다.&lt;/p&gt;
-
-&lt;p&gt;위 예제에서는 RenderTexture 를 사용하였는데, 저렇게 코드에서 처리할 수도 있지만 CustomRenderTexture 를 통해 간편하게 처리할 수도 있다. CustomRenderTexture 는 업데이트 주기를 사용자 임의대로 정할 수 있으므로 꽤나 유용하게 쓰일 수 있다.&lt;/p&gt;
-
-&lt;h1&gt;참조 자료&lt;/h1&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/kr/current/ScriptReference/Camera.RenderToCubemap.html&quot;&gt;Unity Reference : Camera.RenderToCubemap&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="unity" />
-      
-        <category term="render" />
-      
-
-      
-
-      
-        <summary type="html">using replacement shader 에서 Camera.RenderWithShader 와 같은 렌더링을 코드에서 직접해주면서 기능을 커스터마이징 할 수 있는 것을 살펴보았는데, 이 게시물에서는 비슷한 메서드인 Camera.RenderToCubemap 에 대해서 알아볼 것이다. Unity 에서는 여러 렌더링 커스터마이징 기능을 제공하는데, 이 게시물에서는 그 중 하나인 Camera.RenderToCubemap 에 대해서 알아볼 것이다. 일반적으로 Cubemap 은 SkyBox 나 주변의 Irradiance 를 나타낼 때 쓴다. 다만 이를 직접 구현할 때의 문제점은 각 모서리별로 Aliasing 이 일어나는 경우다. 매우 매끄러운 표면의 Specular 에서 Aliasing 이 나타난 Irradiance 를 표현하면 굉장히 티가 많이 나기 때문에 이는 굉장히 신경써야할 문제다. 그래서 Unity 에서는 Cubemap 에 렌더링을 하는 기능인 Camera.RenderToCubemap 을 지원한다. 이를 통해 할 수 있는 것은 실시간으로 Cubemap 에 렌더링된 결과를 저장해 Irradiance 의 소스로 쓰거나, 실시간으로 바뀌는 Skybox 렌더링을 할 수도 있다. 사용 방법은 아래와 같다. RenderTexture cubmapRT = ...; camera.RenderToCubemap(cubemapRT, 63); Camera.RenderToCubemap 의 두번째로 들어가는 인자는 어떤 면을 그릴건지에 대한 비트마스크다. Camera.RenderToCubemap 를 쓸때 주의할 점은 일부 하드웨어에서는 동작하지 않는 기능이라고 한다. 다만 특정한 하드웨어를 기술해 놓지않아서 추측하기는 어렵다. 단순히 추측할 수 있는 것은 MRT 를 지원하지 않거나 아니면 다른 ComputeShader 같은 기능을 사용해 일부 하드웨어에서 안된다고 하는 정도 밖에 없다. 위 예제에서는 RenderTexture 를 사용하였는데, 저렇게 코드에서 처리할 수도 있지만 CustomRenderTexture 를 통해 간편하게 처리할 수도 있다. CustomRenderTexture 는 업데이트 주기를 사용자 임의대로 정할 수 있으므로 꽤나 유용하게 쓰일 수 있다. 참조 자료 Unity Reference : Camera.RenderToCubemap</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Using Relplacement Shader</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/09/29/using-relplacement-shader/" rel="alternate" type="text/html" title="Using Relplacement Shader" />
-      <published>2017-09-29T00:00:00+00:00</published>
-      <updated>2017-09-29T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/09/29/using-relplacement-shader</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/09/29/using-relplacement-shader/">&lt;p&gt;Unity 는 &lt;em&gt;Replacement Shader&lt;/em&gt; 라는 렌더링 기능을 지원한다. 이는 Unity 가 Rendering 기능에서 지원하는 약간 Hack 한 테크닉이며 이 기능을 잘 사용하면 쉐이더를 바꿔치기 해서 재미있는 것들을 할 수 있다. &lt;em&gt;Replacement Shader&lt;/em&gt; 는 렌더링할 MeshRenderer 들이 가지고 있는 &lt;strong&gt;Material&lt;/strong&gt; 의 Shader 를 사용자가 원하는 것으로 바꾸는 기능이다. 이 기능을 통해 그림자 같은 여러 부가적인 처리를 할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;사용하는 방법은 아래와 같다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C#&quot;&gt;Shader shader = Shader.Find(&quot;CustomShaderName&quot;);
-string replacementTag = &quot;replace&quot;;
-
-// tag is optional. if dont need tag, insert null.
-camera.RenderWithShader(shader, replacementTag);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;위의 간단한 예제는 &lt;em&gt;Replacement Shader&lt;/em&gt; 를 사용해 한번 그려주는 예제다. 단순히 &lt;em&gt;Camera.RenderWithShader&lt;/em&gt; 를 사용하기 때문에 직접 값을 컨트롤할 때 사용하기 좋다. &lt;em&gt;Replacement Shader&lt;/em&gt; 를 영구적으로 세팅하여 자동으로 그려주면 아래와 같이 하면된다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C#&quot;&gt;Shader shader = Shader.Find(&quot;CustomShaderName&quot;);
-string replacementTag = &quot;replace&quot;;
-
-// tag is optional. if dont need tag, insert null.
-camera.SetReplacementShader(shader, replacementTag);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;사용 방법은 굉장히 단순하다. 다만 이 &lt;em&gt;Replacement Shader&lt;/em&gt; 기능에서 중요한 것은 쉐이더를 단순히 치환하는 것만 포인트가 아니다. 치환된 쉐이더들은 기존 &lt;strong&gt;Material&lt;/strong&gt; 이 가지고 있던 데이터들과 쉐이더 코드에서 이름만 똑같이 맞추어주면 자동으로 데이터들이 쉐이더로 들어온다. 즉 쉐이더를 갈아치우지 않고도 데이터를 공유할 수 있는 것이다. 이는 Unity 의 렌더링에서 굉장히 강력한 시스템으로 초기에는 이해하기도 힘들고 잔머리가 필요하지만 이를 잘 사용만 한다면 굉장히 유용하게 쓰일 수 있다.&lt;/p&gt;
-
-&lt;p&gt;필자는 Github 에서 OIT 예제를 보면서 처음 보았다. &lt;a href=&quot;https://github.com/candycat1992/OIT_Lab&quot;&gt;Github : OIT_Lab&lt;/a&gt; 에서 OIT 를 처리하는 코드에서 구경할 수 있다. 또한 일본 Unity 지사에서 일하는 유명한 keijiro 의 &lt;a href=&quot;https://github.com/keijiro/Skinner&quot;&gt;Skinner&lt;/a&gt; 에서 위치를 처리하는데 쓰이기도 한다.&lt;/p&gt;
-
-&lt;h1&gt;참조 자료&lt;/h1&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/kr/current/Manual/SL-ShaderReplacement.html&quot;&gt;Unity Reference : Replaced Shaders 에서의 렌더링&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="unity" />
-      
-        <category term="render" />
-      
-
-      
-
-      
-        <summary type="html">Unity 는 Replacement Shader 라는 렌더링 기능을 지원한다. 이는 Unity 가 Rendering 기능에서 지원하는 약간 Hack 한 테크닉이며 이 기능을 잘 사용하면 쉐이더를 바꿔치기 해서 재미있는 것들을 할 수 있다. Replacement Shader 는 렌더링할 MeshRenderer 들이 가지고 있는 Material 의 Shader 를 사용자가 원하는 것으로 바꾸는 기능이다. 이 기능을 통해 그림자 같은 여러 부가적인 처리를 할 수 있다. 사용하는 방법은 아래와 같다. Shader shader = Shader.Find(&quot;CustomShaderName&quot;); string replacementTag = &quot;replace&quot;; // tag is optional. if dont need tag, insert null. camera.RenderWithShader(shader, replacementTag); 위의 간단한 예제는 Replacement Shader 를 사용해 한번 그려주는 예제다. 단순히 Camera.RenderWithShader 를 사용하기 때문에 직접 값을 컨트롤할 때 사용하기 좋다. Replacement Shader 를 영구적으로 세팅하여 자동으로 그려주면 아래와 같이 하면된다. Shader shader = Shader.Find(&quot;CustomShaderName&quot;); string replacementTag = &quot;replace&quot;; // tag is optional. if dont need tag, insert null. camera.SetReplacementShader(shader, replacementTag); 사용 방법은 굉장히 단순하다. 다만 이 Replacement Shader 기능에서 중요한 것은 쉐이더를 단순히 치환하는 것만 포인트가 아니다. 치환된 쉐이더들은 기존 Material 이 가지고 있던 데이터들과 쉐이더 코드에서 이름만 똑같이 맞추어주면 자동으로 데이터들이 쉐이더로 들어온다. 즉 쉐이더를 갈아치우지 않고도 데이터를 공유할 수 있는 것이다. 이는 Unity 의 렌더링에서 굉장히 강력한 시스템으로 초기에는 이해하기도 힘들고 잔머리가 필요하지만 이를 잘 사용만 한다면 굉장히 유용하게 쓰일 수 있다. 필자는 Github 에서 OIT 예제를 보면서 처음 보았다. Github : OIT_Lab 에서 OIT 를 처리하는 코드에서 구경할 수 있다. 또한 일본 Unity 지사에서 일하는 유명한 keijiro 의 Skinner 에서 위치를 처리하는데 쓰이기도 한다. 참조 자료 Unity Reference : Replaced Shaders 에서의 렌더링</summary>
       
 
       
