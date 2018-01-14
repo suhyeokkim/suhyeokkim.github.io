@@ -38,7 +38,7 @@ void Process (uint3 id : SV_DispatchThreadID)
 }
 ```
 
-맨 처음에 있는 _dataBuffer_ 에 연결된다. [StructuredBuffer vs ConstantBuffer]({{ site.baseurl }}{ post_url 2017-07-06-structured-buffer-vs-constant-buffer }) 에서본 _StructuredBuffer_ 타입이 가능하다. 또한 _RWStructuredBuffer_, _ConsumeStructuredBuffer_, _AppendStructuredBuffer_ 가능하다. 다른 렌더러 쉐이더 코드에서도 사용가능하다. 그래서 일반적으로 고려되는 파이프라인은 아래와 같다.
+맨 처음에 있는 _dataBuffer_ 에 연결된다. [StructuredBuffer vs ConstantBuffer]({{ site.baseurl }}{% post_url 2017-07-06-structured-buffer-vs-constant-buffer %}) 에서본 _StructuredBuffer_ 타입이 가능하다. 또한 _RWStructuredBuffer_, _ConsumeStructuredBuffer_, _AppendStructuredBuffer_ 가능하다. 다른 렌더러 쉐이더 코드에서도 사용가능하다. 그래서 일반적으로 고려되는 파이프라인은 아래와 같다.
 
 ![data process](/images/data-process-pipeline.png){: .center-image}
 

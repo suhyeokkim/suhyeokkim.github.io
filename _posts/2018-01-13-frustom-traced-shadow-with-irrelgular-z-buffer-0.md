@@ -9,7 +9,7 @@ categories:
   - fts
 ---
 
-[Percentage-Closer Filtering Shadows]({{ site.baseurl }}{ post_url 2017-12-27-percentage-closer-soft-shadows }) 에서 _PCF_ 를 응용한 _PCSS_ 라는 _Soft Shadow_ 를 나타내는 기법에 대해서 알아보았다. 이번 글에서는 여태까지 알아본 것들에 비해 굉장히 최근에 나온 기법인 _Frustom-Traced Shadow_ 에 대해서 알아볼것이다.
+[Percentage-Closer Filtering Shadows]({{ site.baseurl }}{% post_url 2017-12-27-percentage-closer-soft-shadows %}) 에서 _PCF_ 를 응용한 _PCSS_ 라는 _Soft Shadow_ 를 나타내는 기법에 대해서 알아보았다. 이번 글에서는 여태까지 알아본 것들에 비해 굉장히 최근에 나온 기법인 _Frustom-Traced Shadow_ 에 대해서 알아볼것이다.
 
 해당 기법은 2015년에 _Siggraph_, _Interactive 3D_ 같은 컨퍼런스에서 발표되었으며, 현재 _Tom Clansy's the Division_ 에 _PCSS_ 와 혼합된 형태(_Hybrid Frustom Traced Shadow_)로 적용되어 있다. _Frame Rate_ 에 조금 영향을 미쳐 대부분의 게이머들은 아직은 _HFTS_ 를 사용하지 않는듯 하다.([Reddit : Nvidia HFTS (The Division)](https://www.reddit.com/r/nvidia/comments/49idz3/nvidia_hfts_the_division/)) 하지만 컴퓨팅 파워가 늘어나는 것을 가정한다면 앞으로 하이엔드 게임의 주 옵션이 될수도 있겠다.
 

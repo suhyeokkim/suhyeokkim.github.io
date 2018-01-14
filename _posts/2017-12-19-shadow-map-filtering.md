@@ -11,7 +11,7 @@ categories:
 
 
 
-[What is Shadow Mapping]({{ site.baseurl }}{ post_url 2017-11-30-what-is-shadow-mapping }) 에서 _Shadow Mapping_ 에 대한 간단한 번역 & 설명을 적어놓았다. 해당 글에서 _PCF_ 를 잠깐 언급했었다. 이 글에서는 _PCF_ 를 포함해서 _Shadow Map_ 을 필터링하는 방법에 대해서 알아보겠다.
+[What is Shadow Mapping]({{ site.baseurl }}{% post_url 2017-11-30-what-is-shadow-mapping %}) 에서 _Shadow Mapping_ 에 대한 간단한 번역 & 설명을 적어놓았다. 해당 글에서 _PCF_ 를 잠깐 언급했었다. 이 글에서는 _PCF_ 를 포함해서 _Shadow Map_ 을 필터링하는 방법에 대해서 알아보겠다.
 
 첫번째는 _PCF_ 다. 풀어쓰면 _Percentage Closer Filtering_ 이라는 단어가 되며, _Shadow Map_ 을 여러번 샘플링해 _Percentage_ 를 소숫점으로 나타내서 _Shadow_ 가 생긴 정도를 나타내주는 _Filtering_ 기법이다. 쉽게 이해할 수 있도록 아래 그림을 보자.
 
@@ -93,7 +93,7 @@ float VSM_FILTER( float2 tex, float fragDepth )
 
 눈여겨 볼것은 샘플러를 _Linear_ 하게 설정해놓는 것이다.
 
-하지만 _VSM_ 은 큰 단점이 하나 있다. 바로 _Light Leaking_ 이 일어나는 것이다. 이는 [GDC 2006 : Variance Shadow Map](https://http.download.nvidia.com/developer/presentations/2006/gdc/2006-GDC-Variance-Shadow-Maps.pdf) 에서 참조할 수 있다. 이를 해결 하는 근본적인 방법은 없다고 한다. 
+하지만 _VSM_ 은 큰 단점이 하나 있다. 바로 _Light Leaking_ 이 일어나는 것이다. 이는 [GDC 2006 : Variance Shadow Map](https://http.download.nvidia.com/developer/presentations/2006/gdc/2006-GDC-Variance-Shadow-Maps.pdf) 에서 참조할 수 있다. 이를 해결 하는 근본적인 방법은 없다고 한다.
 
 두가지 기법의 차이는 텍스쳐 샘플링을 더 많이 하느냐, 메모리를 2배로 늘려주느냐의 차이에 있다. 속도를 따지면 _VSM_ 이 빠르다고 한다. 하지만 굳이 퍼포먼스를 낼 필요가 없다면 _PCF_ 를 사용하는 것도 나쁜 선택은 아닐것 같다. 선택에 대한 궁금증은 [OpenGL Forum : Shadow filtering: PCF better than VSM? ](https://www.opengl.org/discussion_boards/showthread.php/177219-Shadow-filtering-PCF-better-than-VSM) 글을 참조하길 바란다.
 

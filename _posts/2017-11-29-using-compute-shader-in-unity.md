@@ -67,7 +67,7 @@ shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
 
 _Compute Shader_ 는 _DirectX 11_ 이상, _Vulkan_,  _OpenGL 4.3_ 이상, _OpenGL ES 3.0_ 이상, _Metal_ 에서 사용가능하다. 그 아래의 플랫폼은 지원하지 않는다. 또 유의해야 할점은 그래픽 드라이버별로 지원 기능이 조금씩 다를 수 있으니 기능을 유의하며 사용해야한다. [Unity Manual : ComptuteShader](https://docs.unity3d.com/Manual/ComputeShaders.html) 에서 조금 참고할 수 있다.
 
-[Using Compute Buffer in Unity]({{ site.baseurl }}{ post_url 2017-08-01-using-compute-buffer-in-unity }) 에서 관련된 내용을 언급했으니 같이 보면 좋을듯 하다.
+[Using Compute Buffer in Unity]({{ site.baseurl }}{% post_url 2017-08-01-using-compute-buffer-in-unity %}) 에서 관련된 내용을 언급했으니 같이 보면 좋을듯 하다.
 
 ## 참조
 

@@ -9,11 +9,11 @@ categories:
   - fts
 ---
 
-[Frustom Traced Shadow with Irregular Z-Buffer 0]({{ site.baseurl }}{ post_url 2018-01-13-frustom-traced-shadow-with-irrelgular-z-buffer-0 }) 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다.
+[Frustom Traced Shadow with Irregular Z-Buffer 0]({{ site.baseurl }}{% post_url 2018-01-13-frustom-traced-shadow-with-irrelgular-z-buffer-0 %}) 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다.
 
 ### 전체 시스템
 
-[이전 글]({{ site.baseurl }}{ post_url 2018-01-13-frustom-traced-shadow-with-irrelgular-z-buffer-0 })에서 두가지 단계에 대해서 자세한 설명을 했었다. _Irregular Z-Buffer_ 를 생성하고 _Visibility Test_ 를 하는 것이였다. 실제 구현된 단계는 총 6개의 단계로 이루어진다고 한다.
+[이전 글]({{ site.baseurl }}{% post_url 2018-01-13-frustom-traced-shadow-with-irrelgular-z-buffer-0 %})에서 두가지 단계에 대해서 자세한 설명을 했었다. _Irregular Z-Buffer_ 를 생성하고 _Visibility Test_ 를 하는 것이였다. 실제 구현된 단계는 총 6개의 단계로 이루어진다고 한다.
 
 첫번째로는 _Eye-Space Z-Prepass_ 를 해준다. 요즘의 엔진들이나 큰 규모가 아닌 게임이더라도 _Z-Prepass_[^L1] 는 거의 대부분 해준다. _Geometry Pass_ 가 두번 걸리기는 하지만 _Fill Rate_ 의 부하가 _Geometry Pass_ 의 부하보다 많이 커서 그런 듯하다. 중요한건 단순히 언급한 _Eye-Space Z-Prepass_ 를 뜻하는게 아니다. 이전에 언급한 _μQuad_ 의 빠른 계산을 위해 _G-Buffer_ 에 3개의 실수 값들을 넣는다. 이 3개의 실수는 실제 그려지는 카메라의 위치와 _Tangent Plane_ 의 4개의 코너중에 3개의 거리를 나타낸다. 이는 _μQuad_ 를 다시 계산하기에 충분하다고 한다.
 

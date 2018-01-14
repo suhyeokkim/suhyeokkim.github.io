@@ -9,7 +9,7 @@ categories:
   - pcss
 ---
 
-[Shadow Map Filtering]({{ site.baseurl }}{ post_url 2017-12-19-shadow-map-filtering }) 에서 _PCF_ 와 _VSM_ 에 대하여 간단히 알아보았다. 이번 글에서 설명할 것은 _PCF_ 를 활용한 _PCSS_ 다.
+[Shadow Map Filtering]({{ site.baseurl }}{% post_url 2017-12-19-shadow-map-filtering %}) 에서 _PCF_ 와 _VSM_ 에 대하여 간단히 알아보았다. 이번 글에서 설명할 것은 _PCF_ 를 활용한 _PCSS_ 다.
 
 _PCSS_ 는 _Soft Shadow_ 를 구현하는 기법 중 하나로써 2005년에 발표되어 여태까지도 꽤나 알려진 기법이다. 우선 _Soft Shadow_ 가 무엇인지 알아보자.
 

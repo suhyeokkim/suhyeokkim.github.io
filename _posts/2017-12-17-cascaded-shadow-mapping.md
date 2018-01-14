@@ -9,7 +9,7 @@ categories:
   - csm
 ---
 
-[What is Shadow Mapping]({{ site.baseurl }}{ post_url 2017-11-30-what-is-shadow-mapping }) 에서 _Shadow Mapping_ 에 대한 간단한 번역 & 설명을 적어놓았다. 이번 글에서는 _Shadow Mapping_ 을 효과적으로 사용하기 위한 _Cascaded Shadow Mapping_ 에 대하여 적어보겠다.
+[What is Shadow Mapping]({{ site.baseurl }}{% post_url 2017-11-30-what-is-shadow-mapping %}) 에서 _Shadow Mapping_ 에 대한 간단한 번역 & 설명을 적어놓았다. 이번 글에서는 _Shadow Mapping_ 을 효과적으로 사용하기 위한 _Cascaded Shadow Mapping_ 에 대하여 적어보겠다.
 
 _Cascaded Shadow Mapping_ 을 구글 번역기에 돌려보면 _"계단식 그림자 매핑"_ 이라고 나온다. 조금 직관적이지 않은 말이지만 뜻 자체는 맞다. 간단하게 _Cascaded Shadow Mapping_ 에 대하여 말하자면 넓은 환경의 그림자를 위해 거리에(거의 _Depth_) 따라서 여러개의 _Shadow Map_ 을 생성하는 방법이다.
 
@@ -17,7 +17,7 @@ _Cascaded Shadow Mapping_ 을 구글 번역기에 돌려보면 _"계단식 그�
 
 ## Shadow-map generation
 
-_Cascaded Shadow Mapping_ 을 위한 _Shadow Map_ 생성은 앞서쓴 [글]({{ site.baseurl }}{ post_url 2017-11-30-what-is-shadow-mapping })에서 설명한 방법과 거의 유사하다. 앞서 여러개의 _Shadow Map_ 을 생성하여 그림자를 표현한다고 언급했었다. 여러개의 _Shaodw Map_ 을 생성하는 기준은 _View Frustom_ 을 _Depth_ 를 기준으로 여러개로 쪼개어 각 쪼개진 _Frustom_ 을 기준으로 _Shadow Map_ 을 그린다.
+_Cascaded Shadow Mapping_ 을 위한 _Shadow Map_ 생성은 앞서쓴 [글]({{ site.baseurl }}{% post_url 2017-11-30-what-is-shadow-mapping %})에서 설명한 방법과 거의 유사하다. 앞서 여러개의 _Shadow Map_ 을 생성하여 그림자를 표현한다고 언급했었다. 여러개의 _Shaodw Map_ 을 생성하는 기준은 _View Frustom_ 을 _Depth_ 를 기준으로 여러개로 쪼개어 각 쪼개진 _Frustom_ 을 기준으로 _Shadow Map_ 을 그린다.
 
 _Frustom_ 은 보통 _Depth_ 값을 정하거나 어떤 알고리즘을 사용하여 쪼갠다. 이는 다음 포스팅에서 언급할 예정이다. _Frustom_ 을 쪼개주면 다음은 쪼개진 _Camera View Frustom_ 의 각각의 8개의 꼭지점들을 _Light-Space_ 로 변환한다. 변환된 각각 꼭지점으로 2차원의 _aligned axis bounding box_ 의 위치를 구해준다. 가장 작은 X,Y 값과 가장 큰 X, Y 값을 구해주면 된다.
 
