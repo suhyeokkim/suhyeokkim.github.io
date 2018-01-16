@@ -10,7 +10,7 @@
  - Tiled Lighting
 
  - Order Independant Transparency
- - Shadow mapping, Cascaded Shadow Mapping, Ray-Tracing Shadow, Frustom-Tracing Shadow, Percentage-Closer Soft-Shadow
+ - Shadow mapping, Cascaded Shadow Mapping, Ray-Tracing Shadow, frustum-Tracing Shadow, Percentage-Closer Soft-Shadow
 
 # Practical
 

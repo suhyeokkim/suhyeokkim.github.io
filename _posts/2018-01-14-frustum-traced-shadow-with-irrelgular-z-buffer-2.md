@@ -9,10 +9,11 @@ categories:
   - fts
 ---
 
-[Frustom Traced Shadow with Irregular Z-Buffer 1]({{ site.baseurl }}{% post_url 2018-01-13-frustom-traced-shadow-with-irrelgular-z-buffer-1 %}) 에서 포괄적인 전체 시스템과 복잡도에 대하여 알아보았다. 이번 글에서는 시스템 구현에 관한 디테일한 사항들을 알아볼 것이다.
+[frustum Traced Shadow with Irregular Z-Buffer 1]({{ site.baseurl }}{% post_url 2018-01-13-frustum-traced-shadow-with-irrelgular-z-buffer-1 %}) 에서 포괄적인 전체 시스템과 복잡도에 대하여 알아보았다. 이번 글에서는 시스템 구현에 관한 디테일한 사항들을 알아볼 것이다.
 
 첫번째로는 _Irregular Z-Buffer_ 와 _Sampling Rate_ 간의 최적화다. 논문의 저자는 기본적으로 _32spp_ (_sampling per pixel_) 를 제안했다. 정확히 짚자면, _Light-Space_ 에서 _Occluder Geometry_ 를 _Conservative Rasterization_ 을 하면 _Visibility Test_ 를 계산하는 것이, 한번 _Visibility Test_ 를 할때 32번을 하는게 가장 신경쓰이는 부분이다. 이의 결과를 저장하기 위해 두가지 방법이 있다고 한다. 하나는 _μQuad_ 를 _Light-Space_ 에서 _IZB_ 를 만들 떄 _Rasterize_ 하는 것, 다른 방법은 32 번의 _Visibility Test_ 샘플링 결과를 _IZB_ 에 저장하는 것이다. 전자는 비용이 크기 때문에 안쓰고, 후자를 선택했다고 한다. 이를 _Sample-based insertion_ 이라고 명명했다. 그래서 이 방식으로 _Prototype_ 을 만들어 보니, _IZB_ 의 중복을 위한 최적화를 했음에도 불구하고 한 픽셀당 8개 이상의 _IZB Node_ 가 생성되었다고 한다.
 
+그래서 고안해낸 간단한 근사(_approximate_)하는 방법을 언급한다. _μQuad_ 의 _Normal_ 벡터와 _View Ray_(_Eye Direction_) 벡터의 내적 값이 0에 가까워질수록(90도에 가까워질수록) _μQuad_ 를 늘리는 것이다. 아래 그림의 왼쪽 그림을 보면 쉽게 이해할 수 있다.
 그래서 고안해낸 간단한 근사(_approximate_)하는 방법을 언급한다. _μQuad_ 의 _Normal_ 벡터와 _View Ray_(_Eye Direction_) 벡터의 내적 값이 0에 가까워질수록(90도에 가까워질수록) _μQuad_ 를 늘리는 것이다. 아래 그림의 왼쪽 그림을 보면 쉽게 이해할 수 있다.
 
 <br/>
@@ -57,7 +58,7 @@ categories:
 
 세번째는 헤드 포인터를 가지고 있는 _Light-Space Buffer_ 의 해상도다. 일반적인 _Shadow Mapping_ 기법의 _Shadow Map_ 의 해상도는 보여지는 정도를 결정하지만, 여기서의 해상도는 퍼포먼스를 결정한다.(_La_) 1920 x 1080 을 기준으로 추천하는 해상도는 1400 ~ 2500 사이라고 한다.
 
-네번째로는 기존의 _Shadow Mapping_ 의 잘 알려진 기법인 _Cascaded Shadow Mapping_[^P1] 을 이 기법에 적용시키는 것이다. 이 기법의 원리는 _View Frustom_ 을 원하는 갯수대로 쪼갠 후, 쪼개진 _Frustom_ 안의 오브젝트들의 _Shadow_ 를 계산한다. 논문에서 쪼개는 방법은 _Sample Distribution Shadow Map_ 과 _Logarithm Partitioning_ 을 언급했다. 여기서는 쪼개진 _Frustom_ 마다 전부 _IZB_ 를 생성한다. 이때 각각의 쪼개진 _Frustom_ 의 끝부분이 잘 맞도록 신경써야줘야 한다고 언급했다. 논문의 저자는 구현할때 _2D Texture Array_ 를 사용하여 _IZB_ 를 저장하고, 병렬로 각각의 _Detph Texture_ 마다 _Light-Space Culling Prepass_ 를 넣어줬다고 한다. 일반적으로 각각의 _Cascade_ 를 계산할때는 한개당 하나의 _Pass_ 를 사용하여 계산하는데, 여기서는 1 Pass 로 적절히 프리미티브를 나누어 성능 향상을 고려했다고 한다.
+네번째로는 기존의 _Shadow Mapping_ 의 잘 알려진 기법인 _Cascaded Shadow Mapping_[^P1] 을 이 기법에 적용시키는 것이다. 이 기법의 원리는 _View frustum_ 을 원하는 갯수대로 쪼갠 후, 쪼개진 _frustum_ 안의 오브젝트들의 _Shadow_ 를 계산한다. 논문에서 쪼개는 방법은 _Sample Distribution Shadow Map_ 과 _Logarithm Partitioning_ 을 언급했다. 여기서는 쪼개진 _frustum_ 마다 전부 _IZB_ 를 생성한다. 이때 각각의 쪼개진 _frustum_ 의 끝부분이 잘 맞도록 신경써야줘야 한다고 언급했다. 논문의 저자는 구현할때 _2D Texture Array_ 를 사용하여 _IZB_ 를 저장하고, 병렬로 각각의 _Detph Texture_ 마다 _Light-Space Culling Prepass_ 를 넣어줬다고 한다. 일반적으로 각각의 _Cascade_ 를 계산할때는 한개당 하나의 _Pass_ 를 사용하여 계산하는데, 여기서는 1 Pass 로 적절히 프리미티브를 나누어 성능 향상을 고려했다고 한다.
 
 _Cascade_ 의 적용은 _Occluder Geometry_ 의 _Rasterize_ 퍼포먼스를 안고 가면서 _Thread Divergence_ 의 시간을 줄여준다. 이는 사용시 적절한 타협점을 찾아야 한다는 뜻으로, 보통은 두개의 _Cascade_ 를 사용하고, 복잡한 게임에서는 3개나 4개의 _Cascade_ 를 사용하여 상황에 따라 뜀뛰는 시간을 최소화 시킨다. 아래 그림은 _Cascade_ 의 효과를 증명해준다.
 

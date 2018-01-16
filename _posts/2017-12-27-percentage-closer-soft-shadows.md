@@ -60,7 +60,7 @@ _Soft Shadow_ 가 표현하는 부드러운 부분의 그림자는 위 그림에
 </center>
 <br/>
 
-보통 _Pixel Shader_ 에서 그림자의 비춘 정도를 계산하기 때문에 _Receiver_ 의 작은 부분을 기준으로 그림이 그려져 있다. 작은 부분을 기준으로 _Area Light_ 와의 _Frustom_ 과 _Blocker_ 가 얼마나 충돌되는지 체크한다. 우리는 _Shadow Map_ 을 사용하기 때문에 아래 그림이 조금 더 실제 계산과 비슷하다.
+보통 _Pixel Shader_ 에서 그림자의 비춘 정도를 계산하기 때문에 _Receiver_ 의 작은 부분을 기준으로 그림이 그려져 있다. 작은 부분을 기준으로 _Area Light_ 와의 _frustum_ 과 _Blocker_ 가 얼마나 충돌되는지 체크한다. 우리는 _Shadow Map_ 을 사용하기 때문에 아래 그림이 조금 더 실제 계산과 비슷하다.
 
 <br/>
 

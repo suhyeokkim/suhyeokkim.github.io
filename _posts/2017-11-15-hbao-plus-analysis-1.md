@@ -37,12 +37,12 @@ __HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다.__
 ) 그래서 _Pixel Shader_ 로 넘어간 데이터들은 픽셀별로 들어가고, 픽셀별로 들어간 정점들의 위치는 _Clipping-Space_ 로 되어있다. 여기까지 이해했으면 아래 그림을 보자.
 
 <br/>
-![Frustom vs Clipping](/images/Graphics3D_ClipVolume.png){: .center-image}
+![frustum vs Clipping](/images/Graphics3D_ClipVolume.png){: .center-image}
 <center>출처 : <a href="https://www.ntu.edu.sg/home/ehchua/programming/opengl/CG_BasicsTheory.html">3D Graphics with OpenGL Basic Theory</a>
 </center>
 <br/>
 
-위 그림은 _View Frustom_ 과 _Clipping Volume_ 을 보여준다. _View Frustom_ 은 _Perspective_ 방식으로 카메라가 실제로 보여주는 공간을 시각화 한것이고, _Clipping Volume_ 은 _MVP_ 변환에서 _Projection_ 행렬을 사용할시 _View Frustom_ 에서 _Clipping Volume_ 으로 변환되는 볼륨을 시각화 한것이다. _Projection_ 변환은 아래와 같다.
+위 그림은 _View frustum_ 과 _Clipping Volume_ 을 보여준다. _View frustum_ 은 _Perspective_ 방식으로 카메라가 실제로 보여주는 공간을 시각화 한것이고, _Clipping Volume_ 은 _MVP_ 변환에서 _Projection_ 행렬을 사용할시 _View frustum_ 에서 _Clipping Volume_ 으로 변환되는 볼륨을 시각화 한것이다. _Projection_ 변환은 아래와 같다.
 
 <br/>
 ![perspective projection matrix](/images/projection_matrix.png){: .center-image}
@@ -51,7 +51,7 @@ __HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다.__
 </center>
 <br/>
 
-_Perspective Projection_ 은 _Frustom_ 기준 위치를 _Cube_ 기준 위치로 바꾸는 연산이기 때문에 실제 좌표의 왜곡이 발생한다. 우리는 Z(Detph) 값이 어떤식으로 왜곡되는지 알아야 한다. 우선 _Clipping-Space_ 로 변환할때, _Perspective_ 형식의 _View Frustom_ 의 _zNear_, _zFar_ 사이의 Z 값을 [0~1] 값으로 매핑한다. 그러면 _zNear_, _zFar_ 값을에 따라서 실제 좌표가 바뀐다. 그리고 값 자체가 실제 Z 값과 선형적으로 매핑되지 않는다. 아래 그림을 보자.
+_Perspective Projection_ 은 _frustum_ 기준 위치를 _Cube_ 기준 위치로 바꾸는 연산이기 때문에 실제 좌표의 왜곡이 발생한다. 우리는 Z(Detph) 값이 어떤식으로 왜곡되는지 알아야 한다. 우선 _Clipping-Space_ 로 변환할때, _Perspective_ 형식의 _View frustum_ 의 _zNear_, _zFar_ 사이의 Z 값을 [0~1] 값으로 매핑한다. 그러면 _zNear_, _zFar_ 값을에 따라서 실제 좌표가 바뀐다. 그리고 값 자체가 실제 Z 값과 선형적으로 매핑되지 않는다. 아래 그림을 보자.
 
 <br/>
 ![non linear depth](/images/nonlinearDepth.png){: .center-image}
