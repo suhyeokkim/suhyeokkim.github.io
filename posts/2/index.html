@@ -1244,12 +1244,12 @@ Shaders can then take advantage of potential performance improvements by using a
 ) 그래서 <em>Pixel Shader</em> 로 넘어간 데이터들은 픽셀별로 들어가고, 픽셀별로 들어간 정점들의 위치는 <em>Clipping-Space</em> 로 되어있다. 여기까지 이해했으면 아래 그림을 보자.</p>
 
 <p><br />
-<img src="/images/Graphics3D_ClipVolume.png" alt="Frustom vs Clipping" class="center-image" /></p>
+<img src="/images/Graphics3D_ClipVolume.png" alt="frustum vs Clipping" class="center-image" /></p>
 <center>출처 : <a href="https://www.ntu.edu.sg/home/ehchua/programming/opengl/CG_BasicsTheory.html">3D Graphics with OpenGL Basic Theory</a>
 </center>
 <p><br /></p>
 
-<p>위 그림은 <em>View Frustom</em> 과 <em>Clipping Volume</em> 을 보여준다. <em>View Frustom</em> 은 <em>Perspective</em> 방식으로 카메라가 실제로 보여주는 공간을 시각화 한것이고, <em>Clipping Volume</em> 은 <em>MVP</em> 변환에서 <em>Projection</em> 행렬을 사용할시 <em>View Frustom</em> 에서 <em>Clipping Volume</em> 으로 변환되는 볼륨을 시각화 한것이다. <em>Projection</em> 변환은 아래와 같다.</p>
+<p>위 그림은 <em>View frustum</em> 과 <em>Clipping Volume</em> 을 보여준다. <em>View frustum</em> 은 <em>Perspective</em> 방식으로 카메라가 실제로 보여주는 공간을 시각화 한것이고, <em>Clipping Volume</em> 은 <em>MVP</em> 변환에서 <em>Projection</em> 행렬을 사용할시 <em>View frustum</em> 에서 <em>Clipping Volume</em> 으로 변환되는 볼륨을 시각화 한것이다. <em>Projection</em> 변환은 아래와 같다.</p>
 
 <p><br />
 <img src="/images/projection_matrix.png" alt="perspective projection matrix" class="center-image" /></p>
@@ -1258,7 +1258,7 @@ Shaders can then take advantage of potential performance improvements by using a
 </center>
 <p><br /></p>
 
-<p><em>Perspective Projection</em> 은 <em>Frustom</em> 기준 위치를 <em>Cube</em> 기준 위치로 바꾸는 연산이기 때문에 실제 좌표의 왜곡이 발생한다. 우리는 Z(Detph) 값이 어떤식으로 왜곡되는지 알아야 한다. 우선 <em>Clipping-Space</em> 로 변환할때, <em>Perspective</em> 형식의 <em>View Frustom</em> 의 <em>zNear</em>, <em>zFar</em> 사이의 Z 값을 [0~1] 값으로 매핑한다. 그러면 <em>zNear</em>, <em>zFar</em> 값을에 따라서 실제 좌표가 바뀐다. 그리고 값 자체가 실제 Z 값과 선형적으로 매핑되지 않는다. 아래 그림을 보자.</p>
+<p><em>Perspective Projection</em> 은 <em>frustum</em> 기준 위치를 <em>Cube</em> 기준 위치로 바꾸는 연산이기 때문에 실제 좌표의 왜곡이 발생한다. 우리는 Z(Detph) 값이 어떤식으로 왜곡되는지 알아야 한다. 우선 <em>Clipping-Space</em> 로 변환할때, <em>Perspective</em> 형식의 <em>View frustum</em> 의 <em>zNear</em>, <em>zFar</em> 사이의 Z 값을 [0~1] 값으로 매핑한다. 그러면 <em>zNear</em>, <em>zFar</em> 값을에 따라서 실제 좌표가 바뀐다. 그리고 값 자체가 실제 Z 값과 선형적으로 매핑되지 않는다. 아래 그림을 보자.</p>
 
 <p><br />
 <img src="/images/nonlinearDepth.png" alt="non linear depth" class="center-image" /></p>

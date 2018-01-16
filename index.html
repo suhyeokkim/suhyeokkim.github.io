@@ -105,7 +105,7 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
-            <a class="post-link" href="/2018/01/14/frustom-traced-shadow-with-irrelgular-z-buffer-2/">Frustom Traced Shadow With Irrelgular Z Buffer 2</a>
+            <a class="post-link" href="/2018/01/14/frustum-traced-shadow-with-irrelgular-z-buffer-2/">Frustum Traced Shadow With Irrelgular Z Buffer 2</a>
           </h1>
 
           <p class="post-meta">Jan 14, 2018 • 
@@ -413,11 +413,12 @@
         </header>
 
         <div class="post-content">
-          <p><a href="/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-1/">Frustom Traced Shadow with Irregular Z-Buffer 1</a> 에서 포괄적인 전체 시스템과 복잡도에 대하여 알아보았다. 이번 글에서는 시스템 구현에 관한 디테일한 사항들을 알아볼 것이다.</p>
+          <p><a href="/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1/">frustum Traced Shadow with Irregular Z-Buffer 1</a> 에서 포괄적인 전체 시스템과 복잡도에 대하여 알아보았다. 이번 글에서는 시스템 구현에 관한 디테일한 사항들을 알아볼 것이다.</p>
 
 <p>첫번째로는 <em>Irregular Z-Buffer</em> 와 <em>Sampling Rate</em> 간의 최적화다. 논문의 저자는 기본적으로 <em>32spp</em> (<em>sampling per pixel</em>) 를 제안했다. 정확히 짚자면, <em>Light-Space</em> 에서 <em>Occluder Geometry</em> 를 <em>Conservative Rasterization</em> 을 하면 <em>Visibility Test</em> 를 계산하는 것이, 한번 <em>Visibility Test</em> 를 할때 32번을 하는게 가장 신경쓰이는 부분이다. 이의 결과를 저장하기 위해 두가지 방법이 있다고 한다. 하나는 <em>μQuad</em> 를 <em>Light-Space</em> 에서 <em>IZB</em> 를 만들 떄 <em>Rasterize</em> 하는 것, 다른 방법은 32 번의 <em>Visibility Test</em> 샘플링 결과를 <em>IZB</em> 에 저장하는 것이다. 전자는 비용이 크기 때문에 안쓰고, 후자를 선택했다고 한다. 이를 <em>Sample-based insertion</em> 이라고 명명했다. 그래서 이 방식으로 <em>Prototype</em> 을 만들어 보니, <em>IZB</em> 의 중복을 위한 최적화를 했음에도 불구하고 한 픽셀당 8개 이상의 <em>IZB Node</em> 가 생성되었다고 한다.</p>
 
-<p>그래서 고안해낸 간단한 근사(<em>approximate</em>)하는 방법을 언급한다. <em>μQuad</em> 의 <em>Normal</em> 벡터와 <em>View Ray</em>(<em>Eye Direction</em>) 벡터의 내적 값이 0에 가까워질수록(90도에 가까워질수록) <em>μQuad</em> 를 늘리는 것이다. 아래 그림의 왼쪽 그림을 보면 쉽게 이해할 수 있다.</p>
+<p>그래서 고안해낸 간단한 근사(<em>approximate</em>)하는 방법을 언급한다. <em>μQuad</em> 의 <em>Normal</em> 벡터와 <em>View Ray</em>(<em>Eye Direction</em>) 벡터의 내적 값이 0에 가까워질수록(90도에 가까워질수록) <em>μQuad</em> 를 늘리는 것이다. 아래 그림의 왼쪽 그림을 보면 쉽게 이해할 수 있다.
+그래서 고안해낸 간단한 근사(<em>approximate</em>)하는 방법을 언급한다. <em>μQuad</em> 의 <em>Normal</em> 벡터와 <em>View Ray</em>(<em>Eye Direction</em>) 벡터의 내적 값이 0에 가까워질수록(90도에 가까워질수록) <em>μQuad</em> 를 늘리는 것이다. 아래 그림의 왼쪽 그림을 보면 쉽게 이해할 수 있다.</p>
 
 <p><br />
 <img src="/images/fts_microquad_elongate.png" alt="" class="center-image" /></p>
@@ -461,7 +462,7 @@
 
 <p>세번째는 헤드 포인터를 가지고 있는 <em>Light-Space Buffer</em> 의 해상도다. 일반적인 <em>Shadow Mapping</em> 기법의 <em>Shadow Map</em> 의 해상도는 보여지는 정도를 결정하지만, 여기서의 해상도는 퍼포먼스를 결정한다.(<em>La</em>) 1920 x 1080 을 기준으로 추천하는 해상도는 1400 ~ 2500 사이라고 한다.</p>
 
-<p>네번째로는 기존의 <em>Shadow Mapping</em> 의 잘 알려진 기법인 <em>Cascaded Shadow Mapping</em><sup id="fnref:P1"><a href="#fn:P1" class="footnote">3</a></sup> 을 이 기법에 적용시키는 것이다. 이 기법의 원리는 <em>View Frustom</em> 을 원하는 갯수대로 쪼갠 후, 쪼개진 <em>Frustom</em> 안의 오브젝트들의 <em>Shadow</em> 를 계산한다. 논문에서 쪼개는 방법은 <em>Sample Distribution Shadow Map</em> 과 <em>Logarithm Partitioning</em> 을 언급했다. 여기서는 쪼개진 <em>Frustom</em> 마다 전부 <em>IZB</em> 를 생성한다. 이때 각각의 쪼개진 <em>Frustom</em> 의 끝부분이 잘 맞도록 신경써야줘야 한다고 언급했다. 논문의 저자는 구현할때 <em>2D Texture Array</em> 를 사용하여 <em>IZB</em> 를 저장하고, 병렬로 각각의 <em>Detph Texture</em> 마다 <em>Light-Space Culling Prepass</em> 를 넣어줬다고 한다. 일반적으로 각각의 <em>Cascade</em> 를 계산할때는 한개당 하나의 <em>Pass</em> 를 사용하여 계산하는데, 여기서는 1 Pass 로 적절히 프리미티브를 나누어 성능 향상을 고려했다고 한다.</p>
+<p>네번째로는 기존의 <em>Shadow Mapping</em> 의 잘 알려진 기법인 <em>Cascaded Shadow Mapping</em><sup id="fnref:P1"><a href="#fn:P1" class="footnote">3</a></sup> 을 이 기법에 적용시키는 것이다. 이 기법의 원리는 <em>View frustum</em> 을 원하는 갯수대로 쪼갠 후, 쪼개진 <em>frustum</em> 안의 오브젝트들의 <em>Shadow</em> 를 계산한다. 논문에서 쪼개는 방법은 <em>Sample Distribution Shadow Map</em> 과 <em>Logarithm Partitioning</em> 을 언급했다. 여기서는 쪼개진 <em>frustum</em> 마다 전부 <em>IZB</em> 를 생성한다. 이때 각각의 쪼개진 <em>frustum</em> 의 끝부분이 잘 맞도록 신경써야줘야 한다고 언급했다. 논문의 저자는 구현할때 <em>2D Texture Array</em> 를 사용하여 <em>IZB</em> 를 저장하고, 병렬로 각각의 <em>Detph Texture</em> 마다 <em>Light-Space Culling Prepass</em> 를 넣어줬다고 한다. 일반적으로 각각의 <em>Cascade</em> 를 계산할때는 한개당 하나의 <em>Pass</em> 를 사용하여 계산하는데, 여기서는 1 Pass 로 적절히 프리미티브를 나누어 성능 향상을 고려했다고 한다.</p>
 
 <p><em>Cascade</em> 의 적용은 <em>Occluder Geometry</em> 의 <em>Rasterize</em> 퍼포먼스를 안고 가면서 <em>Thread Divergence</em> 의 시간을 줄여준다. 이는 사용시 적절한 타협점을 찾아야 한다는 뜻으로, 보통은 두개의 <em>Cascade</em> 를 사용하고, 복잡한 게임에서는 3개나 4개의 <em>Cascade</em> 를 사용하여 상황에 따라 뜀뛰는 시간을 최소화 시킨다. 아래 그림은 <em>Cascade</em> 의 효과를 증명해준다.</p>
 
@@ -523,7 +524,7 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
-            <a class="post-link" href="/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-1/">Frustom Traced Shadow With Irrelgular Z Buffer 1</a>
+            <a class="post-link" href="/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1/">Frustum Traced Shadow With Irrelgular Z Buffer 1</a>
           </h1>
 
           <p class="post-meta">Jan 13, 2018 • 
@@ -831,11 +832,11 @@
         </header>
 
         <div class="post-content">
-          <p><a href="/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-0/">Frustom Traced Shadow with Irregular Z-Buffer 0</a> 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다.</p>
+          <p><a href="/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0/">frustum Traced Shadow with Irregular Z-Buffer 0</a> 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다.</p>
 
 <h3>전체 시스템</h3>
 
-<p><a href="/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-0/">이전 글</a>에서 두가지 단계에 대해서 자세한 설명을 했었다. <em>Irregular Z-Buffer</em> 를 생성하고 <em>Visibility Test</em> 를 하는 것이였다. 실제 구현된 단계는 총 6개의 단계로 이루어진다고 한다.</p>
+<p><a href="/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0/">이전 글</a>에서 두가지 단계에 대해서 자세한 설명을 했었다. <em>Irregular Z-Buffer</em> 를 생성하고 <em>Visibility Test</em> 를 하는 것이였다. 실제 구현된 단계는 총 6개의 단계로 이루어진다고 한다.</p>
 
 <p>첫번째로는 <em>Eye-Space Z-Prepass</em> 를 해준다. 요즘의 엔진들이나 큰 규모가 아닌 게임이더라도 <em>Z-Prepass</em><sup id="fnref:L1"><a href="#fn:L1" class="footnote">1</a></sup> 는 거의 대부분 해준다. <em>Geometry Pass</em> 가 두번 걸리기는 하지만 <em>Fill Rate</em> 의 부하가 <em>Geometry Pass</em> 의 부하보다 많이 커서 그런 듯하다. 중요한건 단순히 언급한 <em>Eye-Space Z-Prepass</em> 를 뜻하는게 아니다. 이전에 언급한 <em>μQuad</em> 의 빠른 계산을 위해 <em>G-Buffer</em> 에 3개의 실수 값들을 넣는다. 이 3개의 실수는 실제 그려지는 카메라의 위치와 <em>Tangent Plane</em> 의 4개의 코너중에 3개의 거리를 나타낸다. 이는 <em>μQuad</em> 를 다시 계산하기에 충분하다고 한다.</p>
 
@@ -924,7 +925,7 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
-            <a class="post-link" href="/2018/01/13/frustom-traced-shadow-with-irrelgular-z-buffer-0/">Frustom Traced Shadow With Irrelgular Z Buffer 0</a>
+            <a class="post-link" href="/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0/">Frustum Traced Shadow With Irrelgular Z Buffer 0</a>
           </h1>
 
           <p class="post-meta">Jan 13, 2018 • 
@@ -1232,9 +1233,9 @@
         </header>
 
         <div class="post-content">
-          <p><a href="/2017/12/27/percentage-closer-soft-shadows/">Percentage-Closer Filtering Shadows</a> 에서 <em>PCF</em> 를 응용한 <em>PCSS</em> 라는 <em>Soft Shadow</em> 를 나타내는 기법에 대해서 알아보았다. 이번 글에서는 여태까지 알아본 것들에 비해 굉장히 최근에 나온 기법인 <em>Frustom-Traced Shadow</em> 에 대해서 알아볼것이다.</p>
+          <p><a href="/2017/12/27/percentage-closer-soft-shadows/">Percentage-Closer Filtering Shadows</a> 에서 <em>PCF</em> 를 응용한 <em>PCSS</em> 라는 <em>Soft Shadow</em> 를 나타내는 기법에 대해서 알아보았다. 이번 글에서는 여태까지 알아본 것들에 비해 굉장히 최근에 나온 기법인 <em>frustum-Traced Shadow</em> 에 대해서 알아볼것이다.</p>
 
-<p>해당 기법은 2015년에 <em>Siggraph</em>, <em>Interactive 3D</em> 같은 컨퍼런스에서 발표되었으며, 현재 <em>Tom Clansy’s the Division</em> 에 <em>PCSS</em> 와 혼합된 형태(<em>Hybrid Frustom Traced Shadow</em>)로 적용되어 있다. <em>Frame Rate</em> 에 조금 영향을 미쳐 대부분의 게이머들은 아직은 <em>HFTS</em> 를 사용하지 않는듯 하다.(<a href="https://www.reddit.com/r/nvidia/comments/49idz3/nvidia_hfts_the_division/">Reddit : Nvidia HFTS (The Division)</a>) 하지만 컴퓨팅 파워가 늘어나는 것을 가정한다면 앞으로 하이엔드 게임의 주 옵션이 될수도 있겠다.</p>
+<p>해당 기법은 2015년에 <em>Siggraph</em>, <em>Interactive 3D</em> 같은 컨퍼런스에서 발표되었으며, 현재 <em>Tom Clansy’s the Division</em> 에 <em>PCSS</em> 와 혼합된 형태(<em>Hybrid frustum Traced Shadow</em>)로 적용되어 있다. <em>Frame Rate</em> 에 조금 영향을 미쳐 대부분의 게이머들은 아직은 <em>HFTS</em> 를 사용하지 않는듯 하다.(<a href="https://www.reddit.com/r/nvidia/comments/49idz3/nvidia_hfts_the_division/">Reddit : Nvidia HFTS (The Division)</a>) 하지만 컴퓨팅 파워가 늘어나는 것을 가정한다면 앞으로 하이엔드 게임의 주 옵션이 될수도 있겠다.</p>
 
 <p>이 기법의 저자는 <em>Shadow Map</em> 처럼 따로 붙은 기법없이 <em>Aliasing</em> 이 없어야 했으며, 현세대의 GPU 와 해상도를 <em>Interactive</em> 하게 지원하는 것이 완벽한 <em>Hard Shadow</em> 를 목표로 <em>FTS</em> 를 고안했다. 가장 많이 쓰이는 <em>Shadow Map</em> 기법은 공간적(<em>Light-Space</em> 와 <em>Clipping-Space</em> 의 <em>Discretize</em> 된 결과의 차이), 일시적인(필터링이 필요한 <em>Aliasing</em>)인 문제들이 산재한다. 이는 이 기법을 고안한 시발점이였다.</p>
 
@@ -1253,7 +1254,7 @@
 
 <h3>Key Idea</h3>
 
-<p>이 기법의 중요한 아이디어는 앞에서 소개한 <em>Irregular Z-Buffer</em> 와 <em>Frustom-Triangle Test</em> 이 두가지다. <em>Irregular Z-Buffer</em> 는 앞서 <em>Shadow Map</em> 의 단점중에 공간적 괴리를 해결하는 데이터 구조이고, <em>Frustom-Triangle Test</em> 는 논문에서 한 말을 이용하면 <em>Sub-Pixel Accurate Pixel</em> 을 구성하기 위한 시뮬레이션 테스트다. 이 두가지를 간단하게 살펴보자.</p>
+<p>이 기법의 중요한 아이디어는 앞에서 소개한 <em>Irregular Z-Buffer</em> 와 <em>frustum-Triangle Test</em> 이 두가지다. <em>Irregular Z-Buffer</em> 는 앞서 <em>Shadow Map</em> 의 단점중에 공간적 괴리를 해결하는 데이터 구조이고, <em>frustum-Triangle Test</em> 는 논문에서 한 말을 이용하면 <em>Sub-Pixel Accurate Pixel</em> 을 구성하기 위한 시뮬레이션 테스트다. 이 두가지를 간단하게 살펴보자.</p>
 
 <p>첫번째로는 바로 위에서 언급했던 <em>Irregular Z-Buffer</em> 다. 여기서의 <em>IZB</em> 는 우리가 알던 일반적인 <em>Buffer</em> 의 쓰임새와는 조금 다르게 쓰인다. 이 기법에서의 <em>IZB</em> 는 일반적인 <em>Shadow Map</em> 에서의 <em>Eye-Space</em> 와 <em>Light-Space</em> 의 괴리를 없에기 위해 <em>Light-Space</em> 를 기준으로 <em>Depth</em> 를 쭉 저장하는게 아닌, <em>Eye-Space</em> 의 각각 픽셀별로 표현하는 물체에 영향을 미치는 광원을 방향으로 <em>Ray</em> 를 쏜다. 그리고 <em>Light-Space</em> 를 기준으로 만든 <em>Grid</em> 버퍼에 <em>Ray</em> 가 부딫치고, 부딫친 부분에서 가장 가까운 텍셀에 데이터를 저장한다. 위에서 설명한 <em>IZB</em> 를 구성하는 방법에 대한 그림이 아래에 있다.</p>
 
@@ -1293,7 +1294,7 @@ end for
 </center>
 <p><br /></p>
 
-<p>다음은 <em>Visibility Test</em> 다. 논문에서는 <em>Frustom-Triangle Test</em> 라고 부르는데, 이는 조금 복잡한 과정으로 구성된다. 아래 그림을 보면서 알아보자.</p>
+<p>다음은 <em>Visibility Test</em> 다. 논문에서는 <em>frustum-Triangle Test</em> 라고 부르는데, 이는 조금 복잡한 과정으로 구성된다. 아래 그림을 보면서 알아보자.</p>
 
 <p><br />
 <img src="/images/fts_VisibilityTest.png" alt="" class="center-image" /></p>
@@ -1303,14 +1304,14 @@ end for
 
 <p>가장 처음에는 <em>μQuad</em> 라는 것을 생성한다. <em>μQuad</em> 는 <em>Tangent-Space</em> 를 기준으로 설정하며 각 픽셀별로 생성한다. 위 그림에서는 중간 그림에 구 위에있는 평면을 뜻한다. 그 다음 가리는 <em>Geometry</em> 의 폴리곤들의 각각의 <em>Edge</em> 를 사용하여 <em>Shadow Plane</em> 을 생성한다. 마지막으로 만들어진 <em>Shadow Plane</em> 을 <em>μQuad</em> 에 <em>Projection</em> 한다. 이때 가지고 있던 <em>LUT</em> 를 통해 가려짐을 계산한다. 그리고 다른 <em>Edge</em> 들도 계속해서 누적시킨다.</p>
 
-<p>간단하게 <em>Frustom-Triangle Test</em> 의 단계에 대해 설명해보았다. 이제 각각의 과정 : <em>μQuad Construction</em>, <em>Shadow Plane Construction</em>, <em>Visibility Computation</em> 에 대해 조금 더 자세히 써보겠다.</p>
+<p>간단하게 <em>frustum-Triangle Test</em> 의 단계에 대해 설명해보았다. 이제 각각의 과정 : <em>μQuad Construction</em>, <em>Shadow Plane Construction</em>, <em>Visibility Computation</em> 에 대해 조금 더 자세히 써보겠다.</p>
 
 <p><em>μQuad</em> 의 생성은 <em>Geometry</em> 의 <em>Tangent-Space</em> 를 기준으로 계산되는 것 빼고는 특이한 점이 없다. 하지만 생성되는 시기에 대해선 조금 특별한게 있다. 가시성을 계산할 때 생성할 수도 있지만 <em>G-Buffer</em> 를 생성할 때 미리 계산하는 것이 더 효율적이라고 한다.</p>
 
 <p>가시성을 계산할 때 <em>ray-triangle intersection</em> 을 계산하기 보다는 앖에서 언급한 각각의 폴리곤의 <em>Shadow Volume</em> 을 각 점마다 계산한다고 한다. <em>Shadow Volume</em> 은 그림자를 생성하는 <em>Occluder Triangle</em> 을 기준으로 각각의 <em>Edge</em> 에서 뻗어나오는 직사각형 면으로 구성된다. 아래 그림을 보면 쉽게 이해할 수 있다. 그리고 <em>μQuad</em> 에서 샘플링한 각각의 점들을 기준으로 가시성을 계산한다면 한다면, 4번의 내적으로 가시성을 테스트할 수 있다는 것을 의미한다.</p>
 
 <p><br />
-<img src="/images/HFTS_FrustomTracing.png" alt="" class="center-image" /></p>
+<img src="/images/HFTS_frustumTracing.png" alt="" class="center-image" /></p>
 <center>출처 : <a href="http://developer.download.nvidia.com/gameworks/events/  GDC2016/jstory_hfts.pdf">NVidia : Advanced Geometrically Correct Shadows for Modern Game Engines</a>
 </center>
 <p><br /></p>
@@ -1321,7 +1322,7 @@ end for
 
 <p>가시성을 계산하기 위해서는 <em>Shadow Plane</em> 을 <em>μQuad</em> 에 <em>Projection</em> 해줘야 한다. 그러면 <em>μQuad</em> 는 최대 3개의 <em>line</em> 을 얻게 된다. 논문에서는 이 <em>line</em> 을 <em>μQuad</em> 를 기준으로 극좌표계<sup id="fnref:C3"><a href="#fn:C3" class="footnote">3</a></sup> 데이터로 저장한다고 한다. 반지름과 각도가 5bit 크기로 저장된다. 해당 10bit 데이터를 사용하여 미리 계산된 테이블에서 32개의 이진 가시성 샘플을 가져온다. 결과와  bit 단위의 and 연산을 통해 <em>μQuad</em> 의 가시성을 계산할 수 있다고 한다.</p>
 
-<p>해당 기법을 고안한 사람은 두가지의 아이디어 : <em>Irregular Z-Buffer</em> 와 <em>Frustom-Triangle Test</em> 를 통해  <em>Sub-pixel Hard Shadow</em> 의 이론을 만들었다. 하지만 이 아이디어들과 구현을 위한 노력의 차이는 꽤 큰듯하다. 논문을 보면 아이디어에 대한 텍스트보다 최적화를 위한 텍스트가 2배가 될정도로 많다. 다음 글에서는 논문에서 나온 전체 과정과 디테일한 구현 사항에 대해 적어보겠다.</p>
+<p>해당 기법을 고안한 사람은 두가지의 아이디어 : <em>Irregular Z-Buffer</em> 와 <em>frustum-Triangle Test</em> 를 통해  <em>Sub-pixel Hard Shadow</em> 의 이론을 만들었다. 하지만 이 아이디어들과 구현을 위한 노력의 차이는 꽤 큰듯하다. 논문을 보면 아이디어에 대한 텍스트보다 최적화를 위한 텍스트가 2배가 될정도로 많다. 다음 글에서는 논문에서 나온 전체 과정과 디테일한 구현 사항에 대해 적어보겠다.</p>
 
 <h2>참조</h2>
 
@@ -1825,7 +1826,7 @@ end for
 </center>
 <p><br /></p>
 
-<p>보통 <em>Pixel Shader</em> 에서 그림자의 비춘 정도를 계산하기 때문에 <em>Receiver</em> 의 작은 부분을 기준으로 그림이 그려져 있다. 작은 부분을 기준으로 <em>Area Light</em> 와의 <em>Frustom</em> 과 <em>Blocker</em> 가 얼마나 충돌되는지 체크한다. 우리는 <em>Shadow Map</em> 을 사용하기 때문에 아래 그림이 조금 더 실제 계산과 비슷하다.</p>
+<p>보통 <em>Pixel Shader</em> 에서 그림자의 비춘 정도를 계산하기 때문에 <em>Receiver</em> 의 작은 부분을 기준으로 그림이 그려져 있다. 작은 부분을 기준으로 <em>Area Light</em> 와의 <em>frustum</em> 과 <em>Blocker</em> 가 얼마나 충돌되는지 체크한다. 우리는 <em>Shadow Map</em> 을 사용하기 때문에 아래 그림이 조금 더 실제 계산과 비슷하다.</p>
 
 <p><br /></p>
 
@@ -2626,9 +2627,9 @@ end for
 
 <h2>Shadow-map generation</h2>
 
-<p><em>Cascaded Shadow Mapping</em> 을 위한 <em>Shadow Map</em> 생성은 앞서쓴 <a href="/2017/11/30/what-is-shadow-mapping/">글</a>에서 설명한 방법과 거의 유사하다. 앞서 여러개의 <em>Shadow Map</em> 을 생성하여 그림자를 표현한다고 언급했었다. 여러개의 <em>Shaodw Map</em> 을 생성하는 기준은 <em>View Frustom</em> 을 <em>Depth</em> 를 기준으로 여러개로 쪼개어 각 쪼개진 <em>Frustom</em> 을 기준으로 <em>Shadow Map</em> 을 그린다.</p>
+<p><em>Cascaded Shadow Mapping</em> 을 위한 <em>Shadow Map</em> 생성은 앞서쓴 <a href="/2017/11/30/what-is-shadow-mapping/">글</a>에서 설명한 방법과 거의 유사하다. 앞서 여러개의 <em>Shadow Map</em> 을 생성하여 그림자를 표현한다고 언급했었다. 여러개의 <em>Shaodw Map</em> 을 생성하는 기준은 <em>View frustum</em> 을 <em>Depth</em> 를 기준으로 여러개로 쪼개어 각 쪼개진 <em>frustum</em> 을 기준으로 <em>Shadow Map</em> 을 그린다.</p>
 
-<p><em>Frustom</em> 은 보통 <em>Depth</em> 값을 정하거나 어떤 알고리즘을 사용하여 쪼갠다. 이는 다음 포스팅에서 언급할 예정이다. <em>Frustom</em> 을 쪼개주면 다음은 쪼개진 <em>Camera View Frustom</em> 의 각각의 8개의 꼭지점들을 <em>Light-Space</em> 로 변환한다. 변환된 각각 꼭지점으로 2차원의 <em>aligned axis bounding box</em> 의 위치를 구해준다. 가장 작은 X,Y 값과 가장 큰 X, Y 값을 구해주면 된다.</p>
+<p><em>frustum</em> 은 보통 <em>Depth</em> 값을 정하거나 어떤 알고리즘을 사용하여 쪼갠다. 이는 다음 포스팅에서 언급할 예정이다. <em>frustum</em> 을 쪼개주면 다음은 쪼개진 <em>Camera View frustum</em> 의 각각의 8개의 꼭지점들을 <em>Light-Space</em> 로 변환한다. 변환된 각각 꼭지점으로 2차원의 <em>aligned axis bounding box</em> 의 위치를 구해준다. 가장 작은 X,Y 값과 가장 큰 X, Y 값을 구해주면 된다.</p>
 
 <p><br />
 <img src="/images/CSM_EffectOfCropMatrix.png" alt="" class="center-image" /></p>
@@ -2638,7 +2639,7 @@ end for
 
 <p>위 그림에서 XY 평면에서의 빨간색 선으로 되어있는 사각형이 언급한 <em>aligned axis bounding box</em> 를 말한다. 이 <em>AABB</em> 는 아래에서 특정한 행렬을 만들때 쓰인다.</p>
 
-<p><a href="http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf">NVidia : Cascaded Shadow Maps  </a> 에서는 이 <em>Light-Space</em> 로 변환하는 <em>MVP 변환</em> 에서 <em>Projection</em> 변환을 바꿔준다고 설명한다. 두개의 행렬이 나오는데, 하나는 직교 투영 행렬로(<em>orthogonal projection</em>) 나눠진 <em>Frustom</em> 의 <em>Far</em> 값과 <em>Near</em> 값을 통해 생성해준다. 그리고 나머지 하나는 <em>Crop Matrix</em> 라는 변환 행렬이다.</p>
+<p><a href="http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf">NVidia : Cascaded Shadow Maps  </a> 에서는 이 <em>Light-Space</em> 로 변환하는 <em>MVP 변환</em> 에서 <em>Projection</em> 변환을 바꿔준다고 설명한다. 두개의 행렬이 나오는데, 하나는 직교 투영 행렬로(<em>orthogonal projection</em>) 나눠진 <em>frustum</em> 의 <em>Far</em> 값과 <em>Near</em> 값을 통해 생성해준다. 그리고 나머지 하나는 <em>Crop Matrix</em> 라는 변환 행렬이다.</p>
 
 <p>위에서 구한 <em>Light-Space</em> 의 <em>AABB</em> 값을 통해 <em>Crop Matrix</em> 를 계산한다. 아래 그림에서나오는 Mx, My 와 mx, my 는 각각 Maximum X,Y, Minimum X,Y 를 뜻한다.</p>
 
