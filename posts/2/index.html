@@ -105,6 +105,213 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2017/11/18/DrawInstanced-vs-Merged-Instancing/">Drawinstanced Vs Merged Instancing</a>
+          </h1>
+
+          <p class="post-meta">Nov 18, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/render/">render</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/hlsl/">hlsl</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p><a href="https://www.gdcvault.com/play/1020624/Advanced-Visual-Effects-with-DirectX">GDC 2014 : Vertex Sahder Tricks</a> 슬라이드에 따르면 <em>DrawInstanced</em> 함수를 사용하여 인스턴싱을 하는것보다 <em>vertexID</em> 를 사용하여 인스턴싱을 하는것이 빠르다고 한다. <em>vertexID</em> 를 쓰는 방법은 굉장히 단순하다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>VSOutput VS(uint id : SV_VertexID)
+{
+    VSOutput output;
+
+    /*
+        ...
+    */
+
+    return output;
+}
+</code></pre></div></div>
+
+<p><em>SV_VertexID</em> <em>Semantic</em> 을 사용하여 값을 접근하기만 하면 된다. <em>vertexID</em> 는 말그대로 버텍스별 인덱스를 뜻한다. <em>SRV</em> 나 <em>UAV</em> 와 함께 사용하여 <em>Instancing</em> 을 하면된다.</p>
+
+<p><br />
+<img src="/images/gdc2014_vertexshadertricks_23.png" alt="Merge Instancing Performance" /></p>
+<center>출처 : <a href="https://www.gdcvault.com/play/1020624/Advanced-Visual-Effects-with-DirectX">GDC 2014 : Vertex Sahder Tricks</a>
+</center>
+<p><br /></p>
+
+<p>그림을 보면 AMD GPU 에서 확실히 퍼포먼스 차이가 난것을 확인할 수 있다. <del>스피커가 AMD 소속이라는 게 포인트</del></p>
+
+<h1>참조 자료</h1>
+
+<ul>
+  <li><a href="https://www.gdcvault.com/play/1020624/Advanced-Visual-Effects-with-DirectX">GDC 2014 : Vertex Sahder Tricks</a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2017/11/15/hbao-plus-analysis-3/">Hbao Plus Analysis 3</a>
           </h1>
 
@@ -161,6 +368,10 @@
   
     
       <a href="/categories/render/">render</a>,
+    
+  
+    
+  
     
   
     
@@ -258,6 +469,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -271,6 +486,10 @@
   
     
       <a href="/categories/analysis/">analysis</a>,
+    
+  
+    
+  
     
   
     
@@ -390,6 +609,10 @@
   
     
       <a href="/categories/hbao/">hbao+</a>
+    
+  
+    
+  
     
   
     
@@ -538,6 +761,10 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
   
+    
+  
+    
+  
 
   
   
@@ -551,6 +778,10 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/analysis/">analysis</a>,
+    
+  
+    
+  
     
   
     
@@ -688,6 +919,10 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
   
+    
+  
+    
+  
 
   
   
@@ -751,6 +986,10 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/bilateral-filter/">bilateral_filter</a>
+    
+  
+    
+  
     
   
     
@@ -912,6 +1151,10 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
   
+    
+  
+    
+  
 
   
   
@@ -925,6 +1168,10 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/analysis/">analysis</a>,
+    
+  
+    
+  
     
   
     
@@ -1062,6 +1309,10 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
   
+    
+  
+    
+  
 
   
   
@@ -1121,6 +1372,10 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/linearize-depth/">linearize_depth</a>,
+    
+  
+    
+  
     
   
     
@@ -1198,6 +1453,10 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/deintereaved-texturing/">deintereaved_texturing</a>
+    
+  
+    
+  
     
   
     
@@ -1426,6 +1685,10 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
   
+    
+  
+    
+  
 
   
   
@@ -1439,6 +1702,10 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/analysis/">analysis</a>,
+    
+  
+    
+  
     
   
     
@@ -1558,6 +1825,10 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/hbao/">hbao+</a>
+    
+  
+    
+  
     
   
     
@@ -1733,6 +2004,10 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
   
+    
+  
+    
+  
 
   
   
@@ -1768,6 +2043,10 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
     
   
     
@@ -1863,6 +2142,10 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
+    
+  
     
   
     
@@ -2024,6 +2307,10 @@ void geom(vertexOutput input[3], uint InstanceID : SV_GSInstanceID, inout PointS
   
     
   
+    
+  
+    
+  
 
   
   
@@ -2059,6 +2346,10 @@ void geom(vertexOutput input[3], uint InstanceID : SV_GSInstanceID, inout PointS
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
     
   
     
@@ -2154,6 +2445,10 @@ void geom(vertexOutput input[3], uint InstanceID : SV_GSInstanceID, inout PointS
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
+    
+  
     
   
     
@@ -2308,6 +2603,10 @@ fixed4 frag(v2f i)
   
     
   
+    
+  
+    
+  
 
   
   
@@ -2363,6 +2662,10 @@ fixed4 frag(v2f i)
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
+    
+  
     
   
     
@@ -2493,6 +2796,10 @@ fixed4 frag(v2f i)
   
     
   
+    
+  
+    
+  
 
   
   
@@ -2528,6 +2835,10 @@ fixed4 frag(v2f i)
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
     
   
     
@@ -2643,6 +2954,10 @@ fixed4 frag(v2f i)
   
     
   
+    
+  
+    
+  
 
   
   
@@ -2718,6 +3033,10 @@ fixed4 frag(v2f i)
   
     
   
+    
+  
+    
+  
 
   
   
@@ -2727,6 +3046,10 @@ fixed4 frag(v2f i)
   
     
       <a href="/categories/unity/">unity</a>
+    
+  
+    
+  
     
   
     
@@ -2956,6 +3279,10 @@ v2f vert(appdata i)
   
     
   
+    
+  
+    
+  
 
   
   
@@ -2991,6 +3318,10 @@ v2f vert(appdata i)
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
     
   
     
@@ -3086,6 +3417,10 @@ v2f vert(appdata i)
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
+    
+  
     
   
     
@@ -3134,302 +3469,6 @@ v2f vert(appdata i)
 <h3>각종 버퍼들의 활용</h3>
 
 <p><em>Shader Model 4.0</em> 과 <em>Shader Model 5.0</em> 를 통해 여러 버퍼들을 사용하여 <em>Shader</em> 안에서 돌고도는 <em>varying data</em> (쉐이더들의 파라미터들) 와 함께 응용을 할 수 있게 되었다. 이는 함수 한개씩을 파라미터와 반환값만 바꾸면서 코딩하는 환경에서 참조할 전역 변수를 만들어주어 훨씬 더 많은 데이터들을 접근할 수 있게 해준것이다.</p>
-
-        </div>
-
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/10/26/loop-attributes-for-dynamic-branching/">Loop Attributes For Dynamic Branching</a>
-          </h1>
-
-          <p class="post-meta">Oct 26, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/render/">render</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/shader/">shader</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/hlsl/">hlsl</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p><em>Programmable Shader</em> 를 작성할 때에는 한가지 유의해야 할 점이 있다. 이는 <em>Dynamic Branching</em> 이라는 개념이다. <em>Dynamic Branching</em> 은 조건 분기문이 <em>Programmable Shader</em> 에서 사용될 때 나타나는 현상을 말한다. <em>Programmable Shader</em> 는 직렬이 아닌 병렬로 실행되기 때문에 나타나는 특성이다. 반복문에서도 조건 분기를 사용한다. 간단한 아래 코드를 보자.</p>
-
-<pre><code class="language-hlsl">int i = 0;
-while(i &lt; 5)
-{
-  i++;
-}
-</code></pre>
-
-<p>위 코드는 프로그래밍을 입문할때 볼 수 있는 코드다. 중요한 것은 <em>while</em> 단어가 있는 줄에 있는 조건 식이다. <em>(i &lt; 5)</em> 조건식 때문에 <em>Dynamic Branching</em> 이 발생한다. 이 <em>Dynamic Branching</em> 을 명시적으로 없에거나 만들기 위해 <em>hlsl</em> 에서 <em>attribute</em> 를 지원한다. 아래를 보자.</p>
-
-<pre><code class="language-hlsl">[Attribute] for ( Initializer; Conditional; Iterator )
-{
-  Statement Block;
-}
-</code></pre>
-
-<p>해당 구문은 <a href="https://msdn.microsoft.com/ko-kr/library/windows/desktop/bb509602.aspx">MSDN : for Statement</a> 에서 가져왔다. 일반적으로 프로그래머이 정말 많이본 <em>for</em> 반복문이다. 우리가 봐야할 것은 <em>for</em> 구문 왼쪽의 <em>[Attribute]</em> 라는 구문이다. 이 부분에는 총 4가지의 옵션을 넣을 수 있는데, 이 글에서 언급할 <em>[Attribute]</em> 는 두가지다. <em>unroll</em> 과 <em>loop</em> 이 두가지이다.</p>
-
-<p><em>hlsl</em> 로 정상적인 반복문 실행을 하게되면, 매번 반복을 할때 마다 조건식을 검사하게 되고, 해당 반복문의 범위를 마음대로 조정하여 코딩을 할 수 있다. 다만 조건식의 범위가 매번 달라진다면 <em>Dynamic Branching</em> 이 발생하게 된다. 그리고 반복문이 매번 <em>Programmable Shader</em> 가 실행될 때 상수로 반복을 한다면 쉐이더 컴파일러는 최적화를 위해 특정한 행동을 하게 된다. 아래 코드를 보자.</p>
-
-<pre><code class="language-hlsl">for(int i = 0; i &lt; 5; i++)
-{
-}
-</code></pre>
-
-<p>위의 코드는 루프를 다섯번 실행시키는 코드다. 따로 안에 인덱스 <em>i</em> 를 건드리지 않는다면 쉐이더 컴파일러는 컴파일 시점에 최적화를 한다. 이를 <em>unroll</em> 이라고 부를 수 있는데, 실행할 반복문을 반복문으로 해석하는게 아닌 5번 연속해서 같은 행동을 하게 하는 것이다. 조건 자체도 없어지고 그저 인덱스를 풀어쓰게 된다. 이는 상수(constant)로 반복문을 제어하면 쉐이더 컴파일러가 알아서 해주기 때문에 신경써주지 않아도 된다. 다만 <em>unroll</em> 이라는 키워드를 써서 바뀔 때는 변수를 사용해 반복문을 제어할 때다. 변수를 사용하면 컴파일 시점에서는 추측할 수 없기 때문에 암시적으로 <em>unroll</em> 을 할 수 없다. 이 때 <em>unroll</em> 키워드를 사용하여 제어할 수 있다.</p>
-
-<pre><code class="language-hlsl">int count = ...;
-[unroll(5)]
-for(int i = 0; i &lt; count; i++)
-{
-}
-</code></pre>
-
-<p>또한 암시적으로 <em>unroll</em> 된 반복문을 명시적으로 반복문으로 실행되게 할 수도 있다.</p>
-
-<pre><code class="language-hlsl">[loop]
-for(int i = 0; i &lt; 5; i++)
-{
-}
-</code></pre>
-
-<h1>참조 자료</h1>
-
-<ul>
-  <li><a href="https://msdn.microsoft.com/ko-kr/library/windows/desktop/bb509602.aspx">MSDN : for Statement</a></li>
-  <li><a href="https://www.gamedev.net/forums/topic/649408-can-someone-explain-loop-and-unroll-to-me/">GameDev : Can someone explain [loop] and [unroll] to me?</a></li>
-  <li><a href="https://www.gamedev.net/forums/topic/543541-hlsl-warning-gradient-based-operations-must-be-moved-out-of-flow-control-to-prevent/">GameDev : HLSL warning: Gradient-based operations must be moved out of flow control to prevent
- </a></li>
-</ul>
 
         </div>
 

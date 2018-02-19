@@ -105,6 +105,211 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2018/02/19/gpu-branching-and-divergence/">Gpu Branching And Divergence</a>
+          </h1>
+
+          <p class="post-meta">Feb 19, 2018 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/gpu/">gpu</a>,
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/gpgpu/">gpgpu</a>
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>요즘은 꽤나 많은 것들을 GPU 로 처리할 수 있다. GPGPU 기술이 나온지 10년이 넘어가는 이 시점에서 꽤나 많은 것들이 GPU 로 처리되고 있다. 그 중에서도 GPGPU 를 다뤄볼 사람이라면 필수적인 상식하나가 있다. 아래 그림을 보자.</p>
+
+<p><br />
+<img src="/images/prior_simt.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="http://composter.com.ua/documents/Volta-Architecture-Whitepaper.pdf">NVidia : GV100 Whitepaper</a>
+</center>
+<p><br /></p>
+
+<p>위 그림은 분기가 나뉘어져 있는 코드를 여러개의 스레드가 실행하는 것을 보여준다. 즉 GPU 에서의 코드 실행 모습이다. 왼쪽은 스레드의 번호로 나뉘는 간단한 분기 코드다. 이는 CPU 에서는 크게 문제가 없다. 하지만 분기가 있던 말던 모든 명령어들을(분기안의 코드들) 전부 실행시키는 것이다. 오른쪽의 그림에서 설명하는 것은 이를 실행하는 쓰레드의 모습을 나타낸다. 딱 봐도 이 그림은 처리가 비효율적일 것처럼 보인다.</p>
+
+<p>CPU 는 한 쓰레드에서 하나의 <em>Program Conter</em> 를 가지기 때문에 분기가 나오면 조건에 맞게 단순히 포인터를 증가시키기만 한다. 하지만 <em>SIMT</em>(<em>Single Instruction Multiple Threads</em>) 의 구조를 가진 GPU 에서의 분기는 조금 다르다. 여태까지는 여러개의 쓰레드를 가진 그룹 하나당 <em>Program Counter</em> 를 가지는게 일반적이였다. 그래서 위와같이 동시에 활성화된 쓰레드들 끼리만 실행하게 되는 것이다.</p>
+
+<p><em>Volta</em> 아키텍쳐에서는 이를 개선시켜 한 <em>Thread</em> 당 하나의 <em>Program Counter</em> 와 <em>Call-Stack</em> 을 두므로써 각 <em>Thread</em> 를 독립적으로 실행시키게 해준다고 한다. <em>SIMT</em> 의 <em>Concurrency</em> 를 고려하여 전부 한꺼번에 실행시키지는 못하지만 각각의 <em>Thread</em> 를 같은 명령별로 그룹지어 실행시키거나, 한번에 실행시키는게 아니라 각 그룹의 실행을 클럭이나 시분할로 쪼개어 실행하는 것들을 지원한다고 한다. 아래 그림을 보자.</p>
+
+<p><br />
+<img src="/images/interleaved_execution.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="http://composter.com.ua/documents/Volta-Architecture-Whitepaper.pdf">NVidia : GV100 Whitepaper</a>
+</center>
+<p><br /></p>
+
+<p>하지만 이는 그림에서 나와 있다시피 그다지 효율적인 실행은 아니다. 결국 아직은 분기의 사용은 최소화해야될 것으로 보인다. 다만 이 기능들은 <em>Graphic Processing Unit</em> 들이 <em>Accelerator</em> 로 바뀌는 하나의 과정으로 볼 수 있을듯 하다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="http://composter.com.ua/documents/Volta-Architecture-Whitepaper.pdf">NVidia : GV100 Whitepaper</a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2018/01/14/frustum-traced-shadow-with-irrelgular-z-buffer-2/">Frustum Traced Shadow With Irrelgular Z Buffer 2</a>
           </h1>
 
@@ -143,6 +348,10 @@
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
     
   
     
@@ -258,6 +467,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -287,6 +500,10 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
     
   
     
@@ -406,6 +623,10 @@
   
     
       <a href="/categories/fts/">fts</a>
+    
+  
+    
+  
     
   
 
@@ -602,6 +823,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -677,6 +902,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -706,6 +935,10 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
     
   
     
@@ -825,6 +1058,10 @@
   
     
       <a href="/categories/fts/">fts</a>
+    
+  
+    
+  
     
   
 
@@ -1003,6 +1240,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -1078,6 +1319,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -1107,6 +1352,10 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
     
   
     
@@ -1226,6 +1475,10 @@
   
     
       <a href="/categories/fts/">fts</a>
+    
+  
+    
+  
     
   
 
@@ -1437,6 +1690,10 @@ end for
   
     
   
+    
+  
+    
+  
 
 </p>
         </header>
@@ -1506,6 +1763,10 @@ end for
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
     
   
     
@@ -1621,6 +1882,10 @@ end for
   
     
   
+    
+  
+    
+  
 
   
   
@@ -1650,6 +1915,10 @@ end for
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
     
   
     
@@ -1767,6 +2036,10 @@ end for
   
     
       <a href="/categories/pcss/">pcss</a>
+    
+  
+    
+  
     
   
     
@@ -1973,6 +2246,10 @@ end for
   
     
   
+    
+  
+    
+  
 
   
   
@@ -2048,6 +2325,10 @@ end for
   
     
   
+    
+  
+    
+  
 
   
   
@@ -2077,6 +2358,10 @@ end for
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
     
   
     
@@ -2192,6 +2477,10 @@ end for
   
     
       <a href="/categories/vsm/">vsm</a>
+    
+  
+    
+  
     
   
     
@@ -2389,6 +2678,10 @@ end for
   
     
   
+    
+  
+    
+  
 
   
   
@@ -2464,6 +2757,10 @@ end for
   
     
   
+    
+  
+    
+  
 
   
   
@@ -2493,6 +2790,10 @@ end for
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
     
   
     
@@ -2606,6 +2907,10 @@ end for
   
     
       <a href="/categories/csm/">csm</a>
+    
+  
+    
+  
     
   
     
@@ -2759,6 +3064,10 @@ end for
   
     
   
+    
+  
+    
+  
 
   
   
@@ -2834,6 +3143,10 @@ end for
   
     
   
+    
+  
+    
+  
 
   
   
@@ -2863,6 +3176,10 @@ end for
   
     
       <a href="/categories/rendering/">rendering</a>
+    
+  
+    
+  
     
   
     
@@ -3126,6 +3443,10 @@ bias = clamp(bias, 0,0.01);
   
     
   
+    
+  
+    
+  
 
   
   
@@ -3161,6 +3482,10 @@ bias = clamp(bias, 0,0.01);
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
     
   
     
@@ -3256,6 +3581,10 @@ bias = clamp(bias, 0,0.01);
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
+    
+  
     
   
     
@@ -3344,205 +3673,6 @@ shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
   <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff471569.aspx">MSDN : SV_GroupIndex</a></li>
   <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb509647.aspx">MSDN : Semantics </a></li>
   <li><a href="https://docs.unity3d.com/Manual/ComputeShaders.html">Unity Manual : ComptuteShader</a></li>
-</ul>
-
-        </div>
-
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/11/18/DrawInstanced-vs-Merged-Instancing/">Drawinstanced Vs Merged Instancing</a>
-          </h1>
-
-          <p class="post-meta">Nov 18, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/render/">render</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/hlsl/">hlsl</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p><a href="https://www.gdcvault.com/play/1020624/Advanced-Visual-Effects-with-DirectX">GDC 2014 : Vertex Sahder Tricks</a> 슬라이드에 따르면 <em>DrawInstanced</em> 함수를 사용하여 인스턴싱을 하는것보다 <em>vertexID</em> 를 사용하여 인스턴싱을 하는것이 빠르다고 한다. <em>vertexID</em> 를 쓰는 방법은 굉장히 단순하다.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>VSOutput VS(uint id : SV_VertexID)
-{
-    VSOutput output;
-
-    /*
-        ...
-    */
-
-    return output;
-}
-</code></pre></div></div>
-
-<p><em>SV_VertexID</em> <em>Semantic</em> 을 사용하여 값을 접근하기만 하면 된다. <em>vertexID</em> 는 말그대로 버텍스별 인덱스를 뜻한다. <em>SRV</em> 나 <em>UAV</em> 와 함께 사용하여 <em>Instancing</em> 을 하면된다.</p>
-
-<p><br />
-<img src="/images/gdc2014_vertexshadertricks_23.png" alt="Merge Instancing Performance" /></p>
-<center>출처 : <a href="https://www.gdcvault.com/play/1020624/Advanced-Visual-Effects-with-DirectX">GDC 2014 : Vertex Sahder Tricks</a>
-</center>
-<p><br /></p>
-
-<p>그림을 보면 AMD GPU 에서 확실히 퍼포먼스 차이가 난것을 확인할 수 있다. <del>스피커가 AMD 소속이라는 게 포인트</del></p>
-
-<h1>참조 자료</h1>
-
-<ul>
-  <li><a href="https://www.gdcvault.com/play/1020624/Advanced-Visual-Effects-with-DirectX">GDC 2014 : Vertex Sahder Tricks</a></li>
 </ul>
 
         </div>

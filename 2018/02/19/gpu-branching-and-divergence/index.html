@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Gpu Branching And Divergence</title>
+  <meta name="description" content="요즘은 꽤나 많은 것들을 GPU 로 처리할 수 있다. GPGPU 기술이 나온지 10년이 넘어가는 이 시점에서 꽤나 많은 것들이 GPU 로 처리되고 있다. 그 중에서도 GPGPU 를 다뤄볼 사람이라면 필수적인 상식하나가 있다. 아래 그림을 보자. 출처 : NVidia : GV100 Whitepaper 위 그림은 분기가 나뉘어져 있는 코드를 여러개의 스레드가 실행하는 것을 보여준다. 즉 GPU 에서의 코드 실행 모습이다. 왼쪽은 스레드의 번호로 나뉘는 간단한 분기 코드다. 이는 CPU 에서는 크게 문제가 없다. 하지만 분기가 있던 말던 모든 명령어들을(분기안의 코드들) 전부 실행시키는 것이다. 오른쪽의 그림에서 설명하는 것은 이를 실행하는 쓰레드의 모습을 나타낸다. 딱 봐도 이 그림은 처리가 비효율적일 것처럼 보인다. CPU 는 한 쓰레드에서 하나의 Program Conter 를 가지기 때문에 분기가 나오면 조건에 맞게 단순히 포인터를 증가시키기만 한다. 하지만 SIMT(Single Instruction Multiple Threads) 의 구조를 가진 GPU 에서의 분기는 조금 다르다. 여태까지는 여러개의 쓰레드를 가진 그룹 하나당 Program Counter 를 가지는게 일반적이였다. 그래서 위와같이 동시에 활성화된 쓰레드들 끼리만 실행하게 되는 것이다. Volta 아키텍쳐에서는 이를 개선시켜 한 Thread 당 하나의 Program Counter 와 Call-Stack 을 두므로써 각 Thread 를 독립적으로 실행시키게 해준다고 한다. SIMT 의 Concurrency 를 고려하여 전부 한꺼번에 실행시키지는 못하지만 각각의 Thread 를 같은 명령별로 그룹지어 실행시키거나, 한번에 실행시키는게 아니라 각 그룹의 실행을 클럭이나 시분할로 쪼개어 실행하는 것들을 지원한다고 한다. 아래 그림을 보자. 출처 : NVidia : GV100 Whitepaper 하지만 이는 그림에서 나와 있다시피 그다지 효율적인 실행은 아니다. 결국 아직은 분기의 사용은 최소화해야될 것으로 보인다. 다만 이 기능들은 Graphic Processing Unit 들이 Accelerator 로 바뀌는 하나의 과정으로 볼 수 있을듯 하다. 참조 NVidia : GV100 Whitepaper">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://hrmrzizon.github.io/2018/02/19/gpu-branching-and-divergence/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
+
+  <meta name="google-site-verification" content="f8AsB97UC1pp_K4EwkRaJYJZVC0P4j36RK_TGOPPGAU" />
+
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Gpu Branching And Divergence">
+  <meta name="twitter:description" content="요즘은 꽤나 많은 것들을 GPU 로 처리할 수 있다. GPGPU 기술이 나온지 10년이 넘어가는 이 시점에서 꽤나 많은 것들이 GPU 로 처리되고 있다. 그 중에서도 GPGPU 를 다뤄볼 사람이라면 필수적인 상식하나가 있다. 아래 그림을 보자. 출처 : NVidia : GV100 Whitepaper 위 그림은 분기가 나뉘어져 있는 코드를 여러개의 스레...">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Appocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="/edu">Edu</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Gpu Branching And Divergence</h1>
+    
+    <p class="post-meta"><time datetime="2018-02-19T00:00:00+00:00" itemprop="datePublished">Feb 19, 2018</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/gpu/">gpu</a>,
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/gpgpu/">gpgpu</a>
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>요즘은 꽤나 많은 것들을 GPU 로 처리할 수 있다. GPGPU 기술이 나온지 10년이 넘어가는 이 시점에서 꽤나 많은 것들이 GPU 로 처리되고 있다. 그 중에서도 GPGPU 를 다뤄볼 사람이라면 필수적인 상식하나가 있다. 아래 그림을 보자.</p>
+
+<p><br />
+<img src="/images/prior_simt.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="http://composter.com.ua/documents/Volta-Architecture-Whitepaper.pdf">NVidia : GV100 Whitepaper</a>
+</center>
+<p><br /></p>
+
+<p>위 그림은 분기가 나뉘어져 있는 코드를 여러개의 스레드가 실행하는 것을 보여준다. 즉 GPU 에서의 코드 실행 모습이다. 왼쪽은 스레드의 번호로 나뉘는 간단한 분기 코드다. 이는 CPU 에서는 크게 문제가 없다. 하지만 분기가 있던 말던 모든 명령어들을(분기안의 코드들) 전부 실행시키는 것이다. 오른쪽의 그림에서 설명하는 것은 이를 실행하는 쓰레드의 모습을 나타낸다. 딱 봐도 이 그림은 처리가 비효율적일 것처럼 보인다.</p>
+
+<p>CPU 는 한 쓰레드에서 하나의 <em>Program Conter</em> 를 가지기 때문에 분기가 나오면 조건에 맞게 단순히 포인터를 증가시키기만 한다. 하지만 <em>SIMT</em>(<em>Single Instruction Multiple Threads</em>) 의 구조를 가진 GPU 에서의 분기는 조금 다르다. 여태까지는 여러개의 쓰레드를 가진 그룹 하나당 <em>Program Counter</em> 를 가지는게 일반적이였다. 그래서 위와같이 동시에 활성화된 쓰레드들 끼리만 실행하게 되는 것이다.</p>
+
+<p><em>Volta</em> 아키텍쳐에서는 이를 개선시켜 한 <em>Thread</em> 당 하나의 <em>Program Counter</em> 와 <em>Call-Stack</em> 을 두므로써 각 <em>Thread</em> 를 독립적으로 실행시키게 해준다고 한다. <em>SIMT</em> 의 <em>Concurrency</em> 를 고려하여 전부 한꺼번에 실행시키지는 못하지만 각각의 <em>Thread</em> 를 같은 명령별로 그룹지어 실행시키거나, 한번에 실행시키는게 아니라 각 그룹의 실행을 클럭이나 시분할로 쪼개어 실행하는 것들을 지원한다고 한다. 아래 그림을 보자.</p>
+
+<p><br />
+<img src="/images/interleaved_execution.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="http://composter.com.ua/documents/Volta-Architecture-Whitepaper.pdf">NVidia : GV100 Whitepaper</a>
+</center>
+<p><br /></p>
+
+<p>하지만 이는 그림에서 나와 있다시피 그다지 효율적인 실행은 아니다. 결국 아직은 분기의 사용은 최소화해야될 것으로 보인다. 다만 이 기능들은 <em>Graphic Processing Unit</em> 들이 <em>Accelerator</em> 로 바뀌는 하나의 과정으로 볼 수 있을듯 하다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="http://composter.com.ua/documents/Volta-Architecture-Whitepaper.pdf">NVidia : GV100 Whitepaper</a></li>
+</ul>
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://zizon.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy; Su-Hyeok Kim - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
