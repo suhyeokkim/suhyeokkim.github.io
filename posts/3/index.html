@@ -591,6 +591,10 @@ for(int i = 0; i &lt; 5; i++)
 
 <p>이 API 는 여러 쓰레드들 끼리 쉽게 협력하여 보다 효율적인 쉐이더 병렬 프로그래밍을 가능하게 해줄듯하다. 다만 <em>Shader Model 5.0</em> 에서 소개된 <em>ComputeShader</em> 만큼의 임팩트는 없다. 패러다임의 아주 큰 변화는 없다는 뜻이다. DirectX12 가 지향하는 드라이버 시스템에서의 부담을 줄이는 것과 <em>Shader Model 6.0</em> 은 서로 방향이 비슷하다고 생각된다.</p>
 
+<h1>추가</h1>
+
+<p><a href="/2018/02/19/gpu-branching-and-divergence/">gpu branching and divergence</a>에서 <em>NVidia</em> 의 <em>Volta</em> 아키텍쳐에 대해서 잠깐 언급했었다. <em>Volta</em> 아키텍쳐는 <em>GPGPU</em> 기능을 강화하기 위해 <em>Thread</em> 의 관리 꽤나 향상시켰다. <em>Wave Intrisic</em> 들은 다른 <em>Thread</em> 와의 처리를 도와주기 때문에 <em>Shader Model 6.0</em> 을 지원하는 <em>GPU</em> 가 나온다면 재미있는 시도들이 나올듯 하다.</p>
+
 <h1>참조 자료</h1>
 
 <ul>
