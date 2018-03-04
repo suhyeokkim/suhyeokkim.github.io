@@ -19,6 +19,10 @@ _Shader Model 6.0_ 은 DirectX12 과 Vulkan 에서 지원한다. DirectX 에서�
 
 이 API 는 여러 쓰레드들 끼리 쉽게 협력하여 보다 효율적인 쉐이더 병렬 프로그래밍을 가능하게 해줄듯하다. 다만 _Shader Model 5.0_ 에서 소개된 _ComputeShader_ 만큼의 임팩트는 없다. 패러다임의 아주 큰 변화는 없다는 뜻이다. DirectX12 가 지향하는 드라이버 시스템에서의 부담을 줄이는 것과 _Shader Model 6.0_ 은 서로 방향이 비슷하다고 생각된다.
 
+# 추가
+
+[gpu branching and divergence]({{ site.baseurl }}{% post_url 2018-02-19-gpu-branching-and-divergence %})에서 _NVidia_ 의 _Volta_ 아키텍쳐에 대해서 잠깐 언급했었다. _Volta_ 아키텍쳐는 _GPGPU_ 기능을 강화하기 위해 _Thread_ 의 관리 꽤나 향상시켰다. _Wave Intrisic_ 들은 다른 _Thread_ 와의 처리를 도와주기 때문에 _Shader Model 6.0_ 을 지원하는 _GPU_ 가 나온다면 재미있는 시도들이 나올듯 하다.
+
 # 참조 자료
 
  - [GDCVault(GDC 2017) : D3D12 & Vulkan Done Right](http://www.gdcvault.com/play/1024732/Advanced-Graphics-Tech-D3D12-and)
