@@ -105,6 +105,286 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2017/10/30/shader-pipeline-0-opening/">Shader Pipeline 0 Opening</a>
+          </h1>
+
+          <p class="post-meta">Oct 30, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/render/">render</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/hlsl/">hlsl</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <h3>쉐이더 프로그래밍 환경</h3>
+
+<p><em>Programmable Shader</em> 들을 정리하기 위해 각 쉐이더별로 한개씩 글을 써보기로 했다. 그 전에 미리 알아야될 것들에 대해 알아보려고 한다. 각각의 <em>Shader</em> 들은 코더의 입장에서 바라보았을 때는 단지 몇개의 파라미터를 받고 값을 반환하는 함수들이다. 하지만 일반적으로 알고있는 함수들과는 조금 다르게 실행된다. 첫번째로 일반적인 바이너리들은 CPU 에서 직렬로 실행된다. 멀티 스레드 기능을 따로 쓰지 않는한 말이다. 하지만 <em>Shader</em> 는 기본적으로 병렬로 실행된다. 아래 그림을 보자.</p>
+
+<p><img src="/images/cpucore_vs_gpucore.jpg" alt="CPU core vs GPU core" class="center-image" /></p>
+
+<p>CPU 와 GPU 의 차이를 간단하게 보여주는 그림이다. 다만 위 그림이 전부는 아니니 간단하게 알고 넘어가도록 하자. 우리가 주목해야 할 것은 바로 <em>core</em> 갯수의 차이다. 요즘의 CPU 는 <em>core</em> 의 갯수가 많지 않다. 최근에 나온 <a href="https://ark.intel.com/ko/products/126684/Intel-Core-i7-8700K-Processor-12M-Cache-up-to-4_70-GHz">i7-8700k</a> 를 보면 코어의 갯수가 6개 인것을 확인할 수 있다. 다만 OS 스케줄링이 있어서 실질적으로 실행되는 것은 <em>core</em> 의 갯수에 엄격하게 제한되지는 않는다. 중요한 것은 개인용 PC 에 들어가는 CPU 는 아직은 <em>core</em> 의 갯수가 10개를 넘어가지 않는다는 것이다. 반면에 실제 GPU 의 코어의 갯수를 꽤나 많다. 그림에서는 <em>hundreds of cores</em>, 몇백개의 <em>core</em> 라고 하지만 요즘 개인용 PC 에 들어가는 GPU 코어는 몇천개나(<a href="https://www.geforce.co.uk/hardware/desktop-gpus/geforce-gtx-1080/specifications">gtx1080</a>) 된다. GPU 의 코어가 많은 이유는 간단하다. CPU 에서 돌아가는 프로그램에 비해 간단한 프로그램 바이너리(쉐이더 혹은 GPGPU 프로그램)를 동시에 실행하는게 최근의 GPU 가 쓰이는 목적이기 때문이다.</p>
+
+<p>일반적으로 CPU 에서 코딩하는 프로그램과 다르게 GPU 에서 실행되는 프로그램들은 이러한 병렬적인 실행 환경 때문에 특수한 사항들과 제약사항들이 존재한다. 퍼포먼스를 염두하고 프로그램을 코딩하다 보면 처음 경험하는 프로그래머는 조금 당황스러울 수도 있다.</p>
+
+<h3>쉐이더 파이프라인</h3>
+
+<p>GPU 의 여태까지의 주요한 역할은 기하학적(geometry) 성격을 띄고있는 데이터들을(mesh, vertex …) 이차원 이미지로 계산하여 보여주는 일이였다. 그렇게 3D 에셋 저작툴이나(3dsmax, maya, …) 게임에서 GPU 를 활용해 보다 많은 것들을 표현할 수 있게 해주었다. 우리가 이번에 살펴볼 것은 <em>Shader Model 5.0</em> 의 쉐이더가 실행되는 단계다. 이 단계는 위에서 언급한 기하학적 성격을 띄고 있는 데이터를 이차원 이미지로 계산하는 단계를 나타낸 것이다. 아래 그림을 보자.</p>
+
+<p><img src="/images/sm_5-0_pipeline.jpg" alt="Shader Model 5_0 pipeline" class="center-image" /></p>
+
+<p>이 그림에는 여러가지 항목들이 있다. <em>Programmable Shader</em> 를 제외하면 전부 고정된 기능을 가진 단계로써 프로그래머가 완전히 제어를 할 수 없는 단계다. 우리가 살펴볼 것은 이름 끝에 <em>Shader</em> 가 붙은 것들이다. 차례대로 <em>Vertex Shader</em>, <em>Hull Shader</em>, <em>Domain Shader</em>, <em>Geometry Shader</em>, <em>Pixel Shader</em> 가 있다. 위의 단계들은 두가지로 분류할 수 있다. <em>Geometry Stage</em> 와 <em>Rasterizer Stage</em> 다. <em>Geometry Stage</em> 는 일반적인 3D 상의 위치나 벡터를 가지고 있는 데이터를 처리하는 단계를 말한다. 위 그림에서는 <em>Rasterizer</em> 전 까지의 단계를 뜻한다. <em>Rasterizer Stage</em> 는 2D 이미지로 처리된 상태에서 데이터를 처리하는 단계를 말한다. <em>Rasterizer</em> 단계 부터 오른쪽 끝까지의 단계다. 각 단계에 대한 자세한 설명은 해당 글에서 하겠다.</p>
+
+<p>쉐이더 파이프라인을 알고 있어야 여러 이론들을 구현할 수 있다. 쉐이더를 다루려면 이 쉐이더 파이프라인을 아는 것은 필수라고 할 수 있겠다.</p>
+
+<h3>각종 버퍼들의 활용</h3>
+
+<p><em>Shader Model 4.0</em> 과 <em>Shader Model 5.0</em> 를 통해 여러 버퍼들을 사용하여 <em>Shader</em> 안에서 돌고도는 <em>varying data</em> (쉐이더들의 파라미터들) 와 함께 응용을 할 수 있게 되었다. 이는 함수 한개씩을 파라미터와 반환값만 바꾸면서 코딩하는 환경에서 참조할 전역 변수를 만들어주어 훨씬 더 많은 데이터들을 접근할 수 있게 해준것이다.</p>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2017/10/26/loop-attributes-for-dynamic-branching/">Loop Attributes For Dynamic Branching</a>
           </h1>
 
@@ -2050,190 +2330,6 @@ void Process (uint3 id : SV_DispatchThreadID)
         
           <p class="post-continue">
             <a href="/2017/07/20/dual-quaternion-skinning/">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/07/07/introduce-of-skinning/">Introduce Of Skinning</a>
-          </h1>
-
-          <p class="post-meta">Jul 7, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/skinning/">skinning</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/vertex-deformation/">vertex deformation</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>2달전 쯤에 스키닝에 대한 글을 본적이 있다. 그때는 스키닝이 뭔지도 정확히 모르던 시점이였다. Unity 에서는 LBS 라는 방법으로 스키닝을 지원하는데 이 방식보다 나은 방식이 있는데 어찌하여 옛날 방식을 지원하는지에 대한 불만글이였다. 그래서 공부할 것을 찾던 필자는 Unity 에서의 커스텀 스키닝을 구현을 목표로 잡았다. 정리를 위해 하나하나 글을 남겨보도록 하겠다. 이 글에서는 간단히 스키닝의 개념에 대해서 써보도록 하겠다. 이전에 쓴 <a href="/2017/05/19/handling-rig-and-skinning/">handling rig and skinning</a> 에서도 간략하게 다루었지만 기초 지식이 없는 상태에서 급하게 쓴 글이였고, 굉장히 Unity 스러운 글이기에 다시 처음부터 써보겠다.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/07/07/introduce-of-skinning/">Read on &rarr;</a>
           </p>
         
       </li>
