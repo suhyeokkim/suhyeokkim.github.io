@@ -17,7 +17,7 @@ __이 글은 Unity 5.6.1f 버젼에서 작성되었습니다. 다른 버젼에�
 
 <!-- more -->
 
-기술을 써보기 전에 우선 구현 사항부터 생각해야 한다. 필자는 Unity 에서 지원하는 __SkinnedMeshRenderer__ 가 _DrawCall_ 배칭을 해주지 않아 간단한 스키닝을 직접 구현하였다. __SkinnedMeshRenderer__ 가 많은 기능을 지원하긴 하지만 __SkinnedMeshRenderer__ 컴포넌트의 갯수가 절대적으로 많아지고 매터리얼이 늘어나게 되면 어쩔 수 없이 원하는 기능을 붙여 직접 구현해야 한다. [InstancedSkinning](github.com/hrmrzizon/InstancedSkinningExmaple.git)에서 참고할 수 있다.
+기술을 써보기 전에 우선 구현 사항부터 생각해야 한다. 필자는 Unity 에서 지원하는 __SkinnedMeshRenderer__ 가 _DrawCall_ 배칭을 해주지 않아 간단한 스키닝을 직접 구현하였다. __SkinnedMeshRenderer__ 가 많은 기능을 지원하긴 하지만 __SkinnedMeshRenderer__ 컴포넌트의 갯수가 절대적으로 많아지고 매터리얼이 늘어나게 되면 어쩔 수 없이 원하는 기능을 붙여 직접 구현해야 한다. [InstancedSkinning](https://github.com/hrmrzizon/InstancedSkinningExmaple.git)에서 참고할 수 있다.
 
 해야할 것은 두가지다. 쉐이더에서 데이터를 선언 후 직접 사용하는 코드를 짜주어야 하고, 스크립트에서는 필요한 데이터를 모아서 넣어주기만 하면 된다. 말로는 간단하지만 신경써주어야 할것이 많다. 필자 역시 간단하다고 생각하여 시작했으나 꽤 많은 삽질 끝에 성공했다.
 
