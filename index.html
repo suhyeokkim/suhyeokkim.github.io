@@ -3164,6 +3164,10 @@ end for
 
 <p>자세한 사용법을 알고 싶으면 <a href="http://developer.download.nvidia.com/SDK/10/Samples/cascaded_shadow_maps.zip">NVidia : Cascaded Shadow Map Example</a>에서 소스를 받아 보면 된다.</p>
 
+<h2>추가</h2>
+
+<p><em>Cascaded Shadow Map</em> 을 <em>1 pass</em> 로 그리는 방법은 간단하다. 우선 <em>Shadow Map</em> 들을 <em>TextureArray</em> 를 통해 저장하고, <em>RenderTarget</em> 을 <em>Geometry Shader</em> 에서 각각의 렌더타겟별로 지오메트리를 추가해주어 각각의 <em>Pixel Shader</em> 를 실행시키면 된다. 자세한 코드는 <a href="https://www.slideshare.net/dgtman/implements-cascaded-shadow-maps-with-using-texture-array">여기</a>에서 볼 수 있다.</p>
+
 <h2>참조</h2>
 
 <ul>
@@ -3171,6 +3175,7 @@ end for
   <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ee416307.aspx">MSDN : Cascaded Shadow Maps</a></li>
   <li><a href="https://github.com/TheRealMJP/Shadows">Github : TheRealMJP - Shadows</a></li>
   <li><a href="http://ogldev.atspace.co.uk/www/tutorial49/tutorial49.html">OGLDev : Cascaded Shadow Mapping</a></li>
+  <li><a href="https://www.slideshare.net/dgtman/implements-cascaded-shadow-maps-with-using-texture-array">Slideshare : implements Cascaded Shadow Maps with using TexturArray(한글)</a></li>
 </ul>
 
         </div>
