@@ -51,9 +51,14 @@ _frustum_ 은 보통 _Depth_ 값을 정하거나 어떤 알고리즘을 사용�
 
 자세한 사용법을 알고 싶으면 [NVidia : Cascaded Shadow Map Example](http://developer.download.nvidia.com/SDK/10/Samples/cascaded_shadow_maps.zip)에서 소스를 받아 보면 된다.
 
+## 추가
+
+_Cascaded Shadow Map_ 을 _1 pass_ 로 그리는 방법은 간단하다. 우선 _Shadow Map_ 들을 _TextureArray_ 를 통해 저장하고, _RenderTarget_ 을 _Geometry Shader_ 에서 각각의 렌더타겟별로 지오메트리를 추가해주어 각각의 _Pixel Shader_ 를 실행시키면 된다. 자세한 코드는 [여기](https://www.slideshare.net/dgtman/implements-cascaded-shadow-maps-with-using-texture-array)에서 볼 수 있다.
+
 ## 참조
 
  - [NVidia : Cascaded Shadow Maps  ](http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf)
  - [MSDN : Cascaded Shadow Maps](https://msdn.microsoft.com/en-us/library/windows/desktop/ee416307.aspx)
  - [Github : TheRealMJP - Shadows](https://github.com/TheRealMJP/Shadows)
  - [OGLDev : Cascaded Shadow Mapping](http://ogldev.atspace.co.uk/www/tutorial49/tutorial49.html)
+ - [Slideshare : implements Cascaded Shadow Maps with using TexturArray(한글)](https://www.slideshare.net/dgtman/implements-cascaded-shadow-maps-with-using-texture-array)
