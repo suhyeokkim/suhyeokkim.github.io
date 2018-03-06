@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2018-03-06T02:12:08+00:00</updated>
+  <updated>2018-03-06T02:29:38+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -57,7 +57,7 @@ MonoImporter:
 
 &lt;p&gt;이러한 &lt;em&gt;Importer&lt;/em&gt; 정보들은 보통 해당 &lt;em&gt;Asset&lt;/em&gt; 의 옵션을 세팅할 떄 쓰인다. 또한 &lt;em&gt;2017&lt;/em&gt; 버젼에서는 파일의 확장자를 사용자가 직접 지정해 &lt;em&gt;Importer&lt;/em&gt; 를 사용할 수도 있게 해두었다.(&lt;a href=&quot;/2018/01/11/unity-scripted-importer/&quot;&gt;링크&lt;/a&gt;)&lt;/p&gt;
 
-&lt;p&gt;즉 &lt;em&gt;Unity&lt;/em&gt; 에서는 새로운 파일을 감지했을 때, &lt;em&gt;GUID&lt;/em&gt; 를 생성하고 파일의 확장자에 따라 &lt;em&gt;Importer&lt;/em&gt; 정보를 갱신한 후, 정보를 &lt;em&gt;Library/metadata&lt;/em&gt; 에 갱신하는 것으로 볼 수 있다.&lt;/p&gt;</content>
+&lt;p&gt;즉 &lt;em&gt;Unity&lt;/em&gt; 에서는 새로운 파일을 감지했을 때, &lt;em&gt;GUID&lt;/em&gt; 를 생성하고 파일의 확장자에 따라 &lt;em&gt;Importer&lt;/em&gt; 정보를 갱신한 후, 정보를 &lt;em&gt;Library/metadata&lt;/em&gt; 에 갱신하는 것으로 볼 수 있다. &lt;em&gt;Library/metadata&lt;/em&gt; 에서는 &lt;em&gt;GUID&lt;/em&gt; 로 된 파일과 (해당 &lt;em&gt;GUID&lt;/em&gt;).info 로 파일이 구성되어 있다. 각각의 파일은 파일의 유형별로 다른 것으로 보인다.&lt;/p&gt;</content>
 
       
       
@@ -80,7 +80,7 @@ MonoImporter:
       
 
       
-        <summary type="html">Unity 에서는 모든 사용자의 작업물을 Assets 폴더에 저장한다. 그리고 Assets 폴더안의 파일의 변경이 발생할 시 안의 파일들을 재가공하여 다시 로드한다. 보통 파일의 변경은 assetDatabaseX 바이너리 파일로 들어가게 되며, 스크립트, 바이너리의 변경은 다시 컴파일을 함으로써 현재 변경사항을 프로젝트에 적용시킨다. 이러한 시스템을 위해 Unity 에서는 모든 파일, 디렉토리에 meta 파일을 생성한다. 파일별 meta 파일에는 해당 파일의 순수한 정보가 아닌 메타 정보가 들어간다. 중요한 정보는 두개로 나뉜다. 하나는 Unity 프로젝트상에서 파일을 처음 감지했을 때, 파일의 GUID 를 생성한다. GUID 란 고유의 16진수 32글자로 이루어지는 총 512비트로 이루어지는 ID 로써 자동으로 생성되는 알고리즘을 가지고 있으며 겹칠 염려는 거의 없는 ID 알고리즘이다. 그래서 생성된 GUID 는 다른 곳에서 해당 파일을 참조할떄 쓰인다. 즉 파일이 삭제되서 같은 것으로 다시 생성한다고 해도 GUID 가 랜덤으로 결정되기 때문에 다시 연결을 해주어야 한다. 이는 Unity 내부에서 파일 링크를 GUID 로 한다는 추측을 할 수 있게 해준다. 또한 Edit -&amp;gt; Project Setting -&amp;gt; Editor 에서 Asset Serialization 모드가 Force Text 로 되어있을 시에는 meta 파일들을 직접 텍스트 에디터로 확인이 가능하다. fileFormatVersion: 2 guid: 5d44a238286f6904198ab78e914c229d MonoImporter: serializedVersion: 2 defaultReferences: [] executionOrder: 0 icon: {instanceID: 0} userData: assetBundleName: 어떤 스크립트에 딸린 meta 파일의 내용이다. 두번째 줄에 생성된 guid 가 존재한다. 이는 Library/metadata 디렉토리에 쓰여진 이름들과 매칭된다. 두번째는 바로 해당 파일의 Importer 정보가 들어있다. 위의 meta 파일은 스크립트이기 때문에 3번째 줄에 MonoImporter 라고 쓰여져 있으며, 파일의 성질에 따라서 built-in importer 가 달라진다. 바이너리 파일들은 NativeImporter, 텍스쳐 파일들은 TextureImporter, 3D 모델 파일들은 ModelImporter 로 자동으로 매칭된다. 이러한 Importer 정보들은 보통 해당 Asset 의 옵션을 세팅할 떄 쓰인다. 또한 2017 버젼에서는 파일의 확장자를 사용자가 직접 지정해 Importer 를 사용할 수도 있게 해두었다.(링크) 즉 Unity 에서는 새로운 파일을 감지했을 때, GUID 를 생성하고 파일의 확장자에 따라 Importer 정보를 갱신한 후, 정보를 Library/metadata 에 갱신하는 것으로 볼 수 있다.</summary>
+        <summary type="html">Unity 에서는 모든 사용자의 작업물을 Assets 폴더에 저장한다. 그리고 Assets 폴더안의 파일의 변경이 발생할 시 안의 파일들을 재가공하여 다시 로드한다. 보통 파일의 변경은 assetDatabaseX 바이너리 파일로 들어가게 되며, 스크립트, 바이너리의 변경은 다시 컴파일을 함으로써 현재 변경사항을 프로젝트에 적용시킨다. 이러한 시스템을 위해 Unity 에서는 모든 파일, 디렉토리에 meta 파일을 생성한다. 파일별 meta 파일에는 해당 파일의 순수한 정보가 아닌 메타 정보가 들어간다. 중요한 정보는 두개로 나뉜다. 하나는 Unity 프로젝트상에서 파일을 처음 감지했을 때, 파일의 GUID 를 생성한다. GUID 란 고유의 16진수 32글자로 이루어지는 총 512비트로 이루어지는 ID 로써 자동으로 생성되는 알고리즘을 가지고 있으며 겹칠 염려는 거의 없는 ID 알고리즘이다. 그래서 생성된 GUID 는 다른 곳에서 해당 파일을 참조할떄 쓰인다. 즉 파일이 삭제되서 같은 것으로 다시 생성한다고 해도 GUID 가 랜덤으로 결정되기 때문에 다시 연결을 해주어야 한다. 이는 Unity 내부에서 파일 링크를 GUID 로 한다는 추측을 할 수 있게 해준다. 또한 Edit -&amp;gt; Project Setting -&amp;gt; Editor 에서 Asset Serialization 모드가 Force Text 로 되어있을 시에는 meta 파일들을 직접 텍스트 에디터로 확인이 가능하다. fileFormatVersion: 2 guid: 5d44a238286f6904198ab78e914c229d MonoImporter: serializedVersion: 2 defaultReferences: [] executionOrder: 0 icon: {instanceID: 0} userData: assetBundleName: 어떤 스크립트에 딸린 meta 파일의 내용이다. 두번째 줄에 생성된 guid 가 존재한다. 이는 Library/metadata 디렉토리에 쓰여진 이름들과 매칭된다. 두번째는 바로 해당 파일의 Importer 정보가 들어있다. 위의 meta 파일은 스크립트이기 때문에 3번째 줄에 MonoImporter 라고 쓰여져 있으며, 파일의 성질에 따라서 built-in importer 가 달라진다. 바이너리 파일들은 NativeImporter, 텍스쳐 파일들은 TextureImporter, 3D 모델 파일들은 ModelImporter 로 자동으로 매칭된다. 이러한 Importer 정보들은 보통 해당 Asset 의 옵션을 세팅할 떄 쓰인다. 또한 2017 버젼에서는 파일의 확장자를 사용자가 직접 지정해 Importer 를 사용할 수도 있게 해두었다.(링크) 즉 Unity 에서는 새로운 파일을 감지했을 때, GUID 를 생성하고 파일의 확장자에 따라 Importer 정보를 갱신한 후, 정보를 Library/metadata 에 갱신하는 것으로 볼 수 있다. Library/metadata 에서는 GUID 로 된 파일과 (해당 GUID).info 로 파일이 구성되어 있다. 각각의 파일은 파일의 유형별로 다른 것으로 보인다.</summary>
       
 
       
