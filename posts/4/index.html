@@ -105,6 +105,190 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2017/07/20/dual-quaternion-skinning/">Dual Quaternion Skinning</a>
+          </h1>
+
+          <p class="post-meta">Jul 20, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/skinning/">skinning</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/vertex-deformation/">vertex deformation</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>이전 <a href="/2017/07/07/introduce-of-skinning/">Introduce of skinning</a> 글에서 Skinning 에 대한 설명과 LBS 에 관한 내용을 간단하게 다루어 보았다. 하지만 글 마지막에 해결되지 않은 문제가 하나 있었다. <em>Linear Blend Skinning</em> 의 <em>“Candy Wrapper”</em> 라는 현상이였는데, 이 글에서는 그 문제를 위해 2008년에 고안된 방법에 대해서 알아볼 것이다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/07/20/dual-quaternion-skinning/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2017/07/07/introduce-of-skinning/">Introduce Of Skinning</a>
           </h1>
 
@@ -2269,190 +2453,6 @@
         
           <p class="post-continue">
             <a href="/2017/05/19/handling-rig-and-skinning/">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/05/15/handling-uv-and-material-in-unity/">Handling Uv And Material In Unity</a>
-          </h1>
-
-          <p class="post-meta">May 15, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/rendering/">rendering</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p><a href="/2017/05/14/handling-vertices-and-indices-in-unity/">Handling vertices and indices</a> 글에서 Unity 에서 정점과 인덱스를 사용해 물체를 그리는 방법에 대해서 알아보았다. 그런데 뭔가 설정해야 할것들이 빠진 것처럼 보인다. 실제로 그려지는 모습은 Unity 에서 아무것도 설정이 안되어 있을 때 나오는 분홍색으로 전부 칠해져 있다. 일반적으로 게임에서 나오는 3D 물체들은 전부 색이 칠해져 있거나 그림이 그려져 있다. 거기다가 빛을 받아서 반짝반짝이기도 할때도 있다. 이번 글에서는 3D 오브젝트에 색을 입히거나 그림을 입히는 방법에 대해서 알아보자.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/05/15/handling-uv-and-material-in-unity/">Read on &rarr;</a>
           </p>
         
       </li>
