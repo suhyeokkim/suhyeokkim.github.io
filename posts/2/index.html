@@ -105,10 +105,10 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
-            <a class="post-link" href="/2017/11/30/what-is-shadow-mapping/">What Is Shadow Mapping</a>
+            <a class="post-link" href="/2017/12/17/cascaded-shadow-mapping/">Cascaded Shadow Mapping</a>
           </h1>
 
-          <p class="post-meta">Nov 30, 2017 • 
+          <p class="post-meta">Dec 17, 2017 • 
   
   
     
@@ -143,6 +143,8 @@
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
     
   
     
@@ -266,6 +268,407 @@
   
     
   
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/csm/">csm</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p><a href="/2017/11/30/what-is-shadow-mapping/">What is Shadow Mapping</a> 에서 <em>Shadow Mapping</em> 에 대한 간단한 번역 &amp; 설명을 적어놓았다. 이번 글에서는 <em>Shadow Mapping</em> 을 효과적으로 사용하기 위한 <em>Cascaded Shadow Mapping</em> 에 대하여 적어보겠다.</p>
+
+<p><em>Cascaded Shadow Mapping</em> 을 구글 번역기에 돌려보면 <em>“계단식 그림자 매핑”</em> 이라고 나온다. 조금 직관적이지 않은 말이지만 뜻 자체는 맞다. 간단하게 <em>Cascaded Shadow Mapping</em> 에 대하여 말하자면 넓은 환경의 그림자를 위해 거리에(거의 <em>Depth</em>) 따라서 여러개의 <em>Shadow Map</em> 을 생성하는 방법이다.</p>
+
+<p>넓은 범위의 <em>Directional Light</em> 가 닿는 그림자를 정확하게 표현하려면 꽤나 큰 크기의 <em>Shadow Map</em> 을 사용해야 한다. 하지만 <em>Cascaded Shadow Mapping</em> 을 사용한다면 여러개의 <em>Shadow Map</em> 을 사용하여 보다 조금의 메모리를 사용하여 넓은 범위의 그림자를 표현할 수 있다.</p>
+
+<h2>Shadow-map generation</h2>
+
+<p><em>Cascaded Shadow Mapping</em> 을 위한 <em>Shadow Map</em> 생성은 앞서쓴 <a href="/2017/11/30/what-is-shadow-mapping/">글</a>에서 설명한 방법과 거의 유사하다. 앞서 여러개의 <em>Shadow Map</em> 을 생성하여 그림자를 표현한다고 언급했었다. 여러개의 <em>Shaodw Map</em> 을 생성하는 기준은 <em>View frustum</em> 을 <em>Depth</em> 를 기준으로 여러개로 쪼개어 각 쪼개진 <em>frustum</em> 을 기준으로 <em>Shadow Map</em> 을 그린다.</p>
+
+<p><em>frustum</em> 은 보통 <em>Depth</em> 값을 정하거나 어떤 알고리즘을 사용하여 쪼갠다. 이는 다음 포스팅에서 언급할 예정이다. <em>frustum</em> 을 쪼개주면 다음은 쪼개진 <em>Camera View frustum</em> 의 각각의 8개의 꼭지점들을 <em>Light-Space</em> 로 변환한다. 변환된 각각 꼭지점으로 2차원의 <em>aligned axis bounding box</em> 의 위치를 구해준다. 가장 작은 X,Y 값과 가장 큰 X, Y 값을 구해주면 된다.</p>
+
+<p><br />
+<img src="/images/CSM_EffectOfCropMatrix.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf">NVidia : Cascaded Shadow Mapping</a>
+</center>
+<p><br /></p>
+
+<p>위 그림에서 XY 평면에서의 빨간색 선으로 되어있는 사각형이 언급한 <em>aligned axis bounding box</em> 를 말한다. 이 <em>AABB</em> 는 아래에서 특정한 행렬을 만들때 쓰인다.</p>
+
+<p><a href="http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf">NVidia : Cascaded Shadow Maps  </a> 에서는 이 <em>Light-Space</em> 로 변환하는 <em>MVP 변환</em> 에서 <em>Projection</em> 변환을 바꿔준다고 설명한다. 두개의 행렬이 나오는데, 하나는 직교 투영 행렬로(<em>orthogonal projection</em>) 나눠진 <em>frustum</em> 의 <em>Far</em> 값과 <em>Near</em> 값을 통해 생성해준다. 그리고 나머지 하나는 <em>Crop Matrix</em> 라는 변환 행렬이다.</p>
+
+<p>위에서 구한 <em>Light-Space</em> 의 <em>AABB</em> 값을 통해 <em>Crop Matrix</em> 를 계산한다. 아래 그림에서나오는 Mx, My 와 mx, my 는 각각 Maximum X,Y, Minimum X,Y 를 뜻한다.</p>
+
+<p><br />
+<img src="/images/CSM_CropMatrixCalc.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf">NVidia : Cascaded Shadow Mapping</a>
+</center>
+<p><br /></p>
+
+<p>이렇게 계산된 <em>Crop Matrix</em> 의 역할은 해당 <em>AABB</em> 로 <em>Shadow Map</em> 이 그려질 범위를 결정해주는 역할을 한다. 다만 범위가 아주 정확하지는 않다. 아래 그림을 보자.</p>
+
+<p><br />
+<img src="/images/CSM_FarMiddleNear.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="http://ogldev.atspace.co.uk/www/tutorial49/tutorial49.html">OGLdev : Cascaded Shadow Mapping</a>
+</center>
+<p><br /></p>
+
+<p>위 그림과 같이 보통은 겹치는 부분이 생긴다. 사용시에는 <em>Depth</em> 에 따라서 다르게 사용하기 때문에 크게 문제는 없다. 사용시에는 <em>Depth</em> 값에 따라서 다른 텍스쳐를 가져오는 것과 텍스쳐를 샘플링할때 UV 값을 정점의 위치를 <em>Light-Space</em> 로 변환해서 변환된 정점의 위치의 X,Y 좌표를 UV 값으로 사용하면 된다. 다만 각각의 <em>Shadow Map</em> 마다 변환 행렬은 <em>Crop Matrix</em> 때문에 다르기 때문에 따로 접근해야 한다.</p>
+
+<p>자세한 사용법을 알고 싶으면 <a href="http://developer.download.nvidia.com/SDK/10/Samples/cascaded_shadow_maps.zip">NVidia : Cascaded Shadow Map Example</a>에서 소스를 받아 보면 된다.</p>
+
+<h2>추가</h2>
+
+<p><em>Cascaded Shadow Map</em> 을 <em>1 pass</em> 로 그리는 방법은 간단하다. 우선 <em>Shadow Map</em> 들을 <em>TextureArray</em> 를 통해 저장하고, <em>RenderTarget</em> 을 <em>Geometry Shader</em> 에서 각각의 렌더타겟별로 지오메트리를 추가해주어 각각의 <em>Pixel Shader</em> 를 실행시키면 된다. 자세한 코드는 <a href="https://www.slideshare.net/dgtman/implements-cascaded-shadow-maps-with-using-texture-array">여기</a>에서 볼 수 있다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf">NVidia : Cascaded Shadow Maps  </a></li>
+  <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ee416307.aspx">MSDN : Cascaded Shadow Maps</a></li>
+  <li><a href="https://github.com/TheRealMJP/Shadows">Github : TheRealMJP - Shadows</a></li>
+  <li><a href="http://ogldev.atspace.co.uk/www/tutorial49/tutorial49.html">OGLDev : Cascaded Shadow Mapping</a></li>
+  <li><a href="https://www.slideshare.net/dgtman/implements-cascaded-shadow-maps-with-using-texture-array">Slideshare : implements Cascaded Shadow Maps with using TexturArray(한글)</a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/11/30/what-is-shadow-mapping/">What Is Shadow Mapping</a>
+          </h1>
+
+          <p class="post-meta">Nov 30, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shadow/">shadow</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -295,6 +698,8 @@
   
     
       <a href="/categories/rendering/">rendering</a>
+    
+  
     
   
     
@@ -566,6 +971,8 @@ bias = clamp(bias, 0,0.01);
   
     
   
+    
+  
 
   
   
@@ -601,6 +1008,8 @@ bias = clamp(bias, 0,0.01);
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
     
   
     
@@ -700,6 +1109,8 @@ bias = clamp(bias, 0,0.01);
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
     
   
     
@@ -887,6 +1298,8 @@ shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
   
     
   
+    
+  
 
   
   
@@ -942,6 +1355,8 @@ shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
     
   
     
@@ -1094,6 +1509,8 @@ shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
   
     
   
+    
+  
 
   
   
@@ -1173,6 +1590,8 @@ shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
   
     
   
+    
+  
 
   
   
@@ -1186,6 +1605,8 @@ shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
   
     
       <a href="/categories/analysis/">analysis</a>,
+    
+  
     
   
     
@@ -1309,6 +1730,8 @@ shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
   
     
       <a href="/categories/hbao/">hbao+</a>
+    
+  
     
   
     
@@ -1465,6 +1888,8 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
   
+    
+  
 
   
   
@@ -1478,6 +1903,8 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/analysis/">analysis</a>,
+    
+  
     
   
     
@@ -1623,6 +2050,8 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
   
+    
+  
 
   
   
@@ -1686,6 +2115,8 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/bilateral-filter/">bilateral_filter</a>
+    
+  
     
   
     
@@ -1855,6 +2286,8 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
   
+    
+  
 
   
   
@@ -1868,6 +2301,8 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/analysis/">analysis</a>,
+    
+  
     
   
     
@@ -2013,6 +2448,8 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
   
+    
+  
 
   
   
@@ -2072,6 +2509,8 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/linearize-depth/">linearize_depth</a>,
+    
+  
     
   
     
@@ -2153,6 +2592,8 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/deintereaved-texturing/">deintereaved_texturing</a>
+    
+  
     
   
     
@@ -2389,6 +2830,8 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
   
+    
+  
 
   
   
@@ -2402,6 +2845,8 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/analysis/">analysis</a>,
+    
+  
     
   
     
@@ -2525,6 +2970,8 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/hbao/">hbao+</a>
+    
+  
     
   
     
@@ -2708,6 +3155,8 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
   
+    
+  
 
   
   
@@ -2743,6 +3192,8 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
     
   
     
@@ -2842,6 +3293,8 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
     
   
     
@@ -3011,6 +3464,8 @@ void geom(vertexOutput input[3], uint InstanceID : SV_GSInstanceID, inout PointS
   
     
   
+    
+  
 
   
   
@@ -3090,6 +3545,8 @@ void geom(vertexOutput input[3], uint InstanceID : SV_GSInstanceID, inout PointS
   
     
   
+    
+  
 
   
   
@@ -3145,6 +3602,8 @@ void geom(vertexOutput input[3], uint InstanceID : SV_GSInstanceID, inout PointS
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
     
   
     
@@ -3212,199 +3671,6 @@ fixed4 frag(v2f i)
 
 <ul>
   <li><a href="https://www.slideshare.net/kyruie/everything-about-earlyz">SlideShader : Everything about Early-Z</a></li>
-</ul>
-
-        </div>
-
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/10/31/shader-pipeline-2-rasterizer/">Shader Pipeline 2 Rasterizer</a>
-          </h1>
-
-          <p class="post-meta">Oct 31, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/render/">render</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/hlsl/">hlsl</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>이전 포스트 “<a href="/2017/10/30/shader-pipeline-1-vertex-shader/">Vertex Shader</a>” 에서 <em>Vertex Shader</em> 에 대해 간단히 알아보았다. 이번 글에서는 <em>Rasterizer</em> 에 대해서 간단히 써보려 한다.</p>
-
-<p><em>Rasterizer</em> 는 쉐이더 파이프라인에 존재하는 고정 기능 단계이다. 간단하게 정의하면, <em>Rasterizer</em> 이전 단계를 거쳐 나온 Geometry 데이터들(vertex, mesh, …)을 정해진 해상도에 맞춰 픽셀별로 조각내어 주는 단계다. 아래 그림을 보자.</p>
-
-<p><img src="https://i-msdn.sec.s-msft.com/dynimg/IC520311.png" alt="MSDN : Traignel Rasterization Rule" /></p>
-
-<p>이는 일반적인 삼각형 폴리곤을 <em>Rasterizer</em> 단계에서 어떻게 픽셀로 변환하는지 한눈에 알게 해놓은 사진이다. 겹치는 정도에 따라 검은색에 가깝게 해놓은 것을 볼 수있다. <a href="https://msdn.microsoft.com/ko-kr/library/windows/desktop/cc627092.aspx">MSDN : Rasterization Rules</a> 에서 다른 프리미티브의 <em>Rasterize</em> 과정도 살펴볼 수 있다.</p>
-
-<p>쉐이더 파이프라인에서 <em>Rasterizer</em> 가 가지는 의미도 조금 특별하다. 이는 3차원 메시 데이터를 2차원 이미지 데이터로 바꿔주는 과정이기 때문에 <em>Geometry Stage</em> 에서 <em>Rasterizer Stage</em> 로 넘어가는 관문이다.</p>
-
-<h1>참조 자료</h1>
-
-<ul>
-  <li><a href="https://msdn.microsoft.com/ko-kr/library/windows/desktop/cc627092.aspx">MSDN : Rasterization Rules</a></li>
 </ul>
 
         </div>

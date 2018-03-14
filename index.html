@@ -105,6 +105,213 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2018/03/13/recommandation-of-gpu-skinning-in-github/">Recommandation Of Gpu Skinning In Github</a>
+          </h1>
+
+          <p class="post-meta">Mar 13, 2018 • 
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/gpu-skinning/">gpu-skinning</a>
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>최근 급하게 어떤 프로젝트에 투입되서 작업을 하고 있다. 다른 회사와 같이 일을 하고 있는데, 다른 회사에서 해놓은 것들이 너무 느려서 최적화를 해야했다. 결국 일반적인 잔머리로는 도저히 해결할 수 없는 상황에 봉착했다. 1년 전의 필자였다면 포기하고 안된다고 했었겠지만 다행히 약간의 노하우를 통해 해결할 수 있었다.</p>
+
+<h2>상황과 문제?</h2>
+
+<p>요즘 한국에서는 VR 게임/컨텐츠들이 굉장히 많이 개발되고 있다. 필자도 그 와중에 떨어진 프로젝트를 하나 받아진행하게 되었다. 개발은 주변 3D 환경을 다른 회사에서 해주고, 게임이 돌아가는 코어 시스템을 필자의 회사에서 작업하기로 되어 있었다. 게임에서의 코어 시스템은 개발을 하였으나 <em>Unity</em> 에 의존적인 코딩은 거의 진행되지 않은 상태에서 한달전 프로젝트에 투입되었다.</p>
+
+<p>그렇게 하나하나 작업을 하면서 코어 시스템과 3D 환경을 결합하는 도중, 터무니 없는 경우를 만났다. 바로 <strong>SkinnedMeshRenderer</strong> 와 <em>Animator</em> 가 약 800 개 정도되는 상황에 부딫쳤다. 여기서는 두가지의 큰 부하가 있었다. 절대적인 <em>Vertex Skinning</em> 부하와 <em>Animator</em> 가 800개가 한꺼번에 계산되는 부하였다. <em>Vertex</em> 숫자는 <em>LOD</em> 베이커를 구해서 어떻게든 해결이 되었으나, 800개의 <em>Animator</em> 부하는 우회방법이 없었다. 즉 이는 <em>Vertex Shader</em> 나 <em>Compute Shader</em> 안에서 <em>AnimationClip</em> 의 정보들을 처리하는 정공법이 필요했다.</p>
+
+<p>하지만 기한도 얼마 남지않아 급한 와중에 저것들을 직접 코딩할 여유는 없었다. 게다가 처음 건드려보는 부분이라서 헤멜 코스트까지 합하면 굉장히 암울했다. 혹시 오픈소스가 있나 싶어서 생각을 해보았는데 예전에 <em>SkinRenderer</em> 를 직접 구현하면서 찾아본 오픈소스 레포지토리가 하나 있었다.</p>
+
+<h2>Github : <a href="https://github.com/chengkehan/GPUSkinning">GPUSkinning</a></h2>
+
+<p>한 중국인이 개발한 스키닝 툴이다. 이는 두가지의 큰 기능을 담고있다. 하나는 <em>Vertex Shader</em> 에서 <em>Skinning</em> 처리를 해주는 기능과, 하나는 <em>AnimationClip</em> 들을 직접 샘플링해 바이너리 파일로 저장해 GPU 메모리에 텍스쳐의 형태로 올려두어 사용하는 기능이 있다.</p>
+
+<p><em>Compute Shader</em> 나 <em>Vetex Shader</em> 를 사용해 <em>Skinning</em> 을 구현하는 것은 크게 어려운 것은 아니다. <em>Deformation</em>  하지만 제일 시간이 오래걸리는 부분은 <em>AnimationClip</em> 을 가공하는 부분이 제일 오래 걸리는 부분 중 하나다. 해당 레포지토리에는 그 오래걸리는 부분을 만들어 놓았다. 사실 이 부분으로만으로 꽤 큰 가치가 있다.</p>
+
+<p>조금 불편한 점도 몇가지 있다. 한번에 여러개의 샘플링이 안되고, 에디터에서 필수적으로 지원해야할 멀티 에디팅이 안된다. 후자는 간단히 코드를 수정하면 되지만 전자는 샘플링 과정에서 플레이를 해야되기 때문에 직접 수정하기엔 조금 부담스럽다. <em>Vertex Shader</em> 에 스키닝이 물려있기 때문에 <em>Skinning</em> 을 수정하려면 <em>Shader</em> 부분도 바꿔야하고, <em>LOD</em> 기능도 어설프게 들어있어 조금 애매하다.</p>
+
+<p>그래도 이 정도의 양질의 코드라면 굉장히 쓸모있어 보인다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="https://github.com/chengkehan/GPUSkinning">Github : GPUSkining</a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2018/03/06/dualized-asset-management-of-unity/">Dualized Asset Management Of Unity</a>
           </h1>
 
@@ -117,6 +324,8 @@
   
     
       <a href="/categories/unity/">unity</a>
+    
+  
     
   
     
@@ -310,6 +519,8 @@ MonoImporter:
   
     
   
+    
+  
 
   
   
@@ -365,6 +576,8 @@ MonoImporter:
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
     
   
     
@@ -508,6 +721,8 @@ MonoImporter:
   
     
   
+    
+  
 
   
   
@@ -585,6 +800,8 @@ MonoImporter:
   
     
       <a href="/categories/gpgpu/">gpgpu</a>
+    
+  
     
   
 
@@ -713,6 +930,8 @@ MonoImporter:
   
     
   
+    
+  
 
   
   
@@ -792,6 +1011,8 @@ MonoImporter:
   
     
   
+    
+  
 
   
   
@@ -821,6 +1042,8 @@ MonoImporter:
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
     
   
     
@@ -944,6 +1167,8 @@ MonoImporter:
   
     
       <a href="/categories/fts/">fts</a>
+    
+  
     
   
     
@@ -1148,6 +1373,8 @@ MonoImporter:
   
     
   
+    
+  
 
   
   
@@ -1227,6 +1454,8 @@ MonoImporter:
   
     
   
+    
+  
 
   
   
@@ -1256,6 +1485,8 @@ MonoImporter:
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
     
   
     
@@ -1379,6 +1610,8 @@ MonoImporter:
   
     
       <a href="/categories/fts/">fts</a>
+    
+  
     
   
     
@@ -1565,6 +1798,8 @@ MonoImporter:
   
     
   
+    
+  
 
   
   
@@ -1644,6 +1879,8 @@ MonoImporter:
   
     
   
+    
+  
 
   
   
@@ -1673,6 +1910,8 @@ MonoImporter:
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
     
   
     
@@ -1796,6 +2035,8 @@ MonoImporter:
   
     
       <a href="/categories/fts/">fts</a>
+    
+  
     
   
     
@@ -2015,6 +2256,8 @@ end for
   
     
   
+    
+  
 
 </p>
         </header>
@@ -2084,6 +2327,8 @@ end for
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
     
   
     
@@ -2207,6 +2452,8 @@ end for
   
     
   
+    
+  
 
   
   
@@ -2236,6 +2483,8 @@ end for
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
     
   
     
@@ -2357,6 +2606,8 @@ end for
   
     
       <a href="/categories/pcss/">pcss</a>
+    
+  
     
   
     
@@ -2571,6 +2822,8 @@ end for
   
     
   
+    
+  
 
   
   
@@ -2650,6 +2903,8 @@ end for
   
     
   
+    
+  
 
   
   
@@ -2679,6 +2934,8 @@ end for
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
     
   
     
@@ -2808,6 +3065,8 @@ end for
   
     
   
+    
+  
 
 </p>
         </header>
@@ -2908,397 +3167,6 @@ end for
   <li><a href="http://developer.download.nvidia.com/SDK/10/direct3d/screenshots/samples/VarianceShadowMapping.html">NVidia : Variance Shadow Mapping Website</a></li>
   <li><a href="https://github.com/TheRealMJP/Shadows">Github : TheRealMJP - Shadows</a></li>
   <li><a href="https://www.opengl.org/discussion_boards/showthread.php/177219-Shadow-filtering-PCF-better-than-VSM">OpenGL Forum : Shadow filtering: PCF better than VSM? </a></li>
-</ul>
-
-        </div>
-
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/12/17/cascaded-shadow-mapping/">Cascaded Shadow Mapping</a>
-          </h1>
-
-          <p class="post-meta">Dec 17, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/shader/">shader</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/shadow/">shadow</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/rendering/">rendering</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/csm/">csm</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p><a href="/2017/11/30/what-is-shadow-mapping/">What is Shadow Mapping</a> 에서 <em>Shadow Mapping</em> 에 대한 간단한 번역 &amp; 설명을 적어놓았다. 이번 글에서는 <em>Shadow Mapping</em> 을 효과적으로 사용하기 위한 <em>Cascaded Shadow Mapping</em> 에 대하여 적어보겠다.</p>
-
-<p><em>Cascaded Shadow Mapping</em> 을 구글 번역기에 돌려보면 <em>“계단식 그림자 매핑”</em> 이라고 나온다. 조금 직관적이지 않은 말이지만 뜻 자체는 맞다. 간단하게 <em>Cascaded Shadow Mapping</em> 에 대하여 말하자면 넓은 환경의 그림자를 위해 거리에(거의 <em>Depth</em>) 따라서 여러개의 <em>Shadow Map</em> 을 생성하는 방법이다.</p>
-
-<p>넓은 범위의 <em>Directional Light</em> 가 닿는 그림자를 정확하게 표현하려면 꽤나 큰 크기의 <em>Shadow Map</em> 을 사용해야 한다. 하지만 <em>Cascaded Shadow Mapping</em> 을 사용한다면 여러개의 <em>Shadow Map</em> 을 사용하여 보다 조금의 메모리를 사용하여 넓은 범위의 그림자를 표현할 수 있다.</p>
-
-<h2>Shadow-map generation</h2>
-
-<p><em>Cascaded Shadow Mapping</em> 을 위한 <em>Shadow Map</em> 생성은 앞서쓴 <a href="/2017/11/30/what-is-shadow-mapping/">글</a>에서 설명한 방법과 거의 유사하다. 앞서 여러개의 <em>Shadow Map</em> 을 생성하여 그림자를 표현한다고 언급했었다. 여러개의 <em>Shaodw Map</em> 을 생성하는 기준은 <em>View frustum</em> 을 <em>Depth</em> 를 기준으로 여러개로 쪼개어 각 쪼개진 <em>frustum</em> 을 기준으로 <em>Shadow Map</em> 을 그린다.</p>
-
-<p><em>frustum</em> 은 보통 <em>Depth</em> 값을 정하거나 어떤 알고리즘을 사용하여 쪼갠다. 이는 다음 포스팅에서 언급할 예정이다. <em>frustum</em> 을 쪼개주면 다음은 쪼개진 <em>Camera View frustum</em> 의 각각의 8개의 꼭지점들을 <em>Light-Space</em> 로 변환한다. 변환된 각각 꼭지점으로 2차원의 <em>aligned axis bounding box</em> 의 위치를 구해준다. 가장 작은 X,Y 값과 가장 큰 X, Y 값을 구해주면 된다.</p>
-
-<p><br />
-<img src="/images/CSM_EffectOfCropMatrix.png" alt="" class="center-image" /></p>
-<center>출처 : <a href="http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf">NVidia : Cascaded Shadow Mapping</a>
-</center>
-<p><br /></p>
-
-<p>위 그림에서 XY 평면에서의 빨간색 선으로 되어있는 사각형이 언급한 <em>aligned axis bounding box</em> 를 말한다. 이 <em>AABB</em> 는 아래에서 특정한 행렬을 만들때 쓰인다.</p>
-
-<p><a href="http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf">NVidia : Cascaded Shadow Maps  </a> 에서는 이 <em>Light-Space</em> 로 변환하는 <em>MVP 변환</em> 에서 <em>Projection</em> 변환을 바꿔준다고 설명한다. 두개의 행렬이 나오는데, 하나는 직교 투영 행렬로(<em>orthogonal projection</em>) 나눠진 <em>frustum</em> 의 <em>Far</em> 값과 <em>Near</em> 값을 통해 생성해준다. 그리고 나머지 하나는 <em>Crop Matrix</em> 라는 변환 행렬이다.</p>
-
-<p>위에서 구한 <em>Light-Space</em> 의 <em>AABB</em> 값을 통해 <em>Crop Matrix</em> 를 계산한다. 아래 그림에서나오는 Mx, My 와 mx, my 는 각각 Maximum X,Y, Minimum X,Y 를 뜻한다.</p>
-
-<p><br />
-<img src="/images/CSM_CropMatrixCalc.png" alt="" class="center-image" /></p>
-<center>출처 : <a href="http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf">NVidia : Cascaded Shadow Mapping</a>
-</center>
-<p><br /></p>
-
-<p>이렇게 계산된 <em>Crop Matrix</em> 의 역할은 해당 <em>AABB</em> 로 <em>Shadow Map</em> 이 그려질 범위를 결정해주는 역할을 한다. 다만 범위가 아주 정확하지는 않다. 아래 그림을 보자.</p>
-
-<p><br />
-<img src="/images/CSM_FarMiddleNear.png" alt="" class="center-image" /></p>
-<center>출처 : <a href="http://ogldev.atspace.co.uk/www/tutorial49/tutorial49.html">OGLdev : Cascaded Shadow Mapping</a>
-</center>
-<p><br /></p>
-
-<p>위 그림과 같이 보통은 겹치는 부분이 생긴다. 사용시에는 <em>Depth</em> 에 따라서 다르게 사용하기 때문에 크게 문제는 없다. 사용시에는 <em>Depth</em> 값에 따라서 다른 텍스쳐를 가져오는 것과 텍스쳐를 샘플링할때 UV 값을 정점의 위치를 <em>Light-Space</em> 로 변환해서 변환된 정점의 위치의 X,Y 좌표를 UV 값으로 사용하면 된다. 다만 각각의 <em>Shadow Map</em> 마다 변환 행렬은 <em>Crop Matrix</em> 때문에 다르기 때문에 따로 접근해야 한다.</p>
-
-<p>자세한 사용법을 알고 싶으면 <a href="http://developer.download.nvidia.com/SDK/10/Samples/cascaded_shadow_maps.zip">NVidia : Cascaded Shadow Map Example</a>에서 소스를 받아 보면 된다.</p>
-
-<h2>추가</h2>
-
-<p><em>Cascaded Shadow Map</em> 을 <em>1 pass</em> 로 그리는 방법은 간단하다. 우선 <em>Shadow Map</em> 들을 <em>TextureArray</em> 를 통해 저장하고, <em>RenderTarget</em> 을 <em>Geometry Shader</em> 에서 각각의 렌더타겟별로 지오메트리를 추가해주어 각각의 <em>Pixel Shader</em> 를 실행시키면 된다. 자세한 코드는 <a href="https://www.slideshare.net/dgtman/implements-cascaded-shadow-maps-with-using-texture-array">여기</a>에서 볼 수 있다.</p>
-
-<h2>참조</h2>
-
-<ul>
-  <li><a href="http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf">NVidia : Cascaded Shadow Maps  </a></li>
-  <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ee416307.aspx">MSDN : Cascaded Shadow Maps</a></li>
-  <li><a href="https://github.com/TheRealMJP/Shadows">Github : TheRealMJP - Shadows</a></li>
-  <li><a href="http://ogldev.atspace.co.uk/www/tutorial49/tutorial49.html">OGLDev : Cascaded Shadow Mapping</a></li>
-  <li><a href="https://www.slideshare.net/dgtman/implements-cascaded-shadow-maps-with-using-texture-array">Slideshare : implements Cascaded Shadow Maps with using TexturArray(한글)</a></li>
 </ul>
 
         </div>

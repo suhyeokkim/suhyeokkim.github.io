@@ -105,6 +105,203 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2017/10/31/shader-pipeline-2-rasterizer/">Shader Pipeline 2 Rasterizer</a>
+          </h1>
+
+          <p class="post-meta">Oct 31, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/render/">render</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/hlsl/">hlsl</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>이전 포스트 “<a href="/2017/10/30/shader-pipeline-1-vertex-shader/">Vertex Shader</a>” 에서 <em>Vertex Shader</em> 에 대해 간단히 알아보았다. 이번 글에서는 <em>Rasterizer</em> 에 대해서 간단히 써보려 한다.</p>
+
+<p><em>Rasterizer</em> 는 쉐이더 파이프라인에 존재하는 고정 기능 단계이다. 간단하게 정의하면, <em>Rasterizer</em> 이전 단계를 거쳐 나온 Geometry 데이터들(vertex, mesh, …)을 정해진 해상도에 맞춰 픽셀별로 조각내어 주는 단계다. 아래 그림을 보자.</p>
+
+<p><img src="https://i-msdn.sec.s-msft.com/dynimg/IC520311.png" alt="MSDN : Traignel Rasterization Rule" /></p>
+
+<p>이는 일반적인 삼각형 폴리곤을 <em>Rasterizer</em> 단계에서 어떻게 픽셀로 변환하는지 한눈에 알게 해놓은 사진이다. 겹치는 정도에 따라 검은색에 가깝게 해놓은 것을 볼 수있다. <a href="https://msdn.microsoft.com/ko-kr/library/windows/desktop/cc627092.aspx">MSDN : Rasterization Rules</a> 에서 다른 프리미티브의 <em>Rasterize</em> 과정도 살펴볼 수 있다.</p>
+
+<p>쉐이더 파이프라인에서 <em>Rasterizer</em> 가 가지는 의미도 조금 특별하다. 이는 3차원 메시 데이터를 2차원 이미지 데이터로 바꿔주는 과정이기 때문에 <em>Geometry Stage</em> 에서 <em>Rasterizer Stage</em> 로 넘어가는 관문이다.</p>
+
+<h1>참조 자료</h1>
+
+<ul>
+  <li><a href="https://msdn.microsoft.com/ko-kr/library/windows/desktop/cc627092.aspx">MSDN : Rasterization Rules</a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2017/10/30/shader-pipeline-1-vertex-shader/">Shader Pipeline 1 Vertex Shader</a>
           </h1>
 
@@ -187,6 +384,8 @@
   
     
   
+    
+  
 
   
   
@@ -222,6 +421,8 @@
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
     
   
     
@@ -345,6 +546,8 @@
   
     
   
+    
+  
 
   
   
@@ -424,6 +627,8 @@
   
     
   
+    
+  
 
   
   
@@ -433,6 +638,8 @@
   
     
       <a href="/categories/unity/">unity</a>
+    
+  
     
   
     
@@ -670,6 +877,8 @@ v2f vert(appdata i)
   
     
   
+    
+  
 
   
   
@@ -705,6 +914,8 @@ v2f vert(appdata i)
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
     
   
     
@@ -804,6 +1015,8 @@ v2f vert(appdata i)
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
     
   
     
@@ -950,6 +1163,8 @@ v2f vert(appdata i)
   
     
   
+    
+  
 
   
   
@@ -985,6 +1200,8 @@ v2f vert(appdata i)
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
     
   
     
@@ -1084,6 +1301,8 @@ v2f vert(appdata i)
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
     
   
     
@@ -1258,6 +1477,8 @@ for(int i = 0; i &lt; 5; i++)
   
     
   
+    
+  
 
   
   
@@ -1293,6 +1514,8 @@ for(int i = 0; i &lt; 5; i++)
   
     
       <a href="/categories/shader/">shader</a>
+    
+  
     
   
     
@@ -1460,6 +1683,8 @@ for(int i = 0; i &lt; 5; i++)
   
     
   
+    
+  
 
   
   
@@ -1513,6 +1738,8 @@ for(int i = 0; i &lt; 5; i++)
   
     
       <a href="/categories/render/">render</a>
+    
+  
     
   
     
@@ -1657,6 +1884,8 @@ camera.RenderToCubemap(cubemapRT, 63);
   
     
   
+    
+  
 
   
   
@@ -1710,6 +1939,8 @@ camera.RenderToCubemap(cubemapRT, 63);
   
     
       <a href="/categories/render/">render</a>
+    
+  
     
   
     
@@ -1864,6 +2095,8 @@ camera.SetReplacementShader(shader, replacementTag);
   
     
   
+    
+  
 
   
   
@@ -1899,6 +2132,8 @@ camera.SetReplacementShader(shader, replacementTag);
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
     
   
     
@@ -1984,6 +2219,8 @@ camera.SetReplacementShader(shader, replacementTag);
   
     
       <a href="/categories/gpuinstancing/">gpuinstancing</a>
+    
+  
     
   
     
@@ -2161,6 +2398,8 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
   
+    
+  
 
   
   
@@ -2212,6 +2451,8 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
       <a href="/categories/study/">study</a>
+    
+  
     
   
     
@@ -2345,6 +2586,8 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
   
+    
+  
 
   
   
@@ -2424,6 +2667,8 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
   
+    
+  
 
 </p>
         </header>
@@ -2437,198 +2682,6 @@ void Process (uint3 id : SV_DispatchThreadID)
         
           <p class="post-continue">
             <a href="/2017/07/30/normal-tangent-binormal/">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/07/22/optimized-center-of-rotation/">Optimized Center Of Rotation</a>
-          </h1>
-
-          <p class="post-meta">Jul 22, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/skinning/">skinning</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/vertex-deformation/">vertex deformation</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>이전 <a href="/2017/07/20/dual-quaternion-skinning/">dual quaternion skinning</a> 글에서 <em>dual quaternion skinning</em> 에 대해서 설명해 보았다. 이전 글에서는 단순히 <em>dual quaternion skinning</em> 에 대해서 알아보고 장점에 대해서 알아보았다. 단점에 대해서는 언급을 하지않았는데 사실 단점도 존재하긴 한다. 새로 소개할 방법의 논문에서 <em>dual quaternion skinning</em> 의 단점에 대해서 언급했다.</p>
-
-<p><em>joint bulging artifact</em> 라고 하는 것인데, 90도 정도 휜 부분의 바깥쪽이 튀어나오는 현상을 말한다. 아래 그림에서 볼 수 있다.</p>
-
-<p><img src="/images/dqs_ocor_bent.png" alt="both bent" class="center-image" /></p>
-
-<p>왼쪽은 <em>dual quaternion skinning</em> 을 표현한 그림이고, 오른쪽은 곧 소개할 <em>optimized center of rotation</em> 방법이 적용된 스키닝이다. 각 그림의 오른쪽의 90도 휜 부분을 관찰하면 <em>dual quternion skinning</em> 이 약간 아래가 부푼 모습을 볼 수 있다. 이를 <em>joint bulging artifact</em> 라고 한다. 그리고 오른쪽 위의 확대된 그림을 보면 <em>dual quaternion skinning</em> 은 약간 움푹 들어간 것을 볼 수 있다.</p>
-
-<p>그래서 디즈니 리서치라는 연구소에서 새로운 방법을 2016 년 Siggraph 에서 소개했다. 논문의 이름은 <em>Real-time Skeletal Skinning with Optimized Centers of Rotation</em> 이다.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/07/22/optimized-center-of-rotation/">Read on &rarr;</a>
           </p>
         
       </li>

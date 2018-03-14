@@ -105,6 +105,202 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2017/07/22/optimized-center-of-rotation/">Optimized Center Of Rotation</a>
+          </h1>
+
+          <p class="post-meta">Jul 22, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/skinning/">skinning</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/vertex-deformation/">vertex deformation</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>이전 <a href="/2017/07/20/dual-quaternion-skinning/">dual quaternion skinning</a> 글에서 <em>dual quaternion skinning</em> 에 대해서 설명해 보았다. 이전 글에서는 단순히 <em>dual quaternion skinning</em> 에 대해서 알아보고 장점에 대해서 알아보았다. 단점에 대해서는 언급을 하지않았는데 사실 단점도 존재하긴 한다. 새로 소개할 방법의 논문에서 <em>dual quaternion skinning</em> 의 단점에 대해서 언급했다.</p>
+
+<p><em>joint bulging artifact</em> 라고 하는 것인데, 90도 정도 휜 부분의 바깥쪽이 튀어나오는 현상을 말한다. 아래 그림에서 볼 수 있다.</p>
+
+<p><img src="/images/dqs_ocor_bent.png" alt="both bent" class="center-image" /></p>
+
+<p>왼쪽은 <em>dual quaternion skinning</em> 을 표현한 그림이고, 오른쪽은 곧 소개할 <em>optimized center of rotation</em> 방법이 적용된 스키닝이다. 각 그림의 오른쪽의 90도 휜 부분을 관찰하면 <em>dual quternion skinning</em> 이 약간 아래가 부푼 모습을 볼 수 있다. 이를 <em>joint bulging artifact</em> 라고 한다. 그리고 오른쪽 위의 확대된 그림을 보면 <em>dual quaternion skinning</em> 은 약간 움푹 들어간 것을 볼 수 있다.</p>
+
+<p>그래서 디즈니 리서치라는 연구소에서 새로운 방법을 2016 년 Siggraph 에서 소개했다. 논문의 이름은 <em>Real-time Skeletal Skinning with Optimized Centers of Rotation</em> 이다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/07/22/optimized-center-of-rotation/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2017/07/20/dual-quaternion-skinning/">Dual Quaternion Skinning</a>
           </h1>
 
@@ -187,6 +383,8 @@
   
     
   
+    
+  
 
   
   
@@ -234,6 +432,8 @@
   
     
       <a href="/categories/vertex-deformation/">vertex deformation</a>
+    
+  
     
   
     
@@ -371,6 +571,8 @@
   
     
   
+    
+  
 
   
   
@@ -418,6 +620,8 @@
   
     
       <a href="/categories/vertex-deformation/">vertex deformation</a>
+    
+  
     
   
     
@@ -555,6 +759,8 @@
   
     
   
+    
+  
 
 </p>
         </header>
@@ -590,6 +796,8 @@
   
     
       <a href="/categories/unity/">unity</a>,
+    
+  
     
   
     
@@ -739,6 +947,8 @@
   
     
   
+    
+  
 
   
   
@@ -780,6 +990,8 @@
   
     
       <a href="/categories/gpuinstancing/">gpuinstancing</a>
+    
+  
     
   
     
@@ -923,6 +1135,8 @@
   
     
   
+    
+  
 
   
   
@@ -958,6 +1172,8 @@
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
     
   
     
@@ -1081,6 +1297,8 @@
   
     
   
+    
+  
 
 </p>
         </header>
@@ -1120,6 +1338,8 @@
   
     
       <a href="/categories/unity/">unity</a>
+    
+  
     
   
     
@@ -1301,6 +1521,8 @@
   
     
   
+    
+  
 
   
   
@@ -1380,6 +1602,8 @@
   
     
   
+    
+  
 
   
   
@@ -1409,6 +1633,8 @@
   
     
       <a href="/categories/rendering/">rendering</a>
+    
+  
     
   
     
@@ -1570,6 +1796,8 @@
   
     
   
+    
+  
 
   
   
@@ -1599,6 +1827,8 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
     
   
     
@@ -1686,6 +1916,8 @@
   
     
       <a href="/categories/cg/">cg</a>
+    
+  
     
   
     
@@ -1847,6 +2079,8 @@
   
     
   
+    
+  
 
   
   
@@ -1926,6 +2160,8 @@
   
     
   
+    
+  
 
   
   
@@ -1955,6 +2191,8 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
     
   
     
@@ -2084,6 +2322,8 @@
   
     
   
+    
+  
 
   
   
@@ -2163,6 +2403,8 @@
   
     
   
+    
+  
 
 </p>
         </header>
@@ -2186,273 +2428,6 @@
         
           <p class="post-continue">
             <a href="/2017/05/29/simple-shader-programming/">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/05/19/handling-rig-and-skinning/">Handling Rig And Skinning</a>
-          </h1>
-
-          <p class="post-meta">May 19, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/rig/">rig</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/animate/">animate</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>앞서 오브젝트들을 그리는 방법에 대해서 알아보았다.(<a href="/2017/05/14/handling-vertices-and-indices-in-unity/">hnalding vertices</a>, <a href="/2017/05/15/handling-uv-and-material-in-unity/">handling uvs</a>) 폴리곤을 그리고 색을 칠하는 방법이었다. 하지만 이런 기능만 가지고 게임을 만들기에는 약간 부족하다. 보통 게임을 만들때 케릭터들의 부드러운 움직임을 표현해야 한다. 2D 게임은 보통 그림을 여러장을 그려서 움직이게 보이게 한다. 하지만 3D 게임에서의 부드러운 움직임은 2D 게임의 표현과는 다르게 표현한다. 일단 부드럽게 움직여야할 단위가 다르다. 메쉬의 정점들을 부드럽게 움직여야하기 때문에 2D 게임의 움직임과는 다른 무언가가 필요하다.</p>
-
-<p>2D 게임에서 그림을 한꺼번에 움직이는 것처럼 단순하게 메쉬 전체를 부드럽게 움직여서 해결되면 좋겠지만 이 방법은 조금 문제가 있다. 관절같은 접합 부분에서 부드럽게 처리해야 하는 부분 즉 어떤 정점만 부드럽게 움직여야하는 문제가 있다. 그래서 고안된 방법은 특정한 위치를 설정해서 그 위치를 기준으로 정점들을 움직여주는 방법이다.</p>
-
-<p>언급한 특정한 위치를 <em>Bone</em> : 뼈라고 한다. 뼈를 움직여서 정점들을 직접 움직이는 것이다. 그리고 뼈를 기준으로 움직이는 것을 <em>Skinning</em> 이라고 한다. 사람의 뼈가 움직이면 피부도 따라서 움직이듯이 피부를 직접 설정하는 것을 <em>Skinning</em> 이라고 하는 것이다. 그리고 <em>Bone</em> 의 위치도 상당히 중요하다. 자연스러운 움직임을 만들려면 만들어진 메쉬에 잘 맞게 위치를 설정해주어야 하기 때문이다. 위치 뿐만아니라 여러 움직이는 범위나 뼈의 계층 구조를 잘 설정해주어야 자연스러운 움직임을 나타낼 수 있다. 이러한 작업을 <em>Rigging</em> 이라 한다. 보통 3D 오브젝트를 만들고 <em>Rigging</em> 과 <em>Skinning</em> 을 하는 작업은 그래픽 아티스트가 직접 해주지만 우리는 이 과정을 이해해야 하기에 Unity 에서 직접 만들어 볼 것이다.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/05/19/handling-rig-and-skinning/">Read on &rarr;</a>
           </p>
         
       </li>

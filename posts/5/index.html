@@ -105,6 +105,279 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2017/05/19/handling-rig-and-skinning/">Handling Rig And Skinning</a>
+          </h1>
+
+          <p class="post-meta">May 19, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/rig/">rig</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/animate/">animate</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>앞서 오브젝트들을 그리는 방법에 대해서 알아보았다.(<a href="/2017/05/14/handling-vertices-and-indices-in-unity/">hnalding vertices</a>, <a href="/2017/05/15/handling-uv-and-material-in-unity/">handling uvs</a>) 폴리곤을 그리고 색을 칠하는 방법이었다. 하지만 이런 기능만 가지고 게임을 만들기에는 약간 부족하다. 보통 게임을 만들때 케릭터들의 부드러운 움직임을 표현해야 한다. 2D 게임은 보통 그림을 여러장을 그려서 움직이게 보이게 한다. 하지만 3D 게임에서의 부드러운 움직임은 2D 게임의 표현과는 다르게 표현한다. 일단 부드럽게 움직여야할 단위가 다르다. 메쉬의 정점들을 부드럽게 움직여야하기 때문에 2D 게임의 움직임과는 다른 무언가가 필요하다.</p>
+
+<p>2D 게임에서 그림을 한꺼번에 움직이는 것처럼 단순하게 메쉬 전체를 부드럽게 움직여서 해결되면 좋겠지만 이 방법은 조금 문제가 있다. 관절같은 접합 부분에서 부드럽게 처리해야 하는 부분 즉 어떤 정점만 부드럽게 움직여야하는 문제가 있다. 그래서 고안된 방법은 특정한 위치를 설정해서 그 위치를 기준으로 정점들을 움직여주는 방법이다.</p>
+
+<p>언급한 특정한 위치를 <em>Bone</em> : 뼈라고 한다. 뼈를 움직여서 정점들을 직접 움직이는 것이다. 그리고 뼈를 기준으로 움직이는 것을 <em>Skinning</em> 이라고 한다. 사람의 뼈가 움직이면 피부도 따라서 움직이듯이 피부를 직접 설정하는 것을 <em>Skinning</em> 이라고 하는 것이다. 그리고 <em>Bone</em> 의 위치도 상당히 중요하다. 자연스러운 움직임을 만들려면 만들어진 메쉬에 잘 맞게 위치를 설정해주어야 하기 때문이다. 위치 뿐만아니라 여러 움직이는 범위나 뼈의 계층 구조를 잘 설정해주어야 자연스러운 움직임을 나타낼 수 있다. 이러한 작업을 <em>Rigging</em> 이라 한다. 보통 3D 오브젝트를 만들고 <em>Rigging</em> 과 <em>Skinning</em> 을 하는 작업은 그래픽 아티스트가 직접 해주지만 우리는 이 과정을 이해해야 하기에 Unity 에서 직접 만들어 볼 것이다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/05/19/handling-rig-and-skinning/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2017/05/15/handling-uv-and-material-in-unity/">Handling Uv And Material In Unity</a>
           </h1>
 
@@ -117,6 +390,8 @@
   
     
       <a href="/categories/unity/">unity</a>,
+    
+  
     
   
     
@@ -216,6 +491,8 @@
   
     
       <a href="/categories/rendering/">rendering</a>
+    
+  
     
   
     
@@ -371,6 +648,8 @@
   
     
   
+    
+  
 
   
   
@@ -400,6 +679,8 @@
   
     
       <a href="/categories/rendering/">rendering</a>
+    
+  
     
   
     
@@ -581,6 +862,8 @@
   
     
   
+    
+  
 
   
   
@@ -610,6 +893,8 @@
   
     
       <a href="/categories/rendering/">rendering</a>
+    
+  
     
   
     
@@ -769,6 +1054,8 @@
   
     
   
+    
+  
 
   
   
@@ -848,6 +1135,8 @@
   
     
   
+    
+  
 
   
   
@@ -857,6 +1146,8 @@
   
     
       <a href="/categories/unity/">unity</a>
+    
+  
     
   
     
@@ -1036,6 +1327,8 @@
   
     
   
+    
+  
 
   
   
@@ -1059,6 +1352,8 @@
   
     
       <a href="/categories/game/">game</a>
+    
+  
     
   
     
@@ -1150,6 +1445,8 @@
   
     
       <a href="/categories/makeblog/">makeblog</a>
+    
+  
     
   
     
@@ -1335,6 +1632,8 @@
   
     
   
+    
+  
 
 </p>
         </header>
@@ -1440,6 +1739,8 @@
   
     
   
+    
+  
 
   
   
@@ -1455,6 +1756,8 @@
   
     
       <a href="/categories/c/">c#</a>,
+    
+  
     
   
     
@@ -1598,6 +1901,8 @@
   
     
   
+    
+  
 
   
   
@@ -1611,6 +1916,8 @@
   
     
       <a href="/categories/analysis/">analysis</a>
+    
+  
     
   
     
@@ -1784,6 +2091,8 @@
   
     
   
+    
+  
 
   
   
@@ -1863,6 +2172,8 @@
   
     
   
+    
+  
 
 </p>
         </header>
@@ -1877,117 +2188,6 @@
           <p class="post-continue">
             <a href="/2017/04/21/usage-of-coroutine/">Read on &rarr;</a>
           </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/04/19/custom-property-drawer-tooltip/">Custom Property Drawer Tooltip</a>
-          </h1>
-
-          <p class="post-meta">Apr 19, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>CustomPropertyDrawer 를 사용할 때 필드에 설정한 <strong>Tooltip</strong> 정보가 전달이 안될 때가 있다. 이때는 아래와 같이 하면 된다.</p>
-
-<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnGUI</span><span class="p">(</span><span class="n">Rect</span> <span class="n">position</span><span class="p">,</span> <span class="n">SerializedProperty</span> <span class="n">property</span><span class="p">,</span> <span class="n">GUIContent</span> <span class="n">label</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">GUIContent</span> <span class="n">content</span> <span class="p">=</span> <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">BeginProperty</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">property</span><span class="p">);</span>
-
-    <span class="c1">// label 대신 content 를 에디터 코드에 넣어줌.</span>
-
-    <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">EndProperty</span><span class="p">();</span>
-<span class="p">}</span></code></pre></figure>
-
-<p>OnGUI 를 통해 넘어오는 <strong>label</strong> 파라미터에는 단지 텍스트만 들어가있어 조금 더 살펴보니 위의 방법처럼 해당 프로퍼티의 <strong>GUIContent</strong> 를 가져오는 방법이 있었다. 저 반환된 <strong>GUIContent</strong> 는 어디에서도 사용가능하니 유용하게 쓰일듯하다.</p>
-
-        </div>
-
         
       </li>
     

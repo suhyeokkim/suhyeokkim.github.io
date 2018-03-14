@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2018-03-09T09:37:35+00:00</updated>
+  <updated>2018-03-14T06:09:47+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -24,6 +24,72 @@
     </author>
   
 
+  
+  
+    <entry>
+      
+      <title type="html">Recommandation Of Gpu Skinning In Github</title>
+      
+      <link href="https://hrmrzizon.github.io/2018/03/13/recommandation-of-gpu-skinning-in-github/" rel="alternate" type="text/html" title="Recommandation Of Gpu Skinning In Github" />
+      <published>2018-03-13T00:00:00+00:00</published>
+      <updated>2018-03-13T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2018/03/13/recommandation-of-gpu-skinning-in-github</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2018/03/13/recommandation-of-gpu-skinning-in-github/">&lt;p&gt;최근 급하게 어떤 프로젝트에 투입되서 작업을 하고 있다. 다른 회사와 같이 일을 하고 있는데, 다른 회사에서 해놓은 것들이 너무 느려서 최적화를 해야했다. 결국 일반적인 잔머리로는 도저히 해결할 수 없는 상황에 봉착했다. 1년 전의 필자였다면 포기하고 안된다고 했었겠지만 다행히 약간의 노하우를 통해 해결할 수 있었다.&lt;/p&gt;
+
+&lt;h2&gt;상황과 문제?&lt;/h2&gt;
+
+&lt;p&gt;요즘 한국에서는 VR 게임/컨텐츠들이 굉장히 많이 개발되고 있다. 필자도 그 와중에 떨어진 프로젝트를 하나 받아진행하게 되었다. 개발은 주변 3D 환경을 다른 회사에서 해주고, 게임이 돌아가는 코어 시스템을 필자의 회사에서 작업하기로 되어 있었다. 게임에서의 코어 시스템은 개발을 하였으나 &lt;em&gt;Unity&lt;/em&gt; 에 의존적인 코딩은 거의 진행되지 않은 상태에서 한달전 프로젝트에 투입되었다.&lt;/p&gt;
+
+&lt;p&gt;그렇게 하나하나 작업을 하면서 코어 시스템과 3D 환경을 결합하는 도중, 터무니 없는 경우를 만났다. 바로 &lt;strong&gt;SkinnedMeshRenderer&lt;/strong&gt; 와 &lt;em&gt;Animator&lt;/em&gt; 가 약 800 개 정도되는 상황에 부딫쳤다. 여기서는 두가지의 큰 부하가 있었다. 절대적인 &lt;em&gt;Vertex Skinning&lt;/em&gt; 부하와 &lt;em&gt;Animator&lt;/em&gt; 가 800개가 한꺼번에 계산되는 부하였다. &lt;em&gt;Vertex&lt;/em&gt; 숫자는 &lt;em&gt;LOD&lt;/em&gt; 베이커를 구해서 어떻게든 해결이 되었으나, 800개의 &lt;em&gt;Animator&lt;/em&gt; 부하는 우회방법이 없었다. 즉 이는 &lt;em&gt;Vertex Shader&lt;/em&gt; 나 &lt;em&gt;Compute Shader&lt;/em&gt; 안에서 &lt;em&gt;AnimationClip&lt;/em&gt; 의 정보들을 처리하는 정공법이 필요했다.&lt;/p&gt;
+
+&lt;p&gt;하지만 기한도 얼마 남지않아 급한 와중에 저것들을 직접 코딩할 여유는 없었다. 게다가 처음 건드려보는 부분이라서 헤멜 코스트까지 합하면 굉장히 암울했다. 혹시 오픈소스가 있나 싶어서 생각을 해보았는데 예전에 &lt;em&gt;SkinRenderer&lt;/em&gt; 를 직접 구현하면서 찾아본 오픈소스 레포지토리가 하나 있었다.&lt;/p&gt;
+
+&lt;h2&gt;Github : &lt;a href=&quot;https://github.com/chengkehan/GPUSkinning&quot;&gt;GPUSkinning&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;한 중국인이 개발한 스키닝 툴이다. 이는 두가지의 큰 기능을 담고있다. 하나는 &lt;em&gt;Vertex Shader&lt;/em&gt; 에서 &lt;em&gt;Skinning&lt;/em&gt; 처리를 해주는 기능과, 하나는 &lt;em&gt;AnimationClip&lt;/em&gt; 들을 직접 샘플링해 바이너리 파일로 저장해 GPU 메모리에 텍스쳐의 형태로 올려두어 사용하는 기능이 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Compute Shader&lt;/em&gt; 나 &lt;em&gt;Vetex Shader&lt;/em&gt; 를 사용해 &lt;em&gt;Skinning&lt;/em&gt; 을 구현하는 것은 크게 어려운 것은 아니다. &lt;em&gt;Deformation&lt;/em&gt;  하지만 제일 시간이 오래걸리는 부분은 &lt;em&gt;AnimationClip&lt;/em&gt; 을 가공하는 부분이 제일 오래 걸리는 부분 중 하나다. 해당 레포지토리에는 그 오래걸리는 부분을 만들어 놓았다. 사실 이 부분으로만으로 꽤 큰 가치가 있다.&lt;/p&gt;
+
+&lt;p&gt;조금 불편한 점도 몇가지 있다. 한번에 여러개의 샘플링이 안되고, 에디터에서 필수적으로 지원해야할 멀티 에디팅이 안된다. 후자는 간단히 코드를 수정하면 되지만 전자는 샘플링 과정에서 플레이를 해야되기 때문에 직접 수정하기엔 조금 부담스럽다. &lt;em&gt;Vertex Shader&lt;/em&gt; 에 스키닝이 물려있기 때문에 &lt;em&gt;Skinning&lt;/em&gt; 을 수정하려면 &lt;em&gt;Shader&lt;/em&gt; 부분도 바꿔야하고, &lt;em&gt;LOD&lt;/em&gt; 기능도 어설프게 들어있어 조금 애매하다.&lt;/p&gt;
+
+&lt;p&gt;그래도 이 정도의 양질의 코드라면 굉장히 쓸모있어 보인다.&lt;/p&gt;
+
+&lt;h2&gt;참조&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/chengkehan/GPUSkinning&quot;&gt;Github : GPUSkining&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="unity" />
+      
+        <category term="gpu-skinning" />
+      
+
+      
+
+      
+        <summary type="html">최근 급하게 어떤 프로젝트에 투입되서 작업을 하고 있다. 다른 회사와 같이 일을 하고 있는데, 다른 회사에서 해놓은 것들이 너무 느려서 최적화를 해야했다. 결국 일반적인 잔머리로는 도저히 해결할 수 없는 상황에 봉착했다. 1년 전의 필자였다면 포기하고 안된다고 했었겠지만 다행히 약간의 노하우를 통해 해결할 수 있었다. 상황과 문제? 요즘 한국에서는 VR 게임/컨텐츠들이 굉장히 많이 개발되고 있다. 필자도 그 와중에 떨어진 프로젝트를 하나 받아진행하게 되었다. 개발은 주변 3D 환경을 다른 회사에서 해주고, 게임이 돌아가는 코어 시스템을 필자의 회사에서 작업하기로 되어 있었다. 게임에서의 코어 시스템은 개발을 하였으나 Unity 에 의존적인 코딩은 거의 진행되지 않은 상태에서 한달전 프로젝트에 투입되었다. 그렇게 하나하나 작업을 하면서 코어 시스템과 3D 환경을 결합하는 도중, 터무니 없는 경우를 만났다. 바로 SkinnedMeshRenderer 와 Animator 가 약 800 개 정도되는 상황에 부딫쳤다. 여기서는 두가지의 큰 부하가 있었다. 절대적인 Vertex Skinning 부하와 Animator 가 800개가 한꺼번에 계산되는 부하였다. Vertex 숫자는 LOD 베이커를 구해서 어떻게든 해결이 되었으나, 800개의 Animator 부하는 우회방법이 없었다. 즉 이는 Vertex Shader 나 Compute Shader 안에서 AnimationClip 의 정보들을 처리하는 정공법이 필요했다. 하지만 기한도 얼마 남지않아 급한 와중에 저것들을 직접 코딩할 여유는 없었다. 게다가 처음 건드려보는 부분이라서 헤멜 코스트까지 합하면 굉장히 암울했다. 혹시 오픈소스가 있나 싶어서 생각을 해보았는데 예전에 SkinRenderer 를 직접 구현하면서 찾아본 오픈소스 레포지토리가 하나 있었다. Github : GPUSkinning 한 중국인이 개발한 스키닝 툴이다. 이는 두가지의 큰 기능을 담고있다. 하나는 Vertex Shader 에서 Skinning 처리를 해주는 기능과, 하나는 AnimationClip 들을 직접 샘플링해 바이너리 파일로 저장해 GPU 메모리에 텍스쳐의 형태로 올려두어 사용하는 기능이 있다. Compute Shader 나 Vetex Shader 를 사용해 Skinning 을 구현하는 것은 크게 어려운 것은 아니다. Deformation 하지만 제일 시간이 오래걸리는 부분은 AnimationClip 을 가공하는 부분이 제일 오래 걸리는 부분 중 하나다. 해당 레포지토리에는 그 오래걸리는 부분을 만들어 놓았다. 사실 이 부분으로만으로 꽤 큰 가치가 있다. 조금 불편한 점도 몇가지 있다. 한번에 여러개의 샘플링이 안되고, 에디터에서 필수적으로 지원해야할 멀티 에디팅이 안된다. 후자는 간단히 코드를 수정하면 되지만 전자는 샘플링 과정에서 플레이를 해야되기 때문에 직접 수정하기엔 조금 부담스럽다. Vertex Shader 에 스키닝이 물려있기 때문에 Skinning 을 수정하려면 Shader 부분도 바꿔야하고, LOD 기능도 어설프게 들어있어 조금 애매하다. 그래도 이 정도의 양질의 코드라면 굉장히 쓸모있어 보인다. 참조 Github : GPUSkining</summary>
+      
+
+      
+      
+    </entry>
+  
   
   
     <entry>
@@ -2048,62 +2114,6 @@ fixed4 frag(v2f i)
 
       
         <summary type="html">이전 글 : “Rasterizer” 에서 Rasterizer 에 대해 알아보았다. 이번에는 Fragment Shader 을 알아보자. 쉐이더 파이프라인에서 Rasterizer 다음에 실행되는 것은 Programmable Shader 중에서 Fragment Shader 이다. Fragment Shader 은 Pixel Shader 라고도 불리는데, 이전에 Rasterizer 에서 조각낸 픽셀들을 단위로 실행되기 때문에 Pixel Shader 라고 불리기도 한다. 또한 각 픽셀은 조각난 단위이기 때문에 조각의 뜻을 가진 Fragment Shader 라고도 불린다. 이 글에서는 Fragment Shader 로 사용할 것이다. Fragment Shader 의 역할은 굉장히 단순하다. Geometry Stage 에서 넘어와 Rasterizer 단계에서 정리된 파라미터를 받고, 해당 픽셀의 색을 반환하면 끝난다. 역할은 단순하지만 그만큼 중요한 것이 Fragment Shader 다. 마지막으로 픽셀 단위로 보여주는 색을 바꿀 수 있는 Programmable Shader 로써 반복하는 비용이 꽤나 많아 일반적으로 오래 걸린다고 평가되지만 색을 바꿀 수 있어 그만큼 잘쓰면 굉장한 효과를 낼 수 있는 Programmable Shader 다. 가장 단순한 형태의 Unity 에서 사용하는 CG/HLSL 쉐이더를 보자. #pragma fragment frag struct v2f { float4 vertex : SV_POSITION; float4 tangent : TANGENT; float3 normal : NORMAL; float4 texcoord : TEXCOORD0; } /* 다른 코드 들.. */ fixed4 frag(v2f i) { return float4(1,1,1,1); } 해당 쉐이더는 단순하게 흰색만 출력해주는 쉐이더다. 그만큼 매우 단순하고 쉽다. 하지만 많은 것들을 표현하려면 frag 함수의 코드는 점점 길어질 것이다. 또한 Fragment Shader 가 실행되는 시점에서 하드웨어, 드라이버 단계에서 지원하는 기능들도 있다. 일반적인 것들에 대해서 이야기 하자면 Depth Buffer 와 Stencil Buffer 가 있다. 두가지의 공통점은 각 픽셀 단위별로 데이터를 저장하는 버퍼들이다. Depth Buffer 는 Clip-Space 로 변환된 정점 값의 Z 값을 저장하는 용도로 쓰이는 버퍼로, 요즘 개발되거나 쓰이는 기술들은 Depth Buffer 를 엄청 많이 쓴다. 대표적으로 Depth Pre-Pass 가 있다. Stencil Buffer 는 픽셀별로 정수 데이터를 저장해서 사용하는 버퍼로써, 대부분 마스킹을 할 때 쓰인다. 참조 자료 SlideShader : Everything about Early-Z</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Shader Pipeline 2 Rasterizer</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/10/31/shader-pipeline-2-rasterizer/" rel="alternate" type="text/html" title="Shader Pipeline 2 Rasterizer" />
-      <published>2017-10-31T00:00:00+00:00</published>
-      <updated>2017-10-31T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/10/31/shader-pipeline-2-rasterizer</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/10/31/shader-pipeline-2-rasterizer/">&lt;p&gt;이전 포스트 “&lt;a href=&quot;/2017/10/30/shader-pipeline-1-vertex-shader/&quot;&gt;Vertex Shader&lt;/a&gt;” 에서 &lt;em&gt;Vertex Shader&lt;/em&gt; 에 대해 간단히 알아보았다. 이번 글에서는 &lt;em&gt;Rasterizer&lt;/em&gt; 에 대해서 간단히 써보려 한다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Rasterizer&lt;/em&gt; 는 쉐이더 파이프라인에 존재하는 고정 기능 단계이다. 간단하게 정의하면, &lt;em&gt;Rasterizer&lt;/em&gt; 이전 단계를 거쳐 나온 Geometry 데이터들(vertex, mesh, …)을 정해진 해상도에 맞춰 픽셀별로 조각내어 주는 단계다. 아래 그림을 보자.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://i-msdn.sec.s-msft.com/dynimg/IC520311.png&quot; alt=&quot;MSDN : Traignel Rasterization Rule&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;이는 일반적인 삼각형 폴리곤을 &lt;em&gt;Rasterizer&lt;/em&gt; 단계에서 어떻게 픽셀로 변환하는지 한눈에 알게 해놓은 사진이다. 겹치는 정도에 따라 검은색에 가깝게 해놓은 것을 볼 수있다. &lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/windows/desktop/cc627092.aspx&quot;&gt;MSDN : Rasterization Rules&lt;/a&gt; 에서 다른 프리미티브의 &lt;em&gt;Rasterize&lt;/em&gt; 과정도 살펴볼 수 있다.&lt;/p&gt;
-
-&lt;p&gt;쉐이더 파이프라인에서 &lt;em&gt;Rasterizer&lt;/em&gt; 가 가지는 의미도 조금 특별하다. 이는 3차원 메시 데이터를 2차원 이미지 데이터로 바꿔주는 과정이기 때문에 &lt;em&gt;Geometry Stage&lt;/em&gt; 에서 &lt;em&gt;Rasterizer Stage&lt;/em&gt; 로 넘어가는 관문이다.&lt;/p&gt;
-
-&lt;h1&gt;참조 자료&lt;/h1&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/ko-kr/library/windows/desktop/cc627092.aspx&quot;&gt;MSDN : Rasterization Rules&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="render" />
-      
-        <category term="hlsl" />
-      
-
-      
-
-      
-        <summary type="html">이전 포스트 “Vertex Shader” 에서 Vertex Shader 에 대해 간단히 알아보았다. 이번 글에서는 Rasterizer 에 대해서 간단히 써보려 한다. Rasterizer 는 쉐이더 파이프라인에 존재하는 고정 기능 단계이다. 간단하게 정의하면, Rasterizer 이전 단계를 거쳐 나온 Geometry 데이터들(vertex, mesh, …)을 정해진 해상도에 맞춰 픽셀별로 조각내어 주는 단계다. 아래 그림을 보자. 이는 일반적인 삼각형 폴리곤을 Rasterizer 단계에서 어떻게 픽셀로 변환하는지 한눈에 알게 해놓은 사진이다. 겹치는 정도에 따라 검은색에 가깝게 해놓은 것을 볼 수있다. MSDN : Rasterization Rules 에서 다른 프리미티브의 Rasterize 과정도 살펴볼 수 있다. 쉐이더 파이프라인에서 Rasterizer 가 가지는 의미도 조금 특별하다. 이는 3차원 메시 데이터를 2차원 이미지 데이터로 바꿔주는 과정이기 때문에 Geometry Stage 에서 Rasterizer Stage 로 넘어가는 관문이다. 참조 자료 MSDN : Rasterization Rules</summary>
       
 
       
