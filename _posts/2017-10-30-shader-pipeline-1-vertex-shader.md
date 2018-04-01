@@ -51,6 +51,8 @@ v2f vert(appdata_tan i)
 */
 ```
 
+위 코드에서 _vert_ 함수에서 반환하는 값을 _Varying_ 이라고 보통 말한다. 이는 바뀔수도 있는 값이라는 의미이며, _GLSL_ 에서 사용하는 _syntax_ 명명이나, _HLSL_ 에서는 따로 이름이 없어 보통 _shader_ 함수에서 넘어가는 데이터들을 _Varying_ 이라고 통칭한다. 참고로 _vert_ 의 입력 파라미터로 들어오는 것은 _Input Assembly_ 단계에서 처리해준 값으로 이는 _Varying_ 이라고 잘 부르지 않는다.
+
 굉장히 단순한 _Vertex Shader_ 코드다. 코드가 단순한 만큼 이 _Shader_ 는 최소한의 역할만 하고 있다. _model-space_ 에 있는 정점을 _clipping-space_ 의 정점으로 변환 시켜 다음으로(fragment shader) 넘긴다. 위에서 위치 데이터를 바꿀 수 있다고 언급했는데, 이 변환은 정상적인 메커니즘을 통해 오브젝트를 출력하려면 _Rasterizer Stage_ 로 넘어가기전에 반드시 정점값에 적용시켜주어야 하는 변환이다. 해당 변환에 대해서는 [Model, View, Projection](https://docs.google.com/presentation/d/10VzsjfifKJlRTHDlBq7e8vNBTu4D5jOWUF87KYYGwlk/edit?usp=sharing)에 설명해 놓았으니 간단하게 참고하길 바란다.
 
 위 코드에서 보여준 것들은 최소한의 것들이다. 코드를 짜는 것은 프로그래머의 역량이기 때문에 더 창의적인 것들을 할 수 있다. 쉬운 것들 중에서는 표면에서 웨이브를 주어 표면이 일렁이는 것처럼 보이게 할 수 있다. 이는 시간을 키값으로 두어 삼각함수를 이용해 할 수 있겠다.
