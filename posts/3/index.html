@@ -285,6 +285,8 @@
 
 <p>쉐이더 파이프라인에서 <em>Rasterizer</em> 가 가지는 의미도 조금 특별하다. 이는 3차원 메시 데이터를 2차원 이미지 데이터로 바꿔주는 과정이기 때문에 <em>Geometry Stage</em> 에서 <em>Rasterizer Stage</em> 로 넘어가는 관문이다.</p>
 
+<p>또 하나 중요한 것은, <em>Rasterizer</em> 이전의 <em>Geometry Stage</em> 에서 각각 스테이지별로 넘어오던 데이터들을 <em>Interpolator</em> 라고 하는데, <em>Interpolator</em> 의 갯수들은 <em>render target</em> 의 <em>Pixel</em> 이 많으면 많을수록 큰 영향을 미친다. 왜냐하면 <em>Rasterizer</em> 는 단순히 <em>Geometry</em> 를 <em>Pixel</em> 로 변환하는 것만 있는게 아니라 <em>Vertex</em> 별로 가지고 있던 <em>Interpolator</em> 들을 <em>Pixel</em> 별로 보간하여 넣어주어야 하기 때문이다. 또한 <em>VRAM</em> 의 공간도 차지한다. 즉 갯수가 많으면 많을수록 데이터를 처리하는데 많은 비용이 든다는 것을 알 수 있다. 퍼포먼스를 생각한다면 최대한 갯수를 줄이는게 좋은 것 이다.</p>
+
 <h1>참조 자료</h1>
 
 <ul>
@@ -754,6 +756,8 @@
   기타 코드들..
 */</span>
 </code></pre></div></div>
+
+<p>위 코드에서 <em>vert</em> 함수에서 반환하는 값을 <em>Varying</em> 이라고 보통 말한다. 이는 바뀔수도 있는 값이라는 의미이며, <em>GLSL</em> 에서 사용하는 <em>syntax</em> 명명이나, <em>HLSL</em> 에서는 따로 이름이 없어 보통 <em>shader</em> 함수에서 넘어가는 데이터들을 <em>Varying</em> 이라고 통칭한다. 참고로 <em>vert</em> 의 입력 파라미터로 들어오는 것은 <em>Input Assembly</em> 단계에서 처리해준 값으로 이는 <em>Varying</em> 이라고 잘 부르지 않는다.</p>
 
 <p>굉장히 단순한 <em>Vertex Shader</em> 코드다. 코드가 단순한 만큼 이 <em>Shader</em> 는 최소한의 역할만 하고 있다. <em>model-space</em> 에 있는 정점을 <em>clipping-space</em> 의 정점으로 변환 시켜 다음으로(fragment shader) 넘긴다. 위에서 위치 데이터를 바꿀 수 있다고 언급했는데, 이 변환은 정상적인 메커니즘을 통해 오브젝트를 출력하려면 <em>Rasterizer Stage</em> 로 넘어가기전에 반드시 정점값에 적용시켜주어야 하는 변환이다. 해당 변환에 대해서는 <a href="https://docs.google.com/presentation/d/10VzsjfifKJlRTHDlBq7e8vNBTu4D5jOWUF87KYYGwlk/edit?usp=sharing">Model, View, Projection</a>에 설명해 놓았으니 간단하게 참고하길 바란다.</p>
 
