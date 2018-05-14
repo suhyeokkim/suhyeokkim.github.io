@@ -29,6 +29,10 @@ _Compute Shader_ 나 _Vetex Shader_ 를 사용해 _Skinning_ 을 구현하는 �
 
 굳이 단점을 생각하지 않아도 샘플링 코드와 구현만으로도 충분히 가치있는 레포지토리로 생각된다. _ComputeShader_ 를 사용해서 구현했으면 더 좋았을 것 같다는 생각이 문득든다.
 
+써보면서 이게 본격적으로 쓰려고 만들어진 코드는 아닌 것 같다는 생각이 들었다. 기본적인 캐싱도 안되있어서 약간의 삽질을 했었다.
+
+가장 큰 문제는 _AnimationClip_ 이 많으면 많을수록 에디터, 런타임 로드시에 엄청나게 로딩이 걸린다. 아마 ScriptableObject 에 Serialization 으로 저장한 정보들이 많아서 그런듯 하다. 이는 따로 텍스쳐든 뭐든 Unity 에서 직접 관리하는 리소스로 바꾸어야 겠다.
+
 ## 참조
 
  - [Github : GPUSkining](https://github.com/chengkehan/GPUSkinning)
