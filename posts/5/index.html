@@ -105,6 +105,313 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2017/06/02/various-technique-for-rendering/">Various Technique For Rendering</a>
+          </h1>
+
+          <p class="post-meta">Jun 2, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/cg/">cg</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p><a href="/2017/05/29/simple-shader-programming/">Simple shader programming</a> 글 에서 간단하게 CG 를 통해 쉐이더를 작성하는 법에 대해서 알아보았다. 텍스쳐와 간단하게 색을 입히는 코드에 대해서 알아보았다. 하지만 이렇게 직접 쉐이더 코드를 변경하는 단계가 오게되면 이렇게 간단한 코드보다는 되게 복잡한 코드를 쓰는 경우가 많을 것이다. 또한 그 복잡한 코드들의 주요 원인은 보통 라이팅에 때문일것이다. 아무리 GPU 가 발전했다해도 빛에 대한 처리는 아직도 난감하다. 실제 빛의 속도는 <em>299792458m/s</em> 이다. 대략 초당 3억 미터를 간다는 소리인데, 이를 컴퓨터에서 완벽하게 시뮬레이션을 하려면 답이 안나온다. 양자 컴퓨터가 나온다면 모르겠지만 말이다. 게다가 빛은 광자라는 미세한 입자로 나누어져 있고 이와 같이 상호작용하는 물체또한 입자단위로 빛을 반사하는데 모든 것을 똑같이 표현할 수는 없다.</p>
+
+<p>그래서 컴퓨터 그래픽스 분야에서는 한정된 자원의 컴퓨터를 사용해 빛을 실제와 같이 표현하기 위해 많은 노력을 해왔다. 물론 십몇년 전까지는 실제와는 거리가 멀었다. 대표적인 예전의 컴퓨터 그래픽을 나타내는 것은 아래와 같은 영상이다.</p>
+
+<style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style>
+<div class="embed-container">    <iframe title="YouTube video player" width="640" height="390" src="//www.youtube.com/embed/oRL5durPleI" frameborder="0" allowfullscreen=""></iframe></div>
+
+<p>Windows 95 시절의 화면 보호기 영상인데, 컴퓨터 그래픽인 것을 알 수 있는 부분은 맨 마지막에 OpenGL 이라고 쓰여져 있는 부분이다. 물론 이는 OpenGL 이 나온지 얼마 안되었을 때이고 95 년을 기준으로 따졌을 떄 20년이 지난 것들이다. 게다가 여기서는 라이팅도 없다. 하지만 20년이 지나고.. 현재로 돌아와서 최근에 와서는 꽤 실제와 비슷한 것들이 많이 나왔다. 아래 영상을 보자.</p>
+
+<style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style>
+<div class="embed-container">    <iframe title="YouTube video player" width="640" height="390" src="//www.youtube.com/embed/9v4XM8y-8fs" frameborder="0" allowfullscreen=""></iframe></div>
+
+<p>최근에 공개된 파크라이5 의 트레일러 영상이다. 자세히 보면 조금은 인위적인게 보이지만 실시간 3D 렌더링으로 이 정도를 나타낸건 지금도 혀를 내두를만한 기술들이 총 집약되어 여태까지 나온 게임들 중에 최고의 실시간 렌더링의 퀄리티를 보여준다. 특히 빛에 대한 묘사들이 더욱더 실제와 비슷하게 느끼게 해준다.</p>
+
+<p>이 글에서는 위 영상처럼 발전하기 까지의 여러가지 기본적인 렌더링 기법과 라이팅 기법에 대해서 알아볼 것이다. 최신 기술들도 중요하지만 최신 기술들을 이해하기 위해서도 여태까지의 기술들을 알아야 하고, 그 와중에서도 이전에 쓰이던 것을 그대로 쓰는 것도 있기 때문이다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/06/02/various-technique-for-rendering/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2017/05/29/simple-shader-programming/">Simple Shader Programming</a>
           </h1>
 
@@ -117,6 +424,12 @@
   
     
       <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
     
   
     
@@ -274,6 +587,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -303,6 +622,12 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
+    
+  
     
   
     
@@ -440,6 +765,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -479,6 +810,12 @@
   
     
       <a href="/categories/shaderlab/">shaderlab</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -642,6 +979,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -673,6 +1016,12 @@
   
     
       <a href="/categories/rig/">rig</a>,
+    
+  
+    
+  
+    
+  
     
   
     
@@ -758,6 +1107,12 @@
   
     
       <a href="/categories/animate/">animate</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -921,6 +1276,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -950,6 +1311,12 @@
   
     
       <a href="/categories/rendering/">rendering</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1113,6 +1480,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1142,6 +1515,12 @@
   
     
       <a href="/categories/rendering/">rendering</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1331,6 +1710,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1360,6 +1745,12 @@
   
     
       <a href="/categories/rendering/">rendering</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1527,6 +1918,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1610,6 +2007,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1619,6 +2022,12 @@
   
     
       <a href="/categories/unity/">unity</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1806,6 +2215,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1829,6 +2244,12 @@
   
     
       <a href="/categories/game/">game</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1924,6 +2345,12 @@
   
     
       <a href="/categories/makeblog/">makeblog</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -2117,6 +2544,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
 </p>
         </header>
@@ -2130,366 +2563,6 @@
         
           <p class="post-continue">
             <a href="/2017/04/28/usage-of-enumerator/">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/04/23/garbage-collector-in-unity/">Garbage Collector In Unity</a>
-          </h1>
-
-          <p class="post-meta">Apr 23, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/mono/">mono</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/c/">c#</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/gc/">gc</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/analysis/">analysis</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <h4>해당 글은 2017년 4월 23일에 작성되었습니다. 이후의 상황은 반영되지 않았습니다.</h4>
-
-<p>C, C++ 을 제외한 C#, Java, Python 등 주류 애플리케이션 언어들은 대부분 메모리 관리를 garbage-collector(이하 GC) 라는 개념을 차용해 메모리를 관리한다. GC 는 특정한 메커니즘을 가지고 어플리케이션에서 사용하는 메모리를 관리해주는 개념이다. GC 는 언어별로, 구현된 사항별로 다르기 때문에 모든 개념이 통용되는 것은 아니지만 대부분 같은 개념에서 출발한다.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/04/23/garbage-collector-in-unity/">Read on &rarr;</a>
           </p>
         
       </li>

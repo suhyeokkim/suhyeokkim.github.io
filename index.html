@@ -105,6 +105,342 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2018/05/22/opaque-as-alpha-test/">Opaque As Alpha Test</a>
+          </h1>
+
+          <p class="post-meta">May 22, 2018 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/alphatest/">alphatest</a>,
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p><em>Shader</em> 에서 샘플링하는 <em>Texutre</em> 에서 <em>Alpha</em> 값을 가지고 있어, <em>Alpha</em> 을 참조해서 실제 픽셀에 출력을 하는지 안하는지를 결정하는 것을 <em>Alpha Test</em> 라고 한다. 이런 <em>Material</em> 이나 <em>Texture</em> 를  <em>Cutout</em> 이라고 통칭하는 경우가 많다.</p>
+
+<p>보통 게임에서의 <em>Alpha Test</em> 를 사용하는 것들은 나무, 풀 같은 식생들(<em>Vegetation</em>)이 있고, 중간에 구멍이 뚫린 펜스같은 것들도 존재한다. 자연을 배경으로하는 게임의 경우에는 식생들이 굉장히 많기 때문에 <em>Alpha Test</em> 를 사용하는 <em>Shader</em> 가 굉장히 많이 사용될 것이다.</p>
+
+<p><br />
+<img src="/images/1_8EKqWSOOPXaTrDHVFTACJg.png" alt="Wikipedia : Single-precision floating-point format" class="center-image" /></p>
+<center>출처 : <a href="https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f">Anti-aliased Alpha Test: The Esoteric Alpha To Coverage</a>
+</center>
+<p><br /></p>
+
+<p>하지만 <em>Alpha Test</em> 는 굉장히 큰 단점이 있다. 고정된 화면 해상도에서 물체가 작게 표현되면 물체를 표현할 수 있는 픽셀의 숫자가 많이 작아진다. 물체를 표현하는 픽셀의 수가 작아지게 되면 일반적으로 해당 넓이에 맞게 생성된 <em>Texture</em> 의 <em>Mip-level</em> 에 접근한다. 중간의 <em>Alpha Test</em> 그림을 보면된다.</p>
+
+<p><br />
+<img src="/images/1_zNbZFiJXjcqqyTkM9eEt7w.gif" alt="Wikipedia : Single-precision floating-point format" class="center-image" /></p>
+<center>출처 : <a href="https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f">Anti-aliased Alpha Test: The Esoteric Alpha To Coverage</a>
+</center>
+<p><br /></p>
+
+<p>실제로는 양 옆의 물체들처럼 자연스럽게 표현이 되야하지만 일반적인 <em>Alpha Test</em> 를 사용하게 되면 위와 같은 현상에 마주치게 된다. 이는 굉장히 끔찍한 현상이다. 실제 게임을 해보거나, 만들어본 사람이라면 안다. 대부분의 픽셀에 나무가 표현되고, 잎사귀들이 저런식으로 자글자글 거린다면 약간의 불쾌함이 느껴진다. VR 이라면 더욱..</p>
+
+<p>그래서 급하게 대처방안으로 나온 것이 위 그림의 오른쪽에 나오는 <em>Alpha to Coverage</em> 라는 방법이다. 이는 하드웨어 <em>MSAA</em> 를 픽셀 쉐이더의 결과를 통해 자동으로 해주는것으로, <em>MSAA</em> 의 퍼포먼스와 비례한다. <em>MSAA</em> 는 성능이 영 좋지않아 안쓰는 경우가 꽤 많이 존재하기 때문에 <em>Alpha to Coverage</em> 는 절대적으로 사용할 수 있는 방법은 아니다. 게다가 엄청나게 많은 나무를 <em>Alpha to Coverage</em> 를 쓴다면.. 성능은 안봐도 뻔하다.</p>
+
+<p>앞서 말한 <em>Alpha Test</em> 은 <em>Material</em>, <em>Shader</em> 별로 고정된 <em>Alpha</em> 값을 설정해 그 이하가 되면 <em>Pixel Shader</em> 에서 결과를 내놓지 않게 하는(<em>Discard</em>) 방법이였다. <em>Alpha Test</em> 의 문제는 샘플링한 <em>Alpha</em> 값이 가끔 극단적으로 낮아서 <em>Discard</em> 되는 것인데, 이를 간단하게 해결하기 위해 요상한 방법이 등장했다.</p>
+
+<p>바로 <em>Stochastic test</em> 라는 방법이다.</p>
+
+<p><br />
+<img src="/images/stochastic_sampling.png" alt="NVidia deverloper : Hashed Alpha Testing" class="center-image" /></p>
+<center>출처 : <a href="https://developer.download.nvidia.com/assets/gameworks/downloads/regular/GDC17/RealTimeRenderingAdvances_HashedAlphaTesting_GDC2017_FINAL.pdf?pUIX8DXxfad7mL4zB3GOthX3r5IgGao9UWxYuYb3q9h10RXrQeYko-dEuJXJxt1hhsI9J_9KJDcCYGeWWksxlaHTrXSE825D_3izja7LUFOtzhaeBUqpn7qbwXaaGlLdbipjE3PeI3e2IMn45mQAA3OV2PD-kG2y9cecTaWE2uum2uwdHgyn0nhYiLOvlOsrUzewbK5REH7vAm3-lNWzxehw_5Tphg">NVidia developer : Hashed Alpha Testing</a>
+</center>
+<p><br /></p>
+
+<p>위 그림에서 위쪽에 있는 것이 일반적인 <em>Alpha Test</em> 인데, <em>color.a</em> 는 텍스쳐에서 샘플링한 <em>Alpha</em> 값, <em>ατ</em> 는 <em>Alpha Test</em> 를 위한 고정된 <em>Alpha Threshold</em>(<em>알파한계</em>)다. 밑의 코드에서 <em>drand48</em> 이 나타내는 것은 단순한 0 ~ 1 사이의 랜덤값이다. 즉 랜덤하게 <em>Alpha Threshold</em> 를 설정해주어 물체가 멀어져서 평균 <em>Alpha</em> 값이 낮아질 때도 픽셀이 <em>Discard</em> 되지 않도록 하는 것이다.</p>
+
+<p>하지만 이는 굉장한 눈아픔? 반짝거림? 을 유발한다. 범위를 지정해주지 않았기 때문에 이전 프레임에서 출력된 픽셀이 다음 프레임에서는 출력되지 않을 수도 있다. 이렇게 각 프레임마다 상황이 달라서 생기는 현상앞에 <em>Temporal</em> 을 붙인다. <em>Stochastic Alpha Test</em> 의 문제는 <em>Temporal Flickering</em> 이라고 할 수 있겠다.</p>
+
+<p><em>Temporal Stability</em>(임시적 안정성) 을 확보하기 위해서는 <em>Alpha Threshold</em> 를 이러저리 튀지 않게해야 했고, 이를 위해 특정 값에 따라서 <em>Hash</em> 값을 생성하는 방법이 고안되었다. 이 방법은 <em>Hashed Alpha Test</em> 라는 이름으로 작년에 공개되었다.</p>
+
+<!--
+  Hashed Alpha Test
+  Alpha Distribution
+-->
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f">Anti-aliased Alpha Test: The Esoteric Alpha To Coverage</a></li>
+  <li><a href="https://developer.download.nvidia.com/assets/gameworks/downloads/regular/GDC17/RealTimeRenderingAdvances_HashedAlphaTesting_GDC2017_FINAL.pdf?pUIX8DXxfad7mL4zB3GOthX3r5IgGao9UWxYuYb3q9h10RXrQeYko-dEuJXJxt1hhsI9J_9KJDcCYGeWWksxlaHTrXSE825D_3izja7LUFOtzhaeBUqpn7qbwXaaGlLdbipjE3PeI3e2IMn45mQAA3OV2PD-kG2y9cecTaWE2uum2uwdHgyn0nhYiLOvlOsrUzewbK5REH7vAm3-lNWzxehw_5Tphg">NVidia developer : Hashed Alpha Testing</a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2018/05/18/IEEE-754-floaing-number/">Ieee 754 Floaing Number</a>
           </h1>
 
@@ -191,8 +527,18 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
+  
+    
+  
+    
   
     
   
@@ -274,6 +620,8 @@
       <a href="/categories/floating-point/">floating_point</a>
     
   
+    
+  
 
 </p>
         </header>
@@ -350,6 +698,233 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2018/05/13/anisotropic-filtering/">Anisotropic Filtering</a>
+          </h1>
+
+          <p class="post-meta">May 13, 2018 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/anisotropic/">anisotropic</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/filtering/">filtering</a>
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>보통 사용되는 <em>Texture Fltering</em> 들은 <em>Axis Align</em> 된 방향을 기준으로 추가적인 샘플링을 하는 방법들이 대부분이다.(bilinear, bicubic, etc..) 하지만 특이한 것이 하나 있다. 바로 <em>Anisotropic Filtering</em> 이다.</p>
+
+<p><em>Anisotropic Filtering</em> 은 원거리에 있는 물체들을 선명하게 보이게 하기위해서 쓰여지는 <em>Fiterling</em> 으로, 말보다는 아래 그림을 보는게 훨씬 직관적으로 이해할 수 있다.</p>
+
+<p><br />
+<img src="/images/aniso_pixel_to_texel.png" alt="Real-time Rendering 3rd" class="center-image" /></p>
+<center>출처 : Real-time Rendering 3rd&lt;/a&gt;
+</center>
+<p><br /></p>
+
+<p>위의 그림과 같이 <em>Texture-Space</em> 에서 픽셀안에 있는 텍스쳐를 여러번 샘플링하여 평균을 구하는 방식인듯하다. 그런데 아주 중요한 것이 하나 남아있다.</p>
+
+<p><br />
+<img src="/images/img034.gif" alt="Unsolved Problems and Opportunities for High-quality, High-perfornmance 3D Graphics on a PC Platform : Anisotropic Filtering" class="center-image" /></p>
+<center>출처 : [Unsolved Problems and Opportunities for High-quality, High-perfornmance 3D Graphics on a PC Platform : Anisotropic Filtering](http://www.graphicshardware.org/previous/www_1998/presentations/kirk/sld030.htm)
+&lt;/a&gt;
+</center>
+<p><br /></p>
+
+<p>위의 그림을 보면 알겠지만 <em>bilinear filtering</em> 과 함께 쓸 경우 엄청난 샘플링 부하가 생길 것이라는 것을 예상할 수 있다.</p>
+
+<p><em>Anisotropic Filtering</em> 을 처음 접했을 떄, 가장 이해가 가지 않았던 것은 결국 내부에서 샘플링을 해야할 텐데 어떤 방식으로 방향을 구할지 가장 이해가 안됬었다. 지금 다시 생각해보면, <em>ddx</em> 키워드를 <em>uv</em> 좌표에 쓰듯이 <em>Texutre-Space</em> 의 차이 벡터를 쉽게 구할 수 있을 듯 하다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li>Real-Time Rendering 3rd</li>
+  <li><a href="http://www.graphicshardware.org/previous/www_1998/presentations/kirk/sld030.htm">Unsolved Problems and Opportunities for High-quality, High-perfornmance 3D Graphics on a PC Platform : Anisotropic Filtering</a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2018/03/13/recommandation-of-gpu-skinning-in-github/">Recommandation Of Gpu Skinning In Github</a>
           </h1>
 
@@ -362,6 +937,12 @@
   
     
       <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
     
   
     
@@ -519,6 +1100,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
 </p>
         </header>
@@ -579,6 +1166,12 @@
   
     
       <a href="/categories/unity/">unity</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -780,6 +1373,12 @@ MonoImporter:
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -835,6 +1434,12 @@ MonoImporter:
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -986,6 +1591,12 @@ MonoImporter:
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1063,6 +1674,12 @@ MonoImporter:
   
     
       <a href="/categories/gpgpu/">gpgpu</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1199,6 +1816,12 @@ MonoImporter:
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1282,6 +1905,12 @@ MonoImporter:
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1311,6 +1940,12 @@ MonoImporter:
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1438,6 +2073,12 @@ MonoImporter:
   
     
       <a href="/categories/fts/">fts</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1650,6 +2291,12 @@ MonoImporter:
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1733,6 +2380,12 @@ MonoImporter:
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1762,6 +2415,12 @@ MonoImporter:
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1889,6 +2548,12 @@ MonoImporter:
   
     
       <a href="/categories/fts/">fts</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -2083,6 +2748,12 @@ MonoImporter:
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -2166,6 +2837,12 @@ MonoImporter:
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -2195,6 +2872,12 @@ MonoImporter:
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
+    
+  
     
   
     
@@ -2332,6 +3015,12 @@ MonoImporter:
   
     
   
+    
+  
+    
+  
+    
+  
 
 </p>
         </header>
@@ -2451,582 +3140,6 @@ end for
     </li>
   </ol>
 </div>
-
-        </div>
-
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2018/01/11/unity-scripted-importer/">Unity Scripted Importer</a>
-          </h1>
-
-          <p class="post-meta">Jan 11, 2018 • 
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>Unity 의 에디터 시스템은 꽤나 유연하다. 이번 글에서는 <em>AssetImporter</em> 에 대한 기능들에 대하여 알아볼 것이다.</p>
-
-<p>Unity 의 각각의 Asset 들은 확장자의 이름에 따라서 <em>AssetImporter</em> 가 하나씩 만들어지고, 해당 <em>AssetImporter</em> 에 따라서 <em>Post-Process</em> 가 진행된다. 필자가 많이 봤던 <em>AssetImporter</em> 는 <a href="https://docs.unity3d.com/ScriptReference/TextureImporter.html"><em>TextureImporter</em></a> 와 <a href="https://docs.unity3d.com/ScriptReference/ModelImporter.html"><em>ModelImporter</em></a> 가 있었다. 확인할 당시에는 당연히 <em>AssetImporter</em> 를 커스터마이징 할 수 있겠다는 생각이 들어 찾아봤지만 전혀 없었다.(Unity 5 버젼을 사용할 때다.) 이렇게 시스템을 만들어 놓고 왜 없냐는 의문이 들었지만 이는 정말 할수있는게 없었기에 넘어갔었다.</p>
-
-<p>그런데 이번에 Unity 2018.1 베타가 릴리즈 되면서 SRP 를 살펴보던 도중 <em>Expremental</em> 기능들 중에 <a href="https://docs.unity3d.com/2018.1/Documentation/Manual/ScriptedImporters.html"><em>ScriptedImporter</em></a> 라는 기능이 있는 것을 발견했다.</p>
-
-<p>이 기능은 말그대로 예전의 내가 원하던 기능이였다. <em>AssetImporter</em> 클래스와 다른점은 딱 한가지다. 가상 <em>OnImportAsset</em> 메소드가 존재하는 것이다. 즉 <em>ScriptedImporter</em> 를 상속하여 <em>OnImportAsset</em> 를 구현하면 간단하게 에셋을 <em>Customize</em> 할 수 있는 것이다. 또한 에디터 기능을 지원하는 <a href="https://docs.unity3d.com/2018.1/Documentation/ScriptReference/Experimental.AssetImporters.ScriptedImporterEditor.html">ScriptedImporterEditor </a> 라는 클래스를 사용하면 에디터를 손쉽게 바꿀 수 있다. 자세한 사항은 글에서 언급된 링크를 통해 보면 된다.</p>
-
-<h2>참조</h2>
-<ul>
-  <li><a href="https://docs.unity3d.com/2018.1/Documentation/Manual/ScriptedImporters.html">Unity Documentation : ScriptedImporter </a></li>
-  <li><a href="https://docs.unity3d.com/2018.1/Documentation/ScriptReference/Experimental.AssetImporters.ScriptedImporter.html">Unity Reference : ScriptedImporter</a></li>
-  <li><a href="https://docs.unity3d.com/2018.1/Documentation/ScriptReference/Experimental.AssetImporters.ScriptedImporterEditor.html">Unity Reference : ScriptedImporterEditor </a></li>
-</ul>
-
-        </div>
-
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/12/27/percentage-closer-soft-shadows/">Percentage Closer Soft Shadows</a>
-          </h1>
-
-          <p class="post-meta">Dec 27, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/shader/">shader</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/shadow/">shadow</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/rendering/">rendering</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/pcss/">pcss</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p><a href="/2017/12/19/shadow-map-filtering/">Shadow Map Filtering</a> 에서 <em>PCF</em> 와 <em>VSM</em> 에 대하여 간단히 알아보았다. 이번 글에서 설명할 것은 <em>PCF</em> 를 활용한 <em>PCSS</em> 다.</p>
-
-<p><em>PCSS</em> 는 <em>Soft Shadow</em> 를 구현하는 기법 중 하나로써 2005년에 발표되어 여태까지도 꽤나 알려진 기법이다. 우선 <em>Soft Shadow</em> 가 무엇인지 알아보자.</p>
-
-<p><br /></p>
-
-<p><img src="/images/soft_vs_hardshadow.png" alt="" class="center-image" /></p>
-<center>출처 : <a href="http://www.assignmentpoint.com/science/computer/real-time-soft-shadow-rendering.html">assignmentpoint.com : Real Time Soft Shadow Rendering</a>
-</center>
-<p><br /></p>
-
-<p>위와 같이 빛을 가린 물체와 거리가 멀어지면 멀어질수록 밝아지는 그림자를 <em>Soft Shadow</em> 라고 한다. 완전한 <em>Hard Shadow</em> 는 어색하기 때문에 보통 <em>PCF</em> 를 사용하여 끝부분을 부드럽게 처리했으나, 태양광 처럼 길게 그림자를 만드는 경우가 있으면 끝 부분이 가면 갈수록 부드러워져야 한다.</p>
-
-<p><br /></p>
-
-<p><img src="/images/tree_shadow.jpg" alt="" class="center-image" /></p>
-<center>출처 : <a href="https://www.youtube.com/watch?v=Ax8G8P3tA28">Youtube
-</a>
-</center>
-<p><br /></p>
-
-<p>태양 빛에의해 만들어진 나무의 그림자다. 짧은 길이의 그림자는 적당히 <em>PCF</em> 로 대략 표현이 가능하나 이런 길은 그림자를 고정된 사이즈의 <em>PCF</em> 로 표현하기엔 무리가 있다. 그래서 나온것이 <em>PCSS</em> 다.</p>
-
-<p><em>PCSS</em> 를 보기전에, 우리가 알아야할 용어들이 있다. 바로 <em>Umbra</em> 와 <em>Penumbra</em> 다.</p>
-
-<p><br /></p>
-
-<p><img src="/images/umbra_penumbra_antumbra.png" alt="" class="center-image" /></p>
-<center>출처 : <a href="https://en.wikipedia.org/wiki/Umbra,_penumbra_and_antumbra">Wikipedia : Umbra, penumbra and antumbra </a>
-</center>
-<p><br /></p>
-
-<p><em>Soft Shadow</em> 가 표현하는 부드러운 부분의 그림자는 위 그림에서도 보이듯이 <em>Penumbra</em> 라고 한다. <em>PCSS</em> 에서는 부드러운 부분의 그림자를 <em>Penumbra</em> 라고 한다. <em>PCSS</em> 에서는 <em>Penumbra</em> 의 크기를 사용하여 <em>PCF</em> 의 샘플링 범위를 정해준다. 우선 <em>PCSS</em> 의 <em>Penumbra</em> 를 계산하는 방법을 보자.</p>
-
-<p><br /></p>
-
-<p><img src="/images/PCSS_PenumbraSizeEstimation.png" alt="" class="center-image" /></p>
-<center>출처 : <a href="https://http.download.nvidia.com/developer/presentations/2005/SIGGRAPH/Percentage_Closer_Soft_Shadows.pdf">Siggraph 2005 : Percentage-Closer Soft Shadows</a>
-</center>
-<p><br /></p>
-
-<p>맨위의 노란색으로 표시된 부분은 광원을 뜻하며, 일정한 범위로 빛을 비추는 <em>Area Light</em> 로 가정한 후 계산한다. W - light 는 <em>Area Light</em> 의 범위를 뜻한다. 중간에 있는 <em>Blocker</em> 는 빛을 가리는 물체를 뜻하며, d blocker 는 가리는 물체와 빛과의 거리, d receiver 는 그림자가 비추는 물체와 광원 사이의 거리를 뜻한다. 그림자를 받는 부분과 빛을 가리는 물체와 광원을 서로 평행하다고 가정해서 계산한다. 2차원의 그림을 3차원으로 바꿔보자.</p>
-
-<p><br /></p>
-
-<p><img src="/images/PCSS_Scheme.png" alt="" class="center-image" /></p>
-<center>출처 : <a href="http://developer.download.nvidia.com/shaderlibrary/docs/shadow_PCSS.pdf">NVidia : Percentage-Closer Soft Shadows</a>
-</center>
-<p><br /></p>
-
-<p>보통 <em>Pixel Shader</em> 에서 그림자의 비춘 정도를 계산하기 때문에 <em>Receiver</em> 의 작은 부분을 기준으로 그림이 그려져 있다. 작은 부분을 기준으로 <em>Area Light</em> 와의 <em>frustum</em> 과 <em>Blocker</em> 가 얼마나 충돌되는지 체크한다. 우리는 <em>Shadow Map</em> 을 사용하기 때문에 아래 그림이 조금 더 실제 계산과 비슷하다.</p>
-
-<p><br /></p>
-
-<p><img src="/images/PCSS_Scheme2.png" alt="" class="center-image" /></p>
-<center>출처 : <a href="http://developer.download.nvidia.com/shaderlibrary/docs/shadow_PCSS.pdf">NVidia : Percentage-Closer Soft Shadows</a>
-</center>
-<p><br /></p>
-
-<p>그래서 <em>Shadow Map</em> 의 빨간색으로 하이라이트 된 부분을 샘플링해 얼마나 가리고 있는지를 확인한다. 그러면 빛을 받는 정도를 알 수 있게 되는것이다. 해당 부분을 적당히 샘플링한 다음 평균을 구해서 <em>PCF</em> 로 샘플링하는 범위를 계산한다. 계산하여 <em>PCF</em> 에서 범위를 사용해 계산한다. 코드를 보면서 이해해보자.</p>
-
-<p><br /></p>
-
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">float</span> <span class="nf">PCSS_Shadow</span><span class="p">(</span><span class="n">float2</span> <span class="n">uv</span><span class="p">,</span> <span class="kt">float</span> <span class="n">z</span><span class="p">,</span> <span class="n">float2</span> <span class="n">dz_duv</span><span class="p">,</span> <span class="kt">float</span> <span class="n">zEye</span><span class="p">)</span>
-<span class="p">{</span>
-	<span class="c1">// ------------------------</span>
-	<span class="c1">// STEP 1: blocker search</span>
-	<span class="c1">// ------------------------</span>
-	<span class="kt">float</span> <span class="n">accumBlockerDepth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-	<span class="kt">float</span> <span class="n">numBlockers</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-	<span class="n">float2</span> <span class="n">searchRegionRadiusUV</span> <span class="o">=</span> <span class="n">SearchRegionRadiusUV</span><span class="p">(</span><span class="n">zEye</span><span class="p">);</span>
-	<span class="n">FindBlocker</span><span class="p">(</span><span class="n">accumBlockerDepth</span><span class="p">,</span> <span class="n">numBlockers</span><span class="p">,</span> <span class="n">g_shadowMap</span><span class="p">,</span> <span class="n">uv</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">dz_duv</span><span class="p">,</span> <span class="n">searchRegionRadiusUV</span><span class="p">);</span>
-
-	<span class="c1">// Early out if not in the penumbra</span>
-	<span class="k">if</span> <span class="p">(</span><span class="n">numBlockers</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-		<span class="k">return</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
-	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">numBlockers</span> <span class="o">==</span> <span class="n">BLOCKER_SEARCH_COUNT</span><span class="p">)</span>
-		<span class="k">return</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
-
-	<span class="c1">// ------------------------</span>
-	<span class="c1">// STEP 2: penumbra size</span>
-	<span class="c1">// ------------------------</span>
-	<span class="kt">float</span> <span class="n">avgBlockerDepth</span> <span class="o">=</span> <span class="n">accumBlockerDepth</span> <span class="o">/</span> <span class="n">numBlockers</span><span class="p">;</span>
-	<span class="kt">float</span> <span class="n">avgBlockerDepthWorld</span> <span class="o">=</span> <span class="n">ZClipToZEye</span><span class="p">(</span><span class="n">avgBlockerDepth</span><span class="p">);</span>
-	<span class="n">float2</span> <span class="n">penumbraRadiusUV</span> <span class="o">=</span> <span class="n">PenumbraRadiusUV</span><span class="p">(</span><span class="n">zEye</span><span class="p">,</span> <span class="n">avgBlockerDepthWorld</span><span class="p">);</span>
-	<span class="n">float2</span> <span class="n">filterRadiusUV</span> <span class="o">=</span> <span class="n">ProjectToLightUV</span><span class="p">(</span><span class="n">penumbraRadiusUV</span><span class="p">,</span> <span class="n">zEye</span><span class="p">);</span>
-
-	<span class="c1">// ------------------------</span>
-	<span class="c1">// STEP 3: filtering</span>
-	<span class="c1">// ------------------------</span>
-	<span class="k">return</span> <span class="n">PCF_Filter</span><span class="p">(</span><span class="n">uv</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">dz_duv</span><span class="p">,</span> <span class="n">filterRadiusUV</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div></div>
-<center>출처 : <a href="https://github.com/NVIDIAGameWorks/D3DSamples">Github NVIDIAGameWorks : D3DSamples</a>
-</center>
-<p><br /></p>
-
-<p>해당 픽셀이 어두워지는 정도를 반환하는 <em>PCSS</em> 계산 함수다. 코드의 주석에서는 계산을 세단계로 나눈다. 첫번째로는 <em>Shadow Map</em> 을 샘플링해서 얼마나 빛이 얼마나 가려지는지 계산한다. 이를 <em>STEP 1: blocker search</em> 라고 표기해놓았고, 두번째는 <em>PCF</em> 에서 샘플링할 범위를 결정하는 넓이를 계산한다. 이를 <em>STEP 2: penumbra size</em> 라고 한다. 세번째로는 <em>PCF</em> 를 계산해서 가려지는 정도를 반환한다. 자세한 코드는 출처에서 <em>SoftShadows</em> 항목을 들어가면 볼 수 있다.</p>
-
-<p><em>PCSS</em> 의 장점은 아무래도 확실한 <em>Soft Shadow</em> 를 구현했다는 점이다. 비록 대략적으로 가정한 부분이 많지만 장면별로 잘 맞춰주기만 한다면 괜찮은 결과가 나올것 같다. 하지만 샘플링 횟수가 꽤나 된다. <em>PCF</em> 만 하더라도 가볍지는 않은 편인데, <em>Blocker</em> 를 계산하느라 더 많이 샘플링을 한다. 하지만 잘 만들어진 게임과 요즘의 GPU 에서는 아주 큰 오버헤드는 없는걸로 보인다. (<a href="https://www.reddit.com/r/nvidia/comments/49idz3/nvidia_hfts_the_division/">Redit : Nvidia HFTS (The Division)</a>)</p>
-
-<h2>참조</h2>
-<ul>
-  <li><a href="https://http.download.nvidia.com/developer/presentations/2005/SIGGRAPH/Percentage_Closer_Soft_Shadows.pdf">Siggraph 2005 : Percentage-Closer Soft Shadows</a></li>
-  <li><a href="http://developer.download.nvidia.com/shaderlibrary/docs/shadow_PCSS.pdf">NVidia : Percentage-Closer Soft Shadows</a></li>
-  <li><a href="https://github.com/NVIDIAGameWorks/D3DSamples">Github NVidiaGameWorks : D3DSample</a></li>
-</ul>
 
         </div>
 

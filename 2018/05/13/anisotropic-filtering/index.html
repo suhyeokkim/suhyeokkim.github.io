@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Anisotropic Filtering</title>
+  <meta name="description" content="보통 사용되는 Texture Fltering 들은 Axis Align 된 방향을 기준으로 추가적인 샘플링을 하는 방법들이 대부분이다.(bilinear, bicubic, etc..) 하지만 특이한 것이 하나 있다. 바로 Anisotropic Filtering 이다. Anisotropic Filtering 은 원거리에 있는 물체들을 선명하게 보이게 하기위해서 쓰여지는 Fiterling 으로, 말보다는 아래 그림을 보는게 훨씬 직관적으로 이해할 수 있다. 출처 : Real-time Rendering 3rd&amp;lt;/a&amp;gt; 위의 그림과 같이 Texture-Space 에서 픽셀안에 있는 텍스쳐를 여러번 샘플링하여 평균을 구하는 방식인듯하다. 그런데 아주 중요한 것이 하나 남아있다. 출처 : [Unsolved Problems and Opportunities for High-quality, High-perfornmance 3D Graphics on a PC Platform : Anisotropic Filtering](http://www.graphicshardware.org/previous/www_1998/presentations/kirk/sld030.htm) &amp;lt;/a&amp;gt; 위의 그림을 보면 알겠지만 bilinear filtering 과 함께 쓸 경우 엄청난 샘플링 부하가 생길 것이라는 것을 예상할 수 있다. Anisotropic Filtering 을 처음 접했을 떄, 가장 이해가 가지 않았던 것은 결국 내부에서 샘플링을 해야할 텐데 어떤 방식으로 방향을 구할지 가장 이해가 안됬었다. 지금 다시 생각해보면, ddx 키워드를 uv 좌표에 쓰듯이 Texutre-Space 의 차이 벡터를 쉽게 구할 수 있을 듯 하다. 참조 Real-Time Rendering 3rd Unsolved Problems and Opportunities for High-quality, High-perfornmance 3D Graphics on a PC Platform : Anisotropic Filtering">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://hrmrzizon.github.io/2018/05/13/anisotropic-filtering/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
+
+  <meta name="google-site-verification" content="f8AsB97UC1pp_K4EwkRaJYJZVC0P4j36RK_TGOPPGAU" />
+
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Anisotropic Filtering">
+  <meta name="twitter:description" content="보통 사용되는 Texture Fltering 들은 Axis Align 된 방향을 기준으로 추가적인 샘플링을 하는 방법들이 대부분이다.(bilinear, bicubic, etc..) 하지만 특이한 것이 하나 있다. 바로 Anisotropic Filtering 이다. Anisotropic Filtering 은 원거리에 있는 물체들을 선명하게 보이게 하기위...">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Appocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="/edu">Edu</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Anisotropic Filtering</h1>
+    
+    <p class="post-meta"><time datetime="2018-05-13T00:00:00+00:00" itemprop="datePublished">May 13, 2018</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/anisotropic/">anisotropic</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/filtering/">filtering</a>
+    
+  
+    
+  
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>보통 사용되는 <em>Texture Fltering</em> 들은 <em>Axis Align</em> 된 방향을 기준으로 추가적인 샘플링을 하는 방법들이 대부분이다.(bilinear, bicubic, etc..) 하지만 특이한 것이 하나 있다. 바로 <em>Anisotropic Filtering</em> 이다.</p>
+
+<p><em>Anisotropic Filtering</em> 은 원거리에 있는 물체들을 선명하게 보이게 하기위해서 쓰여지는 <em>Fiterling</em> 으로, 말보다는 아래 그림을 보는게 훨씬 직관적으로 이해할 수 있다.</p>
+
+<p><br />
+<img src="/images/aniso_pixel_to_texel.png" alt="Real-time Rendering 3rd" class="center-image" /></p>
+<center>출처 : Real-time Rendering 3rd&lt;/a&gt;
+</center>
+<p><br /></p>
+
+<p>위의 그림과 같이 <em>Texture-Space</em> 에서 픽셀안에 있는 텍스쳐를 여러번 샘플링하여 평균을 구하는 방식인듯하다. 그런데 아주 중요한 것이 하나 남아있다.</p>
+
+<p><br />
+<img src="/images/img034.gif" alt="Unsolved Problems and Opportunities for High-quality, High-perfornmance 3D Graphics on a PC Platform : Anisotropic Filtering" class="center-image" /></p>
+<center>출처 : [Unsolved Problems and Opportunities for High-quality, High-perfornmance 3D Graphics on a PC Platform : Anisotropic Filtering](http://www.graphicshardware.org/previous/www_1998/presentations/kirk/sld030.htm)
+&lt;/a&gt;
+</center>
+<p><br /></p>
+
+<p>위의 그림을 보면 알겠지만 <em>bilinear filtering</em> 과 함께 쓸 경우 엄청난 샘플링 부하가 생길 것이라는 것을 예상할 수 있다.</p>
+
+<p><em>Anisotropic Filtering</em> 을 처음 접했을 떄, 가장 이해가 가지 않았던 것은 결국 내부에서 샘플링을 해야할 텐데 어떤 방식으로 방향을 구할지 가장 이해가 안됬었다. 지금 다시 생각해보면, <em>ddx</em> 키워드를 <em>uv</em> 좌표에 쓰듯이 <em>Texutre-Space</em> 의 차이 벡터를 쉽게 구할 수 있을 듯 하다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li>Real-Time Rendering 3rd</li>
+  <li><a href="http://www.graphicshardware.org/previous/www_1998/presentations/kirk/sld030.htm">Unsolved Problems and Opportunities for High-quality, High-perfornmance 3D Graphics on a PC Platform : Anisotropic Filtering</a></li>
+</ul>
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://zizon.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy; Su-Hyeok Kim - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

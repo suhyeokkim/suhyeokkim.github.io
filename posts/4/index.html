@@ -105,6 +105,537 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2017/08/01/using-compute-buffer-in-unity/">Using Compute Buffer In Unity</a>
+          </h1>
+
+          <p class="post-meta">Aug 1, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/gpuinstancing/">gpuinstancing</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>Unity 에서의 확실한 GPU Instancing 은 <strong>ComputeBuffer</strong> 라는 구현체에서 시작될 것이다. 이 구현체는 <strong>UnityEngine.ComputeBuffer</strong> 라는 Unity 의 구현체이며 하는 역할은 GPU 메모리를 사용하게 해주는 역할을 한다. <strong>ComputeBuffer</strong> 는 <strong>ComputeShader</strong> 와 함께 등장했다. <strong>ComputeShader</strong> 에서 데이터를 읽고 쓰는것을 요구하기 때문에 Unity 는 GPU 메모리를 사용하는 컨테이너로서 <strong>ComputeBuffer</strong> 를 구현해 놓았다. 하지만 이 <strong>ComputeBuffer</strong> 는 <strong>ComputeShader</strong> 뿐만아니라 일반 쉐이더에서도 폭넓게 사용가능하다. 이 말의 뜻은 우리가 생각하는 Unity 에서 지원하는 일반적인 메쉬 데이터를 사용하지 않아도 사용자가 직접 메쉬 데이터를 커스터마이징해서 사용할 수 있다는 이야기이다. 지원하는 플랫폼은 일반적으로 말하는 <em>Shader Model 5.0</em> 이상이다. PC 플랫폼에서는 당연히 사용 가능하다.</p>
+
+<p>사용하는 방법 자체는 어렵지 않다. 스크립트에서 <em>size</em> 와 <em>stride</em> 를 설정해주고, 데이터의 배열을 만들어 GPU 메모리 안에 있는 데이터를 읽거나 쓸 수 있다. 메모리 단위에서 하는것처럼 보이기 때문에 크기와 타입은 맞춰주어야 한다. C# 에서는 <strong>System.Array</strong> 형으로 넣어주니 형태에 주의하기 바란다. 방법은 아래와 같다.</p>
+
+<pre><code class="language-C#">int dataLen = ...;  // length of data
+int[] dataArray = new int[dataLen];
+
+// record data in dataArray..
+
+ComputeShader computeShader = ...;
+ComptueBuffer dataBuffer = new ComputeBuffer(dataLen, sizeof(int));
+dataBuffer.SetData(dataArray);
+
+computeShader.SetBuffer("dataBuffer", dataBuffer);
+</code></pre>
+
+<p>위 코드는 <strong>ComputeShader</strong> 에서 <strong>ComputeBuffer</strong> 를 사용하기 위해 세팅하는 코드다. 가장 맨처음에는 초기에 세팅할 정수 배열을 만들고, 그 다음 <strong>ComputeBuffer</strong> 인스턴스를 생성한다. 생성자에서 넣어주는 인자는 데이터의 길이(<em>length</em>)와 각 데이터별 크기(<em>stride</em>)이다. 그 다음 같은 크기의 배열의 데이터를 GPU 메모리로 쓴다.(<em>write</em>) 그리고 마지막으로 데이터가 세팅된 <strong>ComputeBuffer</strong> 를 <strong>ComputeShader</strong> 에 연결해준다. 이러면 <strong>ComputeShader</strong> 코드에서 <em>dataBuffer</em> 라는 변수명을 가진 변수에 <strong>ComputeBuffer</strong> 가 연결된다. 아래에 <strong>ComputeShader</strong> 코드가 있다.</p>
+
+<pre><code class="language-HLSL">StructuredBuffer&lt;int&gt; dataBuffer;
+
+[numthreads(8,8,1)]
+void Process (uint3 id : SV_DispatchThreadID)
+{
+  ...
+}
+</code></pre>
+
+<p>맨 처음에 있는 <em>dataBuffer</em> 에 연결된다. <a href="/2017/07/06/structured-buffer-vs-constant-buffer/">StructuredBuffer vs ConstantBuffer</a> 에서본 <em>StructuredBuffer</em> 타입이 가능하다. 또한 <em>RWStructuredBuffer</em>, <em>ConsumeStructuredBuffer</em>, <em>AppendStructuredBuffer</em> 가능하다. 다른 렌더러 쉐이더 코드에서도 사용가능하다. 그래서 일반적으로 고려되는 파이프라인은 아래와 같다.</p>
+
+<p><img src="/images/data-process-pipeline.png" alt="data process" class="center-image" /></p>
+
+<p>앞의 두가지 <strong>ComputeBuffer</strong> 를 세팅하고 <strong>ComputeShader</strong> 를 실행하는 코드는 대충 보았다, 뒷 부분의 <strong>ComputeBuffer</strong> 를 통해 렌더링을 하는 것은 그다지 어렵지 않다. 중요한 것은 참신하게, 효율적으로 렌더링하는 것이다.</p>
+
+<p><a href="https://github.com/hrmrzizon/CustomSkinningExample">Github : CustomSkinningExample</a> 에서 스키닝의 계산을 <strong>ComputeShader</strong> 로 넘겨서 계산한다. 또한 메시 데이터 전체를 <strong>ComputeBuffer</strong> 로 넘겨서 렌더링하기 때문에 꽤나 괜찮은 예가 될것이다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="https://docs.unity3d.com/ScriptReference/ComputeBuffer.html">Unity Reference : ComptuteBuffer</a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/08/01/darboux-frame/">Darboux Frame</a>
+          </h1>
+
+          <p class="post-meta">Aug 1, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/math/">math</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/study/">study</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>여러 공간 법선 벡터(<em>tangent space normal</em>, <em>object space normal</em>)에 대하여 알아보던 도중 모르는 것이 하나있어 정리해볼겸 포스팅해보려 한다. <em>darboux frame</em> 이라는 놈이다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/08/01/darboux-frame/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2017/07/30/normal-tangent-binormal/">Normal Tangent Binormal</a>
           </h1>
 
@@ -191,6 +722,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -242,6 +779,12 @@
   
     
       <a href="/categories/study/">study</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -383,6 +926,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -430,6 +979,12 @@
   
     
       <a href="/categories/vertex-deformation/">vertex deformation</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -583,6 +1138,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -630,6 +1191,12 @@
   
     
       <a href="/categories/vertex-deformation/">vertex deformation</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -775,6 +1342,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -822,6 +1395,12 @@
   
     
       <a href="/categories/vertex-deformation/">vertex deformation</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -927,6 +1506,12 @@
   
     
       <a href="/categories/translate/">translate</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1076,6 +1661,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1111,6 +1702,12 @@
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1242,6 +1839,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
 </p>
         </header>
@@ -1265,285 +1868,6 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
-            <a class="post-link" href="/2017/06/11/using-gpu-instancing-in-unity/">Using Gpu Instancing In Unity</a>
-          </h1>
-
-          <p class="post-meta">Jun 11, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/shader/">shader</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/rendering/">rendering</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p><strong>이 글은 Unity 5.6.1f 버젼에서 작성되었습니다. 다른 버젼에서는 에러가 날 수 있으니 참고 바랍니다.</strong></p>
-
-<p><a href="/2017/06/04/using-texture2darray-in-unity/">Using Texture2DArray in Unity</a> 에 이어 <em>DrawCall</em> 을 줄이기 위한 방법에 대해서 소개하려한다. GPU Instancing 이라는 방법인데 <em>TextureArray</em> 와 같이 응용해서 사용하면 획기적으로 <em>DrawCall</em> 을 줄일 수 있다.</p>
-
-<p>일반적으로 알려진 <em>GPU Instancing</em> 에 대해서 말하자면 컴퓨터의 RAM 에만 저장하던 데이터들을 GPU 메모리에 복사해놓고 GPGPU 나 쉐이더를 실행할 때 빠르게 데이터에 접근하는 것을 GPU Instancing 이라 한다. 만약 <em>GPU Instancing</em> 을 사용하지 않으면 매번 <em>DrawCall</em> 에 데이터를 넣어줘야하기 때문에 수많은 <em>DrawCall</em> 이 걸리게 되고 이는 CPU 의 시간을 뺏어먹게 되어 영 좋지 않은 일이 된다. 보통은 같은 동작을 하는 오브젝트들을 최적화할 때 쓰인다. 사용하게 되면 <em>DrawCall</em> 이 <em>O(<strong>오브젝트 갯수</strong>)</em> 로 되던것이 O(1) 의 갯수로 줄어든다. 그래서 <em>TextureArray</em> 와 같이 사용하게 되면 <em>DrawCall</em> 이 <em>O(<strong>오브젝트 갯수</strong> * <strong>텍스쳐 갯수</strong>)</em> 로 계산되던게 <em>O(<strong>1</strong>)</em> 로 바뀌어 버리니 CPU 시간을 엄청나게 많이벌 수 있다. 다만 GPU 메모리를 많이 잡아먹기 때문에 신경써서 데이터를 구성하지 않으면 무슨일이 일어날지 모른다.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/06/11/using-gpu-instancing-in-unity/">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
             <a class="post-link" href="/2017/06/08/performence-and-optimization/">Performence And Optimization</a>
           </h1>
 
@@ -1556,6 +1880,12 @@
   
     
       <a href="/categories/unity/">unity</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1745,6 +2075,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1780,6 +2116,12 @@
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1911,6 +2253,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
 </p>
         </header>
@@ -1930,295 +2278,6 @@
         
           <p class="post-continue">
             <a href="/2017/06/04/using-texture2darray-in-unity/">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/06/02/various-technique-for-rendering/">Various Technique For Rendering</a>
-          </h1>
-
-          <p class="post-meta">Jun 2, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/shader/">shader</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/rendering/">rendering</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/cg/">cg</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p><a href="/2017/05/29/simple-shader-programming/">Simple shader programming</a> 글 에서 간단하게 CG 를 통해 쉐이더를 작성하는 법에 대해서 알아보았다. 텍스쳐와 간단하게 색을 입히는 코드에 대해서 알아보았다. 하지만 이렇게 직접 쉐이더 코드를 변경하는 단계가 오게되면 이렇게 간단한 코드보다는 되게 복잡한 코드를 쓰는 경우가 많을 것이다. 또한 그 복잡한 코드들의 주요 원인은 보통 라이팅에 때문일것이다. 아무리 GPU 가 발전했다해도 빛에 대한 처리는 아직도 난감하다. 실제 빛의 속도는 <em>299792458m/s</em> 이다. 대략 초당 3억 미터를 간다는 소리인데, 이를 컴퓨터에서 완벽하게 시뮬레이션을 하려면 답이 안나온다. 양자 컴퓨터가 나온다면 모르겠지만 말이다. 게다가 빛은 광자라는 미세한 입자로 나누어져 있고 이와 같이 상호작용하는 물체또한 입자단위로 빛을 반사하는데 모든 것을 똑같이 표현할 수는 없다.</p>
-
-<p>그래서 컴퓨터 그래픽스 분야에서는 한정된 자원의 컴퓨터를 사용해 빛을 실제와 같이 표현하기 위해 많은 노력을 해왔다. 물론 십몇년 전까지는 실제와는 거리가 멀었다. 대표적인 예전의 컴퓨터 그래픽을 나타내는 것은 아래와 같은 영상이다.</p>
-
-<style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style>
-<div class="embed-container">    <iframe title="YouTube video player" width="640" height="390" src="//www.youtube.com/embed/oRL5durPleI" frameborder="0" allowfullscreen=""></iframe></div>
-
-<p>Windows 95 시절의 화면 보호기 영상인데, 컴퓨터 그래픽인 것을 알 수 있는 부분은 맨 마지막에 OpenGL 이라고 쓰여져 있는 부분이다. 물론 이는 OpenGL 이 나온지 얼마 안되었을 때이고 95 년을 기준으로 따졌을 떄 20년이 지난 것들이다. 게다가 여기서는 라이팅도 없다. 하지만 20년이 지나고.. 현재로 돌아와서 최근에 와서는 꽤 실제와 비슷한 것들이 많이 나왔다. 아래 영상을 보자.</p>
-
-<style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style>
-<div class="embed-container">    <iframe title="YouTube video player" width="640" height="390" src="//www.youtube.com/embed/9v4XM8y-8fs" frameborder="0" allowfullscreen=""></iframe></div>
-
-<p>최근에 공개된 파크라이5 의 트레일러 영상이다. 자세히 보면 조금은 인위적인게 보이지만 실시간 3D 렌더링으로 이 정도를 나타낸건 지금도 혀를 내두를만한 기술들이 총 집약되어 여태까지 나온 게임들 중에 최고의 실시간 렌더링의 퀄리티를 보여준다. 특히 빛에 대한 묘사들이 더욱더 실제와 비슷하게 느끼게 해준다.</p>
-
-<p>이 글에서는 위 영상처럼 발전하기 까지의 여러가지 기본적인 렌더링 기법과 라이팅 기법에 대해서 알아볼 것이다. 최신 기술들도 중요하지만 최신 기술들을 이해하기 위해서도 여태까지의 기술들을 알아야 하고, 그 와중에서도 이전에 쓰이던 것을 그대로 쓰는 것도 있기 때문이다.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/06/02/various-technique-for-rendering/">Read on &rarr;</a>
           </p>
         
       </li>

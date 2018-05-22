@@ -105,10 +105,133 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
-            <a class="post-link" href="/2017/12/19/shadow-map-filtering/">Shadow Map Filtering</a>
+            <a class="post-link" href="/2018/01/11/unity-scripted-importer/">Unity Scripted Importer</a>
           </h1>
 
-          <p class="post-meta">Dec 19, 2017 • 
+          <p class="post-meta">Jan 11, 2018 • 
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>Unity 의 에디터 시스템은 꽤나 유연하다. 이번 글에서는 <em>AssetImporter</em> 에 대한 기능들에 대하여 알아볼 것이다.</p>
+
+<p>Unity 의 각각의 Asset 들은 확장자의 이름에 따라서 <em>AssetImporter</em> 가 하나씩 만들어지고, 해당 <em>AssetImporter</em> 에 따라서 <em>Post-Process</em> 가 진행된다. 필자가 많이 봤던 <em>AssetImporter</em> 는 <a href="https://docs.unity3d.com/ScriptReference/TextureImporter.html"><em>TextureImporter</em></a> 와 <a href="https://docs.unity3d.com/ScriptReference/ModelImporter.html"><em>ModelImporter</em></a> 가 있었다. 확인할 당시에는 당연히 <em>AssetImporter</em> 를 커스터마이징 할 수 있겠다는 생각이 들어 찾아봤지만 전혀 없었다.(Unity 5 버젼을 사용할 때다.) 이렇게 시스템을 만들어 놓고 왜 없냐는 의문이 들었지만 이는 정말 할수있는게 없었기에 넘어갔었다.</p>
+
+<p>그런데 이번에 Unity 2018.1 베타가 릴리즈 되면서 SRP 를 살펴보던 도중 <em>Expremental</em> 기능들 중에 <a href="https://docs.unity3d.com/2018.1/Documentation/Manual/ScriptedImporters.html"><em>ScriptedImporter</em></a> 라는 기능이 있는 것을 발견했다.</p>
+
+<p>이 기능은 말그대로 예전의 내가 원하던 기능이였다. <em>AssetImporter</em> 클래스와 다른점은 딱 한가지다. 가상 <em>OnImportAsset</em> 메소드가 존재하는 것이다. 즉 <em>ScriptedImporter</em> 를 상속하여 <em>OnImportAsset</em> 를 구현하면 간단하게 에셋을 <em>Customize</em> 할 수 있는 것이다. 또한 에디터 기능을 지원하는 <a href="https://docs.unity3d.com/2018.1/Documentation/ScriptReference/Experimental.AssetImporters.ScriptedImporterEditor.html">ScriptedImporterEditor </a> 라는 클래스를 사용하면 에디터를 손쉽게 바꿀 수 있다. 자세한 사항은 글에서 언급된 링크를 통해 보면 된다.</p>
+
+<h2>참조</h2>
+<ul>
+  <li><a href="https://docs.unity3d.com/2018.1/Documentation/Manual/ScriptedImporters.html">Unity Documentation : ScriptedImporter </a></li>
+  <li><a href="https://docs.unity3d.com/2018.1/Documentation/ScriptReference/Experimental.AssetImporters.ScriptedImporter.html">Unity Reference : ScriptedImporter</a></li>
+  <li><a href="https://docs.unity3d.com/2018.1/Documentation/ScriptReference/Experimental.AssetImporters.ScriptedImporterEditor.html">Unity Reference : ScriptedImporterEditor </a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/12/27/percentage-closer-soft-shadows/">Percentage Closer Soft Shadows</a>
+          </h1>
+
+          <p class="post-meta">Dec 27, 2017 • 
   
   
     
@@ -143,6 +266,12 @@
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
     
   
     
@@ -274,6 +403,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -303,6 +438,495 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/pcss/">pcss</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p><a href="/2017/12/19/shadow-map-filtering/">Shadow Map Filtering</a> 에서 <em>PCF</em> 와 <em>VSM</em> 에 대하여 간단히 알아보았다. 이번 글에서 설명할 것은 <em>PCF</em> 를 활용한 <em>PCSS</em> 다.</p>
+
+<p><em>PCSS</em> 는 <em>Soft Shadow</em> 를 구현하는 기법 중 하나로써 2005년에 발표되어 여태까지도 꽤나 알려진 기법이다. 우선 <em>Soft Shadow</em> 가 무엇인지 알아보자.</p>
+
+<p><br /></p>
+
+<p><img src="/images/soft_vs_hardshadow.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="http://www.assignmentpoint.com/science/computer/real-time-soft-shadow-rendering.html">assignmentpoint.com : Real Time Soft Shadow Rendering</a>
+</center>
+<p><br /></p>
+
+<p>위와 같이 빛을 가린 물체와 거리가 멀어지면 멀어질수록 밝아지는 그림자를 <em>Soft Shadow</em> 라고 한다. 완전한 <em>Hard Shadow</em> 는 어색하기 때문에 보통 <em>PCF</em> 를 사용하여 끝부분을 부드럽게 처리했으나, 태양광 처럼 길게 그림자를 만드는 경우가 있으면 끝 부분이 가면 갈수록 부드러워져야 한다.</p>
+
+<p><br /></p>
+
+<p><img src="/images/tree_shadow.jpg" alt="" class="center-image" /></p>
+<center>출처 : <a href="https://www.youtube.com/watch?v=Ax8G8P3tA28">Youtube
+</a>
+</center>
+<p><br /></p>
+
+<p>태양 빛에의해 만들어진 나무의 그림자다. 짧은 길이의 그림자는 적당히 <em>PCF</em> 로 대략 표현이 가능하나 이런 길은 그림자를 고정된 사이즈의 <em>PCF</em> 로 표현하기엔 무리가 있다. 그래서 나온것이 <em>PCSS</em> 다.</p>
+
+<p><em>PCSS</em> 를 보기전에, 우리가 알아야할 용어들이 있다. 바로 <em>Umbra</em> 와 <em>Penumbra</em> 다.</p>
+
+<p><br /></p>
+
+<p><img src="/images/umbra_penumbra_antumbra.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="https://en.wikipedia.org/wiki/Umbra,_penumbra_and_antumbra">Wikipedia : Umbra, penumbra and antumbra </a>
+</center>
+<p><br /></p>
+
+<p><em>Soft Shadow</em> 가 표현하는 부드러운 부분의 그림자는 위 그림에서도 보이듯이 <em>Penumbra</em> 라고 한다. <em>PCSS</em> 에서는 부드러운 부분의 그림자를 <em>Penumbra</em> 라고 한다. <em>PCSS</em> 에서는 <em>Penumbra</em> 의 크기를 사용하여 <em>PCF</em> 의 샘플링 범위를 정해준다. 우선 <em>PCSS</em> 의 <em>Penumbra</em> 를 계산하는 방법을 보자.</p>
+
+<p><br /></p>
+
+<p><img src="/images/PCSS_PenumbraSizeEstimation.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="https://http.download.nvidia.com/developer/presentations/2005/SIGGRAPH/Percentage_Closer_Soft_Shadows.pdf">Siggraph 2005 : Percentage-Closer Soft Shadows</a>
+</center>
+<p><br /></p>
+
+<p>맨위의 노란색으로 표시된 부분은 광원을 뜻하며, 일정한 범위로 빛을 비추는 <em>Area Light</em> 로 가정한 후 계산한다. W - light 는 <em>Area Light</em> 의 범위를 뜻한다. 중간에 있는 <em>Blocker</em> 는 빛을 가리는 물체를 뜻하며, d blocker 는 가리는 물체와 빛과의 거리, d receiver 는 그림자가 비추는 물체와 광원 사이의 거리를 뜻한다. 그림자를 받는 부분과 빛을 가리는 물체와 광원을 서로 평행하다고 가정해서 계산한다. 2차원의 그림을 3차원으로 바꿔보자.</p>
+
+<p><br /></p>
+
+<p><img src="/images/PCSS_Scheme.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="http://developer.download.nvidia.com/shaderlibrary/docs/shadow_PCSS.pdf">NVidia : Percentage-Closer Soft Shadows</a>
+</center>
+<p><br /></p>
+
+<p>보통 <em>Pixel Shader</em> 에서 그림자의 비춘 정도를 계산하기 때문에 <em>Receiver</em> 의 작은 부분을 기준으로 그림이 그려져 있다. 작은 부분을 기준으로 <em>Area Light</em> 와의 <em>frustum</em> 과 <em>Blocker</em> 가 얼마나 충돌되는지 체크한다. 우리는 <em>Shadow Map</em> 을 사용하기 때문에 아래 그림이 조금 더 실제 계산과 비슷하다.</p>
+
+<p><br /></p>
+
+<p><img src="/images/PCSS_Scheme2.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="http://developer.download.nvidia.com/shaderlibrary/docs/shadow_PCSS.pdf">NVidia : Percentage-Closer Soft Shadows</a>
+</center>
+<p><br /></p>
+
+<p>그래서 <em>Shadow Map</em> 의 빨간색으로 하이라이트 된 부분을 샘플링해 얼마나 가리고 있는지를 확인한다. 그러면 빛을 받는 정도를 알 수 있게 되는것이다. 해당 부분을 적당히 샘플링한 다음 평균을 구해서 <em>PCF</em> 로 샘플링하는 범위를 계산한다. 계산하여 <em>PCF</em> 에서 범위를 사용해 계산한다. 코드를 보면서 이해해보자.</p>
+
+<p><br /></p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">float</span> <span class="nf">PCSS_Shadow</span><span class="p">(</span><span class="n">float2</span> <span class="n">uv</span><span class="p">,</span> <span class="kt">float</span> <span class="n">z</span><span class="p">,</span> <span class="n">float2</span> <span class="n">dz_duv</span><span class="p">,</span> <span class="kt">float</span> <span class="n">zEye</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// ------------------------</span>
+	<span class="c1">// STEP 1: blocker search</span>
+	<span class="c1">// ------------------------</span>
+	<span class="kt">float</span> <span class="n">accumBlockerDepth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="kt">float</span> <span class="n">numBlockers</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="n">float2</span> <span class="n">searchRegionRadiusUV</span> <span class="o">=</span> <span class="n">SearchRegionRadiusUV</span><span class="p">(</span><span class="n">zEye</span><span class="p">);</span>
+	<span class="n">FindBlocker</span><span class="p">(</span><span class="n">accumBlockerDepth</span><span class="p">,</span> <span class="n">numBlockers</span><span class="p">,</span> <span class="n">g_shadowMap</span><span class="p">,</span> <span class="n">uv</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">dz_duv</span><span class="p">,</span> <span class="n">searchRegionRadiusUV</span><span class="p">);</span>
+
+	<span class="c1">// Early out if not in the penumbra</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">numBlockers</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+		<span class="k">return</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">numBlockers</span> <span class="o">==</span> <span class="n">BLOCKER_SEARCH_COUNT</span><span class="p">)</span>
+		<span class="k">return</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+
+	<span class="c1">// ------------------------</span>
+	<span class="c1">// STEP 2: penumbra size</span>
+	<span class="c1">// ------------------------</span>
+	<span class="kt">float</span> <span class="n">avgBlockerDepth</span> <span class="o">=</span> <span class="n">accumBlockerDepth</span> <span class="o">/</span> <span class="n">numBlockers</span><span class="p">;</span>
+	<span class="kt">float</span> <span class="n">avgBlockerDepthWorld</span> <span class="o">=</span> <span class="n">ZClipToZEye</span><span class="p">(</span><span class="n">avgBlockerDepth</span><span class="p">);</span>
+	<span class="n">float2</span> <span class="n">penumbraRadiusUV</span> <span class="o">=</span> <span class="n">PenumbraRadiusUV</span><span class="p">(</span><span class="n">zEye</span><span class="p">,</span> <span class="n">avgBlockerDepthWorld</span><span class="p">);</span>
+	<span class="n">float2</span> <span class="n">filterRadiusUV</span> <span class="o">=</span> <span class="n">ProjectToLightUV</span><span class="p">(</span><span class="n">penumbraRadiusUV</span><span class="p">,</span> <span class="n">zEye</span><span class="p">);</span>
+
+	<span class="c1">// ------------------------</span>
+	<span class="c1">// STEP 3: filtering</span>
+	<span class="c1">// ------------------------</span>
+	<span class="k">return</span> <span class="n">PCF_Filter</span><span class="p">(</span><span class="n">uv</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">dz_duv</span><span class="p">,</span> <span class="n">filterRadiusUV</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<center>출처 : <a href="https://github.com/NVIDIAGameWorks/D3DSamples">Github NVIDIAGameWorks : D3DSamples</a>
+</center>
+<p><br /></p>
+
+<p>해당 픽셀이 어두워지는 정도를 반환하는 <em>PCSS</em> 계산 함수다. 코드의 주석에서는 계산을 세단계로 나눈다. 첫번째로는 <em>Shadow Map</em> 을 샘플링해서 얼마나 빛이 얼마나 가려지는지 계산한다. 이를 <em>STEP 1: blocker search</em> 라고 표기해놓았고, 두번째는 <em>PCF</em> 에서 샘플링할 범위를 결정하는 넓이를 계산한다. 이를 <em>STEP 2: penumbra size</em> 라고 한다. 세번째로는 <em>PCF</em> 를 계산해서 가려지는 정도를 반환한다. 자세한 코드는 출처에서 <em>SoftShadows</em> 항목을 들어가면 볼 수 있다.</p>
+
+<p><em>PCSS</em> 의 장점은 아무래도 확실한 <em>Soft Shadow</em> 를 구현했다는 점이다. 비록 대략적으로 가정한 부분이 많지만 장면별로 잘 맞춰주기만 한다면 괜찮은 결과가 나올것 같다. 하지만 샘플링 횟수가 꽤나 된다. <em>PCF</em> 만 하더라도 가볍지는 않은 편인데, <em>Blocker</em> 를 계산하느라 더 많이 샘플링을 한다. 하지만 잘 만들어진 게임과 요즘의 GPU 에서는 아주 큰 오버헤드는 없는걸로 보인다. (<a href="https://www.reddit.com/r/nvidia/comments/49idz3/nvidia_hfts_the_division/">Redit : Nvidia HFTS (The Division)</a>)</p>
+
+<h2>참조</h2>
+<ul>
+  <li><a href="https://http.download.nvidia.com/developer/presentations/2005/SIGGRAPH/Percentage_Closer_Soft_Shadows.pdf">Siggraph 2005 : Percentage-Closer Soft Shadows</a></li>
+  <li><a href="http://developer.download.nvidia.com/shaderlibrary/docs/shadow_PCSS.pdf">NVidia : Percentage-Closer Soft Shadows</a></li>
+  <li><a href="https://github.com/NVIDIAGameWorks/D3DSamples">Github NVidiaGameWorks : D3DSample</a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/12/19/shadow-map-filtering/">Shadow Map Filtering</a>
+          </h1>
+
+          <p class="post-meta">Dec 19, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shadow/">shadow</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
+    
+  
     
   
     
@@ -426,6 +1050,12 @@
   
     
       <a href="/categories/vsm/">vsm</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -639,6 +1269,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -722,6 +1358,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -751,6 +1393,12 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
+    
+  
     
   
     
@@ -872,6 +1520,12 @@
   
     
       <a href="/categories/csm/">csm</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1046,6 +1700,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1129,6 +1789,12 @@
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1158,6 +1824,12 @@
   
     
       <a href="/categories/rendering/">rendering</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1437,6 +2109,12 @@ bias = clamp(bias, 0,0.01);
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1472,6 +2150,12 @@ bias = clamp(bias, 0,0.01);
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1575,6 +2259,12 @@ bias = clamp(bias, 0,0.01);
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1770,6 +2460,12 @@ shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1825,6 +2521,12 @@ shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1985,6 +2687,12 @@ shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -2068,6 +2776,12 @@ shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -2081,6 +2795,12 @@ shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
   
     
       <a href="/categories/analysis/">analysis</a>,
+    
+  
+    
+  
+    
+  
     
   
     
@@ -2208,6 +2928,12 @@ shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
   
     
       <a href="/categories/hbao/">hbao+</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -2372,6 +3098,12 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -2385,6 +3117,12 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/analysis/">analysis</a>,
+    
+  
+    
+  
+    
+  
     
   
     
@@ -2538,6 +3276,12 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -2601,6 +3345,12 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/bilateral-filter/">bilateral_filter</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -2778,6 +3528,12 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -2791,6 +3547,12 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/analysis/">analysis</a>,
+    
+  
+    
+  
+    
+  
     
   
     
@@ -2944,6 +3706,12 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
   
+    
+  
+    
+  
+    
+  
 
   
   
@@ -3003,6 +3771,12 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/linearize-depth/">linearize_depth</a>,
+    
+  
+    
+  
+    
+  
     
   
     
@@ -3088,6 +3862,12 @@ Shaders can then take advantage of potential performance improvements by using a
   
     
       <a href="/categories/deintereaved-texturing/">deintereaved_texturing</a>
+    
+  
+    
+  
+    
+  
     
   
     
@@ -3233,652 +4013,6 @@ Shaders can then take advantage of potential performance improvements by using a
   <li><a href="https://developer.nvidia.com/sites/default/files/akamai/gameworks/samples/DeinterleavedTexturing.pdf">NVidia : Deintereaved Texturing</a></li>
   <li><a href="https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf">GDC2013 : Particle Shadows &amp; Cache-Efficient Post-Processing</a></li>
   <li><a href="http://www.gdcvault.com/play/1017623/Advanced-Visual-Effects-with-DirectX">GDCVault : Particle Shadows &amp; Cache-Efficient Post-Processing Video</a></li>
-</ul>
-
-        </div>
-
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/11/15/hbao-plus-analysis-0/">Hbao Plus Analysis 0</a>
-          </h1>
-
-          <p class="post-meta">Nov 15, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/render/">render</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/analysis/">analysis</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/hbao/">hbao+</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>게임에서 쓰이는 실시간 렌더링에서 빛과 물체들의 상호작용을 완벽하게 현실적으로 표현하는 거의 불가능하다. 하지만 이를 위해 수십년동안 많은 엔지니어와 연구자들이 노력하여 부분적이고 제한된 환경에서의 빛과 물체의 상호작용을 현실 세계와 비슷하게 따라잡고 있다. 이번 글에서 살펴볼 것은 <em>Screen-Space Ambient Occlusion(SSAO)</em> 기반의 <em>HBAO+</em> 라는 라이브러리에 대해서 알아볼 것이다.</p>
-
-<p><em>HBAO+</em> 는 NVidia 에서 만든 라이브러리로써, 현재 <a href="https://developer.nvidia.com/shadowworks"><em>ShadowWorks</em></a> 라는 프로젝트에 포함되어 있다. <a href="https://developer.nvidia.com/shadowworks"><em>ShadowWorks</em></a> 에는 <em>HBAO+</em> 뿐만 아니라 <em>ShadowLib</em> 이라는 그림자 렌더링을 위한 라이브러리로써 HFTS, PCSS, CSM 등 많은 기능들을 포함하고 있는 라이브러리가 있다. 현재 <em>ShadowLib</em> 은 오픈소스가 아니지만 이번에 알아볼 <em>HBAO+</em> 는 <em>Github</em> 에서 소스를 받을 수 있다. 이에 대한 자세한 사항은 <a href="https://developer.nvidia.com/gameworks-source-github">“Access GameWorks Source on Github”</a> 에서 확인할 수 있다.</p>
-
-<h3>Ambient Occlusion?</h3>
-
-<p><em>Ambient Occlusion</em> 이란 말은 처음 들어본 사람에게는 생소한 말이지만 한번이라도 들어본 사람들에게는 꽤나 익숙한 말일 것이다. 빠른 이해를 위해 아래 그림을 보자.</p>
-
-<p><br />
-<img src="/images/220px-AmbientOcclusion_German.jpg" alt="Wikipedia : Ambient Occlusion Image" class="center-image" /></p>
-<center>출처 : <a href="https://en.wikipedia.org/wiki/Ambient_occlusion">Wikipedia : Ambient Occlusion</a>
-</center>
-<p><br /></p>
-
-<p>가장 위의 이미지를 보자. 단순한 렌더링이 아니라 반사를 구현해놓아서 꽤나 사실적이다. 하지만 여기서 더욱더 사실적으로 표현이 가능하다. 중간의 이미지를 보면 <em>Ambient Occlusion</em> 이 무엇인지 쉽게 알 수 있다. 흰색 물체와 흰색 배경과 함께 아래 구석에 어두워진 것을 볼 수 있다. 이를 <em>Ambient Occlusion</em> 이라고 한다.</p>
-
-<p>글로 간단하게 설명하자면 물체가 모이면 좁은 공간이 생기게 되고, 구석이면 구석일 수록 직접 들어오는 빛은 있으나 반사되어 오는 빛이 적어지므로 어두워진다. 이를 말하는 것이바로 <em>Ambient Occlusion</em> 이다. <em>Ambient</em> 는 주변을 뜻하고, <em>Occlusion</em> 은 무언가 가리는 것을 뜻한다. 빛을 가려서 주변에 보이는 것이 어두워지는 것을 말하는 것이다.</p>
-
-<p>보통 <em>Ambient Occlusion</em> 은 개발시에 미리 시간을 들여 계산해 미리 저장해놓은 다음 실시간으로 저장된 데이터를 읽어서 사용하는 <em>precomputed AO</em> 방식으로 사용한다. 이유는 간단하다. 실시간으로 계산되기에는 요즘 컴퓨터로는 연산량을 버틸 수 없어서 그렇다. 월드가 복잡할수록, 넓을수록, 고퀄리티의 <em>AO</em> 를 계산할수록 시간이 대폭 증가한다. 하지만 이는 물체와 물체간의 <em>AO</em> 를 계산할때의 이야기이다.</p>
-
-<h3>Screen-Space AO?</h3>
-
-<p><em>Deffered Rendering</em> 이 많이 쓰이면서 이를 위한 많은 기술들이 연구되었다. <em>Deffered Rendering</em> 의 대부분의 기술들은 이름앞에 보통 <em>Screen-Space</em> 라는 단어를 달고 나왔다. <em>Screen-Space</em> 란 <em>Geometry Stage</em> 아닌 <em>Rasterizer Stage</em> 로 넘어가서 처리되는 부분을 말한다. 말 뜻대로 해석한다면 2D 이미지의 공간이라는 뜻도 되겠다. 다만 <em>Pixel Shader</em> 로 넘어간다고 해서 <em>Depth(Z value)</em> 가 사라지지는 않기 때문에 이를 온전히 2D 공간이라고도 볼 수는 없다. 실제 좌표계는 <em>Clipping-Space</em> 로 되어 있을 것이다.(x,y,z 가 -1 ~ 1 범위의 좌표로 되어있는 공간, Driver API 에 따라 조금씩 다르다.) 쉽게 이해하기 위해 아래 그림을 보자.</p>
-
-<p><br />
-<img src="/images/DeferredLighting.jpg" alt="Deffered Rendering" class="center-image" /></p>
-<center>출처 : <a href="http://tower22.blogspot.kr/2010/11/from-deferred-to-inferred-part-uno.html">From Deferred to Inferred, part uno</a>
-</center>
-<p><br /></p>
-
-<p>위 그림은 <em>Deffered Rendering</em> 의 중요한 특징을 나타내는 그림이다. 이 데이터들을 <em>GBuffer</em> 라고 한다. 저 결과들은 <em>Multi Render Target</em> 을 통해 한 <em>Pixel Shader</em> 에서 나온 결과물들이다. 즉 한 장면을 렌더링해서 2D 버퍼안에 데이터들을 픽셀별로 저장한 것이다. 각각 저마다 필요한 정보들을 담고 있다. 우리가 알아볼 <em>Screen-Space AO</em> 또한 이런식으로 데이터를 처리한다. 위 그림에는 나와있지 않지만 하드웨어 차원에서 <em>Depth Buffer</em> 를 지원한다. <em>Pixel Shader</em> 를 실행한 후 알아서 <em>Depth Buffer</em> 에 Z 값을 저장해준다. <em>Screen-Space AO</em> 는 <em>Depth Buffer</em> 를 이용하여 계산한다. 물론 <em>Depth Buffer</em> 뿐만아니라 <em>GBuffer</em> 에서 <em>Normal</em> 데이터까지 사용하여 할 수도 있다.</p>
-
-<p>하지만 <em>SSAO</em> 는 정공법이 아니다. 모든 <em>AO</em> 를 표현할 수 없으며 디테일한 <em>AO</em> 밖에 표현하지 못한다. 그렇기에 이는 부가적인 방법으로 사용되어야 한다. <em>SSAO</em> 를 활용하기 가장 좋은 장면은 화면에서 작게 표시되는 오브젝트들이 조밀하게 많이 있을 떄나 그려지는 오브젝트의 디테일이 많을 때다. 이럴때 <em>SSAO</em> 를 표현하면 괜찮은 결과가 나온다.</p>
-
-<p><br />
-<img src="/images/0cf69542-8ff5-422a-8d01-f11bd65ab62e_scaled.jpg" alt="Unity Technology : SSAO" class="center-image" /></p>
-<center>출처 : <a href="https://forum.unity.com/threads/ssao-pro-high-quality-screen-space-ambient-occlusion.274003/page-5">Unity Forum</a>
-</center>
-<center></center>
-<p><br /></p>
-
-<p>게임에서는 조금이라도 복잡한 메시를 쓸 수 밖에 없기 때문에 결국 왠만한 게임에는 <em>SSAO</em> 를 넣는 것이 괜찮은 선택이 된것이다. 하지만 초기에 제안된 <em>SSAO</em> 구현물들은 대부분 꽤나 시간을 잡아먹었었다. 그래서 시간에 따른 선택이 되었지만 <em>HBAO+</em> 와 같은 개량된 기법이 여러개 등장하여 퍼포먼스를 다른 곳에 쓸 수 있게 되었다. <a href="https://www.geforce.com/hardware/technology/hbao-plus/technology">Geforce : HBAO+ Technology</a> 에서 <em>SSAO</em> 테크닉에 따른 벤치마킹을 볼 수 있다.</p>
-
-<p><br />
-<img src="/images/hbao_bench.png" alt="benchmark" class="center-image" /></p>
-<center>출처 : <a href="https://www.geforce.com/hardware/technology/hbao-plus/technology">Geforce : HBAO+ Technology</a>
-</center>
-<center></center>
-<p><br /></p>
-
-<p>우리가 살펴볼 것은 가장 아래에 있는 <em>HBAO+</em> 에 대한 것들이다. <em>Resolution</em> 은 <em>Depth Buffer</em> 의 해상도를 뜻한다. 당연히 큰 사이즈여야 디테일한 것까지 표현할 수 있다. 가장 왼쪽에 있는 것은 시간이다. <em>HBAO+</em> 가 2.4ms 로 조금 느리지만 그 오른쪽에 있는 <em>Occlusion Samples Per AO Pixel</em> 의 숫자와 같이 비교하면 이야기가 다르다. 이는 한 픽셀별로 몇번 다른 텍스쳐의 데이터 샘플링 숫자다. <em>HBAO</em> 는 4번만 하지만, <em>HBAO+</em> 는 이의 9배인 36번이다. 샘플링을 많이하게 되면 더욱더 사실적인 <em>SSAO</em> 를 표현할 수 있다. 샘플링 숫자에 비하면 시간은 내어줄 수 있는 자원인 것이다.</p>
-
-<p>이 글에서는 <em>HBAO+</em> 를 분석하기 전 배경이 되는 개념에 대해서 알아보았다. 다음 <a href="/2017/11/15/hbao-plus-analysis-1/">hbao plus analysis 1</a> 에서는 <em>HBAO+</em> 라이브러리에 대한 본격적인 분석을 해보려고 한다.</p>
-
-<h1>참조 자료</h1>
-
-<ul>
-  <li><a href="https://en.wikipedia.org/wiki/Ambient_occlusion">Wikipedia : Ambient Occlusion</a></li>
-  <li><a href="https://developer.nvidia.com/developer-program">NVidia Developer Program</a></li>
-  <li><a href="https://www.geforce.com/hardware/technology/hbao-plus/technology">Geforce : HBAO+ Technology</a></li>
-  <li><a href="https://forums.geforce.co.kr/index.php?document_srl=12616&amp;mid=geforce">한국 지포스 포럼 : HBAO+</a></li>
-</ul>
-
-        </div>
-
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/10/31/shader-pipeline-4-geometry-shader/">Shader Pipeline 4 Geometry Shader</a>
-          </h1>
-
-          <p class="post-meta">Oct 31, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/render/">render</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/shader/">shader</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/hlsl/">hlsl</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>“<a href="/2017/10/31/shader-pipeline-3-fragment-shader/">Fragemnt Shader</a>” 에서 <em>Fragment Shader</em> 에 대해 알아보았다. 다음은 <em>Geometry Shader</em> 에 대해서 써보려 한다.</p>
-
-<p><em>Geometry Shader</em> 는 쉐이더 파이프라인에서 <em>Rasterizer Stage</em> 넘어가기 전의 <em>Geometry Stage</em> 의 마지막 단계로써 이전 쉐이더에서 넘긴  <em>Primitive</em> 데이터(point, line, triangle..)를 프로그래머가 원하는 복수의 <em>Primitive</em> 데이터로 변환할 수 있다. 삼각형을 삼각형의 중심을 나타내는 점으로 변환하는 쉐이더를 보자.</p>
-
-<pre><code class="language-C">[maxvertexcount(1)]
-void geom(vertexOutput input[3], inout PointStream&lt;geometryOutput&gt; pointStream)
-{
-    geometryShaderOutput o;
-
-    o.vertex = (input[0].vertex + input[1].vertex + input[2].vertex) / 3;
-
-    pointStream.Append(o);
-}
-</code></pre>
-
-<p>매우 간단한 코드다. 간략하게 설명하자면, 맨 윗줄의 <em>maxvertexcount</em> 는 해당 지오메트리 쉐이더에서 <em>Stream</em> 으로 넘길 정점별 데이터의 갯수를 뜻한다. <em>Geometry Shader</em> 한번당 <em>Stream</em> 으로 넘길 <em>maxvertexcount</em> 의 한계는 정해지지 않았지만 크기는 1024 바이트로 정해져 있기 때문에 적절하게 사용해야 겠다. 그 다음줄의 인자들에 대해서 설명하면, 첫번째 <em>vertexOutput input[3]</em> 은 정해진 프리미티브의 값들을 뜻한다. 여기서는 삼각형을 기준으로 만들었기 때문에 정점별 정보가 3개가 있다. _inout PointStream<geometryOutput> pointStream_ 은 _Geometry Shader_ 의 최종 출력을 해주는 오브젝트다. _PointStream_ 은 점 프리미티브의 데이터를 받는 _Stream_ 으로써, 프리미티브가 다르면 각자 다른것을 사용할 수 있다.([MSDN : Getting Started with the Stream-Output Stage](https://msdn.microsoft.com/en-us/library/windows/desktop/bb205122.aspx)) 부등호 안에 있는 것은 일반적으로 알려진 제너릭이나 템플릿의 형태와 같으니 안에 출력으로 넘길 구조체를 넘겨주면 된다. 함수의 내용은 삼각형을 구성하는 각 정점의 위치의 평균을 구해 하나의 정점 정보만 _Stream_ 에 넘긴다.</geometryOutput></p>
-
-<p><em>Stream</em> 은 총 두가지의 역할을 한다. 하나는 <em>Rasterizer</em> 단계로 넘겨서 쉐이더에서 처리를 할 수 있게 하는 통로 역할을 하고, 다른 하나는 드라이버 레벨에서 데이터를 출력해주는 통로 역할을 한다. 두가지의 일을 하기 때문에 <em>Stream</em> 의 개념으로 추상화한 것인가 싶다. 그리고 하나의 <em>Geometry Shader</em> 에서 여러개의 <em>Stream</em> 으로 출력이 가능하긴 하다. 최대 4개의 <em>Stream</em> 을 사용할 수 있다. <em>Stream</em> 을 선택해서 데이터를 받아올 수도 있으며, <em>Rasterizer</em> 로 보낼수도 있다. 자세한 사항은 <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff471424.aspx">MSDN : How To: Index Multiple Output Streams </a> 에서 확인하면 되겠다.</p>
-
-<p>활용할 수 있는 다른 기능이 하나 더 있다. <em>instance</em> 기능이다. 아래 코드를 보자.</p>
-
-<pre><code class="language-C">[instance(3)]
-[maxvertexcount(1)]
-void geom(vertexOutput input[3], uint InstanceID : SV_GSInstanceID, inout PointStream&lt;geometryOutput&gt; pointStream)
-{
-    geometryShaderOutput o;
-
-    o.vertex = input[InstanceID].vertex;
-
-    pointStream.Append(o);
-}
-</code></pre>
-
-<p>해당 코드는 삼각형의 세개의 정점 위치를 넘기는 코드다. 달라진 것은 <em>instance(3)</em> 코드가 붙고, <em>uint InstanceID : SV_GSInstanceID</em> 파라미터가 생겨 코드 안에서 이를 활용한다. <em>instance(x)</em> 에 들어가는 x 는 반복하는 횟수를 뜻하고, <em>InstanceID</em> 파라미터는 반복하는 인덱스를 뜻한다. 같은 입력을 여러번 받아서 일정한 수만큼 반복하는 것이다.  <em>instance</em> 속성에 들어가는 숫자의 한계는 32까지다.</p>
-
-<p><em>Geometry Shader</em> 는 <em>Shader Model 4.0</em> 에서 추가되었으며 뒤에 추가적으로 알아본 <em>multiple stream</em> 과 <em>instance</em> 키워드는 <em>Shader Model 5.0</em> 에서 확장된 기능들이다.</p>
-
-<h1>참조 자료</h1>
-
-<ul>
-  <li><a href="https://msdn.microsoft.com/ko-kr/library/windows/desktop/bb509609.aspx">MSDN : Geometry-Shader Object</a></li>
-  <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb205122.aspx">MSDN : Getting Started with the Stream-Output Stage</a></li>
-  <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff471424.aspx">MSDN : How To: Index Multiple Output Streams</a></li>
-  <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff471425.aspx">MSDN : How To: Instance a Geometry Shader</a></li>
-  <li><a href="https://www.gamedev.net/forums/topic/600141-limit-on-maxvertexcount-gs/">GameDev : limit on maxvertexcount() GS</a></li>
 </ul>
 
         </div>
