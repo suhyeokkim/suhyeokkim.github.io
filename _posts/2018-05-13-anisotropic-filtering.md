@@ -21,8 +21,7 @@ _Anisotropic Filtering_ 은 원거리에 있는 물체들을 선명하게 보이
 
 <br/>
 ![Unsolved Problems and Opportunities for High-quality, High-perfornmance 3D Graphics on a PC Platform : Anisotropic Filtering](/images/img034.gif){: .center-image}
-<center>출처 : [Unsolved Problems and Opportunities for High-quality, High-perfornmance 3D Graphics on a PC Platform : Anisotropic Filtering](http://www.graphicshardware.org/previous/www_1998/presentations/kirk/sld030.htm)
-</a>
+<center>출처 : <a href="http://www.graphicshardware.org/previous/www_1998/presentations/kirk/sld030.htm">Unsolved Problems and Opportunities for High-quality, High-perfornmance 3D Graphics on a PC Platform : Anisotropic Filtering</a>
 </center>
 <br/>
 
