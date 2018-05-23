@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2018-05-23T01:09:43+00:00</updated>
+  <updated>2018-05-23T15:27:19+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -66,14 +66,95 @@
 &lt;/center&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;위 그림에서 위쪽에 있는 것이 일반적인 &lt;em&gt;Alpha Test&lt;/em&gt; 인데, &lt;em&gt;color.a&lt;/em&gt; 는 텍스쳐에서 샘플링한 &lt;em&gt;Alpha&lt;/em&gt; 값, &lt;em&gt;ατ&lt;/em&gt; 는 &lt;em&gt;Alpha Test&lt;/em&gt; 를 위한 고정된 &lt;em&gt;Alpha Threshold&lt;/em&gt;(&lt;em&gt;알파한계&lt;/em&gt;)다. 밑의 코드에서 &lt;em&gt;drand48&lt;/em&gt; 이 나타내는 것은 단순한 0 ~ 1 사이의 랜덤값이다. 즉 랜덤하게 &lt;em&gt;Alpha Threshold&lt;/em&gt; 를 설정해주어 물체가 멀어져서 평균 &lt;em&gt;Alpha&lt;/em&gt; 값이 낮아질 때도 픽셀이 &lt;em&gt;Discard&lt;/em&gt; 되지 않도록 하는 것이다.&lt;/p&gt;
+&lt;p&gt;위 그림에서 위쪽에 있는 것이 일반적인 &lt;em&gt;Alpha Test&lt;/em&gt; 인데, &lt;em&gt;color.a&lt;/em&gt; 는 텍스쳐에서 샘플링한 &lt;em&gt;Alpha&lt;/em&gt; 값, &lt;em&gt;ατ&lt;/em&gt; 는 &lt;em&gt;Alpha Test&lt;/em&gt; 를 위한 고정된 &lt;em&gt;Alpha Threshold&lt;/em&gt;(&lt;em&gt;알파한계&lt;/em&gt;)다. 밑의 코드에서 &lt;em&gt;drand48&lt;/em&gt; 이 나타내는 것은 단순한 0 ~ 1 사이의 랜덤값이다. 즉 랜덤하게 &lt;em&gt;Alpha Threshold&lt;/em&gt; 를 설정해주어 물체가 멀어져서 평균 &lt;em&gt;Alpha&lt;/em&gt; 값이 낮아질 때도 픽셀이 &lt;em&gt;Discard&lt;/em&gt; 되지 않도록 하는 것이다. 하지만 이는 굉장한 눈아픔? 반짝거림? 을 유발한다. 범위를 지정해주지 않았기 때문에 이전 프레임에서 출력된 픽셀이 다음 프레임에서는 출력되지 않을 수도 있다. 이렇게 각 프레임마다 상황이 달라서 생기는 현상앞에 &lt;em&gt;Temporal&lt;/em&gt; 을 붙인다. &lt;em&gt;Stochastic Alpha Test&lt;/em&gt; 의 문제는 &lt;em&gt;Temporal Flickering&lt;/em&gt; 이라고 할 수 있겠다.&lt;/p&gt;
 
-&lt;p&gt;하지만 이는 굉장한 눈아픔? 반짝거림? 을 유발한다. 범위를 지정해주지 않았기 때문에 이전 프레임에서 출력된 픽셀이 다음 프레임에서는 출력되지 않을 수도 있다. 이렇게 각 프레임마다 상황이 달라서 생기는 현상앞에 &lt;em&gt;Temporal&lt;/em&gt; 을 붙인다. &lt;em&gt;Stochastic Alpha Test&lt;/em&gt; 의 문제는 &lt;em&gt;Temporal Flickering&lt;/em&gt; 이라고 할 수 있겠다.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Temporal Flickering&lt;/em&gt; 이 없는, &lt;em&gt;Temporal Stability&lt;/em&gt;(임시적 안정성) 을 확보하기 위해서는 &lt;em&gt;Alpha Threshold&lt;/em&gt; 를 이러저리 튀지 않게해야 했고, 이를 위해 특정 값에 따라서 &lt;em&gt;Hash&lt;/em&gt; 값을 생성하는 방법이 고안되었다. 이 방법은 &lt;em&gt;Hashed Alpha Test&lt;/em&gt; 라는 이름으로 작년에 공개되었다.&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;Temporal Stability&lt;/em&gt;(임시적 안정성) 을 확보하기 위해서는 &lt;em&gt;Alpha Threshold&lt;/em&gt; 를 이러저리 튀지 않게해야 했고, 이를 위해 특정 값에 따라서 &lt;em&gt;Hash&lt;/em&gt; 값을 생성하는 방법이 고안되었다. 이 방법은 &lt;em&gt;Hashed Alpha Test&lt;/em&gt; 라는 이름으로 작년에 공개되었다.&lt;/p&gt;
+&lt;h2&gt;Hashed Alpha testing&lt;/h2&gt;
+
+&lt;p&gt;기본적으로 랜덤 값(난수) 생성은 제대로된 난수생성이 아닌, 특수한 식을 사용해서 의사 난수 생성 방법을 이용하는데, &lt;em&gt;Hash&lt;/em&gt; 를 이용한 난수생성은 일반적으로 많이 쓰인다고 한다. &lt;em&gt;Hashed Alpha Testing&lt;/em&gt; 은 &lt;em&gt;Hash&lt;/em&gt; 를 생성하기 위한 &lt;em&gt;Key&lt;/em&gt; 값을 선정하는데 조심스러웠다고 한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Key&lt;/em&gt; 로 선정될 수 있는 후보는 &lt;em&gt;Texture Coordinate&lt;/em&gt;, &lt;em&gt;World-Space Coordinate&lt;/em&gt;, &lt;em&gt;Ojbect-Space Coordinate&lt;/em&gt; 이 세가지 였다고 한다. &lt;em&gt;Texture Coordinate&lt;/em&gt; 는 가끔 없는 경우가 있어 제외하였고, &lt;em&gt;World-Space Coordinate&lt;/em&gt; 는 정적 물체에는 원하는대로 동작하지만, 동적 물체의 경우에는 문제가 있었다고 한다. 결국 남은건 &lt;em&gt;Ojbect-Space Coordinate&lt;/em&gt; 가 남게 되었다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Ojbect-Space Coordinate&lt;/em&gt; 의 &lt;em&gt;X,Y,Z&lt;/em&gt; 세 좌표를 모두 이용하게 되는데, 이는 &lt;em&gt;X,Y&lt;/em&gt; 두개만 이용하게 되면 &lt;em&gt;Hash&lt;/em&gt; 값이 &lt;em&gt;Screen-Space&lt;/em&gt; 에서 생성되어 다른 물체와 겹치게 되면 &lt;em&gt;Alpha to Coverge&lt;/em&gt; 같은 효과를 내게되어 3가지 좌표 모두 &lt;em&gt;Hash&lt;/em&gt; 생성에 사용된다고 한다.&lt;/p&gt;
+
+&lt;p&gt;마지막으로 중요한 포인트는 &lt;em&gt;Temporal Stability&lt;/em&gt; 를 확보하는 것이다. 이해하기 쉽게 설명하자면, 아래와 같은 각 픽셀을 나타내는 그리드안에 점이 있다고 가정해보자. 이 점들이 조금씩 움직여서 계속 픽셀안에 있다면, 같은 &lt;em&gt;Hash&lt;/em&gt; 값을 사용하여 같은 &lt;em&gt;Alpha Threshold&lt;/em&gt; 값을 만들어줘야 한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/subpixel_0.png&quot; alt=&quot;Subpixel 0&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;아래 두 그림의 빨간 점의 위치처럼 원래의 픽셀위치를 벗어나게 된다면 새로운 &lt;em&gt;Alpha Threshold&lt;/em&gt; 를 생성해야 하겠지만, 위치가 많이 바뀌지 않는다면 같은 &lt;em&gt;Alpha Threshold&lt;/em&gt; 를 사용해 &lt;em&gt;Flickering&lt;/em&gt; 을 최대한 줄여야 한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/subpixel_2.png&quot; alt=&quot;Subpixel 2&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;이러한 맥락으로 &lt;em&gt;Hashed ALpha Testing&lt;/em&gt; 은 &lt;em&gt;Temporal Stability&lt;/em&gt; 를 조금 확보하게 된다. 물론 위의 그림은 이해를 돕기위한 용도로, 실제 코드상에서는 다른 방법을 통해 계산된다. 아래 코드를 보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/hat_codesnippet_screenxy.png&quot; alt=&quot;Hashed Alpha Testing&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://cwyman.org/papers/tvcg17_hashedAlphaExtended.pdf&quot;&gt;Cwyman.org : Hashed Alpha Test(Extended)&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;위 코드는 픽셀이 가지고 있는 &lt;em&gt;Object-Space Coordinate&lt;/em&gt; 의 옆 픽셀과의 차이, 세로에 있는 픽셀과의 차이를 통한 값으로 계산한다. (dFdX, dFdY 의 자세한 내용은 찾아보거나 &lt;a href=&quot;/2018/03/04/what-is-ddx-and-ddy/&quot;&gt;What is ddx and ddy&lt;/a&gt; 에서 볼 수 있다.) 픽셀별로 값의 차이, 즉 근접한 픽셀의 위치 차이값에 따른값(미분값)과 그 값을 이용해 &lt;em&gt;Object-Space Coordinate&lt;/em&gt; 값에 곱한 값을 &lt;em&gt;Key&lt;/em&gt; 로 두어서 &lt;em&gt;Alpha Threshold&lt;/em&gt; 를 계산한다.&lt;/p&gt;
+
+&lt;p&gt;마지막에 &lt;em&gt;Alpha Threshold&lt;/em&gt; 를 구하는 코드를 보면, &lt;em&gt;Floor&lt;/em&gt; 하는, 올림을 해주어 &lt;em&gt;discrete value&lt;/em&gt; 로 &lt;em&gt;Key&lt;/em&gt; 값을 넣어준다. &lt;em&gt;Floor&lt;/em&gt; 가 의미하는 것은, 선형적인 데이터가 아닌 뚝뚝 끊기는 데이터로 만들어 특정한 값을 넘어야 &lt;em&gt;Key&lt;/em&gt; 값이 바뀌게 하여 &lt;em&gt;Hash&lt;/em&gt; 를 유지해 &lt;em&gt;Flickering&lt;/em&gt; 을 방지하는 것이다. 아래 그림은 &lt;em&gt;floor(x)&lt;/em&gt; 의 그래프다. 즉 코드의 &lt;em&gt;pixScale&lt;/em&gt; 이 크면 클수록 &lt;em&gt;Hash&lt;/em&gt; 의 값은 픽셀의 변화에 따라서 빠르게 바뀌고, 작으면 작을수록(0에 가까워질수록) 픽셀의 변화에 따라서 &lt;em&gt;Hash&lt;/em&gt; 값이 느리게 바뀔 것이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/wolframalpha_floor.gif&quot; alt=&quot;Woflram Alpha : Floor Graph&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://www.wolframalpha.com/input/?i=floor&quot;&gt;Wolframalpha&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;이러한 방법은 &lt;em&gt;View-Space&lt;/em&gt; 를 기준으로 &lt;em&gt;X,Y&lt;/em&gt; 좌표가 조금씩 바뀔때는 픽셀끼리의 차이를 계산하기 때문에 안정적이다. 하지만 &lt;em&gt;Z(Depth)&lt;/em&gt; 값이 바뀔때는 많은 &lt;em&gt;Flickering&lt;/em&gt; 을 일으킬 것이다. 이를 해결하기 위해 아래 코드를 보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/hat_codesnippet_screenz0.png&quot; alt=&quot;Hashed Alpha Testing&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://cwyman.org/papers/tvcg17_hashedAlphaExtended.pdf&quot;&gt;Cwyman.org : Hashed Alpha Test(Extended)&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;위치의 픽셀별 차이 벡터의 크기를 &lt;em&gt;discrete&lt;/em&gt; 시키는 방법도 좋은 아이디어중 하나다. 하지만 이는 빌보드처럼 큰 크기의 판이 다가오게 된다면 끝부분의 &lt;em&gt;discontinuity&lt;/em&gt; 를 유발하게 된다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/hat_codesnippet_screenz1.png&quot; alt=&quot;Hashed Alpha Testing&quot; class=&quot;center-image&quot; /&gt;
+&lt;img src=&quot;/images/hat_codesnippet_lerpscale.png&quot; alt=&quot;Hashed Alpha Testing&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://cwyman.org/papers/tvcg17_hashedAlphaExtended.pdf&quot;&gt;Cwyman.org : Hashed Alpha Test(Extended)&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;그래서 위 코드와 같 &lt;em&gt;discretize&lt;/em&gt; 시킨 올림처리한 값과, 내림처리한 값을 사용한 두 &lt;em&gt;Hash&lt;/em&gt; 값 사이의 보간을 통해서 &lt;em&gt;Alpha Threshold&lt;/em&gt; 를 구해준다. 하지만 이 코드는 아직 문제점이 존재한다. 만약 &lt;em&gt;maxDeriv&lt;/em&gt; 의 값이 0 ~ 1 사이라면 내림값이 반드시 0이 되기 때문에 보간할 값 중 한개의 값이 고정되게 된다. 그래서 아래와 같은 코드를 사용한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/hat_codesnippet_exp2.png&quot; alt=&quot;Hashed Alpha Testing&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://cwyman.org/papers/tvcg17_hashedAlphaExtended.pdf&quot;&gt;Cwyman.org : Hashed Alpha Test(Extended)&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;pixScale&lt;/em&gt; 을 그냥 계산하는 대신, &lt;em&gt;discretize&lt;/em&gt; 된 두개의 스케일값을 2의 지수로 표현하여 값이 0으로 되는 것을 막는다. 이렇게 보간된 값을 사용하여 &lt;em&gt;Alpha Threshold&lt;/em&gt; 를 정해주면 약간의 문제가 생긴다. 보간을 함으로써 균일하지 않게 랜덤값이 분포되었기 때문이다. 그래서 아래와 같은 식을 사용하여 다시 값을 분포시켜준다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/hat_codesnippet_cdf.png&quot; alt=&quot;Hashed Alpha Testing&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://cwyman.org/papers/tvcg17_hashedAlphaExtended.pdf&quot;&gt;Cwyman.org : Hashed Alpha Test(Extended)&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;위의 식을 적용하면 모든 값들이 균일하게 분포되어 진정한 랜덤값의 &lt;em&gt;Alpha Threshold&lt;/em&gt; 가 생성된다고 한다. 아래는 전체 코드다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/hat_codesnippet_whole.png&quot; alt=&quot;Hashed Alpha Testing&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://cwyman.org/papers/tvcg17_hashedAlphaExtended.pdf&quot;&gt;Cwyman.org : Hashed Alpha Test(Extended)&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;자세한 사항은 논문에서 확인할 수 있다(&lt;a href=&quot;http://cwyman.org/papers/tvcg17_hashedAlphaExtended.pdf&quot;&gt;[Cwyman17]&lt;/a&gt;). 결과는 아래 유튜브 영상에서 확인할 수 있다.&lt;/p&gt;
+
+&lt;style&gt;.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }&lt;/style&gt;
+&lt;div class=&quot;embed-container&quot;&gt;    &lt;iframe title=&quot;YouTube video player&quot; width=&quot;640&quot; height=&quot;390&quot; src=&quot;//www.youtube.com/embed/p4TYf5DDpbQ&quot; frameborder=&quot;0&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+&lt;p&gt;이를 통해 전보다 훨씬 나은 &lt;em&gt;Alpha Test&lt;/em&gt; 품질을 얻을 수 있게 되었다. 하지만 &lt;em&gt;Hashed Alpha Testing&lt;/em&gt; 의 결과는 &lt;em&gt;Stochastic Test&lt;/em&gt; 처럼 픽셀이 흩뿌려진 느낌을 지울 수 없다. 어느정도의 랜덤값에서 생성이되니 이는 어쩔 수 없는 결과다.&lt;/p&gt;
+
+&lt;p&gt;그래서 &lt;em&gt;I3D 2018&lt;/em&gt; 에 제출된 &lt;em&gt;Alpha Distribution&lt;/em&gt; 이라는 논문이 있다.&lt;/p&gt;
 
 &lt;!--
-  Hashed Alpha Test
   Alpha Distribution
 --&gt;
 
@@ -82,6 +163,8 @@
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f&quot;&gt;Anti-aliased Alpha Test: The Esoteric Alpha To Coverage&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://developer.download.nvidia.com/assets/gameworks/downloads/regular/GDC17/RealTimeRenderingAdvances_HashedAlphaTesting_GDC2017_FINAL.pdf?pUIX8DXxfad7mL4zB3GOthX3r5IgGao9UWxYuYb3q9h10RXrQeYko-dEuJXJxt1hhsI9J_9KJDcCYGeWWksxlaHTrXSE825D_3izja7LUFOtzhaeBUqpn7qbwXaaGlLdbipjE3PeI3e2IMn45mQAA3OV2PD-kG2y9cecTaWE2uum2uwdHgyn0nhYiLOvlOsrUzewbK5REH7vAm3-lNWzxehw_5Tphg&quot;&gt;NVidia developer : Hashed Alpha Testing&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://cwyman.org/papers/tvcg17_hashedAlphaExtended.pdf&quot;&gt;Cwyman.org : Hashed Alpha Test(Extended)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.cemyuksel.com/research/alphadistribution/&quot;&gt;Cemyuksel : Alpha Distribution&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</content>
 
       
@@ -109,7 +192,7 @@
       
 
       
-        <summary type="html">Shader 에서 샘플링하는 Texutre 에서 Alpha 값을 가지고 있어, Alpha 을 참조해서 실제 픽셀에 출력을 하는지 안하는지를 결정하는 것을 Alpha Test 라고 한다. 이런 Material 이나 Texture 를 Cutout 이라고 통칭하는 경우가 많다. 보통 게임에서의 Alpha Test 를 사용하는 것들은 나무, 풀 같은 식생들(Vegetation)이 있고, 중간에 구멍이 뚫린 펜스같은 것들도 존재한다. 자연을 배경으로하는 게임의 경우에는 식생들이 굉장히 많기 때문에 Alpha Test 를 사용하는 Shader 가 굉장히 많이 사용될 것이다. 출처 : Anti-aliased Alpha Test: The Esoteric Alpha To Coverage 하지만 Alpha Test 는 굉장히 큰 단점이 있다. 고정된 화면 해상도에서 물체가 작게 표현되면 물체를 표현할 수 있는 픽셀의 숫자가 많이 작아진다. 물체를 표현하는 픽셀의 수가 작아지게 되면 일반적으로 해당 넓이에 맞게 생성된 Texture 의 Mip-level 에 접근한다. 중간의 Alpha Test 그림을 보면된다. 출처 : Anti-aliased Alpha Test: The Esoteric Alpha To Coverage 실제로는 양 옆의 물체들처럼 자연스럽게 표현이 되야하지만 일반적인 Alpha Test 를 사용하게 되면 위와 같은 현상에 마주치게 된다. 이는 굉장히 끔찍한 현상이다. 실제 게임을 해보거나, 만들어본 사람이라면 안다. 대부분의 픽셀에 나무가 표현되고, 잎사귀들이 저런식으로 자글자글 거린다면 약간의 불쾌함이 느껴진다. VR 이라면 더욱.. 그래서 급하게 대처방안으로 나온 것이 위 그림의 오른쪽에 나오는 Alpha to Coverage 라는 방법이다. 이는 하드웨어 MSAA 를 픽셀 쉐이더의 결과를 통해 자동으로 해주는것으로, MSAA 의 퍼포먼스와 비례한다. MSAA 는 성능이 영 좋지않아 안쓰는 경우가 꽤 많이 존재하기 때문에 Alpha to Coverage 는 절대적으로 사용할 수 있는 방법은 아니다. 게다가 엄청나게 많은 나무를 Alpha to Coverage 를 쓴다면.. 성능은 안봐도 뻔하다. 앞서 말한 Alpha Test 은 Material, Shader 별로 고정된 Alpha 값을 설정해 그 이하가 되면 Pixel Shader 에서 결과를 내놓지 않게 하는(Discard) 방법이였다. Alpha Test 의 문제는 샘플링한 Alpha 값이 가끔 극단적으로 낮아서 Discard 되는 것인데, 이를 간단하게 해결하기 위해 요상한 방법이 등장했다. 바로 Stochastic test 라는 방법이다. 출처 : NVidia developer : Hashed Alpha Testing 위 그림에서 위쪽에 있는 것이 일반적인 Alpha Test 인데, color.a 는 텍스쳐에서 샘플링한 Alpha 값, ατ 는 Alpha Test 를 위한 고정된 Alpha Threshold(알파한계)다. 밑의 코드에서 drand48 이 나타내는 것은 단순한 0 ~ 1 사이의 랜덤값이다. 즉 랜덤하게 Alpha Threshold 를 설정해주어 물체가 멀어져서 평균 Alpha 값이 낮아질 때도 픽셀이 Discard 되지 않도록 하는 것이다. 하지만 이는 굉장한 눈아픔? 반짝거림? 을 유발한다. 범위를 지정해주지 않았기 때문에 이전 프레임에서 출력된 픽셀이 다음 프레임에서는 출력되지 않을 수도 있다. 이렇게 각 프레임마다 상황이 달라서 생기는 현상앞에 Temporal 을 붙인다. Stochastic Alpha Test 의 문제는 Temporal Flickering 이라고 할 수 있겠다. Temporal Stability(임시적 안정성) 을 확보하기 위해서는 Alpha Threshold 를 이러저리 튀지 않게해야 했고, 이를 위해 특정 값에 따라서 Hash 값을 생성하는 방법이 고안되었다. 이 방법은 Hashed Alpha Test 라는 이름으로 작년에 공개되었다. 참조 Anti-aliased Alpha Test: The Esoteric Alpha To Coverage NVidia developer : Hashed Alpha Testing</summary>
+        <summary type="html">Shader 에서 샘플링하는 Texutre 에서 Alpha 값을 가지고 있어, Alpha 을 참조해서 실제 픽셀에 출력을 하는지 안하는지를 결정하는 것을 Alpha Test 라고 한다. 이런 Material 이나 Texture 를 Cutout 이라고 통칭하는 경우가 많다. 보통 게임에서의 Alpha Test 를 사용하는 것들은 나무, 풀 같은 식생들(Vegetation)이 있고, 중간에 구멍이 뚫린 펜스같은 것들도 존재한다. 자연을 배경으로하는 게임의 경우에는 식생들이 굉장히 많기 때문에 Alpha Test 를 사용하는 Shader 가 굉장히 많이 사용될 것이다. 출처 : Anti-aliased Alpha Test: The Esoteric Alpha To Coverage 하지만 Alpha Test 는 굉장히 큰 단점이 있다. 고정된 화면 해상도에서 물체가 작게 표현되면 물체를 표현할 수 있는 픽셀의 숫자가 많이 작아진다. 물체를 표현하는 픽셀의 수가 작아지게 되면 일반적으로 해당 넓이에 맞게 생성된 Texture 의 Mip-level 에 접근한다. 중간의 Alpha Test 그림을 보면된다. 출처 : Anti-aliased Alpha Test: The Esoteric Alpha To Coverage 실제로는 양 옆의 물체들처럼 자연스럽게 표현이 되야하지만 일반적인 Alpha Test 를 사용하게 되면 위와 같은 현상에 마주치게 된다. 이는 굉장히 끔찍한 현상이다. 실제 게임을 해보거나, 만들어본 사람이라면 안다. 대부분의 픽셀에 나무가 표현되고, 잎사귀들이 저런식으로 자글자글 거린다면 약간의 불쾌함이 느껴진다. VR 이라면 더욱.. 그래서 급하게 대처방안으로 나온 것이 위 그림의 오른쪽에 나오는 Alpha to Coverage 라는 방법이다. 이는 하드웨어 MSAA 를 픽셀 쉐이더의 결과를 통해 자동으로 해주는것으로, MSAA 의 퍼포먼스와 비례한다. MSAA 는 성능이 영 좋지않아 안쓰는 경우가 꽤 많이 존재하기 때문에 Alpha to Coverage 는 절대적으로 사용할 수 있는 방법은 아니다. 게다가 엄청나게 많은 나무를 Alpha to Coverage 를 쓴다면.. 성능은 안봐도 뻔하다. 앞서 말한 Alpha Test 은 Material, Shader 별로 고정된 Alpha 값을 설정해 그 이하가 되면 Pixel Shader 에서 결과를 내놓지 않게 하는(Discard) 방법이였다. Alpha Test 의 문제는 샘플링한 Alpha 값이 가끔 극단적으로 낮아서 Discard 되는 것인데, 이를 간단하게 해결하기 위해 요상한 방법이 등장했다. 바로 Stochastic test 라는 방법이다. 출처 : NVidia developer : Hashed Alpha Testing 위 그림에서 위쪽에 있는 것이 일반적인 Alpha Test 인데, color.a 는 텍스쳐에서 샘플링한 Alpha 값, ατ 는 Alpha Test 를 위한 고정된 Alpha Threshold(알파한계)다. 밑의 코드에서 drand48 이 나타내는 것은 단순한 0 ~ 1 사이의 랜덤값이다. 즉 랜덤하게 Alpha Threshold 를 설정해주어 물체가 멀어져서 평균 Alpha 값이 낮아질 때도 픽셀이 Discard 되지 않도록 하는 것이다. 하지만 이는 굉장한 눈아픔? 반짝거림? 을 유발한다. 범위를 지정해주지 않았기 때문에 이전 프레임에서 출력된 픽셀이 다음 프레임에서는 출력되지 않을 수도 있다. 이렇게 각 프레임마다 상황이 달라서 생기는 현상앞에 Temporal 을 붙인다. Stochastic Alpha Test 의 문제는 Temporal Flickering 이라고 할 수 있겠다. Temporal Flickering 이 없는, Temporal Stability(임시적 안정성) 을 확보하기 위해서는 Alpha Threshold 를 이러저리 튀지 않게해야 했고, 이를 위해 특정 값에 따라서 Hash 값을 생성하는 방법이 고안되었다. 이 방법은 Hashed Alpha Test 라는 이름으로 작년에 공개되었다. Hashed Alpha testing 기본적으로 랜덤 값(난수) 생성은 제대로된 난수생성이 아닌, 특수한 식을 사용해서 의사 난수 생성 방법을 이용하는데, Hash 를 이용한 난수생성은 일반적으로 많이 쓰인다고 한다. Hashed Alpha Testing 은 Hash 를 생성하기 위한 Key 값을 선정하는데 조심스러웠다고 한다. Key 로 선정될 수 있는 후보는 Texture Coordinate, World-Space Coordinate, Ojbect-Space Coordinate 이 세가지 였다고 한다. Texture Coordinate 는 가끔 없는 경우가 있어 제외하였고, World-Space Coordinate 는 정적 물체에는 원하는대로 동작하지만, 동적 물체의 경우에는 문제가 있었다고 한다. 결국 남은건 Ojbect-Space Coordinate 가 남게 되었다. Ojbect-Space Coordinate 의 X,Y,Z 세 좌표를 모두 이용하게 되는데, 이는 X,Y 두개만 이용하게 되면 Hash 값이 Screen-Space 에서 생성되어 다른 물체와 겹치게 되면 Alpha to Coverge 같은 효과를 내게되어 3가지 좌표 모두 Hash 생성에 사용된다고 한다. 마지막으로 중요한 포인트는 Temporal Stability 를 확보하는 것이다. 이해하기 쉽게 설명하자면, 아래와 같은 각 픽셀을 나타내는 그리드안에 점이 있다고 가정해보자. 이 점들이 조금씩 움직여서 계속 픽셀안에 있다면, 같은 Hash 값을 사용하여 같은 Alpha Threshold 값을 만들어줘야 한다. 아래 두 그림의 빨간 점의 위치처럼 원래의 픽셀위치를 벗어나게 된다면 새로운 Alpha Threshold 를 생성해야 하겠지만, 위치가 많이 바뀌지 않는다면 같은 Alpha Threshold 를 사용해 Flickering 을 최대한 줄여야 한다. 이러한 맥락으로 Hashed ALpha Testing 은 Temporal Stability 를 조금 확보하게 된다. 물론 위의 그림은 이해를 돕기위한 용도로, 실제 코드상에서는 다른 방법을 통해 계산된다. 아래 코드를 보자. 출처 : Cwyman.org : Hashed Alpha Test(Extended) 위 코드는 픽셀이 가지고 있는 Object-Space Coordinate 의 옆 픽셀과의 차이, 세로에 있는 픽셀과의 차이를 통한 값으로 계산한다. (dFdX, dFdY 의 자세한 내용은 찾아보거나 What is ddx and ddy 에서 볼 수 있다.) 픽셀별로 값의 차이, 즉 근접한 픽셀의 위치 차이값에 따른값(미분값)과 그 값을 이용해 Object-Space Coordinate 값에 곱한 값을 Key 로 두어서 Alpha Threshold 를 계산한다. 마지막에 Alpha Threshold 를 구하는 코드를 보면, Floor 하는, 올림을 해주어 discrete value 로 Key 값을 넣어준다. Floor 가 의미하는 것은, 선형적인 데이터가 아닌 뚝뚝 끊기는 데이터로 만들어 특정한 값을 넘어야 Key 값이 바뀌게 하여 Hash 를 유지해 Flickering 을 방지하는 것이다. 아래 그림은 floor(x) 의 그래프다. 즉 코드의 pixScale 이 크면 클수록 Hash 의 값은 픽셀의 변화에 따라서 빠르게 바뀌고, 작으면 작을수록(0에 가까워질수록) 픽셀의 변화에 따라서 Hash 값이 느리게 바뀔 것이다. 출처 : Wolframalpha 이러한 방법은 View-Space 를 기준으로 X,Y 좌표가 조금씩 바뀔때는 픽셀끼리의 차이를 계산하기 때문에 안정적이다. 하지만 Z(Depth) 값이 바뀔때는 많은 Flickering 을 일으킬 것이다. 이를 해결하기 위해 아래 코드를 보자. 출처 : Cwyman.org : Hashed Alpha Test(Extended) 위치의 픽셀별 차이 벡터의 크기를 discrete 시키는 방법도 좋은 아이디어중 하나다. 하지만 이는 빌보드처럼 큰 크기의 판이 다가오게 된다면 끝부분의 discontinuity 를 유발하게 된다. 출처 : Cwyman.org : Hashed Alpha Test(Extended) 그래서 위 코드와 같 discretize 시킨 올림처리한 값과, 내림처리한 값을 사용한 두 Hash 값 사이의 보간을 통해서 Alpha Threshold 를 구해준다. 하지만 이 코드는 아직 문제점이 존재한다. 만약 maxDeriv 의 값이 0 ~ 1 사이라면 내림값이 반드시 0이 되기 때문에 보간할 값 중 한개의 값이 고정되게 된다. 그래서 아래와 같은 코드를 사용한다. 출처 : Cwyman.org : Hashed Alpha Test(Extended) pixScale 을 그냥 계산하는 대신, discretize 된 두개의 스케일값을 2의 지수로 표현하여 값이 0으로 되는 것을 막는다. 이렇게 보간된 값을 사용하여 Alpha Threshold 를 정해주면 약간의 문제가 생긴다. 보간을 함으로써 균일하지 않게 랜덤값이 분포되었기 때문이다. 그래서 아래와 같은 식을 사용하여 다시 값을 분포시켜준다. 출처 : Cwyman.org : Hashed Alpha Test(Extended) 위의 식을 적용하면 모든 값들이 균일하게 분포되어 진정한 랜덤값의 Alpha Threshold 가 생성된다고 한다. 아래는 전체 코드다. 출처 : Cwyman.org : Hashed Alpha Test(Extended) 자세한 사항은 논문에서 확인할 수 있다([Cwyman17]). 결과는 아래 유튜브 영상에서 확인할 수 있다. 이를 통해 전보다 훨씬 나은 Alpha Test 품질을 얻을 수 있게 되었다. 하지만 Hashed Alpha Testing 의 결과는 Stochastic Test 처럼 픽셀이 흩뿌려진 느낌을 지울 수 없다. 어느정도의 랜덤값에서 생성이되니 이는 어쩔 수 없는 결과다. 그래서 I3D 2018 에 제출된 Alpha Distribution 이라는 논문이 있다. 참조 Anti-aliased Alpha Test: The Esoteric Alpha To Coverage NVidia developer : Hashed Alpha Testing Cwyman.org : Hashed Alpha Test(Extended) Cemyuksel : Alpha Distribution</summary>
       
 
       
@@ -240,8 +323,7 @@
 
 &lt;p&gt;&lt;br /&gt;
 &lt;img src=&quot;/images/img034.gif&quot; alt=&quot;Unsolved Problems and Opportunities for High-quality, High-perfornmance 3D Graphics on a PC Platform : Anisotropic Filtering&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : [Unsolved Problems and Opportunities for High-quality, High-perfornmance 3D Graphics on a PC Platform : Anisotropic Filtering](http://www.graphicshardware.org/previous/www_1998/presentations/kirk/sld030.htm)
-&amp;lt;/a&amp;gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://www.graphicshardware.org/previous/www_1998/presentations/kirk/sld030.htm&quot;&gt;Unsolved Problems and Opportunities for High-quality, High-perfornmance 3D Graphics on a PC Platform : Anisotropic Filtering&lt;/a&gt;
 &lt;/center&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
@@ -279,7 +361,106 @@
       
 
       
-        <summary type="html">보통 사용되는 Texture Fltering 들은 Axis Align 된 방향을 기준으로 추가적인 샘플링을 하는 방법들이 대부분이다.(bilinear, bicubic, etc..) 하지만 특이한 것이 하나 있다. 바로 Anisotropic Filtering 이다. Anisotropic Filtering 은 원거리에 있는 물체들을 선명하게 보이게 하기위해서 쓰여지는 Fiterling 으로, 말보다는 아래 그림을 보는게 훨씬 직관적으로 이해할 수 있다. 출처 : Real-time Rendering 3rd&amp;lt;/a&amp;gt; 위의 그림과 같이 Texture-Space 에서 픽셀안에 있는 텍스쳐를 여러번 샘플링하여 평균을 구하는 방식인듯하다. 그런데 아주 중요한 것이 하나 남아있다. 출처 : [Unsolved Problems and Opportunities for High-quality, High-perfornmance 3D Graphics on a PC Platform : Anisotropic Filtering](http://www.graphicshardware.org/previous/www_1998/presentations/kirk/sld030.htm) &amp;lt;/a&amp;gt; 위의 그림을 보면 알겠지만 bilinear filtering 과 함께 쓸 경우 엄청난 샘플링 부하가 생길 것이라는 것을 예상할 수 있다. Anisotropic Filtering 을 처음 접했을 떄, 가장 이해가 가지 않았던 것은 결국 내부에서 샘플링을 해야할 텐데 어떤 방식으로 방향을 구할지 가장 이해가 안됬었다. 지금 다시 생각해보면, ddx 키워드를 uv 좌표에 쓰듯이 Texutre-Space 의 차이 벡터를 쉽게 구할 수 있을 듯 하다. 참조 Real-Time Rendering 3rd Unsolved Problems and Opportunities for High-quality, High-perfornmance 3D Graphics on a PC Platform : Anisotropic Filtering</summary>
+        <summary type="html">보통 사용되는 Texture Fltering 들은 Axis Align 된 방향을 기준으로 추가적인 샘플링을 하는 방법들이 대부분이다.(bilinear, bicubic, etc..) 하지만 특이한 것이 하나 있다. 바로 Anisotropic Filtering 이다. Anisotropic Filtering 은 원거리에 있는 물체들을 선명하게 보이게 하기위해서 쓰여지는 Fiterling 으로, 말보다는 아래 그림을 보는게 훨씬 직관적으로 이해할 수 있다. 출처 : Real-time Rendering 3rd&amp;lt;/a&amp;gt; 위의 그림과 같이 Texture-Space 에서 픽셀안에 있는 텍스쳐를 여러번 샘플링하여 평균을 구하는 방식인듯하다. 그런데 아주 중요한 것이 하나 남아있다. 출처 : Unsolved Problems and Opportunities for High-quality, High-perfornmance 3D Graphics on a PC Platform : Anisotropic Filtering 위의 그림을 보면 알겠지만 bilinear filtering 과 함께 쓸 경우 엄청난 샘플링 부하가 생길 것이라는 것을 예상할 수 있다. Anisotropic Filtering 을 처음 접했을 떄, 가장 이해가 가지 않았던 것은 결국 내부에서 샘플링을 해야할 텐데 어떤 방식으로 방향을 구할지 가장 이해가 안됬었다. 지금 다시 생각해보면, ddx 키워드를 uv 좌표에 쓰듯이 Texutre-Space 의 차이 벡터를 쉽게 구할 수 있을 듯 하다. 참조 Real-Time Rendering 3rd Unsolved Problems and Opportunities for High-quality, High-perfornmance 3D Graphics on a PC Platform : Anisotropic Filtering</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">What Is Radiosity Rendering As Gi</title>
+      
+      <link href="https://hrmrzizon.github.io/2018/04/30/what-is-radiosity-rendering-as-gi/" rel="alternate" type="text/html" title="What Is Radiosity Rendering As Gi" />
+      <published>2018-04-30T00:00:00+00:00</published>
+      <updated>2018-04-30T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2018/04/30/what-is-radiosity-rendering-as-gi</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2018/04/30/what-is-radiosity-rendering-as-gi/">&lt;h2&gt;참조&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.cs.bath.ac.uk/~pjw/NOTES/75-ACG/ch5-radiosity.pdf&quot;&gt;Chapter 5 : Radiosity Rendering&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.siggraph.org//education/materials/HyperGraph/radiosity/overview_1.htm&quot;&gt;siggraph.org : Radiosity Overview&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://ldc.usb.ve/~alacruz/cursos/ci5321/clases/Radiosidad/radax-2008-instant%20%20radiosity-paper.pdf&quot;&gt;Instant radiosity&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="rendering" />
+      
+        <category term="light" />
+      
+        <category term="gi" />
+      
+
+      
+
+      
+        <summary type="html">참조 Chapter 5 : Radiosity Rendering siggraph.org : Radiosity Overview Instant radiosity</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">What Is Irradiance Volume As Gi</title>
+      
+      <link href="https://hrmrzizon.github.io/2018/04/30/what-is-irradiance-volume-as-gi/" rel="alternate" type="text/html" title="What Is Irradiance Volume As Gi" />
+      <published>2018-04-30T00:00:00+00:00</published>
+      <updated>2018-04-30T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2018/04/30/what-is-irradiance-volume-as-gi</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2018/04/30/what-is-irradiance-volume-as-gi/">&lt;h2&gt;참조&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.amd.com/wordpress/media/2012/10/Tatarchuk_Irradiance_Volumes.pdf&quot;&gt;AMD Deverlopers : Irradiance Volumes for Games&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.gene.greger-weltin.org/professional/publications/thesis.pdf&quot;&gt;Gene S. Greger : The Irradiance Volume&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="rendering" />
+      
+        <category term="light" />
+      
+        <category term="gi" />
+      
+
+      
+
+      
+        <summary type="html">참조 AMD Deverlopers : Irradiance Volumes for Games Gene S. Greger : The Irradiance Volume</summary>
       
 
       
@@ -1841,271 +2022,6 @@ Shaders can then take advantage of potential performance improvements by using a
 
       
         <summary type="html">HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다. 이전 hbao plus analysis 2 글에서 Horizon based ambient occlusion 와 Cross Bilateral Filter 대해서 알아보았다. 이번 글에서는 부록의 느낌으로 HLSL 코드를 읽으면서 생소했던 기타 기법들에 대해서 써볼 것이다. 첫번째로 Full Screen Triangle 이라는 기법이다. 알고마면 굉장히 단순한 개념으로, 화면을 모두 덮는 한개의 삼각형을 그려서 모든 픽셀에 쉐이더를 돌릴 수 있게 해주는 기법이다. 아래 슬라이드를 보면 쉽게 이해가 갈것이다. 출처 : GDC 2014 : Vertex Sahder Tricks 단순하지만 처음 봤을 때는 조금 신박하게 느껴질 수도 있다. 두번째로는 모든 계산에 최대한 HLSL Intrisic 을 사용한다. 특히 벡터와 벡터사이의 거리를 계산할때 dot product 를 써서 하는게 정말 많았다. 어셈블리 레벨에서 달라지는것 같긴하나 정확한 이유는 알지 못했다. 추측해보면 GPU 에서 해당 명령어가 있지 않을까.. 라고 생각한다. 세번째도 위의 것과 비슷하다. 대부분의 데이터에 MAD 방식을 사용해서 계산한다. 하지만 이는 거의 공식적으로 정해진게 있다. MSDN : mad function 레퍼런스에서도 나오듯이 어떤 GPU 에서는 위에서 추측한대로 하드웨어에서 지원하는 명령어라고 한다. … Shaders can then take advantage of potential performance improvements by using a native mad instruction (versus mul + add) on some hardware. … 또한 HBAO+ 소스에서 찾은 주석에는 GK104 부터 특정 구간에서 10% 퍼포먼스 이득이 있다고 쓰여져 있다. 네번째는 나누기를 절대 쓰지 않는다. 나머지 연산(mod, A % B)는 간혹 쓰이지만 나누기는 절대로 쓰이지 않았었다. 혹시라도 필요하다면 전부 Constant Buffer 에 CPU 에서 역수를 취해서 넘겨주는 방식으로 되어 있었다. 이도 역시 하드웨어에서 동작하는 부분을 알고 짠듯하다. 다섯번째는 HLSL 코드를 cpp 소스에 include 하여 Constant Buffer 값을 갱신하는 코드였다. 여태까지 예전의 DirectX 소스만 보거나 Unity 에서만 작업을 해서 그런지 이런 기능은 굉장히 낯설었다. 참조 자료 NVIDIA HBAO+ GDC 2014 : Vertex Sahder Tricks MSDN : mad function</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Hbao Plus Analysis 2</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-2/" rel="alternate" type="text/html" title="Hbao Plus Analysis 2" />
-      <published>2017-11-15T00:00:00+00:00</published>
-      <updated>2017-11-15T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-2</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-2/">&lt;p&gt;&lt;strong&gt;HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;이전 &lt;a href=&quot;/2017/11/15/hbao-plus-analysis-1/&quot;&gt;hbao plus analysis 1&lt;/a&gt; 글에서 &lt;em&gt;HBAO+&lt;/em&gt; 에서 &lt;em&gt;Linearize Depth&lt;/em&gt; 와 &lt;em&gt;Deinterleaved Texturing&lt;/em&gt; 에 대해서 알아보았다. 이번 글에서는 &lt;em&gt;HBAO+&lt;/em&gt; 의 핵심 알고리즘인 &lt;em&gt;Horizon Based Ambient Occlusion&lt;/em&gt; 와 AO 블러에 사용되는 &lt;em&gt;Cross Bilateral Filter&lt;/em&gt; 에 대해서 알아볼것이다.&lt;/p&gt;
-
-&lt;h2&gt;Horizon Based Ambient Occlusion&lt;/h2&gt;
-
-&lt;p&gt;&lt;em&gt;Horizon Based Ambient Occlusion&lt;/em&gt; 은 xy 평면과(horizon) Depth 값을 사용해서 &lt;em&gt;AO&lt;/em&gt; 를 계산한다. 슬라이드에서 가져온 일부를 보자.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/hbao_siggraph08_05.png&quot; alt=&quot;Horizon Mapping&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf&quot;&gt;Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;해당 슬라이드에서는 xy평면을 단순하게 1차원인 x축만으로 나타냈다. &lt;em&gt;HBAO&lt;/em&gt; 는 그림에 나오는 &lt;em&gt;horizon angle&lt;/em&gt; 을 사용하여 &lt;em&gt;AO&lt;/em&gt; 값을 구한다. 자세한 방법은 아래 슬라이드를 보자.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/hbao_siggraph08_12.png&quot; alt=&quot;Horizon-Based AO&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf&quot;&gt;Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;슬라이드에서는 표면의 접선을 나타내는 &lt;em&gt;Tangent&lt;/em&gt; 벡터와 &lt;em&gt;Horizon&lt;/em&gt; 벡터를 사용해서 &lt;em&gt;sin&lt;/em&gt; 의 차이로 &lt;em&gt;AO&lt;/em&gt; 를 계산한다고 설명되어 있다. &lt;em&gt;Horizon&lt;/em&gt; 벡터는 &lt;em&gt;Depth&lt;/em&gt; 와 화면의 좌표를 구해서 샘플링하는 위치값을 구하고 기준이 되는 위치값의 차이를 통해 구한다. &lt;em&gt;HBAO+&lt;/em&gt; 코드에서는 입력을 받은 &lt;em&gt;Normal&lt;/em&gt; 벡터와 &lt;em&gt;Horizon&lt;/em&gt; 벡터에 &lt;em&gt;dot&lt;/em&gt; 을 사용해 &lt;em&gt;cos&lt;/em&gt; 값을 구하고 변환해준다. 이렇게 한번 &lt;em&gt;AO&lt;/em&gt; 값을 구한다.&lt;/p&gt;
-
-&lt;p&gt;보다 정확한 &lt;em&gt;AO&lt;/em&gt; 값을 구하기 위해서는 전방위로 탐색할 필요가 있다. 정해진 방향으로 샘플링을 해도 오차가 생길 수 있고 완전히 랜덤하게 방향을 정해도 부정확한 결과를 얻을 수 있다. 그래서 &lt;em&gt;HBAO&lt;/em&gt; 는 랜덤하게 방향을 정하나 그 방향 벡터를 정해진 각도로 돌려주어 그나마 정확한 결과를 얻으려 한다. 슬라이드를 보고 넘어가자.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/hbao_siggraph08_14.png&quot; alt=&quot;Sampling the Depth Image&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf&quot;&gt;Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;핵심적인 개념은 모두 설명했지만 만족할만한 결과를 얻기 위해 여러가지 보정 방법들이 필요하다. 그래서 &lt;em&gt;HBAO&lt;/em&gt; 에서는 두가지 보정을 해주는 개념을 설명한다. &lt;em&gt;HBAO&lt;/em&gt; 는 방향을 설정해주고 해당 방향으로 한번만 샘플링 하는게 아니라 여러번 샘플링 한다. 그러므로 거리에 따른 감쇠(attenuation)가 필요하다. 방법은 간단하다. &lt;em&gt;AO&lt;/em&gt; 를 계산할때 구했던 &lt;em&gt;Horizon&lt;/em&gt; 벡터의 크기에 따라서 &lt;em&gt;AO&lt;/em&gt; 값을 줄여준다. 나머지 한가지는 &lt;em&gt;Horizon&lt;/em&gt; 벡터와 &lt;em&gt;Tangent&lt;/em&gt; 벡터를 이용해 구하는 실질적인 &lt;em&gt;AO&lt;/em&gt; 값에 &lt;em&gt;Bias&lt;/em&gt; 로 낮은 &lt;em&gt;AO&lt;/em&gt; 값들을 무시하는 방법이다. &lt;em&gt;Bias&lt;/em&gt; 가 없이 &lt;em&gt;AO&lt;/em&gt; 를 생성하게 되면 노이즈가 생기기 때문이다. 또한 &lt;em&gt;Bias&lt;/em&gt; 로 생긴 수학적 오차는 코드에서 따로 보정해주기 때문에 크게 문제는 없다.&lt;/p&gt;
-
-&lt;h2&gt;Cross Bilateral Filter&lt;/h2&gt;
-
-&lt;p&gt;&lt;em&gt;SSAO&lt;/em&gt; 의 결과에는 일반적으로 블러를 먹이게 된다. 대부분 근사에 기반한 계산이기 때문이다. &lt;em&gt;HBAO&lt;/em&gt; 에서는 &lt;em&gt;Depth&lt;/em&gt; 를 이용한 방법을 소개한다. 바로 &lt;em&gt;Cross Bilateral Filter&lt;/em&gt; 다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Cross Bilateral Filter&lt;/em&gt; 은 &lt;em&gt;Gaussian Filter&lt;/em&gt; 와 비슷한 필터로, &lt;em&gt;Gaussian Filter&lt;/em&gt; 는 샘플링할 위치의 거리에 따라 점차 가중치가 줄어드는 필터라면, &lt;em&gt;Bilateral Filter&lt;/em&gt; 는 위치에 따라 가중치가 줄어드는게 아닌 각 위치별로 가지고 있는 한개의 스칼라값에 차이에 따라서 가중치를 정하는 필터다. &lt;em&gt;Cross&lt;/em&gt; 단어를 붙인 이유는 왼쪽과 오른쪽 방향의 필터와 위와 아래의 필터를 따로하기 때문에 &lt;em&gt;Cross&lt;/em&gt; 라는 단어를 붙인 듯 하다. &lt;em&gt;HBAO+&lt;/em&gt; 코드에서도 X 축과 Y 축을 기준으로 하는 블러 소스가 나누어져 있다. &lt;em&gt;HBAO&lt;/em&gt; 에는 한개의 스칼라 값을 &lt;em&gt;Depth&lt;/em&gt; 를 기준으로 계산한다. 그래서 크게 튀는 부분의 결과는 많이 반영하지 않아 전체적으로 뿌옇게 바뀐다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/hbao_siggraph08_28.png&quot; alt=&quot;Sampling the Depth Image&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf&quot;&gt;Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;h1&gt;참조 자료&lt;/h1&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://docs.nvidia.com/gameworks/content/gameworkslibrary/visualfx/hbao/index.html&quot;&gt;NVidia HBAO+&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf&quot;&gt;Image-Space Horizon Based Ambient Occlusion&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Gaussian_filter&quot;&gt;Wikipedia : Gaussian Filter&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Bilateral_filter&quot;&gt;Wikipedia : Bilateral Filter&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="render" />
-      
-        <category term="analysis" />
-      
-        <category term="hbao+" />
-      
-        <category term="bilateral_filter" />
-      
-
-      
-
-      
-        <summary type="html">HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다. 이전 hbao plus analysis 1 글에서 HBAO+ 에서 Linearize Depth 와 Deinterleaved Texturing 에 대해서 알아보았다. 이번 글에서는 HBAO+ 의 핵심 알고리즘인 Horizon Based Ambient Occlusion 와 AO 블러에 사용되는 Cross Bilateral Filter 에 대해서 알아볼것이다. Horizon Based Ambient Occlusion Horizon Based Ambient Occlusion 은 xy 평면과(horizon) Depth 값을 사용해서 AO 를 계산한다. 슬라이드에서 가져온 일부를 보자. 출처 : Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion 해당 슬라이드에서는 xy평면을 단순하게 1차원인 x축만으로 나타냈다. HBAO 는 그림에 나오는 horizon angle 을 사용하여 AO 값을 구한다. 자세한 방법은 아래 슬라이드를 보자. 출처 : Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion 슬라이드에서는 표면의 접선을 나타내는 Tangent 벡터와 Horizon 벡터를 사용해서 sin 의 차이로 AO 를 계산한다고 설명되어 있다. Horizon 벡터는 Depth 와 화면의 좌표를 구해서 샘플링하는 위치값을 구하고 기준이 되는 위치값의 차이를 통해 구한다. HBAO+ 코드에서는 입력을 받은 Normal 벡터와 Horizon 벡터에 dot 을 사용해 cos 값을 구하고 변환해준다. 이렇게 한번 AO 값을 구한다. 보다 정확한 AO 값을 구하기 위해서는 전방위로 탐색할 필요가 있다. 정해진 방향으로 샘플링을 해도 오차가 생길 수 있고 완전히 랜덤하게 방향을 정해도 부정확한 결과를 얻을 수 있다. 그래서 HBAO 는 랜덤하게 방향을 정하나 그 방향 벡터를 정해진 각도로 돌려주어 그나마 정확한 결과를 얻으려 한다. 슬라이드를 보고 넘어가자. 출처 : Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion 핵심적인 개념은 모두 설명했지만 만족할만한 결과를 얻기 위해 여러가지 보정 방법들이 필요하다. 그래서 HBAO 에서는 두가지 보정을 해주는 개념을 설명한다. HBAO 는 방향을 설정해주고 해당 방향으로 한번만 샘플링 하는게 아니라 여러번 샘플링 한다. 그러므로 거리에 따른 감쇠(attenuation)가 필요하다. 방법은 간단하다. AO 를 계산할때 구했던 Horizon 벡터의 크기에 따라서 AO 값을 줄여준다. 나머지 한가지는 Horizon 벡터와 Tangent 벡터를 이용해 구하는 실질적인 AO 값에 Bias 로 낮은 AO 값들을 무시하는 방법이다. Bias 가 없이 AO 를 생성하게 되면 노이즈가 생기기 때문이다. 또한 Bias 로 생긴 수학적 오차는 코드에서 따로 보정해주기 때문에 크게 문제는 없다. Cross Bilateral Filter SSAO 의 결과에는 일반적으로 블러를 먹이게 된다. 대부분 근사에 기반한 계산이기 때문이다. HBAO 에서는 Depth 를 이용한 방법을 소개한다. 바로 Cross Bilateral Filter 다. Cross Bilateral Filter 은 Gaussian Filter 와 비슷한 필터로, Gaussian Filter 는 샘플링할 위치의 거리에 따라 점차 가중치가 줄어드는 필터라면, Bilateral Filter 는 위치에 따라 가중치가 줄어드는게 아닌 각 위치별로 가지고 있는 한개의 스칼라값에 차이에 따라서 가중치를 정하는 필터다. Cross 단어를 붙인 이유는 왼쪽과 오른쪽 방향의 필터와 위와 아래의 필터를 따로하기 때문에 Cross 라는 단어를 붙인 듯 하다. HBAO+ 코드에서도 X 축과 Y 축을 기준으로 하는 블러 소스가 나누어져 있다. HBAO 에는 한개의 스칼라 값을 Depth 를 기준으로 계산한다. 그래서 크게 튀는 부분의 결과는 많이 반영하지 않아 전체적으로 뿌옇게 바뀐다. 출처 : Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion 참조 자료 NVidia HBAO+ Image-Space Horizon Based Ambient Occlusion Wikipedia : Gaussian Filter Wikipedia : Bilateral Filter</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Hbao Plus Analysis 1</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-1/" rel="alternate" type="text/html" title="Hbao Plus Analysis 1" />
-      <published>2017-11-15T00:00:00+00:00</published>
-      <updated>2017-11-15T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-1</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-1/">&lt;p&gt;&lt;strong&gt;HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;이전 &lt;a href=&quot;/2017/11/15/hbao-plus-analysis-0/&quot;&gt;hbao plus analysis 0&lt;/a&gt; 글에서 &lt;em&gt;HBAO+&lt;/em&gt; 을 알기위한 기본적인 개념들에 대해서 살펴보았다. 이번 글에서는 &lt;em&gt;HBAO+&lt;/em&gt; 의 구조와 &lt;em&gt;Linearize Depth&lt;/em&gt; 와 &lt;em&gt;Deinterleaved Texturing&lt;/em&gt; 에 대해서 알아보겠다.&lt;/p&gt;
-
-&lt;h2&gt;&lt;em&gt;HBAO+&lt;/em&gt; Pipeline&lt;/h2&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/hbao+_pipeline_with_input_normals.png&quot; alt=&quot;hbao+ with input normal&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://docs.nvidia.com/gameworks/content/gameworkslibrary/visualfx/hbao/index.html&quot;&gt;NVIDIA HBAO+&lt;/a&gt;
-&lt;/center&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/hbao+_pipeline_without_input_normals.png&quot; alt=&quot;hbao+ without input normal&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://docs.nvidia.com/gameworks/content/gameworkslibrary/visualfx/hbao/index.html&quot;&gt;NVIDIA HBAO+&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;그림이 두개가 있다. 하나는 &lt;em&gt;GBuffer&lt;/em&gt; 를 사용할 시 &lt;em&gt;World-Space Normal&lt;/em&gt; 버퍼와 &lt;em&gt;Depth Buffer&lt;/em&gt; 를 넘겨주어 계산하는 방식과 입력으로 &lt;em&gt;Depth Buffer&lt;/em&gt; 만 넘겨서 &lt;em&gt;Normal&lt;/em&gt; 데이터를 계산하는 두가지 방식에 대한 파이프라인이다. 두가지의 차이는 &lt;em&gt;Normal&lt;/em&gt; 데이터에 대한 처리방식만 다르다. 나머지 계산은 다를게 없다.&lt;/p&gt;
-
-&lt;h2&gt;Linearize Depths&lt;/h2&gt;
-
-&lt;p&gt;코드를 보면 가장 처음에 시작하는 단계는 바로 &lt;em&gt;Linearize Depths&lt;/em&gt; 다. 이는 꽤나 알려진 방법이다. 하지만 필자는 &lt;em&gt;HBAO+&lt;/em&gt; 를 볼때 처음 봤기에 어느 정도의 설명을 해놓아야겠다. &lt;em&gt;Linearize Depths&lt;/em&gt; 를 알기 위해선 입력된 정점의 위치를 &lt;em&gt;Clipping-Space&lt;/em&gt; 로 변환하는 방법이 어떻게 이루어지는지 알고 있어야 한다.&lt;/p&gt;
-
-&lt;p&gt;일반적인 오브젝트를 렌더링 할때는 &lt;em&gt;Shader&lt;/em&gt; 에 입력으로 들어오는 정점의 기준 공간은 &lt;em&gt;Model-Space&lt;/em&gt;(또는 &lt;em&gt;Local-Space&lt;/em&gt;) &lt;em&gt;Position&lt;/em&gt; 이다. 그래서 &lt;em&gt;MVP&lt;/em&gt; 변환을 통해 &lt;em&gt;Rasterizer&lt;/em&gt; 가 처리할 수 있도록 &lt;em&gt;Clipping-Space&lt;/em&gt; 로 &lt;em&gt;Rasterizer&lt;/em&gt; 로 넘어가기 전에 변환해주어야 한다.(전체적인 내용은 &lt;a href=&quot;https://docs.google.com/presentation/d/10VzsjfifKJlRTHDlBq7e8vNBTu4D5jOWUF87KYYGwlk/edit#slide=id.g25f88339be_0_0&quot;&gt;Model, View, Projection 변환&lt;/a&gt; 에서 확인할 수 있다.
-) 그래서 &lt;em&gt;Pixel Shader&lt;/em&gt; 로 넘어간 데이터들은 픽셀별로 들어가고, 픽셀별로 들어간 정점들의 위치는 &lt;em&gt;Clipping-Space&lt;/em&gt; 로 되어있다. 여기까지 이해했으면 아래 그림을 보자.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/Graphics3D_ClipVolume.png&quot; alt=&quot;frustum vs Clipping&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;https://www.ntu.edu.sg/home/ehchua/programming/opengl/CG_BasicsTheory.html&quot;&gt;3D Graphics with OpenGL Basic Theory&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;위 그림은 &lt;em&gt;View frustum&lt;/em&gt; 과 &lt;em&gt;Clipping Volume&lt;/em&gt; 을 보여준다. &lt;em&gt;View frustum&lt;/em&gt; 은 &lt;em&gt;Perspective&lt;/em&gt; 방식으로 카메라가 실제로 보여주는 공간을 시각화 한것이고, &lt;em&gt;Clipping Volume&lt;/em&gt; 은 &lt;em&gt;MVP&lt;/em&gt; 변환에서 &lt;em&gt;Projection&lt;/em&gt; 행렬을 사용할시 &lt;em&gt;View frustum&lt;/em&gt; 에서 &lt;em&gt;Clipping Volume&lt;/em&gt; 으로 변환되는 볼륨을 시각화 한것이다. &lt;em&gt;Projection&lt;/em&gt; 변환은 아래와 같다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/projection_matrix.png&quot; alt=&quot;perspective projection matrix&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;https://stackoverflow.com/questions/6652253/getting-the-true-z-value-from-the-depth-buffer
-&quot;&gt;Stackoverflow : Getting the true z value from the depth buffer&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Perspective Projection&lt;/em&gt; 은 &lt;em&gt;frustum&lt;/em&gt; 기준 위치를 &lt;em&gt;Cube&lt;/em&gt; 기준 위치로 바꾸는 연산이기 때문에 실제 좌표의 왜곡이 발생한다. 우리는 Z(Detph) 값이 어떤식으로 왜곡되는지 알아야 한다. 우선 &lt;em&gt;Clipping-Space&lt;/em&gt; 로 변환할때, &lt;em&gt;Perspective&lt;/em&gt; 형식의 &lt;em&gt;View frustum&lt;/em&gt; 의 &lt;em&gt;zNear&lt;/em&gt;, &lt;em&gt;zFar&lt;/em&gt; 사이의 Z 값을 [0~1] 값으로 매핑한다. 그러면 &lt;em&gt;zNear&lt;/em&gt;, &lt;em&gt;zFar&lt;/em&gt; 값을에 따라서 실제 좌표가 바뀐다. 그리고 값 자체가 실제 Z 값과 선형적으로 매핑되지 않는다. 아래 그림을 보자.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/nonlinearDepth.png&quot; alt=&quot;non linear depth&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;https://computergraphics.stackexchange.com/questions/5116/how-am-i-able-to-perform-perspective-projection-without-a-near-plane&quot;&gt;Computer Graphics StackExchange : How am I able to perform perspective projection without a near plane?&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;그림이 조금 헷갈릴수도 있다. 세로축의 &lt;em&gt;d&lt;/em&gt; 값은 &lt;em&gt;Projection&lt;/em&gt; 을 한 Z, &lt;em&gt;Depth&lt;/em&gt; 값이고 가로축은 &lt;em&gt;World-Space&lt;/em&gt; 의 Z 값이다. 조금 헷갈릴수도 있는 부분은 세로축의 기준값이 윗부분이 0이고 아랫부분이 1이다. 이 부분은 신경써서 봐야한다. 이해했다면 변경된 &lt;em&gt;Depth&lt;/em&gt; 값은 실제 Z 값과 선형적인 관계가 아니고, 실제 Z 값으로 복원하려면 여러 연산을 해야하기에 &lt;em&gt;HBAO+&lt;/em&gt; 에서는 &lt;em&gt;Depth&lt;/em&gt; 값들을 &lt;em&gt;Linearize&lt;/em&gt; 하는 과정을 맨 처음에 넣은 것이다. 실제 Z 값으로 복원하는 이유는 간단하다. &lt;em&gt;Linear&lt;/em&gt; 하지 않은 &lt;em&gt;Depth&lt;/em&gt; 값을 연산시에 사용하면 보다 부정확한 결과가 나오기 때문이다. 특히 &lt;em&gt;SSAO&lt;/em&gt; 연산을 할때는 &lt;em&gt;Depth&lt;/em&gt; 값이 기본이 되기 때문에 해주어야 한다.&lt;/p&gt;
-
-&lt;p&gt;이 단계에서의 결론은 간단하다. &lt;em&gt;Clipping-Space&lt;/em&gt; 의 &lt;em&gt;Depth&lt;/em&gt; 값을 &lt;em&gt;View-Space&lt;/em&gt; 의 Z 값으로 변환하는 단계다. 처리하는 코드는 다른 단계에 비해 짧다. 만약에 넘겨준 &lt;em&gt;Depth&lt;/em&gt; 데이터들이 &lt;em&gt;View-Space&lt;/em&gt; 인 경우에는 옵션을 통해 처리할 수 있다.&lt;/p&gt;
-
-&lt;h2&gt;Deintereaved Texturing&lt;/h2&gt;
-
-&lt;p&gt;위의 그림에는 &lt;em&gt;Generate HBAO+&lt;/em&gt; 라고 단순히 뭉뚱그려서 표현했지만 그 안에는 단순한 &lt;em&gt;Horizon based ambient occlusion(HBAO)&lt;/em&gt; 계산만 있지는 않다. &lt;em&gt;Deintereaved Texturing&lt;/em&gt; 이라는 테크닉과 함께 &lt;em&gt;HBAO&lt;/em&gt; 를 계산한다. &lt;em&gt;Computer Engineering&lt;/em&gt; 분야의 지식을 응용한 이론으로 개인적으로 이 이론을 접했을 떄 꽤나 충격이였다. 자세한 설명은 &lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf&quot;&gt;GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing&lt;/a&gt; 슬라이드의 몇장과 함께 보자.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/gdc2013_ParticleShadowsAndCacheEfficientPost_51.png&quot; alt=&quot;gdc2013_ParticleShadowsAndCacheEfficientPost_51&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf&quot;&gt;GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Deintereaved Texturing&lt;/em&gt; 의 방법은 간단하다. 텍스쳐를 여러장으로 나누어 샘플링을 한 후 각각의 나눠진 텍스쳐를 샘플링한 결과를 하나로 합친다. 슬라이드에는 &lt;em&gt;Post-Processing&lt;/em&gt; 을 기준으로 설명이 되어있다. 이점은 생각하면서 보자.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/gdc2013_ParticleShadowsAndCacheEfficientPost_52.png&quot; alt=&quot;gdc2013_ParticleShadowsAndCacheEfficientPost_52&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf&quot;&gt;GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;한 텍스쳐를 여러장으로 나누는건 &lt;em&gt;Multiple Render Target&lt;/em&gt; 을 사용해서 나눈다. 슬라이드는 4개를 기준으로 설명했지만 &lt;em&gt;DirectX10&lt;/em&gt; 부터는 최대 8개까지 지원하기 때문에 16개로 나누어 샘플링한다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/gdc2013_ParticleShadowsAndCacheEfficientPost_53.png&quot; alt=&quot;gdc2013_ParticleShadowsAndCacheEfficientPost_53&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf&quot;&gt;GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;다음은 나누어진 각각의 텍스쳐를 샘플링하여 원하는 알고리즘으로 결과를 낸다. 조각난 텍스쳐 한개당 한번 &lt;em&gt;DrawCall&lt;/em&gt; 을 걸어준다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/gdc2013_ParticleShadowsAndCacheEfficientPost_54.png&quot; alt=&quot;gdc2013_ParticleShadowsAndCacheEfficientPost_54&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf&quot;&gt;GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Deintereave&lt;/em&gt; 를 하기전까지는 넓은 범위의 텍스쳐를 샘플링하여 캐시 효율이 많이 떨어졌지만 텍스쳐를 나누어 각각 할때마다 처리를 하게되니 캐시 효율의 이득을 얻었다. 또한 각각의 &lt;em&gt;DrawCall&lt;/em&gt; 마다 텍스쳐의 용량이 조금만 필요하게 되니 대역폭의 이득도 얻게 된다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/gdc2013_ParticleShadowsAndCacheEfficientPost_55.png&quot; alt=&quot;gdc2013_ParticleShadowsAndCacheEfficientPost_55&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf&quot;&gt;GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;한번의 &lt;em&gt;DrawCall&lt;/em&gt; 로 나누어진 결과들을 합친다. &lt;em&gt;Deintereaved Texturing&lt;/em&gt; 은 여기서 끝이다. 실제로 &lt;em&gt;HBAO+&lt;/em&gt; 는 16개의 텍스쳐로 나누어 샘플링한다. &lt;em&gt;Multiple Render Target&lt;/em&gt; 이 8개까지 지원되어 16개로 &lt;em&gt;Deintereave&lt;/em&gt; 하려면 2번 &lt;em&gt;DrawCall&lt;/em&gt; 을 해야한다. 또한 샘플링은 16번 &lt;em&gt;DrawCall&lt;/em&gt; 을 하여 계산한다. 그래서 한번 &lt;em&gt;Deintereaved Texturing&lt;/em&gt; 을 사용하여 &lt;em&gt;Post-Processing&lt;/em&gt; 처리하려면 약 20번의 &lt;em&gt;DrawCall&lt;/em&gt; 을 계산해야 한다. 절대적으로 큰 숫자가 아니기 때문에 크게 신경쓸 필요는 없어보인다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/gdc2013_ParticleShadowsAndCacheEfficientPost_62.png&quot; alt=&quot;gdc2013_ParticleShadowsAndCacheEfficientPost_62&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf&quot;&gt;GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;엄청난 성과를 거둔게 보인다. 캐시 히트 확률이 굉장히 올라갔고, 시간도 많이 절약했다. &lt;em&gt;HBAO+&lt;/em&gt; 의 성능향상을 시켜준 것이 이 &lt;em&gt;Deinterleaved Texturing&lt;/em&gt; 인듯하다.&lt;/p&gt;
-
-&lt;h2&gt;Reconstruction of Normal&lt;/h2&gt;
-
-&lt;p&gt;&lt;em&gt;HBAO+&lt;/em&gt; 는 기본적으로 &lt;em&gt;Depth&lt;/em&gt; 와 &lt;em&gt;Normal&lt;/em&gt; 을 통해서 계산한다. 그렇기 때문에 외부에서 &lt;em&gt;Normal&lt;/em&gt; 데이터를 넣어주거나 직접 만들어야 한다. 보통 &lt;em&gt;Deffered Rendering&lt;/em&gt; 을 차용하는 시스템들은 간단하게 &lt;em&gt;GBuffer&lt;/em&gt; 의 &lt;em&gt;Normal&lt;/em&gt; 데이터만 넣어주면 된다. &lt;em&gt;Normal&lt;/em&gt; 데이터를 가져오는 코드가 있으니 조금만 수정하여 사용하면 된다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Normal&lt;/em&gt; 데이터가 없는 경우에는 라이브러리 내에 직접 계산한다. 계산하는 픽셀을 기준으로 상하,좌우별로 &lt;em&gt;Depth&lt;/em&gt; 와 화면상의 좌표계를 이용하여 &lt;em&gt;View-Space&lt;/em&gt; 의 위치를 구한다음 위치가 상하, 좌우별로 가까운 픽셀의 위치 오프셋을 사용해 외적하여 &lt;em&gt;Normal&lt;/em&gt; 값을 구한다.&lt;/p&gt;
-
-&lt;h1&gt;참조 자료&lt;/h1&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://docs.nvidia.com/gameworks/content/gameworkslibrary/visualfx/hbao/index.html&quot;&gt;NVidia HBAO+&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gameworks/samples/DeinterleavedTexturing.pdf&quot;&gt;NVidia : Deintereaved Texturing&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/BAVOIL_ParticleShadowsAndCacheEfficientPost.pdf&quot;&gt;GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://www.gdcvault.com/play/1017623/Advanced-Visual-Effects-with-DirectX&quot;&gt;GDCVault : Particle Shadows &amp;amp; Cache-Efficient Post-Processing Video&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="render" />
-      
-        <category term="analysis" />
-      
-        <category term="hbao+" />
-      
-        <category term="linearize_depth" />
-      
-        <category term="deintereaved_texturing" />
-      
-
-      
-
-      
-        <summary type="html">HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다. 이전 hbao plus analysis 0 글에서 HBAO+ 을 알기위한 기본적인 개념들에 대해서 살펴보았다. 이번 글에서는 HBAO+ 의 구조와 Linearize Depth 와 Deinterleaved Texturing 에 대해서 알아보겠다. HBAO+ Pipeline 출처 : NVIDIA HBAO+ 출처 : NVIDIA HBAO+ 그림이 두개가 있다. 하나는 GBuffer 를 사용할 시 World-Space Normal 버퍼와 Depth Buffer 를 넘겨주어 계산하는 방식과 입력으로 Depth Buffer 만 넘겨서 Normal 데이터를 계산하는 두가지 방식에 대한 파이프라인이다. 두가지의 차이는 Normal 데이터에 대한 처리방식만 다르다. 나머지 계산은 다를게 없다. Linearize Depths 코드를 보면 가장 처음에 시작하는 단계는 바로 Linearize Depths 다. 이는 꽤나 알려진 방법이다. 하지만 필자는 HBAO+ 를 볼때 처음 봤기에 어느 정도의 설명을 해놓아야겠다. Linearize Depths 를 알기 위해선 입력된 정점의 위치를 Clipping-Space 로 변환하는 방법이 어떻게 이루어지는지 알고 있어야 한다. 일반적인 오브젝트를 렌더링 할때는 Shader 에 입력으로 들어오는 정점의 기준 공간은 Model-Space(또는 Local-Space) Position 이다. 그래서 MVP 변환을 통해 Rasterizer 가 처리할 수 있도록 Clipping-Space 로 Rasterizer 로 넘어가기 전에 변환해주어야 한다.(전체적인 내용은 Model, View, Projection 변환 에서 확인할 수 있다. ) 그래서 Pixel Shader 로 넘어간 데이터들은 픽셀별로 들어가고, 픽셀별로 들어간 정점들의 위치는 Clipping-Space 로 되어있다. 여기까지 이해했으면 아래 그림을 보자. 출처 : 3D Graphics with OpenGL Basic Theory 위 그림은 View frustum 과 Clipping Volume 을 보여준다. View frustum 은 Perspective 방식으로 카메라가 실제로 보여주는 공간을 시각화 한것이고, Clipping Volume 은 MVP 변환에서 Projection 행렬을 사용할시 View frustum 에서 Clipping Volume 으로 변환되는 볼륨을 시각화 한것이다. Projection 변환은 아래와 같다. 출처 : Stackoverflow : Getting the true z value from the depth buffer Perspective Projection 은 frustum 기준 위치를 Cube 기준 위치로 바꾸는 연산이기 때문에 실제 좌표의 왜곡이 발생한다. 우리는 Z(Detph) 값이 어떤식으로 왜곡되는지 알아야 한다. 우선 Clipping-Space 로 변환할때, Perspective 형식의 View frustum 의 zNear, zFar 사이의 Z 값을 [0~1] 값으로 매핑한다. 그러면 zNear, zFar 값을에 따라서 실제 좌표가 바뀐다. 그리고 값 자체가 실제 Z 값과 선형적으로 매핑되지 않는다. 아래 그림을 보자. 출처 : Computer Graphics StackExchange : How am I able to perform perspective projection without a near plane? 그림이 조금 헷갈릴수도 있다. 세로축의 d 값은 Projection 을 한 Z, Depth 값이고 가로축은 World-Space 의 Z 값이다. 조금 헷갈릴수도 있는 부분은 세로축의 기준값이 윗부분이 0이고 아랫부분이 1이다. 이 부분은 신경써서 봐야한다. 이해했다면 변경된 Depth 값은 실제 Z 값과 선형적인 관계가 아니고, 실제 Z 값으로 복원하려면 여러 연산을 해야하기에 HBAO+ 에서는 Depth 값들을 Linearize 하는 과정을 맨 처음에 넣은 것이다. 실제 Z 값으로 복원하는 이유는 간단하다. Linear 하지 않은 Depth 값을 연산시에 사용하면 보다 부정확한 결과가 나오기 때문이다. 특히 SSAO 연산을 할때는 Depth 값이 기본이 되기 때문에 해주어야 한다. 이 단계에서의 결론은 간단하다. Clipping-Space 의 Depth 값을 View-Space 의 Z 값으로 변환하는 단계다. 처리하는 코드는 다른 단계에 비해 짧다. 만약에 넘겨준 Depth 데이터들이 View-Space 인 경우에는 옵션을 통해 처리할 수 있다. Deintereaved Texturing 위의 그림에는 Generate HBAO+ 라고 단순히 뭉뚱그려서 표현했지만 그 안에는 단순한 Horizon based ambient occlusion(HBAO) 계산만 있지는 않다. Deintereaved Texturing 이라는 테크닉과 함께 HBAO 를 계산한다. Computer Engineering 분야의 지식을 응용한 이론으로 개인적으로 이 이론을 접했을 떄 꽤나 충격이였다. 자세한 설명은 GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing 슬라이드의 몇장과 함께 보자. 출처 : GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing Deintereaved Texturing 의 방법은 간단하다. 텍스쳐를 여러장으로 나누어 샘플링을 한 후 각각의 나눠진 텍스쳐를 샘플링한 결과를 하나로 합친다. 슬라이드에는 Post-Processing 을 기준으로 설명이 되어있다. 이점은 생각하면서 보자. 출처 : GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing 한 텍스쳐를 여러장으로 나누는건 Multiple Render Target 을 사용해서 나눈다. 슬라이드는 4개를 기준으로 설명했지만 DirectX10 부터는 최대 8개까지 지원하기 때문에 16개로 나누어 샘플링한다. 출처 : GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing 다음은 나누어진 각각의 텍스쳐를 샘플링하여 원하는 알고리즘으로 결과를 낸다. 조각난 텍스쳐 한개당 한번 DrawCall 을 걸어준다. 출처 : GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing Deintereave 를 하기전까지는 넓은 범위의 텍스쳐를 샘플링하여 캐시 효율이 많이 떨어졌지만 텍스쳐를 나누어 각각 할때마다 처리를 하게되니 캐시 효율의 이득을 얻었다. 또한 각각의 DrawCall 마다 텍스쳐의 용량이 조금만 필요하게 되니 대역폭의 이득도 얻게 된다. 출처 : GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing 한번의 DrawCall 로 나누어진 결과들을 합친다. Deintereaved Texturing 은 여기서 끝이다. 실제로 HBAO+ 는 16개의 텍스쳐로 나누어 샘플링한다. Multiple Render Target 이 8개까지 지원되어 16개로 Deintereave 하려면 2번 DrawCall 을 해야한다. 또한 샘플링은 16번 DrawCall 을 하여 계산한다. 그래서 한번 Deintereaved Texturing 을 사용하여 Post-Processing 처리하려면 약 20번의 DrawCall 을 계산해야 한다. 절대적으로 큰 숫자가 아니기 때문에 크게 신경쓸 필요는 없어보인다. 출처 : GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing 엄청난 성과를 거둔게 보인다. 캐시 히트 확률이 굉장히 올라갔고, 시간도 많이 절약했다. HBAO+ 의 성능향상을 시켜준 것이 이 Deinterleaved Texturing 인듯하다. Reconstruction of Normal HBAO+ 는 기본적으로 Depth 와 Normal 을 통해서 계산한다. 그렇기 때문에 외부에서 Normal 데이터를 넣어주거나 직접 만들어야 한다. 보통 Deffered Rendering 을 차용하는 시스템들은 간단하게 GBuffer 의 Normal 데이터만 넣어주면 된다. Normal 데이터를 가져오는 코드가 있으니 조금만 수정하여 사용하면 된다. Normal 데이터가 없는 경우에는 라이브러리 내에 직접 계산한다. 계산하는 픽셀을 기준으로 상하,좌우별로 Depth 와 화면상의 좌표계를 이용하여 View-Space 의 위치를 구한다음 위치가 상하, 좌우별로 가까운 픽셀의 위치 오프셋을 사용해 외적하여 Normal 값을 구한다. 참조 자료 NVidia HBAO+ NVidia : Deintereaved Texturing GDC2013 : Particle Shadows &amp;amp; Cache-Efficient Post-Processing GDCVault : Particle Shadows &amp;amp; Cache-Efficient Post-Processing Video</summary>
       
 
       

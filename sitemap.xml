@@ -241,6 +241,14 @@
 <lastmod>2018-03-13T00:00:00+00:00</lastmod>
 </url>
 <url>
+<loc>https://hrmrzizon.github.io/2018/04/30/what-is-irradiance-volume-as-gi/</loc>
+<lastmod>2018-04-30T00:00:00+00:00</lastmod>
+</url>
+<url>
+<loc>https://hrmrzizon.github.io/2018/04/30/what-is-radiosity-rendering-as-gi/</loc>
+<lastmod>2018-04-30T00:00:00+00:00</lastmod>
+</url>
+<url>
 <loc>https://hrmrzizon.github.io/2018/05/13/anisotropic-filtering/</loc>
 <lastmod>2018-05-13T00:00:00+00:00</lastmod>
 </url>
@@ -379,6 +387,12 @@
 <loc>https://hrmrzizon.github.io/categories/gpu-skinning/</loc>
 </url>
 <url>
+<loc>https://hrmrzizon.github.io/categories/light/</loc>
+</url>
+<url>
+<loc>https://hrmrzizon.github.io/categories/gi/</loc>
+</url>
+<url>
 <loc>https://hrmrzizon.github.io/categories/anisotropic/</loc>
 </url>
 <url>
@@ -410,6 +424,6 @@
 </url>
 <url>
 <loc>https://hrmrzizon.github.io/files/CgUsersManual.pdf</loc>
-<lastmod>2018-05-23T01:08:47+00:00</lastmod>
+<lastmod>2018-05-23T15:26:17+00:00</lastmod>
 </url>
 </urlset>
