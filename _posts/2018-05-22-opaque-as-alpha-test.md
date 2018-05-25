@@ -125,11 +125,38 @@ _pixScale_ 을 그냥 계산하는 대신, _discretize_ 된 두개의 스케일�
 
 이를 통해 전보다 훨씬 나은 _Alpha Test_ 품질을 얻을 수 있게 되었다. 하지만 _Hashed Alpha Testing_ 의 결과는 _Stochastic Test_ 처럼 픽셀이 흩뿌려진 느낌을 지울 수 없다. 어느정도의 랜덤값에서 생성이되니 이는 어쩔 수 없는 결과다.
 
-그래서 _I3D 2018_ 에 제출된 _Alpha Distribution_ 이라는 논문이 있다.
+## Alpha Distribution
 
-<!--
-  Alpha Distribution
--->
+_Alpha Test_ 의 구린 품질을 좀 더 개선할 수 있는 방법이 또 있다. 이번년도 _I3D_ 에 제출된 _Alpha Distribution_ 이라는 논문이 있는데, 이는 _Hashed Alpha Testing_ 처럼 런타임에 계산을 하지않고 각 _Mip-level_ 의 텍스쳐를 미리 처리해놓는 방법 중에 하나다. 미리 계산된 _Texture_ 들을 사용하여 일반적인 _Alpha Test_ 를 그대로 사용하기만 하면 된다. 아직 직접 사용한 예시는 없어 검증되지는 않았지만, 이 방법이 그대로 사용될 수 있다면 _Alpha Test_ 부분에서는 거의 끝판왕이 될 것 같다.
+
+_Alpha Distribution_ 일반적인 _Alpha Test_ 를 기준으로 _Alpha Threshold_ 가 고정되어 있다는 것을 가정한다. 그렇게 되면 _Alpha Threshold_ 에 따라서 픽셀에 출력이 되냐, 안되냐로  따질 수가 있다.(_Binary Visibility_) _Binary Visibility_ 를 각 _Mip-level_ 에 맞춰서 고르게 분산(_Distribution_)시키는게 _Alpha Distribution_ 의 목적이다.
+
+_Alpha Distribution_ 은 두가지 분산방법을 사용한다. _Error Diffusion_ 과 _Alpha Pyramid_ 이라는 방법을 사용한다. 하나씩 알아보자.
+
+_Error Diffusion_ 은 하나하나의 픽셀을 순회하면서, 각 픽셀의 _Binary Visibility_ 에 해당하는 값(0 아니면 1)과 이미지가 가지고 있는 _Alpha_ 값을 비교해 그 오차(_Quantization Error_)를 다른 픽셀에 나누어준다. _Binary Visibility_ 는 다음과 같이 정해진다.
+
+> αˆi = αi >= ατ : 1, αi < ατ : 0
+
+αi 는 이미지가 가지고 있는 이산화된 _Alpha_ 값이고, ατ 는 _Alpha Threshold_, 한계값을 뜻한다. αˆi 는 해당 픽셀의 _Binary Visibility_ 를 뜻한다. 이것을 가지고 _Quantization Error_ 를 계산한다.
+
+> ϵi = αi − αˆi
+
+ϵi 는 _Quantization Error_ 를 뜻하고 픽셀이 보이게 된다면 _~1 <= ϵi < 0_ 의 값을 가지게 되고 픽셀이 보이지 않는다면 _0 < ϵi <= 1_ 의 값을 가지게 된다. 이런 _Quantization Error_ 는 인근 픽셀로 분포된다. 아래 그림을 보자.
+
+![Error Diffusion](/images/ad_error_diffusion.png){: .center-image}
+
+그림에서 ϵi 가 들어가 있는 부분이 현재 처리중인 픽셀이며, ϵi 의 값은 인근 픽셀로 고정된 비율로 _Alpha_ 값에 더해진다. (x+1,y) 는 7/16, (x-1,y+1) 은 3/16, (x,y+1) 은 5/16, (x+1,y+1) 은 1/16 비율로 분포된다. 이런 방법으로 각 픽셀을 순회하면서 처리하면 _Error Diffusion_ 은 간단하게 끝난다. 오차 확산이라는 이름이 굉장히 직관적이다.
+
+_Error Diffusion_ 은 픽셀과 픽셀사이의 _Alpha_ 값을 고르게 분포시킨다. 하지만 약간의 문제가 존재한다. 보이게 되던, 안보이게 되던 _Alpha_ 값이 0.3 ~ 0.7 정도로 중간값을 가지고 있다면, 한 픽셀은 강조되고, 옆의 픽셀은 보이지 않게 된다. 이러한 방법은 아래 이미지와 비슷한 결과를 만든다.
+
+<br/>
+![Michelangelo's_David_-_Floyd-Steinberg](/images/Michelangelo's_David_-_Floyd-Steinberg.png){: .center-image}
+<center>출처 : <a href="https://en.wikipedia.org/wiki/Dither">Wikipedia : Dither</a>
+</center>
+<br/>
+
+_Error Diffusion_ 의 문제는 위 그림처럼 비슷한 색 영역에 있어도 분산된 영향을 받아서 각 픽셀이 부드럽게 보이지 않는 현상이 발생한다. 이러한 특징을 _Dithering_ 이라고 부른다. 그래서 이보다 나은 품질을 위해 _Alpha Pyramid_ 라는 다른 방법이 소개된다.
+
 
 ## 참조
 
