@@ -185,7 +185,19 @@ _Alpha Pyramid_ 는 순서대로 텍스쳐의 층을 쌓은 후 최상층에서 
 
 {% youtube "https://www.youtube.com/watch?v=cjHfPi9lQik" %}
 
-가장 좋은 _Alpha Test_ 의 결과를 얻기 위해서는 _Alpha Distribution_ 을 적용하는게 훨씬 좋은 듯 하다. 하지만 _Texture Compression_ 이 결려있는 경우에는 처리가 굉장히 애매할 것으로 보인다. 상용 엔진을 사용한다면 사용자가 직접 _Intergration_ 하는건 굉장히 귀찮을 것으로 생각된다. _Hashed Alpha Testing_ 은 _Alpha Distribution_ 에 비해 적용하기는 훨씬 더 쉬운것으로 보인다. 단순하게 _Shader_ 코드를 수정해주기만 하면 되기 때문이다. 하지만 약간의 퍼포먼스를 잡아먹고, 약간의 _Flickering_ 이 존재한다. 상황에 맞게 사용하면 될듯하다.
+절대적으로 좋은 결과를 내게하는 방법은 없다. _Alpha Distribution_ 역시 단점을 가지고 있다. 미리 처리를 하기 때문에 이미지가 고정되어 타일링처럼 보일 수가 있다. 또한 확대시 아무것도 처리하지 않고, _Bilinear Filtering_ 만 걸은 것보다 안좋은 결과를 보여줄 수도 있다.
+
+<br/>
+![Cemyuksel : Alpha Distribution](/images/ad_cons.png){: .center-image}
+<center>출처 : <a href="http://www.cemyuksel.com/research/alphadistribution/">Cemyuksel : Alpha Distribution</a>
+</center>
+<br/>
+
+또 _Alpha Threshold_ 가 고정되어 있다고 가정하기 때문에 값이 바뀌면 다시 계산해야한다. 직접 구현해서 붙이는 경우에는 계산하는 코드를 넣어주어야 하는데, 만약 _Texture Compression_ 이 적용되어 있으면 굉장히 귀찮을 것이다. 거기에 상용엔진에 _Intergration_ 할려면 더욱더 심할것이다.
+
+그에 비해 _Hashed Alpha Testing_ 은 구현하기엔 쉬운편이다. 코드는 _Shader_ 에 붙여넣기만 하면 된다. 하지만 약간의 퍼포먼스를 잡아먹고, 뭉개진 가루처럼 보이는 현상이 존재하기 때문에 무조건 좋다고하기에는 무리가 있다.
+
+조금더 시간을 가지고 지켜봐야 될것 같다는 생각이 든다.
 
 ## 참조
 
