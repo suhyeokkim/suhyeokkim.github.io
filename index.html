@@ -416,7 +416,7 @@
 
 <p><em>Temporal Flickering</em> 이 없는, <em>Temporal Stability</em>(임시적 안정성) 을 확보하기 위해서는 <em>Alpha Threshold</em> 를 이러저리 튀지 않게해야 했고, 이를 위해 특정 값에 따라서 <em>Hash</em> 값을 생성하는 방법이 고안되었다. 이 방법은 <em>Hashed Alpha Test</em> 라는 이름으로 작년에 공개되었다.</p>
 
-<h2>Hashed Alpha testing</h2>
+<h2>Hashed Alpha Testing</h2>
 
 <p>기본적으로 랜덤 값(난수) 생성은 제대로된 난수생성이 아닌, 특수한 식을 사용해서 의사 난수 생성 방법을 이용하는데, <em>Hash</em> 를 이용한 난수생성은 일반적으로 많이 쓰인다고 한다. <em>Hashed Alpha Testing</em> 은 <em>Hash</em> 를 생성하기 위한 <em>Key</em> 값을 선정하는데 조심스러웠다고 한다.</p>
 
@@ -532,7 +532,38 @@
 </center>
 <p><br /></p>
 
-<p><em>Error Diffusion</em> 의 문제는 위 그림처럼 비슷한 색 영역에 있어도 분산된 영향을 받아서 각 픽셀이 부드럽게 보이지 않는 현상이 발생한다. 이러한 특징을 <em>Dithering</em> 이라고 부른다. 그래서 이보다 나은 품질을 위해 <em>Alpha Pyramid</em> 라는 다른 방법이 소개된다.</p>
+<p><em>Error Diffusion</em> 의 문제는 위 그림처럼 비슷한 색 영역에 있어도 분산된 영향을 받아서 각 픽셀이 부드럽게 보이지 않는 현상이 발생한다. 이러한 특징을 <em>Dithering</em> 이라고 부른다. 그래서 <em>Alpha Distribution</em> 논문에서는 이보다 나은 품질을 위해 <em>Alpha Pyramid</em> 라는 다른 방법이 소개된다.</p>
+
+<p><br />
+<img src="/images/alpha_pyramid.png" alt="Cemyuksel : Alpha Distribution" class="center-image" /></p>
+<center>출처 : <a href="http://www.cemyuksel.com/research/alphadistribution/">Cemyuksel : Alpha Distribution</a>
+</center>
+<p><br /></p>
+
+<p><em>Alpha Pyramid</em> 은 <em>Error Diffusion</em> 보다는 좀 더 복잡한 방식이다. <em>Alpha Pyramid</em> 라는 밉맵같은 개념의 텍스쳐들을 생성하고, 그 <em>Alpha Pyramid</em> 를 사용해서 <em>Alpha</em> 값들을 분산시키는 방법이다. <em>Alpha Pyramid</em> 를 만들고 값을 다루는 방법에 대해서 알아보자.</p>
+
+<p><em>Alpha Pyramid</em> 은 각각의 <em>mip-level</em> 마다 하나씩 생성된다. 즉 이미지 한개씩만 처리한다.</p>
+
+<p><em>Alpha Pyramid</em> 를 만들떄 맨 처음에 <em>Mip-Map</em> 과 비슷한 방식으로 <em>Sub-level</em> 들을 만든다. 맨 처음에 생성되는 <em>level</em> 의 해상도는 이미지 해상도의 1/4(1/2*1/2) 을 곱한 해상도로, 2의 지수가 아니여도 된다. 이렇게 생성된 <em>level 1</em> 은 약 원본 이미지의 해상도가 1/4이 되는데, <em>level 0</em> 의 각 픽셀들에 적어도 원본 이미지의 픽셀 4개의 알파값들을 더해서 저장한다. 원본 이미지의 해상도가 2의 지수가 아니라면 <em>level 0</em> 세로와 가로 끝부분의 픽셀들은 픽셀 6개의 알파값들을 더해서 저장하고, 가장 모서리의 픽셀 하나는 픽셀 9개의 알파값을 더해서 저장한다. 위의 이미지는 그리드로 원본의 해상도를 표시하고, 색으로 해당 레벨의 실질적인 픽셀들을 표시한다.</p>
+
+<p>원본 이미지와 <em>level 1</em> 의 관계는 <em>level 1</em> 생성한 후 다음 <em>Level 2</em> 을 생성할 때 <em>level 1</em> 과 <em>level 2</em> 의 관계와 같다. 즉 같은 방법을 2x2 해상도가 될떄까지 계속 반복한다. 이렇게 생성된 <em>Alpha Pyramid</em> 의 각 레벨의 텍셀은 하위 레벨의 연관된 <em>Alpha</em> 값들의 합을 가지고 있는다. 이를 누적된 알파값(<em>Accumulated Alpha</em>)라고 부르겠다.</p>
+
+<p>다음은 각각의 <em>Accumulated Alpha</em> 을 가지고 각각의 픽셀의 보여주는 여부를 결정하는 <em>Visibility Value</em> 를 구해야 한다. 처음에는 <em>Alpha Pyramid</em> 의 최상위 레벨의 각각의 <em>Accumulated Alpha</em> 값들의 합을 구하여 올림을 해준 값을 가지고 있는다. (이 값은 입력으로 들어온 이미지의 보여지는 픽셀을 정하는 값으로, 이 값이 하위 층으로 한층한층 분산되면서 결국 이미지의 보여지는 픽셀을 결정하게 된다. 논문에서는 텍스쳐 전체의 <em>Visibility Value</em> 라고도 한다.) <em>Alpha Pyramid</em> 의 최상위 레벨의 각각의 <em>Accumulated Alpha</em> 의 정수부의 값만(일반적으로 <em>Alpha</em> 값은 0 ~ 1 사이의 소수.) <em>Visibility Value</em> 에 저장한다. 그리고 각 <em>Accumulated Alpha</em> 의 소수부 값들 중 큰 값들만 <em>Visibility Value</em> 를 1씩 나누어준다. 이러면 모든 <em>Visibility Value</em> 가 분산된다. 이렇게 최상위 층의 처리가 끝난다.</p>
+
+<p>그 다음 각각의 층들이 처리가 되야한다. 최상위 층은 각 <em>Accumulated Alpha</em> 을 가지고 있는 윗층이 없어 직접 구했지만, 아랫층부터는 상위 층들이 <em>Accumulated Alpha</em> 합을 구해서 가지고 있다. 이 값을 가지고 위에서 언급한 <em>Visibility Value</em> 를 계산하여 계속 구한다. <em>level 1</em> 까지 이 과정을 반복하면 <em>Alpha Pyramid</em> 내부에서 처리하는 과정은 끝난다.</p>
+
+<p>다음은 마지막으로 계산된 <em>Alpha Pyramid</em> 의 최하층 <em>level 1</em> 의 <em>Visibility Value</em> 들과 맨 처음 입력으로 들어온 이미지를 처리한다. (위에서 <em>Binary Visibility</em> 에 대한 언급을 했었다. <em>Alpha Test</em> 의 이미지는 결국 보이냐, 안보이냐의 차이이기 때문에 <em>Alpha Pyramid</em> 도 <em>level 1</em> 의 <em>Visibility Value</em> 를 통해 이미지의 <em>Binary Visibility</em> 를 처리해준다.) <em>level 1</em> 에 관련된 2x2,2x3,3x2,3x3 픽셀의 <em>Binary Visibility</em> 를 처리한다. <em>level 1</em> 의  <em>Visibility Value</em> 의 값을 기존 이미지가 가지고 있는 <em>Alpha</em> 값이 큰 순서대로 1씩 나누어준다.(보이게 처리한다.) 그렇게 <em>Visibility Value</em> 를 다 쓰게되고 남아있는 픽셀들은 안보이게 처리한다.</p>
+
+<p><em>Alpha Pyramid</em> 는 순서대로 텍스쳐의 층을 쌓은 후 최상층에서 다시 차례대로 내려오면서 <em>Visibility Value</em> 를 분산시키고, 마지막으로 이미지의 각 픽셀의 <em>Binary Visibility</em> 를 정해주는 방법이다.</p>
+
+<p>이 글에서의 <em>Alpha Distribution</em> 에 대한 내용은 논문 뿐만 아니라 논문의 저자가 제공한 코드까지 참조하여 썼다. 근데 논문의 내용중 여기서 언급하지 않은 내용이 있다. 저자가 <a href="https://github.com/cemyuksel/cyCodeBase/blob/master/cyAlphaDistribution.h">제공한 코드</a>에서는 <em>Visibility Value</em> 를 분산시킬 떄 소수부의 값이 큰 기준으로 분산시킨다. 하지만 논문에서는 이를 랜덤하게 처리한다고 한다. 왜냐하면 균일한 패턴의 생성을 막기 위해서라고 한다. 하지만 제공되는 코드에서는 랜덤하게 설정하는 부분은 없었다. 또한 코드에서는 <em>Alpha Threshold</em> 를 0.5 로 가정하여 코드를 짜놓아서</p>
+
+<p>방법만 봐도 여러가지 이유로 <em>Alpha Pyramid</em> 이 <em>Error Diffusion</em> 보다는 더 나은 <em>Alpha Test</em> 를 제공할 것 같다는 생각이 든다. 논문에서도 실제로 더 나은 품질을 보여준다고 한다.</p>
+
+<style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style>
+<div class="embed-container">    <iframe title="YouTube video player" width="640" height="390" src="//www.youtube.com/embed/cjHfPi9lQik" frameborder="0" allowfullscreen=""></iframe></div>
+
+<p>가장 좋은 <em>Alpha Test</em> 의 결과를 얻기 위해서는 <em>Alpha Distribution</em> 을 적용하는게 훨씬 좋은 듯 하다. 하지만 <em>Texture Compression</em> 이 결려있는 경우에는 처리가 굉장히 애매할 것으로 보인다. 상용 엔진을 사용한다면 사용자가 직접 <em>Intergration</em> 하는건 굉장히 귀찮을 것으로 생각된다. <em>Hashed Alpha Testing</em> 은 <em>Alpha Distribution</em> 에 비해 적용하기는 훨씬 더 쉬운것으로 보인다. 단순하게 <em>Shader</em> 코드를 수정해주기만 하면 되기 때문이다. 하지만 약간의 퍼포먼스를 잡아먹고, 약간의 <em>Flickering</em> 이 존재한다. 상황에 맞게 사용하면 될듯하다.</p>
 
 <h2>참조</h2>
 
@@ -541,6 +572,7 @@
   <li><a href="https://developer.download.nvidia.com/assets/gameworks/downloads/regular/GDC17/RealTimeRenderingAdvances_HashedAlphaTesting_GDC2017_FINAL.pdf?pUIX8DXxfad7mL4zB3GOthX3r5IgGao9UWxYuYb3q9h10RXrQeYko-dEuJXJxt1hhsI9J_9KJDcCYGeWWksxlaHTrXSE825D_3izja7LUFOtzhaeBUqpn7qbwXaaGlLdbipjE3PeI3e2IMn45mQAA3OV2PD-kG2y9cecTaWE2uum2uwdHgyn0nhYiLOvlOsrUzewbK5REH7vAm3-lNWzxehw_5Tphg">NVidia developer : Hashed Alpha Testing</a></li>
   <li><a href="http://cwyman.org/papers/tvcg17_hashedAlphaExtended.pdf">Cwyman.org : Hashed Alpha Test(Extended)</a></li>
   <li><a href="http://www.cemyuksel.com/research/alphadistribution/">Cemyuksel : Alpha Distribution</a></li>
+  <li><a href="https://github.com/cemyuksel/cyCodeBase/blob/master/cyAlphaDistribution.h">Github : cyAlphaDistribution.h</a></li>
 </ul>
 
         </div>
