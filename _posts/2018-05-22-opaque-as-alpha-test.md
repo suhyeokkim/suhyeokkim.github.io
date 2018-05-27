@@ -44,7 +44,7 @@ _Shader_ 에서 샘플링하는 _Texutre_ 에서 _Alpha_ 값을 가지고 있어
 
 _Temporal Flickering_ 이 없는, _Temporal Stability_(임시적 안정성) 을 확보하기 위해서는 _Alpha Threshold_ 를 이러저리 튀지 않게해야 했고, 이를 위해 특정 값에 따라서 _Hash_ 값을 생성하는 방법이 고안되었다. 이 방법은 _Hashed Alpha Test_ 라는 이름으로 작년에 공개되었다.
 
-## Hashed Alpha testing
+## Hashed Alpha Testing
 
 기본적으로 랜덤 값(난수) 생성은 제대로된 난수생성이 아닌, 특수한 식을 사용해서 의사 난수 생성 방법을 이용하는데, _Hash_ 를 이용한 난수생성은 일반적으로 많이 쓰인다고 한다. _Hashed Alpha Testing_ 은 _Hash_ 를 생성하기 위한 _Key_ 값을 선정하는데 조심스러웠다고 한다.
 
@@ -155,8 +155,37 @@ _Error Diffusion_ 은 픽셀과 픽셀사이의 _Alpha_ 값을 고르게 분포�
 </center>
 <br/>
 
-_Error Diffusion_ 의 문제는 위 그림처럼 비슷한 색 영역에 있어도 분산된 영향을 받아서 각 픽셀이 부드럽게 보이지 않는 현상이 발생한다. 이러한 특징을 _Dithering_ 이라고 부른다. 그래서 이보다 나은 품질을 위해 _Alpha Pyramid_ 라는 다른 방법이 소개된다.
+_Error Diffusion_ 의 문제는 위 그림처럼 비슷한 색 영역에 있어도 분산된 영향을 받아서 각 픽셀이 부드럽게 보이지 않는 현상이 발생한다. 이러한 특징을 _Dithering_ 이라고 부른다. 그래서 _Alpha Distribution_ 논문에서는 이보다 나은 품질을 위해 _Alpha Pyramid_ 라는 다른 방법이 소개된다.
 
+<br/>
+![Cemyuksel : Alpha Distribution](/images/alpha_pyramid.png){: .center-image}
+<center>출처 : <a href="http://www.cemyuksel.com/research/alphadistribution/">Cemyuksel : Alpha Distribution</a>
+</center>
+<br/>
+
+_Alpha Pyramid_ 은 _Error Diffusion_ 보다는 좀 더 복잡한 방식이다. _Alpha Pyramid_ 라는 밉맵같은 개념의 텍스쳐들을 생성하고, 그 _Alpha Pyramid_ 를 사용해서 _Alpha_ 값들을 분산시키는 방법이다. _Alpha Pyramid_ 를 만들고 값을 다루는 방법에 대해서 알아보자.
+
+_Alpha Pyramid_ 은 각각의 _mip-level_ 마다 하나씩 생성된다. 즉 이미지 한개씩만 처리한다.
+
+_Alpha Pyramid_ 를 만들떄 맨 처음에 _Mip-Map_ 과 비슷한 방식으로 _Sub-level_ 들을 만든다. 맨 처음에 생성되는 _level_ 의 해상도는 이미지 해상도의 1/4(1/2*1/2) 을 곱한 해상도로, 2의 지수가 아니여도 된다. 이렇게 생성된 _level 1_ 은 약 원본 이미지의 해상도가 1/4이 되는데, _level 0_ 의 각 픽셀들에 적어도 원본 이미지의 픽셀 4개의 알파값들을 더해서 저장한다. 원본 이미지의 해상도가 2의 지수가 아니라면 _level 0_ 세로와 가로 끝부분의 픽셀들은 픽셀 6개의 알파값들을 더해서 저장하고, 가장 모서리의 픽셀 하나는 픽셀 9개의 알파값을 더해서 저장한다. 위의 이미지는 그리드로 원본의 해상도를 표시하고, 색으로 해당 레벨의 실질적인 픽셀들을 표시한다.
+
+원본 이미지와 _level 1_ 의 관계는 _level 1_ 생성한 후 다음 _Level 2_ 을 생성할 때 _level 1_ 과 _level 2_ 의 관계와 같다. 즉 같은 방법을 2x2 해상도가 될떄까지 계속 반복한다. 이렇게 생성된 _Alpha Pyramid_ 의 각 레벨의 텍셀은 하위 레벨의 연관된 _Alpha_ 값들의 합을 가지고 있는다. 이를 누적된 알파값(_Accumulated Alpha_)라고 부르겠다.
+
+다음은 각각의 _Accumulated Alpha_ 을 가지고 각각의 픽셀의 보여주는 여부를 결정하는 _Visibility Value_ 를 구해야 한다. 처음에는 _Alpha Pyramid_ 의 최상위 레벨의 각각의 _Accumulated Alpha_ 값들의 합을 구하여 올림을 해준 값을 가지고 있는다. (이 값은 입력으로 들어온 이미지의 보여지는 픽셀을 정하는 값으로, 이 값이 하위 층으로 한층한층 분산되면서 결국 이미지의 보여지는 픽셀을 결정하게 된다. 논문에서는 텍스쳐 전체의 _Visibility Value_ 라고도 한다.) _Alpha Pyramid_ 의 최상위 레벨의 각각의 _Accumulated Alpha_ 의 정수부의 값만(일반적으로 _Alpha_ 값은 0 ~ 1 사이의 소수.) _Visibility Value_ 에 저장한다. 그리고 각 _Accumulated Alpha_ 의 소수부 값들 중 큰 값들만 _Visibility Value_ 를 1씩 나누어준다. 이러면 모든 _Visibility Value_ 가 분산된다. 이렇게 최상위 층의 처리가 끝난다.
+
+그 다음 각각의 층들이 처리가 되야한다. 최상위 층은 각 _Accumulated Alpha_ 을 가지고 있는 윗층이 없어 직접 구했지만, 아랫층부터는 상위 층들이 _Accumulated Alpha_ 합을 구해서 가지고 있다. 이 값을 가지고 위에서 언급한 _Visibility Value_ 를 계산하여 계속 구한다. _level 1_ 까지 이 과정을 반복하면 _Alpha Pyramid_ 내부에서 처리하는 과정은 끝난다.
+
+다음은 마지막으로 계산된 _Alpha Pyramid_ 의 최하층 _level 1_ 의 _Visibility Value_ 들과 맨 처음 입력으로 들어온 이미지를 처리한다. (위에서 _Binary Visibility_ 에 대한 언급을 했었다. _Alpha Test_ 의 이미지는 결국 보이냐, 안보이냐의 차이이기 때문에 _Alpha Pyramid_ 도 _level 1_ 의 _Visibility Value_ 를 통해 이미지의 _Binary Visibility_ 를 처리해준다.) _level 1_ 에 관련된 2x2,2x3,3x2,3x3 픽셀의 _Binary Visibility_ 를 처리한다. _level 1_ 의  _Visibility Value_ 의 값을 기존 이미지가 가지고 있는 _Alpha_ 값이 큰 순서대로 1씩 나누어준다.(보이게 처리한다.) 그렇게 _Visibility Value_ 를 다 쓰게되고 남아있는 픽셀들은 안보이게 처리한다.
+
+_Alpha Pyramid_ 는 순서대로 텍스쳐의 층을 쌓은 후 최상층에서 다시 차례대로 내려오면서 _Visibility Value_ 를 분산시키고, 마지막으로 이미지의 각 픽셀의 _Binary Visibility_ 를 정해주는 방법이다.
+
+이 글에서의 _Alpha Distribution_ 에 대한 내용은 논문 뿐만 아니라 논문의 저자가 제공한 코드까지 참조하여 썼다. 근데 논문의 내용중 여기서 언급하지 않은 내용이 있다. 저자가 [제공한 코드](https://github.com/cemyuksel/cyCodeBase/blob/master/cyAlphaDistribution.h)에서는 _Visibility Value_ 를 분산시킬 떄 소수부의 값이 큰 기준으로 분산시킨다. 하지만 논문에서는 이를 랜덤하게 처리한다고 한다. 왜냐하면 균일한 패턴의 생성을 막기 위해서라고 한다. 하지만 제공되는 코드에서는 랜덤하게 설정하는 부분은 없었다. 또한 코드에서는 _Alpha Threshold_ 를 0.5 로 가정하여 코드를 짜놓아서
+
+방법만 봐도 여러가지 이유로 _Alpha Pyramid_ 이 _Error Diffusion_ 보다는 더 나은 _Alpha Test_ 를 제공할 것 같다는 생각이 든다. 논문에서도 실제로 더 나은 품질을 보여준다고 한다.
+
+{% youtube "https://www.youtube.com/watch?v=cjHfPi9lQik" %}
+
+가장 좋은 _Alpha Test_ 의 결과를 얻기 위해서는 _Alpha Distribution_ 을 적용하는게 훨씬 좋은 듯 하다. 하지만 _Texture Compression_ 이 결려있는 경우에는 처리가 굉장히 애매할 것으로 보인다. 상용 엔진을 사용한다면 사용자가 직접 _Intergration_ 하는건 굉장히 귀찮을 것으로 생각된다. _Hashed Alpha Testing_ 은 _Alpha Distribution_ 에 비해 적용하기는 훨씬 더 쉬운것으로 보인다. 단순하게 _Shader_ 코드를 수정해주기만 하면 되기 때문이다. 하지만 약간의 퍼포먼스를 잡아먹고, 약간의 _Flickering_ 이 존재한다. 상황에 맞게 사용하면 될듯하다.
 
 ## 참조
 
@@ -164,3 +193,4 @@ _Error Diffusion_ 의 문제는 위 그림처럼 비슷한 색 영역에 있어�
  - [NVidia developer : Hashed Alpha Testing](https://developer.download.nvidia.com/assets/gameworks/downloads/regular/GDC17/RealTimeRenderingAdvances_HashedAlphaTesting_GDC2017_FINAL.pdf?pUIX8DXxfad7mL4zB3GOthX3r5IgGao9UWxYuYb3q9h10RXrQeYko-dEuJXJxt1hhsI9J_9KJDcCYGeWWksxlaHTrXSE825D_3izja7LUFOtzhaeBUqpn7qbwXaaGlLdbipjE3PeI3e2IMn45mQAA3OV2PD-kG2y9cecTaWE2uum2uwdHgyn0nhYiLOvlOsrUzewbK5REH7vAm3-lNWzxehw_5Tphg)
  - [Cwyman.org : Hashed Alpha Test(Extended)](http://cwyman.org/papers/tvcg17_hashedAlphaExtended.pdf)
  - [Cemyuksel : Alpha Distribution](http://www.cemyuksel.com/research/alphadistribution/)
+ - [Github : cyAlphaDistribution.h](https://github.com/cemyuksel/cyCodeBase/blob/master/cyAlphaDistribution.h)
