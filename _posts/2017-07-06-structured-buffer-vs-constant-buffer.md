@@ -6,7 +6,7 @@ categories:
   - unity
   - shader
   - gpuinstancing
-  
+
 ---
 
 CG 로 쉐이더 코딩을 하기 위해 여러 소스와 웹페이지를 뒤지던 도중 재미있는 글을 발견했다. HLSL 에서 사용하는 _StructuredBuffer_ 와 _Constant Buffer_ 의 차이에 대한 글이였다. Unity 메뉴얼을 따라가면서 몇번 보긴했지만 무슨 차이인지도 모르는 것들이였다. 하지만 알고나니 GPU Instancing 에 대한 기본적인 상식이기에 글을 쓴다. 우선 두가지를 먼저 간단하게 알아보고 두 개념의 차이에 대해서 알아보자.
@@ -39,7 +39,7 @@ cbuffer _CBufferName {
 
 Unity 에서 제공하는 예제는 단순하게 컬러값을 인스턴스별로 바꾸게 해주는 그리하여 여러개의 메터리얼을 사용하지 않아 쓸데없는 _SetPass_ 를 안하게 해주는 예제다. 이 값들은 쉐이더에서 변경할 필요가 없는 상수 값이므로 _cbuffer_ 를 사용해도 문제가 없다.
 
-하지만 필자는 [Appocrypha : GPU Instancing]({{ site.baseurl }}{% post_url 2017-06-08-performence-and-optimization %}) 글에서 _cbuffer_ 가 추구하는 방향과는 조금 다르게 사용했다. 저 글을 쓸때 한창 스키닝에 대해 관심이 많았기 때문에 _cbuffer_ 를 사용해서 각 뼈들의 위치와 회전 데이터들을 사용했다. 하지만 저 사용용도는 그다지 좋지 않은 생각이였다. 이유는 글의 끝에서 말하겠다.
+하지만 필자는 [Appocrypha : GPU Instancing]({{ site.baseurl }}{% post_url 2017-06-11-using-gpu-instancing-in-unity %}) 글에서 _cbuffer_ 가 추구하는 방향과는 조금 다르게 사용했다. 저 글을 쓸때 한창 스키닝에 대해 관심이 많았기 때문에 _cbuffer_ 를 사용해서 각 뼈들의 위치와 회전 데이터들을 사용했다. 하지만 저 사용용도는 그다지 좋지 않은 생각이였다. 이유는 글의 끝에서 말하겠다.
 
 ## _StructuredBuffer_
 

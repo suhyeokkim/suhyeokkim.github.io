@@ -13,6 +13,7 @@ permalink: /edu/
  - [Basic Arithmetic for Game](https://docs.google.com/presentation/d/1HZwBwZdC5zSFlQISVB7O78H_OynHNzHJCeJpJcpN8lA/edit#slide=id.p)
  - [GPU Structure for Programmer](https://docs.google.com/presentation/d/1iZ-DnEzVLriKzAZd3nREl_R7eHr2-syc3D0N7Pm5jqE/edit?usp=sharing)
 
+<!--
 ### Introduction of Rendering(2017)
 
  - [Slide 0 : 강의 개요](https://docs.google.com/presentation/d/12864ypOgKxDkegD3_HoCA9r7CPPasMorxUkZetkpLq4/edit?usp=sharing)
@@ -20,6 +21,7 @@ permalink: /edu/
  - [Slide 2 : Rendering Pipeline](https://docs.google.com/presentation/d/1tx5duDdeAiJEof_iGwMcBguIZbJ1jwZdRVHgQTQ586c/edit?usp=sharing)
  - [Slide 3 : Visual Appearance Part.1](https://docs.google.com/presentation/d/1jvKKsdAvIlav_JoDmtgSvRIJPCSvhxs71LYpQMNN4iA/edit?usp=sharing)
  - [Slide 4 : Visual Appearance Part.2](https://docs.google.com/presentation/d/1Ysrr03geHWBwFFmLzRdH7rKVsapR-NQa7tlS4Z6JT10/edit?usp=sharing)
+-->
 
 ### Unity Advanced(2017)
 
@@ -31,33 +33,3 @@ permalink: /edu/
 - 5 Day : [Usage of Attributes]({{ site.baseurl }}{% post_url 2017-04-12-usage-of-attributes-in-unity %})
 - 6 Day : [Unity Coroutine]({{ site.baseurl }}{% post_url 2017-04-21-usage-of-coroutine %})
 - 7 Day : [Garbage Collector in Unity]({{ site.baseurl }}{% post_url 2017-04-23-garbage-collector-in-unity %})
-
-### 3D Basics in Unity(2017)
-
-- Step 1 : [Handling vertices and indices]({{ site.baseurl }}{% post_url 2017-05-14-handling-vertices-and-indices-in-unity %})
-- Step 2 : [Handling uv and material]({{ site.baseurl }}{% post_url 2017-05-15-handling-uv-and-material-in-unity %})
-- Step 3 : [Handling rig and animate]({{ site.baseurl }}{% post_url 2017-05-19-handling-rig-and-skinning %})
-- Step 4 : [Simple shader programming]({{ site.baseurl }}{% post_url 2017-05-29-simple-shader-programming %})
-- Step 5 : [Various technique for rendering]({{ site.baseurl }}{% post_url 2017-06-02-various-technique-for-rendering %})
-- Step 6 : [Performences and Optimization]({{ site.baseurl }}{% post_url 2017-06-08-performence-and-optimization %})
-- Step 7 : [RenderHell](https://simonschreibt.de/gat/renderhell/)
-
-<!--From 8 Day To End Day : [Make Unity Editor]-->
-<!--
-  Unity editor scripting
-  - unity editor structure(selection, assetimporter, inspector, windows..)
-  - GUI system in unity, rect or auto-space
-  Make Unity Editor
-   1 Day : Apply Mesh with vertices and indices
-   2 Day : Apply Mesh with uv position and textures
-   3 Day : Apply Mesh to animation
-   4 Day : Make terrain
-   5 Day : Game data..
-   6 Day : ??
--->
-
-### Examples
-
-- [3DBasicExample](https://github.com/hrmrzizon/3DBasicExample)
-- [UnityExample](https://github.com/hrmrzizon/UnityExample)
-- [Extended-Roll-a-Ball](https://github.com/hrmrzizon/Extended-Roll-a-Ball)
