@@ -119,7 +119,7 @@ _WBOIT_ 또한 단점이 몇가지 존재한다. 첫번째로 불투명한 물�
 
 {% youtube "https://www.youtube.com/watch?v=JVa9xXddgbM" %}
 
-위에서 언급한 [Rendering Technology in 'Agents of Mayhem'](https://www.dsvolition.com/publications/rendering-technology-in-agents-of-mayhem/) PT 에서는 기존의 _WBOIT_ 에서 _Emmisive_ 한 물체를 위해 추가적인 화면 해상도에 비례하는 버퍼를 사용하여 빛나는 투명 물체를 표현하는 방법을 서술해놓았다. 또한 해당 논문의 저자가 1년전에 언급한 [_Phenomenological Transparency_](https://www.youtube.com/watch?v=jWe5Ae22Ffs&t=555s) 라는 방법도 있다.
+위에서 언급한 [Rendering Technology in 'Agents of Mayhem'](https://www.dsvolition.com/publications/rendering-technology-in-agents-of-mayhem/) PT 에서는 기존의 _WBOIT_ 에서 _Emmisive_ 한 물체를 위해 추가적인 화면 해상도에 비례하는 버퍼를 사용하여 빛나는 투명 물체를 표현하는 방법을 서술해놓았다. 또한 해당 논문의 저자가 1년전에 고안한 [_Phenomenological Transparency_](https://www.youtube.com/watch?v=jWe5Ae22Ffs&t=555s) 라는 방법도 있다.
 
 ## 참조
 
@@ -127,6 +127,7 @@ _WBOIT_ 또한 단점이 몇가지 존재한다. 첫번째로 불투명한 물�
  - [NVidia : Order-Independent Transparency](http://developer.download.nvidia.com/assets/gamedev/docs/OrderIndependentTransparency.pdf)
  - [NVidia : Order Independent Transparency with Dual Depth Peeling](http://developer.download.nvidia.com/SDK/10.5/opengl/src/dual_depth_peeling/doc/DualDepthPeeling.pdf)
  - [jcgt : Weighted Blended Order-Independent Transparency](http://jcgt.org/published/0002/02/09/)
+ - [Implementing Weighted, Blended Order-Independent Transparency](http://casual-effects.blogspot.com/2015/03/implemented-weighted-blended-order.html)
  - [Github : candycat1992 / OIT_Lab](https://github.com/candycat1992/OIT_Lab)
  - [GDC2018 : Rendering Technology in 'Agents of Mayhem'](https://www.dsvolition.com/publications/rendering-technology-in-agents-of-mayhem/)
  - [Youtube : Phenomenological Transparency](https://www.youtube.com/watch?v=jWe5Ae22Ffs&t=555s)

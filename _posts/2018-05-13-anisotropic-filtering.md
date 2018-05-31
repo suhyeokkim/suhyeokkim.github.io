@@ -25,7 +25,7 @@ _Anisotropic Filtering_ 은 원거리에 있는 물체들을 선명하게 보이
 </center>
 <br/>
 
-위의 그림을 보면 알겠지만 _bilinear filtering_ 과 함께 쓸 경우 엄청난 샘플링 부하가 생길 것이라는 것을 예상할 수 있다.
+위의 그림을 보면 알겠지만 _bilinear filtering_ 과 함께 쓸 경우 픽셀에 해당하는 만큼의 샘플링을 하는걸 알 수 있다. 이렇게 된다면 텍스쳐의 해상도가 클수록, _Anisotropic Level_ 이 높아지면 높아질수록 텍스쳐 샘플링 부하가 생긴다는 것을 알 수 있다. 거기에 _Trilinear filtering_ 까지 함께한다면 엄청난 시간을 잡아먹을 것으로 예상된다.
 
 _Anisotropic Filtering_ 을 처음 접했을 떄, 가장 이해가 가지 않았던 것은 결국 내부에서 샘플링을 해야할 텐데 어떤 방식으로 방향을 구할지 가장 이해가 안됬었다. 지금 다시 생각해보면, _ddx_ 키워드를 _uv_ 좌표에 쓰듯이 _Texutre-Space_ 의 차이 벡터를 쉽게 구할 수 있을 듯 하다.
 
