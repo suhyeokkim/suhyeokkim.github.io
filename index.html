@@ -408,7 +408,7 @@
 <style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style>
 <div class="embed-container">    <iframe title="YouTube video player" width="640" height="390" src="//www.youtube.com/embed/JVa9xXddgbM" frameborder="0" allowfullscreen=""></iframe></div>
 
-<p>위에서 언급한 <a href="https://www.dsvolition.com/publications/rendering-technology-in-agents-of-mayhem/">Rendering Technology in ‘Agents of Mayhem’</a> PT 에서는 기존의 <em>WBOIT</em> 에서 <em>Emmisive</em> 한 물체를 위해 추가적인 화면 해상도에 비례하는 버퍼를 사용하여 빛나는 투명 물체를 표현하는 방법을 서술해놓았다. 또한 해당 논문의 저자가 1년전에 언급한 <a href="https://www.youtube.com/watch?v=jWe5Ae22Ffs&amp;t=555s"><em>Phenomenological Transparency</em></a> 라는 방법도 있다.</p>
+<p>위에서 언급한 <a href="https://www.dsvolition.com/publications/rendering-technology-in-agents-of-mayhem/">Rendering Technology in ‘Agents of Mayhem’</a> PT 에서는 기존의 <em>WBOIT</em> 에서 <em>Emmisive</em> 한 물체를 위해 추가적인 화면 해상도에 비례하는 버퍼를 사용하여 빛나는 투명 물체를 표현하는 방법을 서술해놓았다. 또한 해당 논문의 저자가 1년전에 고안한 <a href="https://www.youtube.com/watch?v=jWe5Ae22Ffs&amp;t=555s"><em>Phenomenological Transparency</em></a> 라는 방법도 있다.</p>
 
 <h2>참조</h2>
 
@@ -1373,7 +1373,7 @@
 </center>
 <p><br /></p>
 
-<p>위의 그림을 보면 알겠지만 <em>bilinear filtering</em> 과 함께 쓸 경우 엄청난 샘플링 부하가 생길 것이라는 것을 예상할 수 있다.</p>
+<p>위의 그림을 보면 알겠지만 <em>bilinear filtering</em> 과 함께 쓸 경우 픽셀에 해당하는 만큼의 샘플링을 하는걸 알 수 있다. 이렇게 된다면 텍스쳐의 해상도가 클수록, <em>Anisotropic Level</em> 이 높아지면 높아질수록 텍스쳐 샘플링 부하가 생긴다는 것을 알 수 있다. 거기에 <em>Trilinear filtering</em> 까지 함께한다면 엄청난 시간을 잡아먹을 것으로 예상된다.</p>
 
 <p><em>Anisotropic Filtering</em> 을 처음 접했을 떄, 가장 이해가 가지 않았던 것은 결국 내부에서 샘플링을 해야할 텐데 어떤 방식으로 방향을 구할지 가장 이해가 안됬었다. 지금 다시 생각해보면, <em>ddx</em> 키워드를 <em>uv</em> 좌표에 쓰듯이 <em>Texutre-Space</em> 의 차이 벡터를 쉽게 구할 수 있을 듯 하다.</p>
 
