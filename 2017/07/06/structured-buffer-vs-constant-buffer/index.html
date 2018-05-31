@@ -183,14 +183,8 @@
   
     
   
-    
-  
 
   
-  
-    
-  
-    
   
     
   
@@ -274,12 +268,10 @@
   
     
   
+    
+  
 
   
-  
-    
-  
-    
   
     
   
@@ -363,6 +355,8 @@
   
     
   
+    
+  
 
 </p>
   </header>
@@ -396,7 +390,7 @@ UNITY_INSTANCING_CBUFFER_END
 
 <p>Unity 에서 제공하는 예제는 단순하게 컬러값을 인스턴스별로 바꾸게 해주는 그리하여 여러개의 메터리얼을 사용하지 않아 쓸데없는 <em>SetPass</em> 를 안하게 해주는 예제다. 이 값들은 쉐이더에서 변경할 필요가 없는 상수 값이므로 <em>cbuffer</em> 를 사용해도 문제가 없다.</p>
 
-<p>하지만 필자는 <a href="/2017/06/08/performence-and-optimization/">Appocrypha : GPU Instancing</a> 글에서 <em>cbuffer</em> 가 추구하는 방향과는 조금 다르게 사용했다. 저 글을 쓸때 한창 스키닝에 대해 관심이 많았기 때문에 <em>cbuffer</em> 를 사용해서 각 뼈들의 위치와 회전 데이터들을 사용했다. 하지만 저 사용용도는 그다지 좋지 않은 생각이였다. 이유는 글의 끝에서 말하겠다.</p>
+<p>하지만 필자는 <a href="/2017/06/11/using-gpu-instancing-in-unity/">Appocrypha : GPU Instancing</a> 글에서 <em>cbuffer</em> 가 추구하는 방향과는 조금 다르게 사용했다. 저 글을 쓸때 한창 스키닝에 대해 관심이 많았기 때문에 <em>cbuffer</em> 를 사용해서 각 뼈들의 위치와 회전 데이터들을 사용했다. 하지만 저 사용용도는 그다지 좋지 않은 생각이였다. 이유는 글의 끝에서 말하겠다.</p>
 
 <h2><em>StructuredBuffer</em></h2>
 
