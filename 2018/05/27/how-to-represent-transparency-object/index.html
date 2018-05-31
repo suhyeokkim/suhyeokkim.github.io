@@ -338,7 +338,7 @@
 <p>그래서 <em>Depth Peeling</em> 보다는 나은 성능을 가진 <em>Weighted Blended OIT</em> 라는 방법이 어느정도 쓰이는 것으로 보인다. <em>Weighted Blended OIT</em> 는 2013년에 논문을 발표하였으며, 요즘에도 쓰이는 방법이다. GDC2018 에서 Agent of Mayhem 의 제작사가 <em>Weighted Blended OIT</em> 에 대한 내용을 발표했다.(<a href="https://www.dsvolition.com/publications/rendering-technology-in-agents-of-mayhem/">링크</a>) <em>Weighted Blended OIT</em> 는 2013년에 고안된 기법으로 <em>Depth Peeling</em> 보다는 덜 오래된 방법이다. <em>Weighted Blended OIT</em> 는 물체의 색을 표현할 떄, 특정한 가중치(<em>weight</em>)를 구해 곱해서 표현한다. 그리고 이전에 출력된 결과에 그대로 색값을 더해준다. 이제 자세한 방법에 대해서 알아보자.</p>
 
 <p><br />
-<img src="/images/weightedblendedOIT_formula.png" alt="wboit formula" class="center-image" /></p>
+<img src="/images/weightedblendedOIT_formula_.png" alt="wboit formula" class="center-image" /></p>
 <center>출처 : <a href="http://jcgt.org/published/0002/02/09/">jcgt : Weighted Blended Order-Independent Transparency</a>
 </center>
 <p><br /></p>
@@ -346,7 +346,7 @@
 <p>위 그림은 최종으로 나온 픽셀이 가지고 있는 색을 보여준다. <em>n</em> 은 해당 픽셀에 그려지는 갯수이고, <em>α</em> 는 <em>Alpha</em>, <em>C</em> 는 <em>Color</em>, <em>Z</em> 는 <em>Depth</em>, <em>C0</em> 는 투명 오브젝트를 그리기 전에 그려진 불투명한 표면의 색이다. 식만 봐서는 자세히는 모르기 때문에 아래 그림을 보면서 알아보자.</p>
 
 <p><br />
-<img src="/images/weightedblendedOIT_formula_explain.png" alt="wboit formula" class="center-image" /></p>
+<img src="/images/weightedblendedOIT_formula_explain_.png" alt="wboit formula" class="center-image" /></p>
 <center>출처 : <a href="http://jcgt.org/published/0002/02/09/">jcgt : Weighted Blended Order-Independent Transparency</a>
 </center>
 <p><br /></p>
@@ -356,7 +356,7 @@
 <p><em>Weight</em> 값을 계산하는 방법은 여러가지가 있다. 가장 중요한 것은 <em>Weight</em> 를 계산할 떄, <em>Depth</em>, <em>Alpha</em> 이 두가지를 사용하여 계산하는 것이 가장 중요한 점이다. <em>Depth</em> 는 카메라를 기준으로 앞 뒤를 판별하는 중요한 기준이며, <em>Alpha</em> 값은 투명한 정도를 나타내는 중요한 값이다. <em>weight</em> 를 구하는 공식은 아래 그림을 참고하자.</p>
 
 <p><br />
-<img src="/images/weightedblendedOIT_weight_formula.png" alt="wboit formula" class="center-image" /></p>
+<img src="/images/weightedblendedOIT_weight_formula_.png" alt="wboit formula" class="center-image" /></p>
 <center>출처 : <a href="http://jcgt.org/published/0002/02/09/">jcgt : Weighted Blended Order-Independent Transparency</a>
 </center>
 <p><br /></p>
@@ -372,7 +372,7 @@
 </table>
 
 <p><br />
-<img src="/images/weightedblendedOIT_weight_formula_additional.png" alt="wboit formula" class="center-image" /></p>
+<img src="/images/weightedblendedOIT_weight_formula_additional_.png" alt="wboit formula" class="center-image" /></p>
 <center>출처 : <a href="http://jcgt.org/published/0002/02/09/">jcgt : Weighted Blended Order-Independent Transparency</a>
 </center>
 <p><br /></p>
@@ -380,7 +380,7 @@
 <p>이는 <em>GLSL</em> 기준으로, <em>HLSL</em> 에서 취급하는 <em>Depth</em> 의 범위가 달라지면 바뀔수도 있다. 식을 선택할 떄 중요한 점은 커브가 어떤식으로 생성되는지 보아야 한다. 아래 그림을 보자.</p>
 
 <p><br />
-<img src="/images/weightedblendedOIT_weight_curve.png" alt="wboit formula" class="center-image" /></p>
+<img src="/images/weightedblendedOIT_weight_curve_.png" alt="wboit formula" class="center-image" /></p>
 <center>출처 : <a href="http://jcgt.org/published/0002/02/09/">jcgt : Weighted Blended Order-Independent Transparency</a>
 </center>
 <p><br /></p>
