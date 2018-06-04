@@ -105,524 +105,6 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
-            <a class="post-link" href="/2018/06/02/post-processing-for-correct-color-representation/">Post Processing For Correct Color Representation</a>
-          </h1>
-
-          <p class="post-meta">Jun 2, 2018 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/rendering/">rendering</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/post-processing/">post-processing</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/tone-mapping/">tone-mapping</a>,
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/gamma-correction/">gamma-correction</a>,
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/hdr/">hdr</a>
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>꽤 오래전부터 게임에서의 <em>post-processing</em> 은 굉장히 중요한 요소로 자리잡았다. 아무리 <em>geometry(mesh)</em> 들을 잘 나타내더라도 모니터에서 출력되는 픽셀단위로 표시되는 빛이 사람의 눈에 어떻게 보이느냐가 중요하기 때문이다. 주로 게임에서는 <em>gamma correction</em>, <em>tone mapping</em> 을 통해서 색을 정확하게 표현하도록 처리한다. 이를 처리하기 위한 배경과 각각의 개념이 무엇을 뜻하는지 적어보겠다.</p>
-
-<!--
-
-  일반적인 1byte 고정 부동소수점의 한계
-  2byte half floating point
-  dynamic range :
--->
-
-<p><br />
-<img src="/images/An+image+comparing+gamma+and+linear+pipelines.png" alt="Gamma correction" class="center-image" /></p>
-<center>출처 : <a href="http://www.kinematicsoup.com/news/2016/6/15/gamma-and-linear-space-what-they-are-how-they-differ">GAMMA AND LINEAR SPACE - WHAT THEY ARE AND HOW THEY DIFFER</a>
-</center>
-<p><br /></p>
-
-<h2>참조</h2>
-
-<ul>
-  <li><a href="https://photo.stackexchange.com/questions/7630/what-is-tone-mapping-how-does-it-relate-to-hdr">Photography stackexchange : What is tone mapping? How does it relate to HDR?</a></li>
-  <li><a href="http://www.kinematicsoup.com/news/2016/6/15/gamma-and-linear-space-what-they-are-how-they-differ">GAMMA AND LINEAR SPACE - WHAT THEY ARE AND HOW THEY DIFFER</a></li>
-  <li><a href="https://en.wikipedia.org/wiki/Exposure_compensation">Wikipedia : Exposure Compensation</a></li>
-  <li><a href="https://en.wikipedia.org/wiki/Tone_mapping">Wikipedia : Tone mapping</a></li>
-</ul>
-
-        </div>
-
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
             <a class="post-link" href="/2018/05/27/how-to-represent-transparency-object/">How To Represent Transparency Object</a>
           </h1>
 
@@ -651,14 +133,6 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -806,14 +280,6 @@
   
     
       <a href="/categories/transparency/">transparency</a>
-    
-  
-    
-  
-    
-  
-    
-  
     
   
 
@@ -1058,14 +524,6 @@
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
   
   
@@ -1153,14 +611,6 @@
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
   
   
@@ -1192,14 +642,6 @@
   
     
       <a href="/categories/shader/">shader</a>
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -1569,14 +1011,6 @@
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
   
   
@@ -1658,14 +1092,6 @@
   
     
       <a href="/categories/floating-point/">floating_point</a>
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -1838,14 +1264,6 @@
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
   
   
@@ -1933,14 +1351,6 @@
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
 </p>
         </header>
@@ -1998,14 +1408,6 @@
   
     
       <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -2171,14 +1573,6 @@
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
 </p>
         </header>
@@ -2239,14 +1633,6 @@
   
     
       <a href="/categories/unity/">unity</a>
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -2456,14 +1842,6 @@ MonoImporter:
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
   
   
@@ -2515,14 +1893,6 @@ MonoImporter:
   
     
       <a href="/categories/hlsl/">hlsl</a>
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -2686,14 +2056,6 @@ MonoImporter:
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
   
   
@@ -2767,14 +2129,6 @@ MonoImporter:
   
     
       <a href="/categories/gpgpu/">gpgpu</a>
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -2923,14 +2277,6 @@ MonoImporter:
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
   
   
@@ -3018,14 +2364,6 @@ MonoImporter:
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
   
   
@@ -3051,14 +2389,6 @@ MonoImporter:
   
     
       <a href="/categories/rendering/">rendering</a>,
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -3208,14 +2538,6 @@ MonoImporter:
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
 </p>
         </header>
@@ -3317,6 +2639,455 @@ MonoImporter:
     </li>
     <li id="fn:C3">
       <p><a href="https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f">https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f</a> <a href="#fnref:C3" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1/">Frustum Traced Shadow With Irrelgular Z Buffer 1</a>
+          </h1>
+
+          <p class="post-meta">Jan 13, 2018 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shadow/">shadow</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/fts/">fts</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p><a href="/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0/">frustum Traced Shadow with Irregular Z-Buffer 0</a> 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다.</p>
+
+<h3>전체 시스템</h3>
+
+<p><a href="/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0/">이전 글</a>에서 두가지 단계에 대해서 자세한 설명을 했었다. <em>Irregular Z-Buffer</em> 를 생성하고 <em>Visibility Test</em> 를 하는 것이였다. 실제 구현된 단계는 총 6개의 단계로 이루어진다고 한다.</p>
+
+<p>첫번째로는 <em>Eye-Space Z-Prepass</em> 를 해준다. 요즘의 엔진들이나 큰 규모가 아닌 게임이더라도 <em>Z-Prepass</em><sup id="fnref:L1"><a href="#fn:L1" class="footnote">1</a></sup> 는 거의 대부분 해준다. <em>Geometry Pass</em> 가 두번 걸리기는 하지만 <em>Fill Rate</em> 의 부하가 <em>Geometry Pass</em> 의 부하보다 많이 커서 그런 듯하다. 중요한건 단순히 언급한 <em>Eye-Space Z-Prepass</em> 를 뜻하는게 아니다. 이전에 언급한 <em>μQuad</em> 의 빠른 계산을 위해 <em>G-Buffer</em> 에 3개의 실수 값들을 넣는다. 이 3개의 실수는 실제 그려지는 카메라의 위치와 <em>Tangent Plane</em> 의 4개의 코너중에 3개의 거리를 나타낸다. 이는 <em>μQuad</em> 를 다시 계산하기에 충분하다고 한다.</p>
+
+<p>이 방법은 <em>Visibility Test</em> 의 속도를 빠르게 하는데 도움이 되지만, 당연히 <em>G-Buffer</em> 의 공간이 부족한 경우에는 쓰지 못한다. AAA 급의 게임들은 <em>G-Buffer</em> 를 bit 단위로 최대한 아껴쓰기 경우가 많기 때문에 이와 같은 상황이 일어날 수도 있다. 이런 경우에는 명시적으로 <em>Visibility Test</em> 를 할때 <em>μQuad</em> 를 계산한다고 한다. 아래 그림은 2009년에 발매된 <em>KillZone 2</em> 의 <em>G-Buffer</em> 사용을 나타내는 PT의 한 부분이다.</p>
+
+<p><br />
+<img src="/images/killzone2_g-buffer.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="https://www.slideshare.net/guerrillagames/deferred-rendering-in-killzone-2-9691589">Deferred Rendering in Killzone 2</a>
+</center>
+<p><br /></p>
+
+<p>두번째로는 씬의 경계를 설정해주는 것이다. <em>Shadow Mapping</em> 에서 <em>Light-Space Projection</em> 행렬은 씬에 딱 맞게 해주어야 한다.<sup id="fnref:C1"><a href="#fn:C1" class="footnote">2</a></sup> 딱 맞지 않는 경우에는 <em>IZB</em> 에 쓸모없는 텍셀을 생기게 하기 때문이다. 그래서 <em>Light-Space Projection</em> 행렬을 계산하기 위해 <em>Compute Shader</em> 와 <em>Z-Buffer</em> 를 사용하여 <em>Bounding Box</em> 를 계산한다. 이 계산은 화면의 해상도에 따라서 달라진다. 하지만 논문의 저자는 이 비용이 병목의 큰 원인이 아니기 때문에 특별한 해결 방법을 제시하지는 않는다.</p>
+
+<p>세번째는 <em>Irregular Z-Buffer</em> 를 만드는 것이다. 이전 글에서 <em>IZB</em> 에 대한 대략적인 아이디어는 언급했었다. 더 디테일하게 이를 말해보면, 우선 <em>Eye-Space Z Buffer</em> 를 참조해 <em>Light-Space</em> 로 변환한 후에 <em>Light-Space A-Buffer</em> 의 텍셀의 <em>Linked-List</em> 에 넣는다.</p>
+
+<p><em>IZB</em> 의 발상은 <em>Eye-Space</em> 의 픽셀과 <em>Light-Space</em> 의 텍셀이 1:1 로 매칭되지 않고 하나의 텍셀이 참조당하는 횟수가 1을 넘을때 <em>allasing</em> 이 발생하는 것에서 시작되었다. 그래서 여기서 구현된 <em>IZB</em> 는 텍셀에 <em>Linked-List</em> 의 개념을 도입하여 보다 정확히 계산할 수 있게 하였다.</p>
+
+<p>아래 그림은 <em>IZB</em> 의 데이터를 나타낸다.</p>
+
+<p><br />
+<img src="/images/fts_depth_length_cull.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="http://cwyman.org/papers/tvcg16_ftizbExtended.pdf">Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows</a>
+</center>
+<p><br /></p>
+
+<p>왼쪽의 그림은 일반적인 <em>Shadow Map</em> 을 나타내고, 중간의 그림은 <em>Linked-List</em> 의 크기를 나타낸다. 흰색은 <em>Linked-List</em> 의 크기가 0인 텍셀을 나타내고, 검은색에 가까워질수록 <em>Linked-List</em> 의 크기가 점점 커지는 것을 나타낸다. 오른쪽의 그림은 필요없는 부분을 0으로 나타내고, 나머지 부분은 0 이상의 숫자를 나타내는 방식이다. 이는 아래에서 언급할 <em>Light-Space Culling Prepass</em> 에서 쓰인다.</p>
+
+<p>픽셀별로 여러개의 가시성(가려진 정도)를 나타내는 픽셀은 여러개의 <em>IZB Node</em> 를 필요로 한다. 일반적인 <em>Shadow Map</em> 과는 다르게 <em>μQuad</em> 는 다른 <em>Light-Space Texel</em> 에 <em>Projection</em> 이 가능하다.</p>
+
+<p>대충 생각해보면, <em>N</em> 개의 픽셀별 쉐도우가 필요하면, <em>N</em> 개의 <em>IZB Node</em> 가 필요하다. 하지만 쓸데없는 데이터를(<em>Geometry</em> 가 없는 경우) 넣지 않을 수 있으므로 <em>M</em> 개의 <em>Light-Space Texel</em> 에 <em>μQuad</em> 를 투영한다면, 우리는 min(<em>N</em>, <em>M</em>)개의 <em>IZB Node</em> 가 필요하다고 알 수 있다.</p>
+
+<p>아래 그림은 <em>IZB</em> 를 사용하는 디테일한 구조를 나타낸다.</p>
+
+<p><br />
+<img src="/images/fts_SimpleLayout.png" alt="" class="center-image" /></p>
+<center>출처 : <a href="http://cwyman.org/papers/tvcg16_ftizbExtended.pdf">Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows</a>
+</center>
+<p><br /></p>
+
+<p><em>IZB</em> 의 데이터 구조는 <em>Light-Space A-Buffer</em> : <em>Eye-Space A-Buffer</em> 의 <em>Node</em> 를 찾아가기 위한 데이터, <em>Eye-Space A-Buffer</em> : 리스트의 크기를 나타내는 버퍼와 같다. 출력되는 결과 : <em>Visibility Buffer</em> 또한 따로 존재한다. 이게 최종적으로 그려질때 사용된다.</p>
+
+<p>다음은 <em>Light-Space Culling Prepass</em> 다. <em>Visibility Test</em> 를 위해 <em>Geometry</em> 의 <em>Light-Space Conservative Rasterization</em> 을 하게 되는데, GPU 에서 <em>Early-Z</em> 기능을 제공한다면 쓸데없는 부분(아무것도 없는 텍셀, 가장 끝)을 컬링할 수 있다.</p>
+
+<p>하지만 <em>Early-Z</em> 하드웨어를 사용할때는 <em>Light-Space Z-Buffer</em> 를 필요로 한다. 이는 조금 당황스러운 상황을 만든다. 그래서 이 단계에서는 반드시 스텐실 버퍼를 만들어야 한다. 위에서 언급한 쓸데없는 부분(아무것도 없는 텍셀, 가장 끝)의 <em>Depth</em> 를 0으로 세팅한다. 나머지는 0 이상의 숫자로 세팅한다.</p>
+
+<p>논문의 저자에 따르면, 엄청 큰 씬을 제외하고는 30% ~ 50% 의 성능 향상을 보였다고 한다. 이는 <em>Conservative Rasterization</em> 으로 생성된 <em>Fragment</em> 의 절대적인 숫자를 줄이고, 아무것도 없는 리스트를 스킵하면서 길이의 다양성을 없엔 효과다.</p>
+
+<p>컬링을 된 이후에는 픽셀별로 <em>Visibility Test</em> 를 해준다. 이때 각각의 폴리곤들은 임의의 텍셀 집합을 가리기 된다. 그리고 각각의 텍셀이 가진 리스트를 순회하면서 <em>Visibility Test</em> 를 한다. 이때 <em>atomic OR</em> 을 사용하여 <em>Visibility Buffer</em> 에 기록한다. 여기서 가장 병목이 되는 구간은 각각의 폴리곤이 임의의 서로다른 길이를 가진 텍셀의 리스트를 커버링하여 각각의 쓰레드별로 실행되는 시간이 제각각이 된다. 문제는 시간이 제각각인 경우, 가장 느린 시간을 소모한 쓰레드를 기준으로 <em>divergence</em> 하여 각각의 텍셀의 리스트의 길이 중 가장 긴 길이의 시간으로 맞춰진다. 이는 최악의 상황을 유발할 수 있다.</p>
+
+<p>마지막으로 <em>Visibility Buffer</em> 를 사용하여 실제 오브젝트들을 렌더링하면 된다.</p>
+
+<h3>복잡도 계산</h3>
+
+<p>위에서도 언급햇다시피 이 기법은 <em>N</em> 번의 <em>Visibility Test</em> 한다면, 시간 복잡도는 O(<em>N</em>) 과 같다. 여기서 <em>N</em> 을 분해하면 다음과 같다. O(<em>La</em> * <em>F</em>), <em>F</em> 는 <em>Light-Space</em> 의 <em>Fragment</em> 갯수이고, <em>La</em> 는 <em>Linked-List</em> 의 평균 길이다.</p>
+
+<p><em>La</em> 또한 다른 요소로 나타낼 수 있다. <em>Visibility Test</em> 는 <em>Eye-Space</em> 에서 한다. 그래서 <em>IZB Node</em> 의 갯수는 <em>Eye-Space</em> 의 해상도에 비례한다. 그리고 <em>Eye-Space</em> 의 데이터는 전부 <em>Light-Space</em> 에 기록되므로 <em>La</em> ≈ (<em>Eye-Space Resolution</em>) / (<em>Light-Space Resolution</em>) 으로 계산될 수 있다.</p>
+
+<p>하지만 위에서 언급했던 것과 같이 <em>SIMT</em> 기반의 GPU 에서는 O(<em>La</em> * <em>F</em>) 가 아닌 O(<em>Lm</em> * <em>F</em>) 이 될 수 밖에 없다. <em>Lm</em> 은 <em>Linked-List</em> 의 최대 길이다. 결국 퍼포먼스를 내기 위해선 <em>Lm</em> 의 길이를 줄이는 것이 가장 중요하다는 것이 된다.</p>
+
+<p>이번 글에서는 전체 시스템과 복잡도에 대해서 알아보았다. 다음은 더 디테일한 구현 부분의 내용을과 <em>Alpha</em> 처리에 대한 부분을 알아볼것이다.</p>
+
+<h2>참조</h2>
+<ul>
+  <li><a href="http://cwyman.org/papers/tvcg16_ftizbExtended.pdf">Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows</a></li>
+</ul>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:L1">
+      <p>https://ypchoi.gitbooks.io/rendering-techniques/content/z_prepass.html <a href="#fnref:L1" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:C1">
+      <p>Cascaded Shadow Map 의 Crop Matrix 를 떠올리면 된다. <a href="#fnref:C1" class="reversefootnote">&#8617;</a></p>
     </li>
   </ol>
 </div>

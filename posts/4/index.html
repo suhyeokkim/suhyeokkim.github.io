@@ -105,235 +105,6 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
-            <a class="post-link" href="/2017/09/29/using-rendering-to-cubemap/">Using Rendering To Cubemap</a>
-          </h1>
-
-          <p class="post-meta">Sep 29, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/render/">render</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p><a href="/2017/09/29/using-relplacement-shader/">using replacement shader</a> 에서 <em>Camera.RenderWithShader</em> 와 같은 렌더링을 코드에서 직접해주면서 기능을 커스터마이징 할 수 있는 것을 살펴보았는데, 이 게시물에서는 비슷한 메서드인 <em>Camera.RenderToCubemap</em> 에 대해서 알아볼 것이다.</p>
-
-<p>Unity 에서는 여러 렌더링 커스터마이징 기능을 제공하는데, 이 게시물에서는 그 중 하나인 <em>Camera.RenderToCubemap</em> 에 대해서 알아볼 것이다. 일반적으로 <em>Cubemap</em> 은 SkyBox 나 주변의 Irradiance 를 나타낼 때 쓴다. 다만 이를 직접 구현할 때의 문제점은 각 모서리별로 <em>Aliasing</em> 이 일어나는 경우다. 매우 매끄러운 표면의 Specular 에서 <em>Aliasing</em> 이 나타난 Irradiance 를 표현하면 굉장히 티가 많이 나기 때문에 이는 굉장히 신경써야할 문제다.</p>
-
-<p>그래서 Unity 에서는 <em>Cubemap</em> 에 렌더링을 하는 기능인 <em>Camera.RenderToCubemap</em> 을 지원한다. 이를 통해 할 수 있는 것은 실시간으로 <em>Cubemap</em> 에 렌더링된 결과를 저장해 <em>Irradiance</em> 의 소스로 쓰거나, 실시간으로 바뀌는 <em>Skybox</em> 렌더링을 할 수도 있다. 사용 방법은 아래와 같다.</p>
-
-<pre><code class="language-C#">RenderTexture cubmapRT = ...;
-camera.RenderToCubemap(cubemapRT, 63);
-</code></pre>
-
-<p><em>Camera.RenderToCubemap</em> 의 두번째로 들어가는 인자는 어떤 면을 그릴건지에 대한 비트마스크다. <em>Camera.RenderToCubemap</em> 를 쓸때 주의할 점은 일부 하드웨어에서는 동작하지 않는 기능이라고 한다. 다만 특정한 하드웨어를 기술해 놓지않아서 추측하기는 어렵다. 단순히 추측할 수 있는 것은 MRT 를 지원하지 않거나 아니면 다른 <em>ComputeShader</em> 같은 기능을 사용해 일부 하드웨어에서 안된다고 하는 정도 밖에 없다.</p>
-
-<p>위 예제에서는 RenderTexture 를 사용하였는데, 저렇게 코드에서 처리할 수도 있지만 CustomRenderTexture 를 통해 간편하게 처리할 수도 있다. CustomRenderTexture 는 업데이트 주기를 사용자 임의대로 정할 수 있으므로 꽤나 유용하게 쓰일 수 있다.</p>
-
-<h1>참조 자료</h1>
-
-<ul>
-  <li><a href="https://docs.unity3d.com/kr/current/ScriptReference/Camera.RenderToCubemap.html">Unity Reference : Camera.RenderToCubemap</a></li>
-</ul>
-
-        </div>
-
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
             <a class="post-link" href="/2017/09/29/using-relplacement-shader/">Using Relplacement Shader</a>
           </h1>
 
@@ -424,14 +195,6 @@ camera.RenderToCubemap(cubemapRT, 63);
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
   
   
@@ -481,14 +244,6 @@ camera.RenderToCubemap(cubemapRT, 63);
   
     
       <a href="/categories/render/">render</a>
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -663,14 +418,6 @@ camera.SetReplacementShader(shader, replacementTag);
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
   
   
@@ -702,14 +449,6 @@ camera.SetReplacementShader(shader, replacementTag);
   
     
       <a href="/categories/shader/">shader</a>,
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -803,14 +542,6 @@ camera.SetReplacementShader(shader, replacementTag);
   
     
       <a href="/categories/gpuinstancing/">gpuinstancing</a>
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -1008,14 +739,6 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
   
   
@@ -1063,14 +786,6 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
       <a href="/categories/study/">study</a>
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -1224,14 +939,6 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
   
   
@@ -1279,14 +986,6 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
       <a href="/categories/study/">study</a>
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -1440,14 +1139,6 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
   
   
@@ -1491,14 +1182,6 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
       <a href="/categories/vertex-deformation/">vertex deformation</a>
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -1664,14 +1347,6 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
   
   
@@ -1715,14 +1390,6 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
       <a href="/categories/vertex-deformation/">vertex deformation</a>
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -1880,14 +1547,6 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
   
   
@@ -1931,14 +1590,6 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
       <a href="/categories/vertex-deformation/">vertex deformation</a>
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -2096,14 +1747,6 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
 </p>
         </header>
@@ -2139,14 +1782,6 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
       <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -2312,14 +1947,6 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
   
   
@@ -2407,14 +2034,6 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
   
-    
-  
-    
-  
-    
-  
-    
-  
 
 </p>
         </header>
@@ -2428,6 +2047,297 @@ void Process (uint3 id : SV_DispatchThreadID)
         
           <p class="post-continue">
             <a href="/2017/07/06/structured-buffer-vs-constant-buffer/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/06/11/using-gpu-instancing-in-unity/">Using Gpu Instancing In Unity</a>
+          </h1>
+
+          <p class="post-meta">Jun 11, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/rendering/">rendering</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p><strong>이 글은 Unity 5.6.1f 버젼에서 작성되었습니다. 다른 버젼에서는 에러가 날 수 있으니 참고 바랍니다.</strong></p>
+
+<p><a href="/2017/06/04/using-texture2darray-in-unity/">Using Texture2DArray in Unity</a> 에 이어 <em>DrawCall</em> 을 줄이기 위한 방법에 대해서 소개하려한다. GPU Instancing 이라는 방법인데 <em>TextureArray</em> 와 같이 응용해서 사용하면 획기적으로 <em>DrawCall</em> 을 줄일 수 있다.</p>
+
+<p>일반적으로 알려진 <em>GPU Instancing</em> 에 대해서 말하자면 컴퓨터의 RAM 에만 저장하던 데이터들을 GPU 메모리에 복사해놓고 GPGPU 나 쉐이더를 실행할 때 빠르게 데이터에 접근하는 것을 GPU Instancing 이라 한다. 만약 <em>GPU Instancing</em> 을 사용하지 않으면 매번 <em>DrawCall</em> 에 데이터를 넣어줘야하기 때문에 수많은 <em>DrawCall</em> 이 걸리게 되고 이는 CPU 의 시간을 뺏어먹게 되어 영 좋지 않은 일이 된다. 보통은 같은 동작을 하는 오브젝트들을 최적화할 때 쓰인다. 사용하게 되면 <em>DrawCall</em> 이 <em>O(<strong>오브젝트 갯수</strong>)</em> 로 되던것이 O(1) 의 갯수로 줄어든다. 그래서 <em>TextureArray</em> 와 같이 사용하게 되면 <em>DrawCall</em> 이 <em>O(<strong>오브젝트 갯수</strong> * <strong>텍스쳐 갯수</strong>)</em> 로 계산되던게 <em>O(<strong>1</strong>)</em> 로 바뀌어 버리니 CPU 시간을 엄청나게 많이벌 수 있다. 다만 GPU 메모리를 많이 잡아먹기 때문에 신경써서 데이터를 구성하지 않으면 무슨일이 일어날지 모른다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/06/11/using-gpu-instancing-in-unity/">Read on &rarr;</a>
           </p>
         
       </li>

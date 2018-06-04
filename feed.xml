@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2018-06-03T12:13:09+00:00</updated>
+  <updated>2018-06-04T11:53:41+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -24,76 +24,6 @@
     </author>
   
 
-  
-  
-    <entry>
-      
-      <title type="html">Post Processing For Correct Color Representation</title>
-      
-      <link href="https://hrmrzizon.github.io/2018/06/02/post-processing-for-correct-color-representation/" rel="alternate" type="text/html" title="Post Processing For Correct Color Representation" />
-      <published>2018-06-02T00:00:00+00:00</published>
-      <updated>2018-06-02T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2018/06/02/post-processing-for-correct-color-representation</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2018/06/02/post-processing-for-correct-color-representation/">&lt;p&gt;꽤 오래전부터 게임에서의 &lt;em&gt;post-processing&lt;/em&gt; 은 굉장히 중요한 요소로 자리잡았다. 아무리 &lt;em&gt;geometry(mesh)&lt;/em&gt; 들을 잘 나타내더라도 모니터에서 출력되는 픽셀단위로 표시되는 빛이 사람의 눈에 어떻게 보이느냐가 중요하기 때문이다. 주로 게임에서는 &lt;em&gt;gamma correction&lt;/em&gt;, &lt;em&gt;tone mapping&lt;/em&gt; 을 통해서 색을 정확하게 표현하도록 처리한다. 이를 처리하기 위한 배경과 각각의 개념이 무엇을 뜻하는지 적어보겠다.&lt;/p&gt;
-
-&lt;!--
-
-  일반적인 1byte 고정 부동소수점의 한계
-  2byte half floating point
-  dynamic range :
---&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/An+image+comparing+gamma+and+linear+pipelines.png&quot; alt=&quot;Gamma correction&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://www.kinematicsoup.com/news/2016/6/15/gamma-and-linear-space-what-they-are-how-they-differ&quot;&gt;GAMMA AND LINEAR SPACE - WHAT THEY ARE AND HOW THEY DIFFER&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;h2&gt;참조&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://photo.stackexchange.com/questions/7630/what-is-tone-mapping-how-does-it-relate-to-hdr&quot;&gt;Photography stackexchange : What is tone mapping? How does it relate to HDR?&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://www.kinematicsoup.com/news/2016/6/15/gamma-and-linear-space-what-they-are-how-they-differ&quot;&gt;GAMMA AND LINEAR SPACE - WHAT THEY ARE AND HOW THEY DIFFER&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Exposure_compensation&quot;&gt;Wikipedia : Exposure Compensation&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Tone_mapping&quot;&gt;Wikipedia : Tone mapping&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="rendering" />
-      
-        <category term="post-processing" />
-      
-        <category term="tone-mapping" />
-      
-        <category term="gamma-correction" />
-      
-        <category term="hdr" />
-      
-
-      
-
-      
-        <summary type="html">꽤 오래전부터 게임에서의 post-processing 은 굉장히 중요한 요소로 자리잡았다. 아무리 geometry(mesh) 들을 잘 나타내더라도 모니터에서 출력되는 픽셀단위로 표시되는 빛이 사람의 눈에 어떻게 보이느냐가 중요하기 때문이다. 주로 게임에서는 gamma correction, tone mapping 을 통해서 색을 정확하게 표현하도록 처리한다. 이를 처리하기 위한 배경과 각각의 개념이 무엇을 뜻하는지 적어보겠다. 출처 : GAMMA AND LINEAR SPACE - WHAT THEY ARE AND HOW THEY DIFFER 참조 Photography stackexchange : What is tone mapping? How does it relate to HDR? GAMMA AND LINEAR SPACE - WHAT THEY ARE AND HOW THEY DIFFER Wikipedia : Exposure Compensation Wikipedia : Tone mapping</summary>
-      
-
-      
-      
-    </entry>
-  
   
   
     <entry>
@@ -2243,6 +2173,105 @@ Shaders can then take advantage of potential performance improvements by using a
 
       
         <summary type="html">HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다. 이전 hbao plus analysis 2 글에서 Horizon based ambient occlusion 와 Cross Bilateral Filter 대해서 알아보았다. 이번 글에서는 부록의 느낌으로 HLSL 코드를 읽으면서 생소했던 기타 기법들에 대해서 써볼 것이다. 첫번째로 Full Screen Triangle 이라는 기법이다. 알고마면 굉장히 단순한 개념으로, 화면을 모두 덮는 한개의 삼각형을 그려서 모든 픽셀에 쉐이더를 돌릴 수 있게 해주는 기법이다. 아래 슬라이드를 보면 쉽게 이해가 갈것이다. 출처 : GDC 2014 : Vertex Sahder Tricks 단순하지만 처음 봤을 때는 조금 신박하게 느껴질 수도 있다. 두번째로는 모든 계산에 최대한 HLSL Intrisic 을 사용한다. 특히 벡터와 벡터사이의 거리를 계산할때 dot product 를 써서 하는게 정말 많았다. 어셈블리 레벨에서 달라지는것 같긴하나 정확한 이유는 알지 못했다. 추측해보면 GPU 에서 해당 명령어가 있지 않을까.. 라고 생각한다. 세번째도 위의 것과 비슷하다. 대부분의 데이터에 MAD 방식을 사용해서 계산한다. 하지만 이는 거의 공식적으로 정해진게 있다. MSDN : mad function 레퍼런스에서도 나오듯이 어떤 GPU 에서는 위에서 추측한대로 하드웨어에서 지원하는 명령어라고 한다. … Shaders can then take advantage of potential performance improvements by using a native mad instruction (versus mul + add) on some hardware. … 또한 HBAO+ 소스에서 찾은 주석에는 GK104 부터 특정 구간에서 10% 퍼포먼스 이득이 있다고 쓰여져 있다. 네번째는 나누기를 절대 쓰지 않는다. 나머지 연산(mod, A % B)는 간혹 쓰이지만 나누기는 절대로 쓰이지 않았었다. 혹시라도 필요하다면 전부 Constant Buffer 에 CPU 에서 역수를 취해서 넘겨주는 방식으로 되어 있었다. 이도 역시 하드웨어에서 동작하는 부분을 알고 짠듯하다. 다섯번째는 HLSL 코드를 cpp 소스에 include 하여 Constant Buffer 값을 갱신하는 코드였다. 여태까지 예전의 DirectX 소스만 보거나 Unity 에서만 작업을 해서 그런지 이런 기능은 굉장히 낯설었다. 참조 자료 NVIDIA HBAO+ GDC 2014 : Vertex Sahder Tricks MSDN : mad function</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Hbao Plus Analysis 2</title>
+      
+      <link href="https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-2/" rel="alternate" type="text/html" title="Hbao Plus Analysis 2" />
+      <published>2017-11-15T00:00:00+00:00</published>
+      <updated>2017-11-15T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-2</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-2/">&lt;p&gt;&lt;strong&gt;HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;이전 &lt;a href=&quot;/2017/11/15/hbao-plus-analysis-1/&quot;&gt;hbao plus analysis 1&lt;/a&gt; 글에서 &lt;em&gt;HBAO+&lt;/em&gt; 에서 &lt;em&gt;Linearize Depth&lt;/em&gt; 와 &lt;em&gt;Deinterleaved Texturing&lt;/em&gt; 에 대해서 알아보았다. 이번 글에서는 &lt;em&gt;HBAO+&lt;/em&gt; 의 핵심 알고리즘인 &lt;em&gt;Horizon Based Ambient Occlusion&lt;/em&gt; 와 AO 블러에 사용되는 &lt;em&gt;Cross Bilateral Filter&lt;/em&gt; 에 대해서 알아볼것이다.&lt;/p&gt;
+
+&lt;h2&gt;Horizon Based Ambient Occlusion&lt;/h2&gt;
+
+&lt;p&gt;&lt;em&gt;Horizon Based Ambient Occlusion&lt;/em&gt; 은 xy 평면과(horizon) Depth 값을 사용해서 &lt;em&gt;AO&lt;/em&gt; 를 계산한다. 슬라이드에서 가져온 일부를 보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/hbao_siggraph08_05.png&quot; alt=&quot;Horizon Mapping&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf&quot;&gt;Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;해당 슬라이드에서는 xy평면을 단순하게 1차원인 x축만으로 나타냈다. &lt;em&gt;HBAO&lt;/em&gt; 는 그림에 나오는 &lt;em&gt;horizon angle&lt;/em&gt; 을 사용하여 &lt;em&gt;AO&lt;/em&gt; 값을 구한다. 자세한 방법은 아래 슬라이드를 보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/hbao_siggraph08_12.png&quot; alt=&quot;Horizon-Based AO&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf&quot;&gt;Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;슬라이드에서는 표면의 접선을 나타내는 &lt;em&gt;Tangent&lt;/em&gt; 벡터와 &lt;em&gt;Horizon&lt;/em&gt; 벡터를 사용해서 &lt;em&gt;sin&lt;/em&gt; 의 차이로 &lt;em&gt;AO&lt;/em&gt; 를 계산한다고 설명되어 있다. &lt;em&gt;Horizon&lt;/em&gt; 벡터는 &lt;em&gt;Depth&lt;/em&gt; 와 화면의 좌표를 구해서 샘플링하는 위치값을 구하고 기준이 되는 위치값의 차이를 통해 구한다. &lt;em&gt;HBAO+&lt;/em&gt; 코드에서는 입력을 받은 &lt;em&gt;Normal&lt;/em&gt; 벡터와 &lt;em&gt;Horizon&lt;/em&gt; 벡터에 &lt;em&gt;dot&lt;/em&gt; 을 사용해 &lt;em&gt;cos&lt;/em&gt; 값을 구하고 변환해준다. 이렇게 한번 &lt;em&gt;AO&lt;/em&gt; 값을 구한다.&lt;/p&gt;
+
+&lt;p&gt;보다 정확한 &lt;em&gt;AO&lt;/em&gt; 값을 구하기 위해서는 전방위로 탐색할 필요가 있다. 정해진 방향으로 샘플링을 해도 오차가 생길 수 있고 완전히 랜덤하게 방향을 정해도 부정확한 결과를 얻을 수 있다. 그래서 &lt;em&gt;HBAO&lt;/em&gt; 는 랜덤하게 방향을 정하나 그 방향 벡터를 정해진 각도로 돌려주어 그나마 정확한 결과를 얻으려 한다. 슬라이드를 보고 넘어가자.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/hbao_siggraph08_14.png&quot; alt=&quot;Sampling the Depth Image&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf&quot;&gt;Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;핵심적인 개념은 모두 설명했지만 만족할만한 결과를 얻기 위해 여러가지 보정 방법들이 필요하다. 그래서 &lt;em&gt;HBAO&lt;/em&gt; 에서는 두가지 보정을 해주는 개념을 설명한다. &lt;em&gt;HBAO&lt;/em&gt; 는 방향을 설정해주고 해당 방향으로 한번만 샘플링 하는게 아니라 여러번 샘플링 한다. 그러므로 거리에 따른 감쇠(attenuation)가 필요하다. 방법은 간단하다. &lt;em&gt;AO&lt;/em&gt; 를 계산할때 구했던 &lt;em&gt;Horizon&lt;/em&gt; 벡터의 크기에 따라서 &lt;em&gt;AO&lt;/em&gt; 값을 줄여준다. 나머지 한가지는 &lt;em&gt;Horizon&lt;/em&gt; 벡터와 &lt;em&gt;Tangent&lt;/em&gt; 벡터를 이용해 구하는 실질적인 &lt;em&gt;AO&lt;/em&gt; 값에 &lt;em&gt;Bias&lt;/em&gt; 로 낮은 &lt;em&gt;AO&lt;/em&gt; 값들을 무시하는 방법이다. &lt;em&gt;Bias&lt;/em&gt; 가 없이 &lt;em&gt;AO&lt;/em&gt; 를 생성하게 되면 노이즈가 생기기 때문이다. 또한 &lt;em&gt;Bias&lt;/em&gt; 로 생긴 수학적 오차는 코드에서 따로 보정해주기 때문에 크게 문제는 없다.&lt;/p&gt;
+
+&lt;h2&gt;Cross Bilateral Filter&lt;/h2&gt;
+
+&lt;p&gt;&lt;em&gt;SSAO&lt;/em&gt; 의 결과에는 일반적으로 블러를 먹이게 된다. 대부분 근사에 기반한 계산이기 때문이다. &lt;em&gt;HBAO&lt;/em&gt; 에서는 &lt;em&gt;Depth&lt;/em&gt; 를 이용한 방법을 소개한다. 바로 &lt;em&gt;Cross Bilateral Filter&lt;/em&gt; 다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Cross Bilateral Filter&lt;/em&gt; 은 &lt;em&gt;Gaussian Filter&lt;/em&gt; 와 비슷한 필터로, &lt;em&gt;Gaussian Filter&lt;/em&gt; 는 샘플링할 위치의 거리에 따라 점차 가중치가 줄어드는 필터라면, &lt;em&gt;Bilateral Filter&lt;/em&gt; 는 위치에 따라 가중치가 줄어드는게 아닌 각 위치별로 가지고 있는 한개의 스칼라값에 차이에 따라서 가중치를 정하는 필터다. &lt;em&gt;Cross&lt;/em&gt; 단어를 붙인 이유는 왼쪽과 오른쪽 방향의 필터와 위와 아래의 필터를 따로하기 때문에 &lt;em&gt;Cross&lt;/em&gt; 라는 단어를 붙인 듯 하다. &lt;em&gt;HBAO+&lt;/em&gt; 코드에서도 X 축과 Y 축을 기준으로 하는 블러 소스가 나누어져 있다. &lt;em&gt;HBAO&lt;/em&gt; 에는 한개의 스칼라 값을 &lt;em&gt;Depth&lt;/em&gt; 를 기준으로 계산한다. 그래서 크게 튀는 부분의 결과는 많이 반영하지 않아 전체적으로 뿌옇게 바뀐다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/hbao_siggraph08_28.png&quot; alt=&quot;Sampling the Depth Image&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf&quot;&gt;Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion&lt;/a&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h1&gt;참조 자료&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://docs.nvidia.com/gameworks/content/gameworkslibrary/visualfx/hbao/index.html&quot;&gt;NVidia HBAO+&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf&quot;&gt;Image-Space Horizon Based Ambient Occlusion&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Gaussian_filter&quot;&gt;Wikipedia : Gaussian Filter&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Bilateral_filter&quot;&gt;Wikipedia : Bilateral Filter&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="render" />
+      
+        <category term="analysis" />
+      
+        <category term="hbao+" />
+      
+        <category term="bilateral_filter" />
+      
+
+      
+
+      
+        <summary type="html">HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다. 이전 hbao plus analysis 1 글에서 HBAO+ 에서 Linearize Depth 와 Deinterleaved Texturing 에 대해서 알아보았다. 이번 글에서는 HBAO+ 의 핵심 알고리즘인 Horizon Based Ambient Occlusion 와 AO 블러에 사용되는 Cross Bilateral Filter 에 대해서 알아볼것이다. Horizon Based Ambient Occlusion Horizon Based Ambient Occlusion 은 xy 평면과(horizon) Depth 값을 사용해서 AO 를 계산한다. 슬라이드에서 가져온 일부를 보자. 출처 : Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion 해당 슬라이드에서는 xy평면을 단순하게 1차원인 x축만으로 나타냈다. HBAO 는 그림에 나오는 horizon angle 을 사용하여 AO 값을 구한다. 자세한 방법은 아래 슬라이드를 보자. 출처 : Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion 슬라이드에서는 표면의 접선을 나타내는 Tangent 벡터와 Horizon 벡터를 사용해서 sin 의 차이로 AO 를 계산한다고 설명되어 있다. Horizon 벡터는 Depth 와 화면의 좌표를 구해서 샘플링하는 위치값을 구하고 기준이 되는 위치값의 차이를 통해 구한다. HBAO+ 코드에서는 입력을 받은 Normal 벡터와 Horizon 벡터에 dot 을 사용해 cos 값을 구하고 변환해준다. 이렇게 한번 AO 값을 구한다. 보다 정확한 AO 값을 구하기 위해서는 전방위로 탐색할 필요가 있다. 정해진 방향으로 샘플링을 해도 오차가 생길 수 있고 완전히 랜덤하게 방향을 정해도 부정확한 결과를 얻을 수 있다. 그래서 HBAO 는 랜덤하게 방향을 정하나 그 방향 벡터를 정해진 각도로 돌려주어 그나마 정확한 결과를 얻으려 한다. 슬라이드를 보고 넘어가자. 출처 : Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion 핵심적인 개념은 모두 설명했지만 만족할만한 결과를 얻기 위해 여러가지 보정 방법들이 필요하다. 그래서 HBAO 에서는 두가지 보정을 해주는 개념을 설명한다. HBAO 는 방향을 설정해주고 해당 방향으로 한번만 샘플링 하는게 아니라 여러번 샘플링 한다. 그러므로 거리에 따른 감쇠(attenuation)가 필요하다. 방법은 간단하다. AO 를 계산할때 구했던 Horizon 벡터의 크기에 따라서 AO 값을 줄여준다. 나머지 한가지는 Horizon 벡터와 Tangent 벡터를 이용해 구하는 실질적인 AO 값에 Bias 로 낮은 AO 값들을 무시하는 방법이다. Bias 가 없이 AO 를 생성하게 되면 노이즈가 생기기 때문이다. 또한 Bias 로 생긴 수학적 오차는 코드에서 따로 보정해주기 때문에 크게 문제는 없다. Cross Bilateral Filter SSAO 의 결과에는 일반적으로 블러를 먹이게 된다. 대부분 근사에 기반한 계산이기 때문이다. HBAO 에서는 Depth 를 이용한 방법을 소개한다. 바로 Cross Bilateral Filter 다. Cross Bilateral Filter 은 Gaussian Filter 와 비슷한 필터로, Gaussian Filter 는 샘플링할 위치의 거리에 따라 점차 가중치가 줄어드는 필터라면, Bilateral Filter 는 위치에 따라 가중치가 줄어드는게 아닌 각 위치별로 가지고 있는 한개의 스칼라값에 차이에 따라서 가중치를 정하는 필터다. Cross 단어를 붙인 이유는 왼쪽과 오른쪽 방향의 필터와 위와 아래의 필터를 따로하기 때문에 Cross 라는 단어를 붙인 듯 하다. HBAO+ 코드에서도 X 축과 Y 축을 기준으로 하는 블러 소스가 나누어져 있다. HBAO 에는 한개의 스칼라 값을 Depth 를 기준으로 계산한다. 그래서 크게 튀는 부분의 결과는 많이 반영하지 않아 전체적으로 뿌옇게 바뀐다. 출처 : Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion 참조 자료 NVidia HBAO+ Image-Space Horizon Based Ambient Occlusion Wikipedia : Gaussian Filter Wikipedia : Bilateral Filter</summary>
       
 
       
