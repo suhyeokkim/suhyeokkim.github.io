@@ -13,6 +13,8 @@ categories:
 
 _PCSS_ 는 _Soft Shadow_ 를 구현하는 기법 중 하나로써 2005년에 발표되어 여태까지도 꽤나 알려진 기법이다. 우선 _Soft Shadow_ 가 무엇인지 알아보자.
 
+<!-- more -->
+
 <br/>
 
 ![](/images/soft_vs_hardshadow.png){: .center-image}

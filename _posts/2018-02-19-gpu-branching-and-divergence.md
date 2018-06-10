@@ -9,6 +9,8 @@ categories:
 
 요즘은 꽤나 많은 것들을 GPU 로 처리할 수 있다. GPGPU 기술이 나온지 10년이 넘어가는 이 시점에서 꽤나 많은 것들이 GPU 로 처리되고 있다. 그 중에서도 GPGPU 를 다뤄볼 사람이라면 필수적인 상식하나가 있다. 아래 그림을 보자.
 
+<!-- more -->
+
 <br/>
 ![](/images/prior_simt.png){: .center-image}
 <center>출처 : <a href="http://composter.com.ua/documents/Volta-Architecture-Whitepaper.pdf">NVidia : GV100 Whitepaper</a>

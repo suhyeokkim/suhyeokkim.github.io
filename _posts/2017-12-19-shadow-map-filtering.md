@@ -13,6 +13,8 @@ categories:
 
 [What is Shadow Mapping]({{ site.baseurl }}{% post_url 2017-11-30-what-is-shadow-mapping %}) 에서 _Shadow Mapping_ 에 대한 간단한 번역 & 설명을 적어놓았다. 해당 글에서 _PCF_ 를 잠깐 언급했었다. 이 글에서는 _PCF_ 를 포함해서 _Shadow Map_ 을 필터링하는 방법에 대해서 알아보겠다.
 
+<!-- more -->
+
 첫번째는 _PCF_ 다. 풀어쓰면 _Percentage Closer Filtering_ 이라는 단어가 되며, _Shadow Map_ 을 여러번 샘플링해 _Percentage_ 를 소숫점으로 나타내서 _Shadow_ 가 생긴 정도를 나타내주는 _Filtering_ 기법이다. 쉽게 이해할 수 있도록 아래 그림을 보자.
 
 <br/>

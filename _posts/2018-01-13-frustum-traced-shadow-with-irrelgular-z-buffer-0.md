@@ -11,6 +11,8 @@ categories:
 
 [Percentage-Closer Filtering Shadows]({{ site.baseurl }}{% post_url 2017-12-27-percentage-closer-soft-shadows %}) 에서 _PCF_ 를 응용한 _PCSS_ 라는 _Soft Shadow_ 를 나타내는 기법에 대해서 알아보았다. 이번 글에서는 여태까지 알아본 것들에 비해 굉장히 최근에 나온 기법인 _frustum-Traced Shadow_ 에 대해서 알아볼것이다.
 
+<!-- more -->
+
 해당 기법은 2015년에 _Siggraph_, _Interactive 3D_ 같은 컨퍼런스에서 발표되었으며, 현재 _Tom Clansy's the Division_ 에 _PCSS_ 와 혼합된 형태(_Hybrid frustum Traced Shadow_)로 적용되어 있다. _Frame Rate_ 에 조금 영향을 미쳐 대부분의 게이머들은 아직은 _HFTS_ 를 사용하지 않는듯 하다.([Reddit : Nvidia HFTS (The Division)](https://www.reddit.com/r/nvidia/comments/49idz3/nvidia_hfts_the_division/)) 하지만 컴퓨팅 파워가 늘어나는 것을 가정한다면 앞으로 하이엔드 게임의 주 옵션이 될수도 있겠다.
 
 이 기법의 저자는 _Shadow Map_ 처럼 따로 붙은 기법없이 _Aliasing_ 이 없어야 했으며, 현세대의 GPU 와 해상도를 _Interactive_ 하게 지원하는 것이 완벽한 _Hard Shadow_ 를 목표로 _FTS_ 를 고안했다. 가장 많이 쓰이는 _Shadow Map_ 기법은 공간적(_Light-Space_ 와 _Clipping-Space_ 의 _Discretize_ 된 결과의 차이), 일시적인(필터링이 필요한 _Aliasing_)인 문제들이 산재한다. 이는 이 기법을 고안한 시발점이였다.

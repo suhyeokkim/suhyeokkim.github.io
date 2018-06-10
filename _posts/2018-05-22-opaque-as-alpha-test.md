@@ -12,6 +12,8 @@ _Shader_ 에서 샘플링하는 _Texutre_ 에서 _Alpha_ 값을 가지고 있어
 
 보통 게임에서의 _Alpha Test_ 를 사용하는 것들은 나무, 풀 같은 식생들(_Vegetation_)이 있고, 중간에 구멍이 뚫린 펜스같은 것들도 존재한다. 자연을 배경으로하는 게임의 경우에는 식생들이 굉장히 많기 때문에 _Alpha Test_ 를 사용하는 _Shader_ 가 굉장히 많이 사용될 것이다.
 
+<!-- more -->
+
 <br/>
 ![Wikipedia : Single-precision floating-point format](/images/1_8EKqWSOOPXaTrDHVFTACJg.png){: .center-image}
 <center>출처 : <a href="https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f">Anti-aliased Alpha Test: The Esoteric Alpha To Coverage</a>

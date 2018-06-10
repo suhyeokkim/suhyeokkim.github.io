@@ -11,6 +11,8 @@ categories:
 
 [What is Shadow Mapping]({{ site.baseurl }}{% post_url 2017-11-30-what-is-shadow-mapping %}) 에서 _Shadow Mapping_ 에 대한 간단한 번역 & 설명을 적어놓았다. 이번 글에서는 _Shadow Mapping_ 을 효과적으로 사용하기 위한 _Cascaded Shadow Mapping_ 에 대하여 적어보겠다.
 
+<!-- more -->
+
 _Cascaded Shadow Mapping_ 을 구글 번역기에 돌려보면 _"계단식 그림자 매핑"_ 이라고 나온다. 조금 직관적이지 않은 말이지만 뜻 자체는 맞다. 간단하게 _Cascaded Shadow Mapping_ 에 대하여 말하자면 넓은 환경의 그림자를 위해 거리에(거의 _Depth_) 따라서 여러개의 _Shadow Map_ 을 생성하는 방법이다.
 
 넓은 범위의 _Directional Light_ 가 닿는 그림자를 정확하게 표현하려면 꽤나 큰 크기의 _Shadow Map_ 을 사용해야 한다. 하지만 _Cascaded Shadow Mapping_ 을 사용한다면 여러개의 _Shadow Map_ 을 사용하여 보다 조금의 메모리를 사용하여 넓은 범위의 그림자를 표현할 수 있다.

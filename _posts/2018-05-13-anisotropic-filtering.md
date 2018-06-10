@@ -9,6 +9,8 @@ categories:
 
 보통 사용되는 _Texture Fltering_ 들은 _Axis Align_ 된 방향을 기준으로 추가적인 샘플링을 하는 방법들이 대부분이다.(bilinear, bicubic, etc..) 하지만 특이한 것이 하나 있다. 바로 _Anisotropic Filtering_ 이다.
 
+<!-- more -->
+
 _Anisotropic Filtering_ 은 원거리에 있는 물체들을 선명하게 보이게 하기위해서 쓰여지는 _Fiterling_ 으로, 말보다는 아래 그림을 보는게 훨씬 직관적으로 이해할 수 있다.
 
 <br/>

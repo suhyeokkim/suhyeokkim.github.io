@@ -11,6 +11,8 @@ categories:
 
 [frustum Traced Shadow with Irregular Z-Buffer 0]({{ site.baseurl }}{% post_url 2018-01-13-frustum-traced-shadow-with-irrelgular-z-buffer-0 %}) 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다.
 
+<!-- more -->
+
 ### 전체 시스템
 
 [이전 글]({{ site.baseurl }}{% post_url 2018-01-13-frustum-traced-shadow-with-irrelgular-z-buffer-0 %})에서 두가지 단계에 대해서 자세한 설명을 했었다. _Irregular Z-Buffer_ 를 생성하고 _Visibility Test_ 를 하는 것이였다. 실제 구현된 단계는 총 6개의 단계로 이루어진다고 한다.
