@@ -368,7 +368,7 @@
 
 <!-- more -->
 
-<h2><em>Constant Buffer</em></h2>
+<h2>Constant Buffer</h2>
 
 <p>이름을 직역하면 상수 버퍼다. 직관적인 느낌은 단순한 고정값 참조를 위한 버퍼인 것 같다.</p>
 
@@ -390,11 +390,13 @@ UNITY_INSTANCING_CBUFFER_END
 }
 </code></pre>
 
-<p>Unity 에서 제공하는 예제는 단순하게 컬러값을 인스턴스별로 바꾸게 해주는 그리하여 여러개의 메터리얼을 사용하지 않아 쓸데없는 <em>SetPass</em> 를 안하게 해주는 예제다. 이 값들은 쉐이더에서 변경할 필요가 없는 상수 값이므로 <em>cbuffer</em> 를 사용해도 문제가 없다.</p>
+<p>Unity 에서 제공하는 예제는 단순하게 컬러값을 인스턴스별로 바꾸게 해주는 그리하여 여러개의 메터리얼을 사용하지 않아 쓸데없는 <em>SetPass</em> 를 안하게 해주는 예제다.</p>
 
-<p>하지만 필자는 <a href="/2017/06/11/using-gpu-instancing-in-unity/">Appocrypha : GPU Instancing</a> 글에서 <em>cbuffer</em> 가 추구하는 방향과는 조금 다르게 사용했다. 저 글을 쓸때 한창 스키닝에 대해 관심이 많았기 때문에 <em>cbuffer</em> 를 사용해서 각 뼈들의 위치와 회전 데이터들을 사용했다. 하지만 저 사용용도는 그다지 좋지 않은 생각이였다. 이유는 글의 끝에서 말하겠다.</p>
+<p>하지만  <em>cbuffer</em> 가 <em>GPR</em> 을(register) 사용하는 것이기 때문에 저장할 수 있는 데이터의 갯수는 비교적 적다. 기본적으로 사용할 수 있는 레지스터 공간 자체가 별로 크지 않기 때문이다. 만약 전체 크기를 넘어간다면 할 수 있는 가정은 메모리에서 데이터를 가져와 사용할때 마다 갱신하는 것인데, 이는 꽤 큰 코스트가 될 것으로 보인다. 특히 배열의 형태의 모든 쓰레드가 다른 데이터를 접근할 때 하나하나 데이터를 가져오면 굉장히 느려질 것이다.</p>
 
-<h2><em>StructuredBuffer</em></h2>
+<p>만약에 <em>cbuffer</em> 와 로컬변수가 같은 <em>GPR</em> 들을 사용하게 된다면 실행내내 유지되는 로컬변수의 갯수에 따라서 실행할 수 있는 Thread 의 수 또한 줄게된다. 이 역시 성능 하락에 영향을 미칠것이다.</p>
+
+<h2>StructuredBuffer</h2>
 
 <p>다음으로 알아볼 것은 <em>StructuredBuffer</em> 다. 이 역시 맨 처음 등장한 것은 <em>Shader Model 4</em> 부터 등장했다. 초기에는 사용 용도가 약간 한정되어 있는 것처럼 나온다. <em>Shader Model 4</em> 에서는 읽기 전용의 버퍼만 지원하고, 버퍼의 종류가 적었다. 또한 사용 용도가 컴퓨터 쉐이더와 픽셀 쉐이더로 한정 되어 있었다고 한다. <em>Shader Model 5</em> 부터는 다양한 변종의 버퍼들을 지원하고, 모든 쉐이더 코드에서 사용이 가능하게 되었다. 이는 쉐이더 코딩의 여러 가능성을 열어 주었다.</p>
 
@@ -420,15 +422,46 @@ v2f vert (uint vertexID : SV_VertexID)
 
 </code></pre>
 
-<p><em>Shader Model 5</em> 에서는 쓰기도 가능한 <em>RWStructuredBuffer</em> 와 단순한 데이터 한개씩 저장하는 <em>Buffer</em>, <em>RWBuffer</em> 등 특이한 다른 컨테이너도 지원해서 꽤나 재미있는 코딩이 가능할 듯 하다.</p>
+<p><em>StructuredBuffer</em> 는 기본적으로 우리가 아는 CPU 에서의 메모리 접근 방식처럼 작동하는 것으로 보인다. DRAM 의 주소를 사용해 데이터를 가져오고, L1,L2 캐시를 통해 캐싱을 하는 <em>“일반적인”</em> 접근 방식 말이다. 꽤 많은 큰 데이터를 접근할 때는 이 방법을 써야할 것으로 보인다. 그리고 <em>StructuredBuffer</em> 를 쓸때 알아야할 사실은 해당 <em>struct</em> 의 구조가 128bit 단위로 크기를 가져야 효율적인 작동을 기대할 수 있다고 한다. 이는 아마도 데이터를 가져올 떄 128bit 씩 가져오는 것으로 예상할 수 있겠다.</p>
 
 <h2>결론?</h2>
 
-<p><em>StructuredBuffer</em> 의 장단점에 대해서는 말하지 않았다. MSDN 에서도 그다지 자세하게 쓰여있지는 않다. 사실 필자도 그다지 관심이 없었다. 그냥 있으면 있는대로 쓰는거지 라는 생각을 당분간 하다가 문득 의문이 들었다. 도대체 무슨 차이길래 다르게 지원하는 것인가에 대한 의문이였다. 그래서 <a href="https://www.gamedev.net/forums/topic/624529-structured-buffers-vs-constant-buffers/">GameDev : structured buffer vs constant buffer</a> 을 찾아 읽었고 꽤나 흥미로운 사실이였다. <a href="https://www.gamedev.net/forums/topic/624529-structured-buffers-vs-constant-buffers/">원문 링크</a></p>
+<p>결론은 간단하다. 데이터의 크기가 작을 때는 <em>Constant Buffer</em>, 데이터의 크기가 클 때는 <em>StructuredBuffer</em> 를 사용하면 된다. <em>Constant Buffer</em> 는 레지스터를 사용해서 빠르지만 가지고 있을 수 있는 데이터의 크기가 작고, <em>StructuredBuffer</em> 는 메모리 접근을 하기 때문에 느리지만 엄청나게 많은 데이터에 접근할 때는 어쩔 수 없는 차선책이다. 물론 GPU 구조에 따라서 달라질 수도 있다(PC 용, 모바일용, 콘솔용)</p>
 
-<p>질문글은 <em>cbuffer</em> 와 <em>StructuredBuffer</em> 의 차이점에 대한 데이터가 없어 무슨 차이 인지, 그리고 3가지의 예시를 들어 각각 어떤게 더 알맞는지에 대한 구체적인 글이였다. 글또한 꽤나 잘쓰여져 있지만 질문글 보다 더욱더 봐야할 것은 아래에 달린 답글 2개다. 일반적으로 알기 힘든 사실들을 다루고 있다. 하나의 글은 두 버퍼의 차이에 대하여 써놨으며 하나의 답글은 질문글의 핀트에 맞추어 답글을 써놓았다. 해당 글의 답변 해석은 블로그에 올려놓았다. <a href="/2017/07/06/translate-gamedev-structured-buffer-vs-constant-buffer/">글 링크</a> 에서 보면 된다.</p>
+<p><em>Compute Shader</em> 를 사용할 때 <em>StructuredBuffer</em> 를 사용하면 다음과 같은 차선책이 존재한다.</p>
 
-<p><em>cbuffer</em> 는 레지스터를 사용하여 작으나 빠르고, 배열을 각각 다른 스레드에서 전부 다른 인덱스로 접근하면 느려진다. <em>StructuredBuffer</em> 조금은 느리나 내부적으로 thread-safe 하게 구현되어 있고, 데이터 캐싱을 한다. 또한 크기의 제한이 없어 자유롭게 쓰고, 크기가 입력에 따라서 달라져서 유동적인 데이터에 쓸만하다는 것이다. 위에서 스키닝을 <em>cbuffer</em> 로 사용한게 문제라고 했었는데, 글을 보면 알겠지만 <em>cbuffer</em> 에서 각각 다른 인덱스로 접근하면 느려지니 문제인 것이다.</p>
+<pre><code class="language-HLSL">StructuredBuffer&lt;Light&gt; LightBuf;
+groupshared Light[MAX_LIGHTS] LocalLights;
+
+LocalLights[ThreadIndex] = LightBuf[ThreadIndex];
+
+GroupSharedMemoryBarrierWithGroupSync();
+
+for (int i = 0; i &lt; num_lights; i++)
+{
+    Light cur_light = LocalLights[i];
+
+    // Do Lighting
+}
+</code></pre>
+<p>출처 : <a href="https://developer.nvidia.com/content/redundancy-and-latency-structured-buffer-use">NVidia developers : Redundancy and Latency in Structured Buffer Use</a></p>
+
+<p><em>Constant Buffer</em> 에 넣기도 애매하고 <em>StructuredBuffer</em> 에 넣기도 애매한 데이터의 갯수가 <em>Thread Size</em> 를 넘지않는 데이터는 위와같이 <em>Shared Memory</em> 를 사용하여 데이터를 캐싱하여 사용할 수 있다. <em>Shared Memory</em> 는 보통 <em>cache</em> 와 같은 SRAM 에, 각 <em>Thread Group</em> 별로 하나씩 가지고 있는 변수로, 위처럼 물리적인 특징을 사용해 <em>cache</em> 로 사용하거나, <em>Thread Group</em> 안에서 데이터를 R/W 시에 사용되는 방식이다.</p>
+
+<p>※ 추가로 해당 글은 수정된 글입니다. 조금 하드웨어적인 부분에 대하여 내용을 수정하던 도중 <a href="http://www.yosoygames.com.ar/wp/2015/01/uniform-buffers-vs-texture-buffers-the-2015-edition/">Yosogames : Uniform buffers vs texture buffers: The 2015 edition</a> 에서 <em>Constant Buffer</em> 에 배열에 각기 다른 데이터를 접근할 때 느려진다는 사실은 꽤 오래전 이야기라고 해서 뒤의 결론은 전부 취소선 처리했습니다. 이 글을 지금 보신다면 밑의 내용은 읽을 필요없고, 이전에 보았다면 꽤 오래전 이야기인것을 알아야 합니다.</p>
+
+<s>
+_StructuredBuffer_ 의 장단점에 대해서는 말하지 않았다. MSDN 에서도 그다지 자세하게 쓰여있지는 않다. 사실 필자도 그다지 관심이 없었다. 그냥 있으면 있는대로 쓰는거지 라는 생각을 당분간 하다가 문득 의문이 들었다. 도대체 무슨 차이길래 다르게 지원하는 것인가에 대한 의문이였다. 그래서 GameDev : structured buffer vs constant buffer 을 찾아 읽었고 꽤나 흥미로운 사실이였다.
+</s>
+
+<s>
+질문글은 _cbuffer_ 와 _StructuredBuffer_ 의 차이점에 대한 데이터가 없어 무슨 차이 인지, 그리고 3가지의 예시를 들어 각각 어떤게 더 알맞는지에 대한 구체적인 글이였다. 글또한 꽤나 잘쓰여져 있지만 질문글 보다 더욱더 봐야할 것은 아래에 달린 답글 2개다. 일반적으로 알기 힘든 사실들을 다루고 있다. 하나의 글은 두 버퍼의 차이에 대하여 써놨으며 하나의 답글은 질문글의 핀트에 맞추어 답글을 써놓았다. 해당 글의 답변 해석은 블로그에 올려놓았다. 글 링크에서 보면 된다.
+</s>
+
+<s>
+_cbuffer_ 는 레지스터를 사용하여 작으나 빠르고, 배열을 각각 다른 스레드에서 전부 다른 인덱스로 접근하면 느려진다. _StructuredBuffer_ 조금은 느리나 내부적으로 thread-safe 하게 구현되어 있고, 데이터 캐싱을 한다. 또한 크기의 제한이 없어 자유롭게 쓰고, 크기가 입력에 따라서 달라져서 유동적인 데이터에 쓸만하다는 것이다. 위에서 스키닝을 _cbuffer_ 로 사용한게 문제라고 했었는데, 글을 보면 알겠지만 _cbuffer_ 에서 각각 다른 인덱스로 접근하면 느려지니 문제인 것이다.
+</s>
+<p>(~ 2018/09/23)</p>
 
 <h2>참조</h2>
 
@@ -436,7 +469,13 @@ v2f vert (uint vertexID : SV_VertexID)
   <li><a href="https://msdn.microsoft.com/ko-kr/library/windows/desktop/bb509581%28v=vs.85%29.aspx">MSDN : Shader Constants</a></li>
   <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff471514%28v=vs.85%29.aspx">MSDN Reference : StructuredBuffer</a></li>
   <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff476335%28v=vs.85%29.aspx">MSDN : New Resource Types</a></li>
-  <li><a href="https://www.gamedev.net/forums/topic/624529-structured-buffers-vs-constant-buffers/">GameDev : structured buffer vs constant buffer</a></li>
+  <li>
+    <p><a href="https://www.gamedev.net/forums/topic/624529-structured-buffers-vs-constant-buffers/">GameDev : structured buffer vs constant buffer</a></p>
+  </li>
+  <li><a href="https://developer.amd.com/wordpress/media/2013/04/DX11PerformanceReloaded.ppsx">AMD Developer Central : DirectX 11 Performance Reloaded</a></li>
+  <li><a href="https://developer.nvidia.com/content/redundancy-and-latency-structured-buffer-use">Redundancy and Latency in Structured Buffer Use</a></li>
+  <li><a href="http://on-demand.gputechconf.com/gtc/2010/presentations/S12312-DirectCompute-Pre-Conference-Tutorial.pdf">GTC 2010 : DirectCompute Optimizations and Best Practices</a></li>
+  <li><a href="http://www.yosoygames.com.ar/wp/2015/01/uniform-buffers-vs-texture-buffers-the-2015-edition/">Yosogames : Uniform buffers vs texture buffers: The 2015 edition</a></li>
 </ul>
 
   </div>
