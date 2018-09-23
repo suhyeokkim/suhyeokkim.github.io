@@ -113,6 +113,19 @@ _StructuredBuffer_ 의 장단점에 대해서는 말하지 않았다. MSDN 에�
 _cbuffer_ 는 레지스터를 사용하여 작으나 빠르고, 배열을 각각 다른 스레드에서 전부 다른 인덱스로 접근하면 느려진다. _StructuredBuffer_ 조금은 느리나 내부적으로 thread-safe 하게 구현되어 있고, 데이터 캐싱을 한다. 또한 크기의 제한이 없어 자유롭게 쓰고, 크기가 입력에 따라서 달라져서 유동적인 데이터에 쓸만하다는 것이다. 위에서 스키닝을 _cbuffer_ 로 사용한게 문제라고 했었는데, 글을 보면 알겠지만 _cbuffer_ 에서 각각 다른 인덱스로 접근하면 느려지니 문제인 것이다.
 </s> (~ 2018/09/23)
 
+## HLSL Assembly Analysis
+
+![unity hlsl assembly](/images/hlsl_assembly_0_cbst.png){: .center-image}
+
+이는 _Constant Buffer_ 와 _StructuredBuffer_ 의 레지스터 선언 내용으로, _Constant Buffer_ 는 세부적인 내용과 _immediateIndexed_, _dynamicIndexed_  키워드를 통해 레지스터에서 사용된다는 것으로 예측했다. 반면에 _StructuredBuffer_ 의 선언부는 굉장히 간단하다. 아마도 _StructuredBuffer_ 의 RAM 안의 주소를 t0 ~ t2 레지스터안에 저장하는 것으로 예측된다.
+
+![unity hlsl assembly](/images/hlsl_assembly_1_cbst.png){: .center-image}
+
+또한 _immediateIndexed_ 가 GPU 내부에서 컴파일될떄 고정될 것으로 예상해서 _Constatn Buffer_ 가 레지스터에 저장된다는 것을 예측하게 해준 것 중 하나다.
+
+![unity hlsl assembly](/images/hlsl_assembly_2_cbst.png){: .center-image}
+
+_Constant Buffer_ 와 달리 데이터에 접근하는 명령어가 굉장히 복잡하다. _ld_structured_indexable_ 의 형태는 다른 데이터 형태에(텍스쳐) 접근할 때에도 비슷한 명령어가 보인다.
 
 ## 참조
 
