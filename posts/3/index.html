@@ -2,7 +2,7 @@
 <html lang="ko">
 
   <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_SVG"></script>
-  
+
   <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -3320,6 +3320,18 @@ camera.RenderToCubemap(cubemapRT, 63);
 
       </div>
     </main>
+    
+    <script>
+      $("script[type='math/tex']").replaceWith(function() {
+          var tex = $(this).text();
+          return katex.renderToString(tex, {displayMode: false});
+      });
+
+      $("script[type='math/tex; mode=display']").replaceWith(function() {
+          var tex = $(this).html();
+          return katex.renderToString(tex.replace(/%.*/g, ''), {displayMode: true});
+      });
+    </script>
 
     <footer class="site-footer">
 
@@ -3329,7 +3341,7 @@ camera.RenderToCubemap(cubemapRT, 63);
       
 
 Content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a><br />
-&copy; 2015&ndash;2018 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+&copy; 2015&ndash;2019 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
 
     </p>
 

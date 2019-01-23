@@ -2,7 +2,7 @@
 <html lang="ko">
 
   <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_SVG"></script>
-  
+
   <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -104,11 +104,11 @@
   <div class="post-content">
     <h1>Appocrypha</h1>
 
-<p>대부분의 글들은 글쓴이의 생각의 확장과 지식을 쌓기 위한 목적으로 작성됩니다. 적절한 비판과 지적은 글쓴이에게 도움이 됩니다.</p>
-
 <p>이 블로그의 글들은 빠르고 간결한 작성과 이해를 위해 “~다.” 어체를 사용합니다. 글쓴이의 머릿속에 있는 정리를 위해 쓰여져서 그렇기도 합니다.</p>
 
 <p>대부분의 포스팅에서 용어를 영어로 사용합니다. 목적으로 하는 분야들이 영어권에서 주도하기 때문에 영어 자료들이 훨씬 많습니다. 이를 위해 대부분의 용어를 영어로 사용합니다. 또한 용어들이 한자로 번역되는 경우가 많은데 한자 용어와 영어 용어의 유용성을 따진다면 영어가 훨씬 유용하기 때문에 영어 용어를 사용합니다.</p>
+
+<p><a href="./categories/paper_reading/">paper_reading</a> 카테고리는 논문을 정리한 글로, 오역한 부분이 있을 수도 있기 때문에 주의해서 읽어주시고 문제가 있다면 알려주시면 감사하겠습니다.</p>
 
 <h1>Su-Hyeok Kim</h1>
 
@@ -123,6 +123,18 @@
 
       </div>
     </main>
+    
+    <script>
+      $("script[type='math/tex']").replaceWith(function() {
+          var tex = $(this).text();
+          return katex.renderToString(tex, {displayMode: false});
+      });
+
+      $("script[type='math/tex; mode=display']").replaceWith(function() {
+          var tex = $(this).html();
+          return katex.renderToString(tex.replace(/%.*/g, ''), {displayMode: true});
+      });
+    </script>
 
     <footer class="site-footer">
 
@@ -132,7 +144,7 @@
       
 
 Content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a><br />
-&copy; 2015&ndash;2018 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+&copy; 2015&ndash;2019 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
 
     </p>
 
