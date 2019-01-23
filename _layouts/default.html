@@ -2,7 +2,7 @@
 <html lang="{{ page.lang | default: site.lang | default: "en" }}">
 
   <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_SVG"></script>
-  
+
   {% include head.html %}
 
   <body>
@@ -14,6 +14,18 @@
         {{ content }}
       </div>
     </main>
+    
+    <script>
+      $("script[type='math/tex']").replaceWith(function() {
+          var tex = $(this).text();
+          return katex.renderToString(tex, {displayMode: false});
+      });
+
+      $("script[type='math/tex; mode=display']").replaceWith(function() {
+          var tex = $(this).html();
+          return katex.renderToString(tex.replace(/%.*/g, ''), {displayMode: true});
+      });
+    </script>
 
     {% include footer.html %}
 
