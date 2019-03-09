@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2019-03-09T06:51:42+00:00</updated>
+  <updated>2019-03-09T08:00:37+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -271,13 +271,13 @@
 
 &lt;p&gt;이는 입체각에만 신경쓰기 때문에 면적이 존재하지 않는 spot light 나 point light 의 세기를 나타내는데 쓰일 수 있다.&lt;/p&gt;
 
-&lt;p&gt;PBR 에서 사용되는 빛의 단위에 대한 자세한 설명은 Siggraph 2014 : “MovingFrostbite to Physically Based Rendering 2.0” 코스 노트에서 볼 수 있다.&lt;/p&gt;
+&lt;p&gt;단순하게 각 단위와 개념들에 대해서 적어보았다. PBR 에서 응용되는 빛의 단위에 대한 자세한 설명은 Siggraph 2014 : “MovingFrostbite to Physically Based Rendering 2.0” 코스 노트에서 볼 수 있다.&lt;/p&gt;
 
 &lt;h2&gt;참조&lt;/h2&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Light Measurement Handbook, Alex Ryer, 1997&lt;/li&gt;
-  &lt;li&gt;Real-Time Rendering 4th, Tomas Akenine-Möller et all, 2019&lt;/li&gt;
+  &lt;li&gt;Real-Time Rendering 4th, Tomas Akenine-Möller et all, 2018&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Radiometry&quot;&gt;Wikipedia : Radiometry&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Photometry&quot;&gt;Wikipedia : Photometry&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;Siggraph 2014 : “MovingFrostbite to Physically Based Rendering 2.0”&lt;/li&gt;
