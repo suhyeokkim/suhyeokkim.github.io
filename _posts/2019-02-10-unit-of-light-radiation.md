@@ -109,12 +109,12 @@ $$ I = \frac{\partial φ}{\partial Ω} $$
 
 이는 입체각에만 신경쓰기 때문에 면적이 존재하지 않는 spot light 나 point light 의 세기를 나타내는데 쓰일 수 있다.
 
-PBR 에서 사용되는 빛의 단위에 대한 자세한 설명은 Siggraph 2014 : "MovingFrostbite to Physically Based Rendering 2.0" 코스 노트에서 볼 수 있다.
+단순하게 각 단위와 개념들에 대해서 적어보았다. PBR 에서 응용되는 빛의 단위에 대한 자세한 설명은 Siggraph 2014 : "MovingFrostbite to Physically Based Rendering 2.0" 코스 노트에서 볼 수 있다.
 
 ## 참조
 
  - Light Measurement Handbook, Alex Ryer, 1997
- - Real-Time Rendering 4th, Tomas Akenine-Möller et all, 2019
+ - Real-Time Rendering 4th, Tomas Akenine-Möller et all, 2018
  - [Wikipedia : Radiometry](https://en.wikipedia.org/wiki/Radiometry)
  - [Wikipedia : Photometry](https://en.wikipedia.org/wiki/Photometry)
  - Siggraph 2014 : "MovingFrostbite to Physically Based Rendering 2.0"
