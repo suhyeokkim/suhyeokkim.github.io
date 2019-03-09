@@ -107,10 +107,10 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
-            <a class="post-link" href="/2017/06/04/using-texture2darray-in-unity/">Using Texture2darray In Unity</a>
+            <a class="post-link" href="/2017/07/06/structured-buffer-vs-constant-buffer/">Structured Buffer Vs Constant Buffer</a>
           </h1>
 
-          <p class="post-meta">Jun 4, 2017 • 
+          <p class="post-meta">Jul 6, 2017 • 
   
   
     
@@ -119,6 +119,8 @@
   
     
       <a href="/categories/unity/">unity</a>,
+    
+  
     
   
     
@@ -284,6 +286,301 @@
   
     
   
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/gpuinstancing/">gpuinstancing</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>CG 로 쉐이더 코딩을 하기 위해 여러 소스와 웹페이지를 뒤지던 도중 재미있는 글을 발견했다. HLSL 에서 사용하는 <em>StructuredBuffer</em> 와 <em>Constant Buffer</em> 의 차이에 대한 글이였다. Unity 메뉴얼을 따라가면서 몇번 보긴했지만 무슨 차이인지도 모르는 것들이였다. 하지만 알고나니 GPU Instancing 에 대한 기본적인 상식이기에 글을 쓴다. 우선 두가지를 먼저 간단하게 알아보고 두 개념의 차이에 대해서 알아보자.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/07/06/structured-buffer-vs-constant-buffer/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/06/11/using-gpu-instancing-in-unity/">Using Gpu Instancing In Unity</a>
+          </h1>
+
+          <p class="post-meta">Jun 11, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -309,6 +606,305 @@
   
     
       <a href="/categories/rendering/">rendering</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p><strong>이 글은 Unity 5.6.1f 버젼에서 작성되었습니다. 다른 버젼에서는 에러가 날 수 있으니 참고 바랍니다.</strong></p>
+
+<p><a href="/2017/06/04/using-texture2darray-in-unity/">Using Texture2DArray in Unity</a> 에 이어 <em>DrawCall</em> 을 줄이기 위한 방법에 대해서 소개하려한다. GPU Instancing 이라는 방법인데 <em>TextureArray</em> 와 같이 응용해서 사용하면 획기적으로 <em>DrawCall</em> 을 줄일 수 있다.</p>
+
+<p>일반적으로 알려진 <em>GPU Instancing</em> 에 대해서 말하자면 컴퓨터의 RAM 에만 저장하던 데이터들을 GPU 메모리에 복사해놓고 GPGPU 나 쉐이더를 실행할 때 빠르게 데이터에 접근하는 것을 GPU Instancing 이라 한다. 만약 <em>GPU Instancing</em> 을 사용하지 않으면 매번 <em>DrawCall</em> 에 데이터를 넣어줘야하기 때문에 수많은 <em>DrawCall</em> 이 걸리게 되고 이는 CPU 의 시간을 뺏어먹게 되어 영 좋지 않은 일이 된다. 보통은 같은 동작을 하는 오브젝트들을 최적화할 때 쓰인다. 사용하게 되면 <em>DrawCall</em> 이 <em>O(<strong>오브젝트 갯수</strong>)</em> 로 되던것이 O(1) 의 갯수로 줄어든다. 그래서 <em>TextureArray</em> 와 같이 사용하게 되면 <em>DrawCall</em> 이 <em>O(<strong>오브젝트 갯수</strong> * <strong>텍스쳐 갯수</strong>)</em> 로 계산되던게 <em>O(<strong>1</strong>)</em> 로 바뀌어 버리니 CPU 시간을 엄청나게 많이벌 수 있다. 다만 GPU 메모리를 많이 잡아먹기 때문에 신경써서 데이터를 구성하지 않으면 무슨일이 일어날지 모른다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/06/11/using-gpu-instancing-in-unity/">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/06/04/using-texture2darray-in-unity/">Using Texture2darray In Unity</a>
+          </h1>
+
+          <p class="post-meta">Jun 4, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/rendering/">rendering</a>
+    
+  
     
   
     
@@ -490,6 +1086,8 @@
   
     
   
+    
+  
 
   
   
@@ -577,6 +1175,8 @@
   
     
   
+    
+  
 
   
   
@@ -602,6 +1202,8 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
     
   
     
@@ -751,6 +1353,8 @@
   
     
   
+    
+  
 
   
   
@@ -786,6 +1390,8 @@
   
     
       <a href="/categories/shaderlab/">shaderlab</a>
+    
+  
     
   
     
@@ -961,6 +1567,8 @@
   
     
   
+    
+  
 
   
   
@@ -988,6 +1596,8 @@
   
     
       <a href="/categories/rig/">rig</a>,
+    
+  
     
   
     
@@ -1077,6 +1687,8 @@
   
     
       <a href="/categories/animate/">animate</a>
+    
+  
     
   
     
@@ -1252,6 +1864,8 @@
   
     
   
+    
+  
 
   
   
@@ -1277,6 +1891,8 @@
   
     
       <a href="/categories/rendering/">rendering</a>
+    
+  
     
   
     
@@ -1452,6 +2068,8 @@
   
     
   
+    
+  
 
   
   
@@ -1477,6 +2095,8 @@
   
     
       <a href="/categories/rendering/">rendering</a>
+    
+  
     
   
     
@@ -1678,6 +2298,8 @@
   
     
   
+    
+  
 
   
   
@@ -1703,6 +2325,8 @@
   
     
       <a href="/categories/rendering/">rendering</a>
+    
+  
     
   
     
@@ -1882,6 +2506,8 @@
   
     
   
+    
+  
 
   
   
@@ -1969,6 +2595,8 @@
   
     
   
+    
+  
 
   
   
@@ -1978,6 +2606,8 @@
   
     
       <a href="/categories/unity/">unity</a>
+    
+  
     
   
     
@@ -2173,6 +2803,8 @@
   
     
   
+    
+  
 
 </p>
         </header>
@@ -2194,495 +2826,6 @@
         
           <p class="post-continue">
             <a href="/2017/04/28/using-travis-ci/">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/04/28/usage-of-enumerator/">Usage Of Enumerator</a>
-          </h1>
-
-          <p class="post-meta">Apr 28, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/c/">c#</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>C# 언어에는 IEnumerator 를 사용한 몇몇의 기능들이 존재한다. List 같은 컨테이너부터 코드로 반복기를 만들어 제어하는 기능 등 여러가지를 제공하는데 그것들에 대하여 한번 알아보자.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/04/28/usage-of-enumerator/">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/04/23/garbage-collector-in-unity/">Garbage Collector In Unity</a>
-          </h1>
-
-          <p class="post-meta">Apr 23, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/mono/">mono</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/c/">c#</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/gc/">gc</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/analysis/">analysis</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <h4>해당 글은 2017년 4월 23일에 작성되었습니다. 이후의 상황은 반영되지 않았습니다.</h4>
-
-<p>C, C++ 을 제외한 C#, Java, Python 등 주류 애플리케이션 언어들은 대부분 메모리 관리를 garbage-collector(이하 GC) 라는 개념을 차용해 메모리를 관리한다. GC 는 특정한 메커니즘을 가지고 어플리케이션에서 사용하는 메모리를 관리해주는 개념이다. GC 는 언어별로, 구현된 사항별로 다르기 때문에 모든 개념이 통용되는 것은 아니지만 대부분 같은 개념에서 출발한다.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/04/23/garbage-collector-in-unity/">Read on &rarr;</a>
           </p>
         
       </li>
