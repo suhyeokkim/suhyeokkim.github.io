@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg1"
+   sodipodi:version="0.32"
+   inkscape:version="0.42"
+   width="433.00000px"
+   height="433.00000px"
+   sodipodi:docbase="/home/jynus/documentos/escritorio"
+   sodipodi:docname="Steradian.svg"
+   inkscape:export-filename="d:\sr.png"
+   inkscape:export-xdpi="122.30000"
+   inkscape:export-ydpi="122.30000">
+  <defs
+     id="defs3">
+    <linearGradient
+       id="linearGradient4044">
+      <stop
+         style="stop-color:#a3aae8;stop-opacity:0.81568629;"
+         offset="0.00000000"
+         id="stop4045" />
+      <stop
+         style="stop-color:#484b5c;stop-opacity:0.79607844;"
+         offset="1.0000000"
+         id="stop4046" />
+    </linearGradient>
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4044"
+       id="radialGradient4051"
+       cx="207.83958"
+       cy="315.54470"
+       r="202.71705"
+       fx="207.83958"
+       fy="315.54470"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(46.32127,53.08668)" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.46443136"
+     inkscape:cx="297.63780"
+     inkscape:cy="420.94487"
+     inkscape:window-width="1016"
+     inkscape:window-height="738"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:current-layer="svg1" />
+  <metadata
+     id="metadata4">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <path
+     sodipodi:type="arc"
+     style="fill:url(#radialGradient4051);fill-opacity:0.48022595;fill-rule:evenodd;stroke:#000000;stroke-width:2.4671378;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4.0000000;stroke-opacity:1.0000000"
+     id="path919"
+     sodipodi:cx="274.84042"
+     sodipodi:cy="347.95636"
+     sodipodi:rx="114.00788"
+     sodipodi:ry="114.00788"
+     d="M 388.84830 347.95636 A 114.00788 114.00788 0 1 1  160.83254,347.95636 A 114.00788 114.00788 0 1 1  388.84830 347.95636 z"
+     transform="matrix(1.877455,0.000000,0.000000,1.877455,-299.6399,-436.6330)" />
+  <path
+     style="fill:#ff3838;fill-opacity:0.36723164;fill-rule:evenodd;stroke:#000000;stroke-width:1.7908777pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+     d="M 119.74510,154.63534 C 82.328069,199.10442 36.449119,217.66957 17.336709,196.07537 C -1.7756908,174.48118 14.106579,121.89095 51.523609,77.421846 C 88.940629,32.952766 133.79323,13.361276 152.90563,34.955466 C 172.01804,56.549666 157.16211,110.16624 119.74510,154.63534 z "
+     id="path2165"
+     sodipodi:nodetypes="ccccc" />
+  <path
+     style="fill:none;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.8477390pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+     d="M 31.610389,204.21410 L 217.30975,215.53004 L 157.28573,40.132826"
+     id="path2787" />
+  <text
+     xml:space="preserve"
+     style="font-size:58.650391px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:100.00000%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:bitstream vera sans"
+     x="132.06306"
+     y="255.83423"
+     id="text2789"
+     sodipodi:linespacing="100.00000%"><tspan
+       id="tspan2790">r</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:51.905449px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:100.00000%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:bitstream vera sans"
+     x="55.764191"
+     y="128.90802"
+     id="text2793"
+     sodipodi:linespacing="100.00000%"><tspan
+       id="tspan2794">r</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:34.603634px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+     x="86.573601"
+     y="112.02187"
+     id="text2796"><tspan
+       id="tspan2797">2</tspan></text>
+</svg>
