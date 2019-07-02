@@ -187,6 +187,8 @@
   
     
   
+    
+  
 
 </p>
   </header>
@@ -198,11 +200,11 @@
 <h2>Property 직렬화 제어</h2>
 
 <figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="c1">// Unity 시스템에 데이터를 직렬화해 멤버변수 초기값을 지정한다.</span>
-<span class="na">[UnityEngine.SerializeField]</span>
+<span class="p">[</span><span class="n">UnityEngine</span><span class="p">.</span><span class="n">SerializeField</span><span class="p">]</span>
 <span class="k">public</span> <span class="kt">int</span> <span class="n">limitCount</span><span class="p">;</span>
 
 <span class="c1">// 직렬화를 못하게 한다.</span>
-<span class="na">[System.NonSerialized]</span>
+<span class="p">[</span><span class="n">System</span><span class="p">.</span><span class="n">NonSerialized</span><span class="p">]</span>
 <span class="k">public</span> <span class="kt">int</span> <span class="n">gameCount</span><span class="p">;</span></code></pre></figure>
 
 <p>Unity 스크립팅 시스템은 따로 멤버 직렬화에 대한 속성을 지정하지 않으면 접근 제한자(public, protected, private) 에 따라 직렬화를 할지 말지 결정한다. 하지만 접근 제한자로만 사용하기에는 부족한 부분이 있다 그래서 Unity 에서는 멤버 변수 직렬화를 <strong>Attribute</strong> 문법을 사용해 Unity 전용 속성을 만들어 제어를 할 수 있도록 해두었다.</p>
@@ -288,7 +290,7 @@
 
 <p>이 코드를 직접 실행시켜보면 알겠지만 이렇게 해봤자 Inspector 에서는 별 변화가 없다. <strong>SomeDataObject</strong> 같이 <strong>MonoBehaviour</strong> 를 상속받지 않은 사용자 정의 자료형들은 Inspector 에서 에디팅을 가능하게 하고, 저장을 하려면 클래스에 직렬화(<strong>Serializable</strong>) 하다는 속성을 붙여주어야 한다.</p>
 
-<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="na">[System.Serializable]</span>
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="p">[</span><span class="n">System</span><span class="p">.</span><span class="n">Serializable</span><span class="p">]</span>
 <span class="k">public</span> <span class="k">class</span> <span class="nc">SomeDataObject</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span></code></pre></figure>
 
 <p>위와 같이 속성 하나만 붙여주면 Inspector 에서 에디팅이 가능하고 직렬화가 되어 자동으로 초기화가 가능해진다. 아래 그림과 같이 보일 것이다.</p>
@@ -314,7 +316,7 @@
 <figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">using</span> <span class="nn">UnityEditor</span><span class="p">;</span>
 <span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
 
-<span class="na">[CustomPropertyDrawer(typeof(SomeDataObject))]</span>
+<span class="p">[</span><span class="nf">CustomPropertyDrawer</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SomeDataObject</span><span class="p">))]</span>
 <span class="k">public</span> <span class="k">class</span> <span class="nc">SomeDataObjectDrawer</span> <span class="p">:</span> <span class="n">PropertyDrawer</span>
 <span class="p">{</span>
   <span class="k">public</span> <span class="k">override</span> <span class="kt">float</span> <span class="nf">GetPropertyHeight</span><span class="p">(</span><span class="n">SerializedProperty</span> <span class="n">property</span><span class="p">,</span> <span class="n">GUIContent</span> <span class="n">label</span><span class="p">)</span>
@@ -365,7 +367,7 @@
 
 <p>C# 문법은 <strong>Enum</strong> 을 비트플래그로 사용하는 방법이 있다. 아래와 같이 말이다.</p>
 
-<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="na">[System.Flags]</span>
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="p">[</span><span class="n">System</span><span class="p">.</span><span class="n">Flags</span><span class="p">]</span>
 <span class="k">public</span> <span class="k">enum</span> <span class="n">SomeEnumFlag</span>
 <span class="p">{</span>
     <span class="n">Some</span>    <span class="p">=</span> <span class="m">1</span> <span class="p">&lt;&lt;</span> <span class="m">0</span><span class="p">,</span>
@@ -375,7 +377,7 @@
 
 <p><strong>Enum</strong> 의 정의에다가 <strong>System.Flags</strong> 를 붙여 사용하면 된다. 그런데 Unity 에서는 이 <strong>Enum</strong> 을 황용하여 비트마스크를 보여주는 기능을 지원하지 않는다. 단지 한개의 아이템만 선택하는 기능만 지원한다. 그래서 Inspector 에서 비트 플래그를 사용하여 값을 설정하려면 직접 <strong>PropertyDrawer</strong> 를 사용하여 에디터를 바꿔주어야 한다. 그래서 아래처럼 코드를 짜보았다.</p>
 
-<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="na">[CustomPropertyDrawer(typeof(SomeEnumFlag))]</span>
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="p">[</span><span class="nf">CustomPropertyDrawer</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SomeEnumFlag</span><span class="p">))]</span>
 <span class="k">public</span> <span class="k">class</span> <span class="nc">SomeEnumFlagDrawer</span> <span class="p">:</span> <span class="n">PropertyDrawer</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">static</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">Type</span><span class="p">,</span> <span class="kt">string</span><span class="p">[</span><span class="k">]&gt;</span> <span class="n">enumTypeNameDict</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">Type</span><span class="p">,</span> <span class="kt">string</span><span class="p">[</span><span class="k">]&gt;</span><span class="p">();</span>
@@ -419,7 +421,7 @@
 
 <p>위 코드는 속성을 직접 선언한 코드다. 중요한 점은 Unity 에서 지원하는 <strong>PropertyAttribute</strong> 를 상속받아서 정의하였다는 점이다. <strong>PropertyAttribute</strong> 를 사용해야만 Inspector 창에서 보이는 방식을 바꿀 수 있다. 위에서 만들어준 <strong>Enum</strong> 비트 플래그 에디터 코드에 아래와 같이 연결시켜준다.</p>
 
-<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="na">[CustomPropertyDrawer(typeof(EnumFlagAttribute))]</span>
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="p">[</span><span class="nf">CustomPropertyDrawer</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">EnumFlagAttribute</span><span class="p">))]</span>
 <span class="k">public</span> <span class="k">class</span> <span class="nc">SomeEnumFlagDrawer</span> <span class="p">:</span> <span class="n">PropertyDrawer</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span></code></pre></figure>
 
 <p>그 다음 해당 속성을 변수에 붙여주면 Inspector 에서 아래 그림과 같이 보일것이다.</p>

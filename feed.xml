@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2019-03-09T08:05:36+00:00</updated>
+  <updated>2019-07-02T12:13:58+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -24,6 +24,90 @@
     </author>
   
 
+  
+  
+    <entry>
+      
+      <title type="html">What Is Srp Batcher In Unity</title>
+      
+      <link href="https://hrmrzizon.github.io/2019/07/02/what-is-srp-batcher-in-unity/" rel="alternate" type="text/html" title="What Is Srp Batcher In Unity" />
+      <published>2019-07-02T00:00:00+00:00</published>
+      <updated>2019-07-02T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2019/07/02/what-is-srp-batcher-in-unity</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2019/07/02/what-is-srp-batcher-in-unity/">&lt;p&gt;Unity의 SRP 의 개발과 같이 여러 기능들이 생겨나는 것 같다. 아마도 기존의 Unity 의 렌더링 모듈들을 최대한 개선하려는 시도로 보인다. 이번 년초에 공개된 &lt;em&gt;SRP Batcher&lt;/em&gt; 또한 효율을 개선하기 위한 것으로 보인다.&lt;/p&gt;
+
+&lt;p&gt;종종 보이는 용어 &lt;em&gt;batch&lt;/em&gt; 라는 용어는 “한꺼번에 처리한다.” 라는 뜻으로 보통 쓰인다. 일반적인 렌더링 시스템에서의 &lt;em&gt;batch&lt;/em&gt; 는 최소한의 drawcall-driver overhead- 을 위해 렌더링할 것들의 데이터들을 최대한 묶어주는 시스템의 기능을 말하기 위해 사용되는 것 같다. 그리고 Unity 또한 기존의 &lt;em&gt;built-in batcher&lt;/em&gt; 시스템이 존재한다. 근데 이에 성능을 향상시키기 위해 &lt;em&gt;SRP batcher&lt;/em&gt; 라는게 만들어 졌다고 한다. 이는 곧 기존의 &lt;em&gt;built-in batcher&lt;/em&gt; 시스템에 비효율적인 부분이 존재한다는 것을 알 수 있다.&lt;/p&gt;
+
+&lt;p&gt;Unity를 사용을 하다보면 알 수 있지만, MeshRenderer 컴포넌트의 같은 쉐이더에 다른 파라미터를 가진 Material 을 추가하거나 바꾸게 되면 DrawCall 이 바꾼 Material 의 갯수에 비례해서 올라가는 것을 알 수 있다. 문제는 이게 &lt;em&gt;static batch&lt;/em&gt; 든 &lt;em&gt;dynamic batch&lt;/em&gt; 든 무조건 일어난다는 것에 문제가 있다. directX 에 직접 맞닿아본 적은 없지만 Unity로 Shader Model 5.0 부터 접한 필자로써는 이해가 잘 되지 않는 상황이였다.&lt;/p&gt;
+
+&lt;p&gt;문제는 Unity Blog의 해당 포스팅을 보면 알 수 있지만(&lt;a href=&quot;https://blogs.unity3d.com/2019/02/28/srp-batcher-speed-up-your-rendering/&quot;&gt;링크&lt;/a&gt;), Unity 자체가 dx9 레벨을 지원하면서 만들어졌으며, 여러 API(dx11)를 지원하려 하다보니 해당 API의 특징을 잘 사용하지 못한채 &lt;em&gt;built-in batcher&lt;/em&gt; 가 만들어진 듯 했다. 아래에는 &lt;em&gt;built-in batcher&lt;/em&gt; 시스템을 나타낸 그림이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;https://blogs.unity3d.com/wp-content/uploads/2019/02/SRP-Batcher-OFF.png&quot; alt=&quot;built-in batcher&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://solitaryroad.com/c1003.html&quot;&gt;Unity Blog : SRP Batcher: Speed up your rendering!
+&lt;/a&gt;
+&lt;br /&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;위와 같은 시스템이라면, 무조건 메터리얼이 바뀌면 이들의 정보를 갱신하기 위해 전체를 다 처리하는 코드로 되어있는 듯 하다. 하지만 여기서 조금 더 생각해보면, &lt;em&gt;Material&lt;/em&gt; 과 각 오브젝트들의 &lt;em&gt;Transformation&lt;/em&gt; 정보들은 다른 정보라고 할 수 있다. 그렇다면 이들을 한꺼번에 처리하는게 아니라, &lt;em&gt;Material&lt;/em&gt;, &lt;em&gt;Transformation&lt;/em&gt; 정보를 나누어서 갱신하면 &lt;em&gt;Material&lt;/em&gt; 을 바꿀 때, 쉐이더 코드가 바뀌지 않는다면, &lt;em&gt;DrawCall&lt;/em&gt; 이 늘어나지 않도록 할 수 있겠다. 문서에는 다른 &lt;em&gt;Material&lt;/em&gt; 이지만 &lt;em&gt;Shader&lt;/em&gt; 의 갯수가 많지 않은 경우를 타겟으로 했다고 쓰여져 있다. 아래 그림은 &lt;em&gt;SRP Batcher&lt;/em&gt; 시스템을 나타내었다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;https://blogs.unity3d.com/wp-content/uploads/2019/02/image5-3.png&quot; alt=&quot;SRP batcher&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://solitaryroad.com/c1003.html&quot;&gt;Unity Blog : SRP Batcher: Speed up your rendering!
+&lt;/a&gt;
+&lt;br /&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;위에서 언급한 데이터를 나눈 것과 동시에 중요한 것이 하나 더 있는데, 기존의 &lt;em&gt;Material&lt;/em&gt; 데이터를 계속 갱신해 주어야 했는데, &lt;em&gt;SRP Batcher&lt;/em&gt; 시스템은 데이터의 영속성을 보장한다고 한다. &lt;em&gt;Material&lt;/em&gt; 의 데이터를 나누어서 관리하기 때문에 각 오브젝트 당으로 &lt;em&gt;cbuffer&lt;/em&gt; 를 데이터를 가질 수 있다고 한다. &lt;em&gt;built-in batcher&lt;/em&gt; 시스템에서는 이와 같은 처리를 하기위해 쉐이더 레벨에서 인스턴싱이라는 것을 지원했었는데 SRP 에서는 몇 안되는 Uber 쉐이더를 사용한다고 가정하고, 이를 자동으로 처리해주는 듯 싶다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;https://blogs.unity3d.com/wp-content/uploads/2019/02/image3-5.png&quot; alt=&quot;SRP batcher&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://solitaryroad.com/c1003.html&quot;&gt;Unity Blog : SRP Batcher: Speed up your rendering!
+&lt;/a&gt;
+&lt;br /&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;위 그림은 &lt;em&gt;batch&lt;/em&gt; 처리시 어떤 기준에 따라서 한꺼번에 처리하는지에 대해 알 수 있는 다이어그램이다.&lt;/p&gt;
+
+&lt;h2&gt;참조&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://blogs.unity3d.com/2019/02/28/srp-batcher-speed-up-your-rendering/&quot;&gt;Unity Blog : SRP Batcher: Speed up your rendering!&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="unity" />
+      
+        <category term="srp_batcher" />
+      
+
+      
+
+      
+        <summary type="html">Unity의 SRP 의 개발과 같이 여러 기능들이 생겨나는 것 같다. 아마도 기존의 Unity 의 렌더링 모듈들을 최대한 개선하려는 시도로 보인다. 이번 년초에 공개된 SRP Batcher 또한 효율을 개선하기 위한 것으로 보인다. 종종 보이는 용어 batch 라는 용어는 “한꺼번에 처리한다.” 라는 뜻으로 보통 쓰인다. 일반적인 렌더링 시스템에서의 batch 는 최소한의 drawcall-driver overhead- 을 위해 렌더링할 것들의 데이터들을 최대한 묶어주는 시스템의 기능을 말하기 위해 사용되는 것 같다. 그리고 Unity 또한 기존의 built-in batcher 시스템이 존재한다. 근데 이에 성능을 향상시키기 위해 SRP batcher 라는게 만들어 졌다고 한다. 이는 곧 기존의 built-in batcher 시스템에 비효율적인 부분이 존재한다는 것을 알 수 있다. Unity를 사용을 하다보면 알 수 있지만, MeshRenderer 컴포넌트의 같은 쉐이더에 다른 파라미터를 가진 Material 을 추가하거나 바꾸게 되면 DrawCall 이 바꾼 Material 의 갯수에 비례해서 올라가는 것을 알 수 있다. 문제는 이게 static batch 든 dynamic batch 든 무조건 일어난다는 것에 문제가 있다. directX 에 직접 맞닿아본 적은 없지만 Unity로 Shader Model 5.0 부터 접한 필자로써는 이해가 잘 되지 않는 상황이였다. 문제는 Unity Blog의 해당 포스팅을 보면 알 수 있지만(링크), Unity 자체가 dx9 레벨을 지원하면서 만들어졌으며, 여러 API(dx11)를 지원하려 하다보니 해당 API의 특징을 잘 사용하지 못한채 built-in batcher 가 만들어진 듯 했다. 아래에는 built-in batcher 시스템을 나타낸 그림이다. 출처 : Unity Blog : SRP Batcher: Speed up your rendering! 위와 같은 시스템이라면, 무조건 메터리얼이 바뀌면 이들의 정보를 갱신하기 위해 전체를 다 처리하는 코드로 되어있는 듯 하다. 하지만 여기서 조금 더 생각해보면, Material 과 각 오브젝트들의 Transformation 정보들은 다른 정보라고 할 수 있다. 그렇다면 이들을 한꺼번에 처리하는게 아니라, Material, Transformation 정보를 나누어서 갱신하면 Material 을 바꿀 때, 쉐이더 코드가 바뀌지 않는다면, DrawCall 이 늘어나지 않도록 할 수 있겠다. 문서에는 다른 Material 이지만 Shader 의 갯수가 많지 않은 경우를 타겟으로 했다고 쓰여져 있다. 아래 그림은 SRP Batcher 시스템을 나타내었다. 출처 : Unity Blog : SRP Batcher: Speed up your rendering! 위에서 언급한 데이터를 나눈 것과 동시에 중요한 것이 하나 더 있는데, 기존의 Material 데이터를 계속 갱신해 주어야 했는데, SRP Batcher 시스템은 데이터의 영속성을 보장한다고 한다. Material 의 데이터를 나누어서 관리하기 때문에 각 오브젝트 당으로 cbuffer 를 데이터를 가질 수 있다고 한다. built-in batcher 시스템에서는 이와 같은 처리를 하기위해 쉐이더 레벨에서 인스턴싱이라는 것을 지원했었는데 SRP 에서는 몇 안되는 Uber 쉐이더를 사용한다고 가정하고, 이를 자동으로 처리해주는 듯 싶다. 출처 : Unity Blog : SRP Batcher: Speed up your rendering! 위 그림은 batch 처리시 어떤 기준에 따라서 한꺼번에 처리하는지에 대해 알 수 있는 다이어그램이다. 참조 Unity Blog : SRP Batcher: Speed up your rendering!</summary>
+      
+
+      
+      
+    </entry>
+  
   
   
     <entry>
@@ -2336,76 +2420,6 @@ shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
 
       
         <summary type="html">Compute Shader 는 DirectX 11 의 등장과 함께 본격적으로 쓰이기 시작했다. 지금은 GPGPU 의 본격적인 기능으로 CPU 에서 처리하기 힘든 계산량을 책임지는 중요한 기능으로 자리잡았다. 실시간으로 현실적인 그래픽을 구현하기 위해 요즘의 게임들은 Compute Shader 를 사용해서 여러 계산을 한다. 조금이라도 퍼포먼스가 필요하다면 당연히 쓰게되는 것이다. 사용하는 방법 자체는 간단하지만 Compute Shader 를 사용해 어떤 기능을 구현하는지가 중요하다. 간단하게 사용방법부터 알아보자. Unity 에서는 Compute Shader 를 위한 파일을 생성해야 한다. 프로젝트창에서 위 그림과 같이 생성해주면 된다. 그러면 아래와 같은 기본소스로 파일이 생성된다. // Each #kernel tells which function to compile; you can have many kernels #pragma kernel CSMain // Create a RenderTexture with enableRandomWrite flag and set it // with cs.SetTexture RWTexture2D&amp;lt;float4&amp;gt; Result; [numthreads(8,8,1)] void CSMain (uint3 id : SV_DispatchThreadID) { // TODO: insert actual code here! Result[id.xy] = float4(id.x &amp;amp; id.y, (id.x &amp;amp; 15)/15.0, (id.y &amp;amp; 15)/15.0, 0.0); } 위의 소스는 HLSL 로 코딩된 소스로 DirectX 11 을 기준으로 코딩되어 있다. UnityCG 파일안의 코드를 이용하면 GLSL 로 자동 컨버팅이 되기도 한다. 직접 GLSL 코드로 코딩하고 싶다면 GLSLPROGRAM 과 ENDGLSL 로 코드를 감싸주면 간단하게 해결된다. 내용은 간단하다. 각 텍셀별로 접근이 가능한 Texture 를 이용해서(DirectX 에서는 UAV 라고 칭한다.) Texture 에 값을 채운다. HLSL 의 자세한 문법과 사용방법은 MSDN : SV_GroupIndex, MSDN : Semantics 들을 참고하길 바란다. 또한 쉐이더에서 뿐만아니라 Unity 스크립트상에서도 데이터들을 연결해주어야 한다. 사용하는 유형은 간단하다. UnityEngine.Texture 에서 파생된 텍스쳐들, UnityEngine.RenderTexture, UnityEngine.ComputeBuffer 정도면 모든 활용이 가능하다. UnityEngine.RenderTexture 에서는 Cubemap 도 지원하니 간단하게 쓸 수 있다. 해당 인스턴스를 넘겨주는 방법은 아래와 같다. ComputeShader shader = ...; RenderTexture rt = ...; shader.SetTexture(&quot;Result&quot;, rt); 코드에서의 변수명을 맞추어 넣어주거나 해쉬값을 미리 가져와 넣어주면 된다. 다른 유형의 데이터들도 이런 방법으로 넣을 수 있다. 데이터를 넣어주면 다음은 Compute Shader 를 실행하여 결과를 얻어야 한다. 간단하게 함수호출만 해주면 된다. 방법은 아래와 같다. ComputeShader shader = ...; RenderTexture rt = ...; int kernelIndex = shader.FindKernel(&quot;CSMain&quot;); shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1); 해당 Compute Shader 소스는 텍스쳐안에 값을 채우는 코드이기 때문에 위와같이 해주었다. Unity Reference : ComputeShader.Dispatch 와 위의 Compute Shader 소스를 참고하면 알겠지만 최대 3차원의 방식으로 Compute Shader 의 그룹을 설정하여 계산이 가능하다. Compute Shader 소스의 [numthreads(8,8,1)] 는 한 그룹의 Thread 갯수를 나타내고, ComputeShader.Dispatch 메소드는 몇개의 그룹을 실행시키는지 넘겨주는 메소드다. 아래 그림을 보면 조금더 쉽게 이해가 가능하다. 출처 : MSDN Compute Shader 는 DirectX 11 이상, Vulkan, OpenGL 4.3 이상, OpenGL ES 3.0 이상, Metal 에서 사용가능하다. 그 아래의 플랫폼은 지원하지 않는다. 또 유의해야 할점은 그래픽 드라이버별로 지원 기능이 조금씩 다를 수 있으니 기능을 유의하며 사용해야한다. Unity Manual : ComptuteShader 에서 조금 참고할 수 있다. Using Compute Buffer in Unity 에서 관련된 내용을 언급했으니 같이 보면 좋을듯 하다. 참조 MSDN : SV_GroupIndex MSDN : Semantics Unity Manual : ComptuteShader</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Drawinstanced Vs Merged Instancing</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/11/18/DrawInstanced-vs-Merged-Instancing/" rel="alternate" type="text/html" title="Drawinstanced Vs Merged Instancing" />
-      <published>2017-11-18T00:00:00+00:00</published>
-      <updated>2017-11-18T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/11/18/DrawInstanced-vs-Merged-Instancing</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/11/18/DrawInstanced-vs-Merged-Instancing/">&lt;p&gt;&lt;a href=&quot;https://www.gdcvault.com/play/1020624/Advanced-Visual-Effects-with-DirectX&quot;&gt;GDC 2014 : Vertex Sahder Tricks&lt;/a&gt; 슬라이드에 따르면 &lt;em&gt;DrawInstanced&lt;/em&gt; 함수를 사용하여 인스턴싱을 하는것보다 &lt;em&gt;vertexID&lt;/em&gt; 를 사용하여 인스턴싱을 하는것이 빠르다고 한다. &lt;em&gt;vertexID&lt;/em&gt; 를 쓰는 방법은 굉장히 단순하다.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;VSOutput VS(uint id : SV_VertexID)
-{
-    VSOutput output;
-
-    /*
-        ...
-    */
-
-    return output;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;em&gt;SV_VertexID&lt;/em&gt; &lt;em&gt;Semantic&lt;/em&gt; 을 사용하여 값을 접근하기만 하면 된다. &lt;em&gt;vertexID&lt;/em&gt; 는 말그대로 버텍스별 인덱스를 뜻한다. &lt;em&gt;SRV&lt;/em&gt; 나 &lt;em&gt;UAV&lt;/em&gt; 와 함께 사용하여 &lt;em&gt;Instancing&lt;/em&gt; 을 하면된다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/gdc2014_vertexshadertricks_23.png&quot; alt=&quot;Merge Instancing Performance&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;https://www.gdcvault.com/play/1020624/Advanced-Visual-Effects-with-DirectX&quot;&gt;GDC 2014 : Vertex Sahder Tricks&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;그림을 보면 AMD GPU 에서 확실히 퍼포먼스 차이가 난것을 확인할 수 있다. &lt;del&gt;스피커가 AMD 소속이라는 게 포인트&lt;/del&gt;&lt;/p&gt;
-
-&lt;h1&gt;참조 자료&lt;/h1&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.gdcvault.com/play/1020624/Advanced-Visual-Effects-with-DirectX&quot;&gt;GDC 2014 : Vertex Sahder Tricks&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="render" />
-      
-        <category term="hlsl" />
-      
-
-      
-
-      
-        <summary type="html">GDC 2014 : Vertex Sahder Tricks 슬라이드에 따르면 DrawInstanced 함수를 사용하여 인스턴싱을 하는것보다 vertexID 를 사용하여 인스턴싱을 하는것이 빠르다고 한다. vertexID 를 쓰는 방법은 굉장히 단순하다. VSOutput VS(uint id : SV_VertexID) { VSOutput output; /* ... */ return output; } SV_VertexID Semantic 을 사용하여 값을 접근하기만 하면 된다. vertexID 는 말그대로 버텍스별 인덱스를 뜻한다. SRV 나 UAV 와 함께 사용하여 Instancing 을 하면된다. 출처 : GDC 2014 : Vertex Sahder Tricks 그림을 보면 AMD GPU 에서 확실히 퍼포먼스 차이가 난것을 확인할 수 있다. 스피커가 AMD 소속이라는 게 포인트 참조 자료 GDC 2014 : Vertex Sahder Tricks</summary>
       
 
       
