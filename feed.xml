@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ko">
-  <generator uri="http://jekyllrb.com" version="3.8.5">Jekyll</generator>
+  <generator uri="http://jekyllrb.com" version="3.8.6">Jekyll</generator>
   
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2019-07-02T12:13:58+00:00</updated>
+  <updated>2019-07-20T16:18:35+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -24,6 +24,252 @@
     </author>
   
 
+  
+  
+    <entry>
+      
+      <title type="html">What Is Color Spaces And Gamuts</title>
+      
+      <link href="https://hrmrzizon.github.io/2019/07/11/what-is-color-spaces-and-gamuts/" rel="alternate" type="text/html" title="What Is Color Spaces And Gamuts" />
+      <published>2019-07-11T00:00:00+00:00</published>
+      <updated>2019-07-11T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2019/07/11/what-is-color-spaces-and-gamuts</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2019/07/11/what-is-color-spaces-and-gamuts/">&lt;p&gt;HDR 에 대한 내용들을 찾다보면 &lt;em&gt;color space&lt;/em&gt; 에 대한 개념을 기본적으로 알고 있어야 수학적인 내용을 배울 때 단계적으로 학습해야 하는 것처럼 대부분의 내용들을 쉽게 이해할 수 있다. 필자의 경우 이에 대한 학습이 전혀 없었고, 직접 자료를 찾아보기 전까지 무슨 소리인지 전혀 몰랐던 상태였다. 다행히 여러 분야에 걸쳐 꽤 많이 알려진 지식들이고 받아들이기에 어려운 개념은 아니라서 이에 대해 글을 쓰면서 정리해보려 한다.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;일반적으로 컴퓨터에서 색을 나타내기 위해서 RGB 튜플을 사용한다. YMCK 같은 프린트를 위한 방법도 존재하지만 빛을 이용한 색을 나타내는 방법은 거의 RGB로 빛을 나타내는 방식을 쓰는 것으로 보인다. 이는 사람의 눈에서 빛을 색으로 감지하는 감각기관인 &lt;em&gt;cone cell&lt;/em&gt; 이 총 3가지의 파장 분포 가진 타입을 가진 즉 3가지의 파장 분포를 인식하는 &lt;em&gt;cone cell&lt;/em&gt; 이 존재한다. 아래 그림에서 나온 L, M, S 파장 분포가 &lt;em&gt;cone cell&lt;/em&gt; 이 인식하는 파장이다. 보통은 &lt;em&gt;l-cones&lt;/em&gt;, &lt;em&gt;m-cones&lt;/em&gt;, &lt;em&gt;s-cones&lt;/em&gt; 라고 하는 듯 하다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;https://upload.wikimedia.org/wikipedia/commons/1/1e/Cones_SMJ2_E.svg&quot; alt=&quot;Wikipedia : CIE 1931 color space&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://en.wikipedia.org/wiki/CIE_1931_color_space&quot;&gt;Wikipedia : CIE 1931 color space
+&lt;/a&gt;
+&lt;br /&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;보면 쉽게 알 수 있겠지만, L은 빨간색, M은 초록색, S는 파란색으로 나타내져 있다. 이렇게 표현된 이유는 아래 그림을 보면 알 수 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;https://upload.wikimedia.org/wikipedia/commons/c/c4/Rendered_Spectrum.png&quot; alt=&quot;Wikipedia : Visible spectrum&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://en.wikipedia.org/wiki/Visible_spectrum&quot;&gt;Wikipedia : Visible spectrum
+&lt;/a&gt;
+&lt;br /&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;가장 높은 경우를 가진, 분포에서 가장 높은 반응을 가지는 포인트를 각 색으로 나타낸 것이다. 즉 빛으로 색을나타낼 떄 RGB로 나타내는 이유 중 하나는 “&lt;em&gt;LMS cone cell&lt;/em&gt; 이 반응하는 가장 큰 경우가 각각 Red,Green,Blue 이기 때문이다.” 라고도 말할 수 있겠다.&lt;/p&gt;
+
+&lt;p&gt;그렇다면 우리는 색을 RGB 튜플로 나타내니, 이에 대한 정의가 있을 것이라 생각할 수 있다. 그리고 이러한 정의가 존재한다. &lt;em&gt;color space&lt;/em&gt; 가 무엇이냐? 라고 묻는다면 단순히 색을 정의한 공간이라고 밖에 설명할 수 밖에 없다. 좀 더 목적에 치중하면, 색을 정량화 하기 위해서 정의한 것이다. 정도에 머무를 것이다. 이에 대한 정의를 먼저 알아야 대강의 이해가 될것이다. 아주 기본적인 &lt;em&gt;color space&lt;/em&gt; 에 대한 정의인 두가지, &lt;em&gt;CIE 1931 RGB color space&lt;/em&gt;, &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 가 있다. 사실상 가장 많이 활용되는 &lt;em&gt;color space&lt;/em&gt; 는 &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 이다. 하지만 우선 &lt;em&gt;CIE 1931 RGB color space&lt;/em&gt; 먼저 알아보자. 이 부분이 먼저 시작되는 부분이기 때문이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;CIE 1931 RGB color space&lt;/em&gt; 의 정의에 대해서 언급해보자면, 특정 실험을 통해서 &lt;script type=&quot;math/tex&quot;&gt;\bar{r}(\lambda),\bar{g}(\lambda),\bar{b}(\lambda)&lt;/script&gt; 함수를 정의한다. 이 실험은 사람을 대상으로 해당 특정 파장의 색을 보여주고 r,g,b 값을 조절하여 색을 실험자가 직접 맞추는 실험이라고 한다. 자세한 내용은 &lt;a href=&quot;https://en.wikipedia.org/wiki/CIE_1931_color_space#CIE_RGB_color_space&quot;&gt;링크&lt;/a&gt;에 나와있다. 정의된 파장에 대한 함수가 아래에 나와있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;https://upload.wikimedia.org/wikipedia/commons/6/69/CIE1931_RGBCMF.svg&quot; alt=&quot;Wikipedia : CIE 1931 color space&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://en.wikipedia.org/wiki/CIE_1931_color_space&quot;&gt;Wikipedia : CIE 1931 color space
+&lt;/a&gt;
+&lt;br /&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;이렇게 정의된 함수를 &lt;em&gt;color matching function&lt;/em&gt; 이라 하는데, &lt;em&gt;color matching function&lt;/em&gt; 를 사용해 우리가 실질적으로 사용하는 RGB 값을 정의할 수 있다. 단 여기에 같이 사용되는 또 다른 측정값들이 있는데, &lt;em&gt;spectrum power distribution&lt;/em&gt; 이라는 것이다. 이는 해당 방정식에서 &lt;script type=&quot;math/tex&quot;&gt;S(\lambda)&lt;/script&gt; 로 표현된다. 이를 간단하게 말하자면 물체가 반사하는 파장의 분포다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;R = \int_0^\infty \bar{r}(\lambda) d\lambda,\;
+G = \int_0^\infty \bar{g}(\lambda) d\lambda,\;
+B = \int_0^\infty \bar{b}(\lambda) d\lambda&lt;/script&gt;
+
+&lt;p&gt;위와같이 정의가 가능하며, 해당 값은 절대적인 값들이기 때문에 보통은 이들을 합해 정규화한 값을 쓴다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;r = R/(R+G+B),\; g = G/(R+G+B),\; b = B/(R+G+B)&lt;/script&gt;
+
+&lt;p&gt;정의에 대한 부분은 이해를 못하더라도 상관없다. 그저 우리가 아는 RGB 표현 방식이 있고, 이를 수학적으로, 명시적으로 정의한게 &lt;em&gt;CIE 1931 RGB color space&lt;/em&gt; 이라고 생각하면된다. 다음은 &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 인데, 위에서 정의한 방법: &lt;em&gt;color matching function&lt;/em&gt; 과 &lt;em&gt;spectrum power distribution&lt;/em&gt; 을 &lt;em&gt;convolution&lt;/em&gt; 하여 정의된다. 다만 실험을 통한 &lt;em&gt;color matching function&lt;/em&gt; 의 정의는 다르다. 실험을 통한 &lt;script type=&quot;math/tex&quot;&gt;\bar{x}(\lambda),\bar{y}(\lambda),\bar{z}(\lambda)&lt;/script&gt; 는 다음과 같다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;https://upload.wikimedia.org/wikipedia/commons/8/8f/CIE_1931_XYZ_Color_Matching_Functions.svg&quot; alt=&quot;Wikipedia : CIE 1931 color space&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://en.wikipedia.org/wiki/CIE_1931_color_space&quot;&gt;Wikipedia : CIE 1931 color space
+&lt;/a&gt;
+&lt;br /&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;이렇게 정의된 &lt;em&gt;color matching function&lt;/em&gt; 과 &lt;em&gt;spectrum power distribution&lt;/em&gt; 을 사용하여 다음과 같이 &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 의 값들을 나타낼 수 있다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;X = \int_0^\infty \bar{x}(\lambda) d\lambda,\; Y = \int_0^\infty \bar{y}(\lambda) d\lambda,\; Z = \int_0^\infty \bar{z}(\lambda) d\lambda&lt;/script&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;x = X/(X+Y+Z),\; y = Y/(X+Y+Z),\; z = Z/(X+Y+Z)&lt;/script&gt;
+
+&lt;p&gt;위의 &lt;em&gt;CIE 1931 RGB color space&lt;/em&gt; 와 굉장히 비슷하게 정의했지만 &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 는 그리 단순하게 설계되진 않았다. 총 5가지의 특징을 가지고 있다. 이는 다음과 같다.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;em&gt;CIE 1931 RGB color space&lt;/em&gt; 와 확실하게 다른점으로 &lt;em&gt;color matching function&lt;/em&gt; 이 음수를 가지지 않는다. 즉 무조건 양수라는 이야기다.&lt;/li&gt;
+  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;\bar{y}(\lambda)&lt;/script&gt; &lt;em&gt;color matching function&lt;/em&gt; 은 해당 &lt;em&gt;spectrum power distribution&lt;/em&gt; 의 &lt;em&gt;luminance&lt;/em&gt; 를 추출해내는 &lt;em&gt;photopic luminous efficiency function&lt;/em&gt; 함수다. 즉 간단하게 말하자면 Y 값이 &lt;em&gt;luminance&lt;/em&gt; 라는 말이다.&lt;/li&gt;
+  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;x=y=z=1/3&lt;/script&gt; 인 지점에서 &lt;em&gt;white point&lt;/em&gt; 가 존재해야 한다고 한다.&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;CIE xy chromaticity diagram&lt;/em&gt; 에서 &lt;em&gt;color gamut&lt;/em&gt; 보았을 때, 1사분면, 즉 &lt;em&gt;x,y&lt;/em&gt; 값이 무조건 양수인 상태에서 존재해야 한다고 한다.&lt;/li&gt;
+  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;\bar{z}(\lambda)&lt;/script&gt; 의 값이 650 nm 이상에서는 전부 0으로 세팅된다고 한다. 이는 아마도 실험 측정값의 에러를 잘라내기 위한 것인듯 싶다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;4번의 정의에서 &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 자체는 색의 음수영역까지 포함하는 &lt;em&gt;imagenary color space&lt;/em&gt; 인걸 알 수 있다. 이는 &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 가 광범위한 &lt;em&gt;color space&lt;/em&gt; 인것을 알 수 있다.&lt;/p&gt;
+
+&lt;p&gt;이렇게 정의된 &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 의 쓰임새는 굉장히 다양하다. 우선 위와같은 사항을 고려해서 설계된것이 아마도 가장 큰게 아닐까 싶다. 많은 &lt;em&gt;color space&lt;/em&gt; 들이 &lt;em&gt;luminance&lt;/em&gt; 와 &lt;em&gt;chromaticity&lt;/em&gt; 를 구분해서 정의하는데, &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 는 이미 구분이 되어있기 때문에 여기에서 조금 더 변형을 가해서 원하는 성질을 추가하면 되기 때문이라고 고려된다. 즉 다양한 쓰임새는 &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 자체가 잘 정의되어 있기 때문이라고 고려된다. &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 는 &lt;em&gt;CIE 1931 RGB color space&lt;/em&gt; 로부터 선형변환할 수 있도록 되어있다. 물론 반대의 경우도 가능하다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{bmatrix}
+X\\
+Y\\
+Z\\
+\end{bmatrix} =
+\cfrac{1}{0.17697}
+\begin{bmatrix}
+0.49000&amp;0.31000&amp;0.20000\\
+0.17697&amp;0.81240&amp;0.01063\\
+0.00000&amp;0.01000&amp;0.99000\\
+\end{bmatrix}
+\begin{bmatrix}
+R\\
+G\\
+B\\
+\end{bmatrix} %]]&gt;&lt;/script&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{bmatrix}
+R\\
+G\\
+B\\
+\end{bmatrix}  =
+\begin{bmatrix}
+0.41847&amp;-0.15866&amp;-0.082835\\
+-0.091169&amp;0.25243&amp;0.015708\\
+0.00092090&amp;-0.0025498&amp;0.17860\\
+\end{bmatrix}
+\begin{bmatrix}
+X\\
+Y\\
+Z\\
+\end{bmatrix} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;이제 자주 보이는 &lt;em&gt;CIE xy chromaticity diagram&lt;/em&gt; 이라는 것이 있다. 앞에서 정의된 &lt;em&gt;x,y&lt;/em&gt; 값을 사용하여 나타낸다. &lt;em&gt;z&lt;/em&gt; 값은 &lt;script type=&quot;math/tex&quot;&gt;1-x-y&lt;/script&gt; 로 쉽게 계산이 가능해서 단순하게 &lt;em&gt;x,y&lt;/em&gt; 값을 사용하여 나타낸다. 이는 &lt;em&gt;X,Y,Z&lt;/em&gt; 의 값의 비율로 계산되는 값으로 절대적인 수치와는 상관없이 그저 &lt;em&gt;chromaticity&lt;/em&gt; 만을 나타내기 위한 방법이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;chromaticity&lt;/em&gt; 와 &lt;em&gt;luminance&lt;/em&gt; 에 대한 설명을 명확하게 하자면, &lt;em&gt;luminance&lt;/em&gt; 는 빛 자체의 밝기, 광도라고 말할 수 있겠다. 검은색에서 흰색의 차이는 단지 밝기의 정도만 차이나는 것이다. &lt;em&gt;chromaticity&lt;/em&gt; 는 밝기에 상관없이 보여지는 색 자체가 다른 것을 뜻한다. 예를들어 어두운 파란색과 어두운 빨간색은 비슷한 &lt;em&gt;luminance&lt;/em&gt; 를 가질 수 있지만, &lt;em&gt;chromaticity&lt;/em&gt; 는 전혀 다르다고 말할 수 있다. 아래 다이어그램은 &lt;em&gt;chromaticity diagram&lt;/em&gt; 이기 때문에 밝기에 대한 정보는 없고 단지 색의 차이, 색차만 나와있는 것을 알 수 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;https://upload.wikimedia.org/wikipedia/commons/3/3b/CIE1931xy_blank.svg&quot; alt=&quot;Wikipedia : CIE 1931 color space&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://en.wikipedia.org/wiki/CIE_1931_color_space&quot;&gt;Wikipedia : CIE 1931 color space
+&lt;/a&gt;
+&lt;br /&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;CIE xy chromaticity diagram&lt;/em&gt; 에서 밑의 직선을 제외한 말발굽 모양의 숫자가 표시된 부분을 &lt;em&gt;spetral locus&lt;/em&gt; 라고 부르는데, 이는 파장의 길이에 따라 달라지는 가시광선을 나타낸다. 곡선에 표시된 숫자는 파장의 크기를 나타낸다. 아래 직선은 &lt;em&gt;line of purple&lt;/em&gt; 이라고 하는데, 여기서 재미있는 것은 &lt;em&gt;spectral locus&lt;/em&gt; 와 &lt;em&gt;white point&lt;/em&gt; 사이에 있는, 즉 환경에 정해진 흰색 사이에 있는 색은 얼마든지 하나의 파장을 가진 빛으로 나타낼 수 있고, 그게 아닌 &lt;em&gt;line of purple&lt;/em&gt; 과 &lt;em&gt;white point&lt;/em&gt; 사이에 있는 색은 하나의 파장을 가진 빛으로 나타낼 수 없다.&lt;/p&gt;
+
+&lt;p&gt;위에서도 언급했지만 &lt;em&gt;CIE XYZ&lt;/em&gt; 는 다른 &lt;em&gt;color space&lt;/em&gt; 와 변환으로 연결되어있는 이론상으로 기본적인 &lt;em&gt;color space&lt;/em&gt; 이다. &lt;em&gt;CIE XYZ&lt;/em&gt; 에서 파생된 여러가지 &lt;em&gt;color space&lt;/em&gt; 들이 존재하는데 몇가지만 살펴보겠다. 첫번째는 &lt;em&gt;CIE LAB&lt;/em&gt; 이라는 &lt;em&gt;color space&lt;/em&gt; 인데 이는 사람이 인지할 수 있는 색의 변화에 맞게 개선되었으며, 프린터가 주로 사용하는 &lt;em&gt;CMYK Color Model&lt;/em&gt;, 디스플레이에서 주로 사용되는 &lt;em&gt;RGB Color Model&lt;/em&gt; 둘다 포함한다고 한다. 두번째는 &lt;em&gt;CIE LUV&lt;/em&gt; 로, 주로 빛으로 색을 나타내는 컴퓨터 그래픽에서 사용되고, 이 또한 &lt;em&gt;perceptual uniformity&lt;/em&gt; 를 개선하였다고 한다. 이 외에도 꽤 많은 &lt;em&gt;color space&lt;/em&gt; 들이 존재한다.&lt;/p&gt;
+
+&lt;p&gt;다음은 &lt;em&gt;color gamut&lt;/em&gt; 혹은 &lt;em&gt;gamut&lt;/em&gt; 이 무엇인지, 어떤 것들이 있는지에 대해서 써보겠다. 위키의 정의에 따르면, &lt;em&gt;gamut&lt;/em&gt; 은 &lt;em&gt;color space&lt;/em&gt; 의 &lt;em&gt;complete subset&lt;/em&gt; 이라고 한마디로 쓰여있다. &lt;em&gt;complete subset&lt;/em&gt; 인 이유는 잘 모르겠으나 아마도 추상적이지 않고 특정한 값을 정의함으로써의 &lt;em&gt;complete subset&lt;/em&gt;, 완벽한 부분집합이라고 말한것으로 생각된다. &lt;em&gt;gamut&lt;/em&gt; 이라는 용어는 이글에서의 의미와도 같고, 거의 대부분 특정한 주어진 환경, 특정한 출력 장치에서 구현될 수 있는 색 공간에서의 부분집합을 뜻하는 말로 쓰이나, 가끔 어떤 이미지, 영상에서 추출된 색의 완벽한 집합을 의미하는 말로도 쓰인다고도 한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gameworks/hdr/UHDColorForGames.pdf&quot;&gt;UHD Color for Games&lt;/a&gt;에서는 &lt;em&gt;gamut&lt;/em&gt; 이 정의되기 위해서는 색의 기준이되는 여러개의 색 공간의 점들, 복수개의 &lt;em&gt;color primary&lt;/em&gt;(&lt;em&gt;RGB Model&lt;/em&gt; 인 경우 3개), 주로 특정 환경에서의 명시적인 흰색을 나타내기 위해 색 공간에서의 특정한 점으로 정의되는 &lt;em&gt;white point&lt;/em&gt;, 특정 색 공간에서 해당 &lt;em&gt;gamut&lt;/em&gt; 으로 변환 하기 위한 &lt;em&gt;encoding function&lt;/em&gt; 이 필요하다고 쓰여있다. 이 글에서 언급하는 &lt;em&gt;gamut&lt;/em&gt; 들은 전부 디스플레이에서 사용되는 &lt;em&gt;gamut&lt;/em&gt; 들이기 때문에, 적어도 여기서 언급되는 &lt;em&gt;gamut&lt;/em&gt; 들은 &lt;em&gt;RGB&lt;/em&gt; 로 표현이 되기 때문에 &lt;em&gt;r,g,b&lt;/em&gt; 를 나타내는 &lt;em&gt;color primary&lt;/em&gt; 를 사용한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;gamut&lt;/em&gt; 은 디스플레이의 색 표준이기 때문에 사용되는 몇가지의 &lt;em&gt;gamut&lt;/em&gt; 들이 존재한다. 그 중 예전부터 가장 많이 알려지고 사용된 &lt;em&gt;sRGB&lt;/em&gt; 에 대해서 먼저 언급하자면, 이는 CRT 모니터의 &lt;em&gt;gamut&lt;/em&gt; 으로 사용될 정도로 꽤 오래된 &lt;em&gt;gamut&lt;/em&gt; 이다. 현재 사용되는 &lt;em&gt;gamut&lt;/em&gt; 중에 표현할 수 있는 색의 범위가 가장 적다. &lt;em&gt;sRGB&lt;/em&gt; 의 최소한의 필요한 빛의 밝기, &lt;em&gt;minimum luminance&lt;/em&gt; 는 80nit 이다. &lt;em&gt;white point&lt;/em&gt; 는 &lt;em&gt;D65&lt;/em&gt; 로 거의 표준적으로 사용된다. 최근 사용되는 &lt;em&gt;SDR&lt;/em&gt; 모니터들의 최대 &lt;em&gt;luminance&lt;/em&gt; 가 200~300nit 가 되기 때문에 꽤 차이가 난다고 할 수 있다. 아래 그림인 &lt;em&gt;chromaticity diagram&lt;/em&gt; 을 보면 쉽게 알 수 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;http://www.lamptolaser.com/images/spectrum.jpg&quot; alt=&quot;Color gamut Rec.2020, DCIP3, Rec.709&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;http://www.lamptolaser.com/fact7.html&quot;&gt;www.lamptolaser.com : The FACTS OF LIGHT, FACT 07
+&lt;/a&gt;
+&lt;br /&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;sRGB&lt;/em&gt; 의 &lt;em&gt;encoding&lt;/em&gt; 은 아래와 같다. &lt;em&gt;CIE XYZ&lt;/em&gt; 을 변환시키려면 아래와 같이 &lt;em&gt;linear RGB&lt;/em&gt; 값으로 변환시킨 다음에, 해당 값을 꽤나 알려진 &lt;em&gt;gamma correction&lt;/em&gt; 이라는 과정, &lt;em&gt;gamma function&lt;/em&gt; 에 &lt;em&gt;linear RGB&lt;/em&gt; 값을 넣어 &lt;em&gt;sRGB&lt;/em&gt; 값을 얻을 수 있다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{bmatrix}
+\mathit{R}_{linear} \\ \mathit{G}_{linear} \\ \mathit{B}_{linear} \\
+\end{bmatrix} =
+\begin{bmatrix}
+3.2406&amp;-1.5372&amp;-0.4986 \\ -0.9689&amp;1.8758&amp;0.0415 \\ 0.0557&amp;-0.2040&amp;1.0570 \\
+\end{bmatrix}
+\begin{bmatrix}
+\mathit{X}_{D65} \\ \mathit{Y}_{D65}\\ \mathit{Z}_{D65}\\
+\end{bmatrix} %]]&gt;&lt;/script&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\gamma(\mathit{u}_{rgb}) = \begin{cases} 12.92\mathit{u}_{rgb}&amp;\mathit{u}_{rgb} \leq 0.0031308\\ (1.055\mathit{u}_{rgb}^{1/2.4}-0.055&amp;otherwise \end{cases}\\ %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;역변환과 여러 정보에 대해서는 &lt;a href=&quot;https://en.wikipedia.org/wiki/SRGB&quot;&gt;Wikipedia : sRGB&lt;/a&gt;에서 확인할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;sRGB&lt;/em&gt; 와 거의 비슷하게 쓰이는 &lt;em&gt;ITU-R Recommendation BT.709&lt;/em&gt;, 보통 줄여서 &lt;em&gt;Rec.709&lt;/em&gt;, &lt;em&gt;BT.709&lt;/em&gt; 라고 불리는 &lt;em&gt;gamut&lt;/em&gt; 은 HDTV 의 기준으로 많이 쓰이는 &lt;em&gt;gamut&lt;/em&gt; 이다. &lt;em&gt;sRGB&lt;/em&gt; 와 확실하게 다른점은 &lt;em&gt;encoding function&lt;/em&gt; 이 다르다는 점이다. 이는 &lt;em&gt;viewing environtment&lt;/em&gt;, 디스플레이가 사용되는 환경이 다르기 때문이라고 한다.&lt;/p&gt;
+
+&lt;p&gt;위의 &lt;em&gt;chromaticity diagram&lt;/em&gt; 에서 두번째로 넓은 영역을 차지하는 &lt;em&gt;DCI-P3&lt;/em&gt; 은 &lt;em&gt;Digital Cinema Initiative&lt;/em&gt; 라는 조직에서 만들고, &lt;em&gt;Society of Motion Picutre &amp;amp; Telelvision Engineers&lt;/em&gt; 라는 조직에서 &lt;em&gt;publishing&lt;/em&gt; 한 &lt;em&gt;gamut&lt;/em&gt; 으로, 꽤 많은 디스플레이들이 지원하는 비교적 넓은, &lt;em&gt;HDR&lt;/em&gt; 과 같이 응용될 수 있는 &lt;em&gt;gamut&lt;/em&gt; 이다. 가장 넓은 영역을 차지하는 &lt;em&gt;Rec. 2020&lt;/em&gt;, &lt;em&gt;ITU-R Recommendation BT.2020&lt;/em&gt; 은 비교적 최근에 고안된 &lt;em&gt;gamut&lt;/em&gt; 으로, 적어도 &lt;em&gt;HDMI 2.1&lt;/em&gt;, &lt;em&gt;HDR&lt;/em&gt; 이 가능한 환경에서 사용될 수 있기 때문에 가장 한정적으로 사용될 수 밖에 없는 &lt;em&gt;gamut&lt;/em&gt; 이다.&lt;/p&gt;
+
+&lt;p&gt;주로 사용되는 &lt;em&gt;gamut&lt;/em&gt; 에 대해 알아보았으니 나머지 연산에 대해서 한번 알아보자. &lt;em&gt;gamut&lt;/em&gt; 은 색을 연산하기 위해서는 반드시 고정되어야 한다. 아래 그림을 보면 같은 색이라도 어떤 &lt;em&gt;color space&lt;/em&gt;, &lt;em&gt;gamut&lt;/em&gt; 이냐에 따라서 같은 연산의 결과라도 &lt;em&gt;gamut&lt;/em&gt; 에 따라서 달라진다.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/color_op_in_gamuts.PNG&quot; alt=&quot;color operation in gamut&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;center&gt;출처 : &lt;a href=&quot;https://developer.nvidia.com/hdr-gdc-2018&quot;&gt;HDR Ecosystem for Games, Evan Hart, 2018
+&lt;/a&gt;
+&lt;br /&gt;
+&lt;/center&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;그래서 &lt;em&gt;sRGB&lt;/em&gt; 같은 작은 &lt;em&gt;gamut&lt;/em&gt; 을 사용하는 경우에 &lt;em&gt;HDR&lt;/em&gt; 을 활용하기 위해 &lt;em&gt;gamut&lt;/em&gt; 을 강제로 늘리고 싶은 경우가 있는데 &lt;em&gt;gamut mapping&lt;/em&gt; 이라고 불리고 그다지 추천되는 방법은 아니다. 디지털 상에서라면 이미 &lt;em&gt;quantization&lt;/em&gt; 이 되어있기도 하고, 색의 범위가 줄어들어 단순히 &lt;em&gt;color gamut&lt;/em&gt; 을 &lt;em&gt;clipping&lt;/em&gt; 하게 되면 &lt;em&gt;chromaticity&lt;/em&gt; 가 급격하게 변경되고, 마찬가지고 색의 범위가 늘어나서 단순히 &lt;em&gt;stretching&lt;/em&gt; 하는 경우에도 전의 경우와 같다. 이는 아트팀에서 노발대발할 부분이므로 최대한 하지 않는 것을 추천하는 경우가 많다. 여러 자료에서는 그래서 그냥 &lt;em&gt;sRGB&lt;/em&gt; 를 쓰라고 언급한다.&lt;/p&gt;
+
+&lt;!--
+$$ \gamma^{-1}(\mathit{u}_{rgb}) = \begin{cases} \mathit{u}_{rgb}/12.92&amp;\mathit{u}_{rgb} \leq 0.04045\\ (\frac{\mathit{u}_{rgb}+0.055}{1.055})^{2.4}&amp;otherwise \end{cases}\\ $$
+$$
+\begin{bmatrix}
+\mathit{X}_{D65} \\ \mathit{Y}_{D65}\\ \mathit{Z}_{D65}\\
+\end{bmatrix} =
+\begin{bmatrix}
+0.4124&amp;0.3576&amp;0.1805 \\ 0.2126&amp;0.7152&amp;0.0722 \\ 0.0193&amp;0.1192&amp;0.9504 \\
+\end{bmatrix}
+\begin{bmatrix}
+\mathit{R}_{linear} \\ \mathit{G}_{linear} \\ \mathit{B}_{linear} \\
+\end{bmatrix}
+$$
+--&gt;
+
+&lt;!-- ITP(ICtCp) : Hdr, 부록 정도로 --&gt;
+
+&lt;h2&gt;참조&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Color_space&quot;&gt;Wikipedia : Color space&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Gamut&quot;&gt;Wikipedia : Gamut&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/SRGB&quot;&gt;Wikipedia : sRGB&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Real-Time Rendering 4th, Tomas Akenine-Möller et all, 2018&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://webzine.kps.or.kr/contents/data/webzine/webzine/15124615671.pdf&quot;&gt;특집 예술세계에서의 물리학 : 색채과학이란 - 디지털 색채를 중심으로, 곽영신.우정원, 2000&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.nvidia.com/sites/default/files/akamai/gameworks/hdr/UHDColorForGames.pdf&quot;&gt;UHD Color for Games, Evan Hart, 2016&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.nvidia.com/hdr-gdc-2018&quot;&gt;HDR Ecosystem for Games, Evan Hart, 2018&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="color" />
+      
+        <category term="colorimetry" />
+      
+
+      
+
+      
+        <summary type="html">HDR 에 대한 내용들을 찾다보면 color space 에 대한 개념을 기본적으로 알고 있어야 수학적인 내용을 배울 때 단계적으로 학습해야 하는 것처럼 대부분의 내용들을 쉽게 이해할 수 있다. 필자의 경우 이에 대한 학습이 전혀 없었고, 직접 자료를 찾아보기 전까지 무슨 소리인지 전혀 몰랐던 상태였다. 다행히 여러 분야에 걸쳐 꽤 많이 알려진 지식들이고 받아들이기에 어려운 개념은 아니라서 이에 대해 글을 쓰면서 정리해보려 한다.</summary>
+      
+
+      
+      
+    </entry>
+  
   
   
     <entry>
@@ -2313,113 +2559,6 @@ bias = clamp(bias, 0,0.01);
 
       
         <summary type="html">※ 이 글은 opengl-tutorial : shadow mapping 게시물을 참고하여 쓰여졌습니다. 자세한 내용은 원문을 보는게 좋습니다. Shadow Mapping 실시간으로 그림자를 구현하기 위한 방법 중에 가장 널리 알려진 방법이다. 다른 방법들보다 구현하기 조금 쉬운편이긴 하나 이 방법은 완벽하지가 않기 때문에 방법 자체로는 완벽한 모습을 보이기 어렵고 다른 방법과 같이 사용하여 부족한 부분을 보완하여 사용해야 한다.</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Using Compute Shader In Unity</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/11/29/using-compute-shader-in-unity/" rel="alternate" type="text/html" title="Using Compute Shader In Unity" />
-      <published>2017-11-29T00:00:00+00:00</published>
-      <updated>2017-11-29T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/11/29/using-compute-shader-in-unity</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/11/29/using-compute-shader-in-unity/">&lt;p&gt;&lt;em&gt;Compute Shader&lt;/em&gt; 는 &lt;em&gt;DirectX 11&lt;/em&gt; 의 등장과 함께 본격적으로 쓰이기 시작했다. 지금은 &lt;em&gt;GPGPU&lt;/em&gt; 의 본격적인 기능으로 CPU 에서 처리하기 힘든 계산량을 책임지는 중요한 기능으로 자리잡았다. 실시간으로 현실적인 그래픽을 구현하기 위해 요즘의 게임들은 &lt;em&gt;Compute Shader&lt;/em&gt; 를 사용해서 여러 계산을 한다. 조금이라도 퍼포먼스가 필요하다면 당연히 쓰게되는 것이다.&lt;/p&gt;
-
-&lt;p&gt;사용하는 방법 자체는 간단하지만 &lt;em&gt;Compute Shader&lt;/em&gt; 를 사용해 어떤 기능을 구현하는지가 중요하다. 간단하게 사용방법부터 알아보자. Unity 에서는 &lt;em&gt;Compute Shader&lt;/em&gt; 를 위한 파일을 생성해야 한다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/create_computeshader.png&quot; alt=&quot;create computeshader&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;프로젝트창에서 위 그림과 같이 생성해주면 된다. 그러면 아래와 같은 기본소스로 파일이 생성된다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;// Each #kernel tells which function to compile; you can have many kernels
-#pragma kernel CSMain
-
-// Create a RenderTexture with enableRandomWrite flag and set it
-// with cs.SetTexture
-RWTexture2D&amp;lt;float4&amp;gt; Result;
-
-[numthreads(8,8,1)]
-void CSMain (uint3 id : SV_DispatchThreadID)
-{
-	// TODO: insert actual code here!
-
-	Result[id.xy] = float4(id.x &amp;amp; id.y, (id.x &amp;amp; 15)/15.0, (id.y &amp;amp; 15)/15.0, 0.0);
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;위의 소스는 &lt;em&gt;HLSL&lt;/em&gt; 로 코딩된 소스로 &lt;em&gt;DirectX 11&lt;/em&gt; 을 기준으로 코딩되어 있다. &lt;em&gt;UnityCG&lt;/em&gt; 파일안의 코드를 이용하면 &lt;em&gt;GLSL&lt;/em&gt; 로 자동 컨버팅이 되기도 한다. 직접 &lt;em&gt;GLSL&lt;/em&gt; 코드로 코딩하고 싶다면 &lt;em&gt;GLSLPROGRAM&lt;/em&gt; 과 &lt;em&gt;ENDGLSL&lt;/em&gt; 로 코드를 감싸주면 간단하게 해결된다.&lt;/p&gt;
-
-&lt;p&gt;내용은 간단하다. 각 텍셀별로 접근이 가능한 &lt;em&gt;Texture&lt;/em&gt; 를 이용해서(&lt;em&gt;DirectX&lt;/em&gt; 에서는 UAV 라고 칭한다.) &lt;em&gt;Texture&lt;/em&gt; 에 값을 채운다. &lt;em&gt;HLSL&lt;/em&gt; 의 자세한 문법과 사용방법은 &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/ff471569.aspx&quot;&gt;MSDN : SV_GroupIndex&lt;/a&gt;, &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/bb509647.aspx&quot;&gt;MSDN : Semantics &lt;/a&gt; 들을 참고하길 바란다.&lt;/p&gt;
-
-&lt;p&gt;또한 쉐이더에서 뿐만아니라 &lt;em&gt;Unity&lt;/em&gt; 스크립트상에서도 데이터들을 연결해주어야 한다. 사용하는 유형은 간단하다. &lt;strong&gt;UnityEngine.Texture&lt;/strong&gt; 에서 파생된 텍스쳐들, &lt;strong&gt;UnityEngine.RenderTexture&lt;/strong&gt;, &lt;strong&gt;UnityEngine.ComputeBuffer&lt;/strong&gt; 정도면 모든 활용이 가능하다. &lt;strong&gt;UnityEngine.RenderTexture&lt;/strong&gt; 에서는 &lt;em&gt;Cubemap&lt;/em&gt; 도 지원하니 간단하게 쓸 수 있다. 해당 인스턴스를 넘겨주는 방법은 아래와 같다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C#&quot;&gt;ComputeShader shader = ...;
-RenderTexture rt = ...;
-
-shader.SetTexture(&quot;Result&quot;, rt);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;코드에서의 변수명을 맞추어 넣어주거나 해쉬값을 미리 가져와 넣어주면 된다. 다른 유형의 데이터들도 이런 방법으로 넣을 수 있다. 데이터를 넣어주면 다음은 &lt;em&gt;Compute Shader&lt;/em&gt; 를 실행하여 결과를 얻어야 한다. 간단하게 함수호출만 해주면 된다. 방법은 아래와 같다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C#&quot;&gt;ComputeShader shader = ...;
-RenderTexture rt = ...;
-int kernelIndex = shader.FindKernel(&quot;CSMain&quot;);
-
-shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;해당 &lt;em&gt;Compute Shader&lt;/em&gt; 소스는 텍스쳐안에 값을 채우는 코드이기 때문에 위와같이 해주었다. &lt;a href=&quot;https://docs.unity3d.com/ScriptReference/ComputeShader.Dispatch.html&quot;&gt;Unity Reference : ComputeShader.Dispatch&lt;/a&gt; 와 위의 &lt;em&gt;Compute Shader&lt;/em&gt; 소스를 참고하면 알겠지만 최대 3차원의 방식으로 &lt;em&gt;Compute Shader&lt;/em&gt; 의 그룹을 설정하여 계산이 가능하다.  &lt;em&gt;Compute Shader&lt;/em&gt; 소스의 &lt;em&gt;[numthreads(8,8,1)]&lt;/em&gt; 는 한 그룹의 &lt;em&gt;Thread&lt;/em&gt; 갯수를 나타내고, &lt;em&gt;ComputeShader.Dispatch&lt;/em&gt; 메소드는 몇개의 그룹을 실행시키는지 넘겨주는 메소드다. 아래 그림을 보면 조금더 쉽게 이해가 가능하다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;https://msdn.microsoft.com/dynimg/IC520438.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/ff471569.aspx&quot;&gt;MSDN&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Compute Shader&lt;/em&gt; 는 &lt;em&gt;DirectX 11&lt;/em&gt; 이상, &lt;em&gt;Vulkan&lt;/em&gt;,  &lt;em&gt;OpenGL 4.3&lt;/em&gt; 이상, &lt;em&gt;OpenGL ES 3.0&lt;/em&gt; 이상, &lt;em&gt;Metal&lt;/em&gt; 에서 사용가능하다. 그 아래의 플랫폼은 지원하지 않는다. 또 유의해야 할점은 그래픽 드라이버별로 지원 기능이 조금씩 다를 수 있으니 기능을 유의하며 사용해야한다. &lt;a href=&quot;https://docs.unity3d.com/Manual/ComputeShaders.html&quot;&gt;Unity Manual : ComptuteShader&lt;/a&gt; 에서 조금 참고할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/2017/08/01/using-compute-buffer-in-unity/&quot;&gt;Using Compute Buffer in Unity&lt;/a&gt; 에서 관련된 내용을 언급했으니 같이 보면 좋을듯 하다.&lt;/p&gt;
-
-&lt;h2&gt;참조&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/ff471569.aspx&quot;&gt;MSDN : SV_GroupIndex&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/bb509647.aspx&quot;&gt;MSDN : Semantics &lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.unity3d.com/Manual/ComputeShaders.html&quot;&gt;Unity Manual : ComptuteShader&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="unity" />
-      
-        <category term="shader" />
-      
-        <category term="hlsl" />
-      
-
-      
-
-      
-        <summary type="html">Compute Shader 는 DirectX 11 의 등장과 함께 본격적으로 쓰이기 시작했다. 지금은 GPGPU 의 본격적인 기능으로 CPU 에서 처리하기 힘든 계산량을 책임지는 중요한 기능으로 자리잡았다. 실시간으로 현실적인 그래픽을 구현하기 위해 요즘의 게임들은 Compute Shader 를 사용해서 여러 계산을 한다. 조금이라도 퍼포먼스가 필요하다면 당연히 쓰게되는 것이다. 사용하는 방법 자체는 간단하지만 Compute Shader 를 사용해 어떤 기능을 구현하는지가 중요하다. 간단하게 사용방법부터 알아보자. Unity 에서는 Compute Shader 를 위한 파일을 생성해야 한다. 프로젝트창에서 위 그림과 같이 생성해주면 된다. 그러면 아래와 같은 기본소스로 파일이 생성된다. // Each #kernel tells which function to compile; you can have many kernels #pragma kernel CSMain // Create a RenderTexture with enableRandomWrite flag and set it // with cs.SetTexture RWTexture2D&amp;lt;float4&amp;gt; Result; [numthreads(8,8,1)] void CSMain (uint3 id : SV_DispatchThreadID) { // TODO: insert actual code here! Result[id.xy] = float4(id.x &amp;amp; id.y, (id.x &amp;amp; 15)/15.0, (id.y &amp;amp; 15)/15.0, 0.0); } 위의 소스는 HLSL 로 코딩된 소스로 DirectX 11 을 기준으로 코딩되어 있다. UnityCG 파일안의 코드를 이용하면 GLSL 로 자동 컨버팅이 되기도 한다. 직접 GLSL 코드로 코딩하고 싶다면 GLSLPROGRAM 과 ENDGLSL 로 코드를 감싸주면 간단하게 해결된다. 내용은 간단하다. 각 텍셀별로 접근이 가능한 Texture 를 이용해서(DirectX 에서는 UAV 라고 칭한다.) Texture 에 값을 채운다. HLSL 의 자세한 문법과 사용방법은 MSDN : SV_GroupIndex, MSDN : Semantics 들을 참고하길 바란다. 또한 쉐이더에서 뿐만아니라 Unity 스크립트상에서도 데이터들을 연결해주어야 한다. 사용하는 유형은 간단하다. UnityEngine.Texture 에서 파생된 텍스쳐들, UnityEngine.RenderTexture, UnityEngine.ComputeBuffer 정도면 모든 활용이 가능하다. UnityEngine.RenderTexture 에서는 Cubemap 도 지원하니 간단하게 쓸 수 있다. 해당 인스턴스를 넘겨주는 방법은 아래와 같다. ComputeShader shader = ...; RenderTexture rt = ...; shader.SetTexture(&quot;Result&quot;, rt); 코드에서의 변수명을 맞추어 넣어주거나 해쉬값을 미리 가져와 넣어주면 된다. 다른 유형의 데이터들도 이런 방법으로 넣을 수 있다. 데이터를 넣어주면 다음은 Compute Shader 를 실행하여 결과를 얻어야 한다. 간단하게 함수호출만 해주면 된다. 방법은 아래와 같다. ComputeShader shader = ...; RenderTexture rt = ...; int kernelIndex = shader.FindKernel(&quot;CSMain&quot;); shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1); 해당 Compute Shader 소스는 텍스쳐안에 값을 채우는 코드이기 때문에 위와같이 해주었다. Unity Reference : ComputeShader.Dispatch 와 위의 Compute Shader 소스를 참고하면 알겠지만 최대 3차원의 방식으로 Compute Shader 의 그룹을 설정하여 계산이 가능하다. Compute Shader 소스의 [numthreads(8,8,1)] 는 한 그룹의 Thread 갯수를 나타내고, ComputeShader.Dispatch 메소드는 몇개의 그룹을 실행시키는지 넘겨주는 메소드다. 아래 그림을 보면 조금더 쉽게 이해가 가능하다. 출처 : MSDN Compute Shader 는 DirectX 11 이상, Vulkan, OpenGL 4.3 이상, OpenGL ES 3.0 이상, Metal 에서 사용가능하다. 그 아래의 플랫폼은 지원하지 않는다. 또 유의해야 할점은 그래픽 드라이버별로 지원 기능이 조금씩 다를 수 있으니 기능을 유의하며 사용해야한다. Unity Manual : ComptuteShader 에서 조금 참고할 수 있다. Using Compute Buffer in Unity 에서 관련된 내용을 언급했으니 같이 보면 좋을듯 하다. 참조 MSDN : SV_GroupIndex MSDN : Semantics Unity Manual : ComptuteShader</summary>
       
 
       

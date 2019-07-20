@@ -107,6 +107,236 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2018/03/04/what-is-ddx-and-ddy/">What Is Ddx And Ddy</a>
+          </h1>
+
+          <p class="post-meta">Mar 4, 2018 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/hlsl/">hlsl</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p><em>HLSL</em> 에는 <em>ddx</em> 와 <em>ddy</em> <em>intrisic</em> 이 <em>Shader Model 2.0</em> 부터 존재했다. 필자는 이를 이해하기 위해 자료를 찾아보았지만 쉽게 이해되는 것들은 거의 없었다. 이해한 것을 정리하기 위해 이글을 쓴다.</p>
+
+<p>예전부터 <em>Pixel Shader</em> 를 처리할 때 픽셀 단위로 하나하나 처리하는게 아닌 적어도 2x2 개의 픽셀들을 한꺼번에 처리했다고 한다. 그래서 이러한 아키텍쳐를 이용한 키워드가 <em>ddx</em> 와 <em>ddy</em> 다. 기본적으로 쉐이더는 병렬로 처리되기 때문에, 4개의 <em>Pixel Shader</em> 가 한꺼번에 실행되는 것으로 생각할 수 있다. 아래 코드를 보면서 생각해보자.</p>
+
+<pre><code class="language-hlsl">    half3 dpdx = ddx(position);
+    half3 dpdy = ddy(position);
+</code></pre>
+
+<p>4개의 픽셀 쉐이더가 첫번째 라인을 실행할 때 ddx 는 들어온 파라미터의 x축, 가로의 픽셀들의 파라미터의 차이를 구해 반환한다. 이는 <em>δ/δx</em> 의 의미와 같다. 즉 x 를 기준으로 편미분을 한것이라고 한다. 마찬가지로 ddy 는 y축을 기준으로 차이를 계산해 반환하는 키워드로 생각하면 된다.</p>
+
+<p><em>Shader Model 5.0</em> 부터는 <em>ddx_coarse/ddy_coarse</em> 와 <em>ddx_fine/ddy_fine</em> 으로 키워드가 나뉜다. 기존의 <em>ddx/ddy</em> 는 <em>ddx_coarse/ddy_coarse</em> 와 같다고 한다. <em>fine</em> 과 <em>coarse</em> 의 차이는 간단하다. 4개의 픽셀을 기준으로 각각의 차이를 전부 구하는게 <em>fine</em>, 한쪽의 차이만 구하는게 <em>coarse</em> 라고 한다. 자세한 것은 아래 참조에서 보는 것을 추천한다.</p>
+
+<h2>참조</h2>
+<ul>
+  <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb509588.aspx">MSDN HLSL Intrisic : ddx</a></li>
+  <li><a href="https://gamedev.stackexchange.com/questions/62648/what-does-ddx-hlsl-actually-do">gamedev.stackexchange.net : What does ddx (hlsl) actually do?</a></li>
+  <li><a href="https://fgiesen.wordpress.com/2011/07/10/a-trip-through-the-graphics-pipeline-2011-part-8/#comment-1990">The ryg blog : A trip through the Graphics Pipeline 2011, part 8</a></li>
+  <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/hh446950.aspx">MSDN Shader Model Assembly 5.0 : deriv_rtx_fine</a></li>
+  <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/hh446948.aspx">MSDN Shader Model Assembly 5.0 : deriv_rtx_coarse </a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2018/02/19/gpu-branching-and-divergence/">Gpu Branching And Divergence</a>
           </h1>
 
@@ -181,6 +411,10 @@
   
     
       <a href="/categories/gpu/">gpu</a>,
+    
+  
+    
+  
     
   
     
@@ -292,6 +526,10 @@
   
     
   
+    
+  
+    
+  
 
 </p>
         </header>
@@ -349,6 +587,10 @@
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
     
   
     
@@ -500,6 +742,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -525,6 +771,10 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
     
   
     
@@ -660,6 +910,10 @@
   
     
       <a href="/categories/fts/">fts</a>
+    
+  
+    
+  
     
   
     
@@ -799,6 +1053,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -890,6 +1148,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -915,6 +1177,10 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
     
   
     
@@ -1050,6 +1316,10 @@
   
     
       <a href="/categories/fts/">fts</a>
+    
+  
+    
+  
     
   
     
@@ -1189,6 +1459,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -1280,6 +1554,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -1305,6 +1583,10 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
     
   
     
@@ -1462,6 +1744,10 @@
   
     
   
+    
+  
+    
+  
 
 </p>
         </header>
@@ -1497,6 +1783,10 @@
   
     
       <a href="/categories/unity/">unity</a>
+    
+  
+    
+  
     
   
     
@@ -1704,6 +1994,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -1795,6 +2089,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -1820,6 +2118,10 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
     
   
     
@@ -1977,6 +2279,10 @@
   
     
   
+    
+  
+    
+  
 
 </p>
         </header>
@@ -2036,6 +2342,10 @@
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
     
   
     
@@ -2187,6 +2497,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -2212,6 +2526,10 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
     
   
     
@@ -2369,6 +2687,10 @@
   
     
   
+    
+  
+    
+  
 
 </p>
         </header>
@@ -2426,6 +2748,10 @@
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
     
   
     
@@ -2577,6 +2903,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -2602,6 +2932,10 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
     
   
     
@@ -2759,6 +3093,10 @@
   
     
   
+    
+  
+    
+  
 
 </p>
         </header>
@@ -2816,6 +3154,10 @@
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
     
   
     
@@ -2967,6 +3309,10 @@
   
     
   
+    
+  
+    
+  
 
   
   
@@ -3058,6 +3404,10 @@
   
     
   
+    
+  
+    
+  
 
 </p>
         </header>
@@ -3074,363 +3424,6 @@
           <p class="post-continue">
             <a href="/2017/11/30/what-is-shadow-mapping/">Read on &rarr;</a>
           </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/11/29/using-compute-shader-in-unity/">Using Compute Shader In Unity</a>
-          </h1>
-
-          <p class="post-meta">Nov 29, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/shader/">shader</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/hlsl/">hlsl</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p><em>Compute Shader</em> 는 <em>DirectX 11</em> 의 등장과 함께 본격적으로 쓰이기 시작했다. 지금은 <em>GPGPU</em> 의 본격적인 기능으로 CPU 에서 처리하기 힘든 계산량을 책임지는 중요한 기능으로 자리잡았다. 실시간으로 현실적인 그래픽을 구현하기 위해 요즘의 게임들은 <em>Compute Shader</em> 를 사용해서 여러 계산을 한다. 조금이라도 퍼포먼스가 필요하다면 당연히 쓰게되는 것이다.</p>
-
-<p>사용하는 방법 자체는 간단하지만 <em>Compute Shader</em> 를 사용해 어떤 기능을 구현하는지가 중요하다. 간단하게 사용방법부터 알아보자. Unity 에서는 <em>Compute Shader</em> 를 위한 파일을 생성해야 한다.</p>
-
-<p><img src="/images/create_computeshader.png" alt="create computeshader" class="center-image" /></p>
-
-<p>프로젝트창에서 위 그림과 같이 생성해주면 된다. 그러면 아래와 같은 기본소스로 파일이 생성된다.</p>
-
-<pre><code class="language-C">// Each #kernel tells which function to compile; you can have many kernels
-#pragma kernel CSMain
-
-// Create a RenderTexture with enableRandomWrite flag and set it
-// with cs.SetTexture
-RWTexture2D&lt;float4&gt; Result;
-
-[numthreads(8,8,1)]
-void CSMain (uint3 id : SV_DispatchThreadID)
-{
-	// TODO: insert actual code here!
-
-	Result[id.xy] = float4(id.x &amp; id.y, (id.x &amp; 15)/15.0, (id.y &amp; 15)/15.0, 0.0);
-}
-</code></pre>
-
-<p>위의 소스는 <em>HLSL</em> 로 코딩된 소스로 <em>DirectX 11</em> 을 기준으로 코딩되어 있다. <em>UnityCG</em> 파일안의 코드를 이용하면 <em>GLSL</em> 로 자동 컨버팅이 되기도 한다. 직접 <em>GLSL</em> 코드로 코딩하고 싶다면 <em>GLSLPROGRAM</em> 과 <em>ENDGLSL</em> 로 코드를 감싸주면 간단하게 해결된다.</p>
-
-<p>내용은 간단하다. 각 텍셀별로 접근이 가능한 <em>Texture</em> 를 이용해서(<em>DirectX</em> 에서는 UAV 라고 칭한다.) <em>Texture</em> 에 값을 채운다. <em>HLSL</em> 의 자세한 문법과 사용방법은 <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff471569.aspx">MSDN : SV_GroupIndex</a>, <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb509647.aspx">MSDN : Semantics </a> 들을 참고하길 바란다.</p>
-
-<p>또한 쉐이더에서 뿐만아니라 <em>Unity</em> 스크립트상에서도 데이터들을 연결해주어야 한다. 사용하는 유형은 간단하다. <strong>UnityEngine.Texture</strong> 에서 파생된 텍스쳐들, <strong>UnityEngine.RenderTexture</strong>, <strong>UnityEngine.ComputeBuffer</strong> 정도면 모든 활용이 가능하다. <strong>UnityEngine.RenderTexture</strong> 에서는 <em>Cubemap</em> 도 지원하니 간단하게 쓸 수 있다. 해당 인스턴스를 넘겨주는 방법은 아래와 같다.</p>
-
-<pre><code class="language-C#">ComputeShader shader = ...;
-RenderTexture rt = ...;
-
-shader.SetTexture("Result", rt);
-</code></pre>
-
-<p>코드에서의 변수명을 맞추어 넣어주거나 해쉬값을 미리 가져와 넣어주면 된다. 다른 유형의 데이터들도 이런 방법으로 넣을 수 있다. 데이터를 넣어주면 다음은 <em>Compute Shader</em> 를 실행하여 결과를 얻어야 한다. 간단하게 함수호출만 해주면 된다. 방법은 아래와 같다.</p>
-
-<pre><code class="language-C#">ComputeShader shader = ...;
-RenderTexture rt = ...;
-int kernelIndex = shader.FindKernel("CSMain");
-
-shader.Dispatch(kernelIndex, rt.width / 8, rt.height / 8, 1);
-</code></pre>
-
-<p>해당 <em>Compute Shader</em> 소스는 텍스쳐안에 값을 채우는 코드이기 때문에 위와같이 해주었다. <a href="https://docs.unity3d.com/ScriptReference/ComputeShader.Dispatch.html">Unity Reference : ComputeShader.Dispatch</a> 와 위의 <em>Compute Shader</em> 소스를 참고하면 알겠지만 최대 3차원의 방식으로 <em>Compute Shader</em> 의 그룹을 설정하여 계산이 가능하다.  <em>Compute Shader</em> 소스의 <em>[numthreads(8,8,1)]</em> 는 한 그룹의 <em>Thread</em> 갯수를 나타내고, <em>ComputeShader.Dispatch</em> 메소드는 몇개의 그룹을 실행시키는지 넘겨주는 메소드다. 아래 그림을 보면 조금더 쉽게 이해가 가능하다.</p>
-
-<p><br />
-<img src="https://msdn.microsoft.com/dynimg/IC520438.png" alt="" class="center-image" /></p>
-<center>출처 : <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff471569.aspx">MSDN</a>
-</center>
-<p><br /></p>
-
-<p><em>Compute Shader</em> 는 <em>DirectX 11</em> 이상, <em>Vulkan</em>,  <em>OpenGL 4.3</em> 이상, <em>OpenGL ES 3.0</em> 이상, <em>Metal</em> 에서 사용가능하다. 그 아래의 플랫폼은 지원하지 않는다. 또 유의해야 할점은 그래픽 드라이버별로 지원 기능이 조금씩 다를 수 있으니 기능을 유의하며 사용해야한다. <a href="https://docs.unity3d.com/Manual/ComputeShaders.html">Unity Manual : ComptuteShader</a> 에서 조금 참고할 수 있다.</p>
-
-<p><a href="/2017/08/01/using-compute-buffer-in-unity/">Using Compute Buffer in Unity</a> 에서 관련된 내용을 언급했으니 같이 보면 좋을듯 하다.</p>
-
-<h2>참조</h2>
-
-<ul>
-  <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff471569.aspx">MSDN : SV_GroupIndex</a></li>
-  <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb509647.aspx">MSDN : Semantics </a></li>
-  <li><a href="https://docs.unity3d.com/Manual/ComputeShaders.html">Unity Manual : ComptuteShader</a></li>
-</ul>
-
-        </div>
-
         
       </li>
     
