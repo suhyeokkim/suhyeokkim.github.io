@@ -5,5 +5,7 @@ main:
     url: /about/
   - title: "Archives"
     url: /archives/
-  - title: "Edu"
-    url: /edu
+  - title: "Portforlio"
+    url: /portforlio/
+#  - title: "Edu"
+#    url: /edu
