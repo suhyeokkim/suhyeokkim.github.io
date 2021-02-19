@@ -38,7 +38,7 @@ incremental: true
 google_analytics: UA-93000374-1
 
 # Plugins
-gems:
+plugins:
   - jekyll-archives
   - jekyll-gist
   - jekyll-paginate
