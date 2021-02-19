@@ -45,6 +45,7 @@ gems:
   - jekyll-redirect-from
   - jekyll-sitemap
   - jekyll-youtube
+  - kramdown-parser-gfm
 
 # Build settings
 markdown: kramdown
