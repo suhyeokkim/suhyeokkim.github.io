@@ -21,8 +21,7 @@
   
   <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
 
-  <meta name="google-site-verification" content="f8AsB97UC1pp_K4EwkRaJYJZVC0P4j36RK_TGOPPGAU" />
-
+  <meta name="google-site-verification" content="o3-a11YI0ZIYwUdcikrWBRObGOUHzk89IJF7CX0ieQk" />
 
   
   <meta name="twitter:card" content="summary">
@@ -59,7 +58,6 @@
     ga('send', 'pageview');
 
   </script>
-
 
 
 </head>
@@ -297,9 +295,9 @@
 
 <p>예전부터 <em>Pixel Shader</em> 를 처리할 때 픽셀 단위로 하나하나 처리하는게 아닌 적어도 2x2 개의 픽셀들을 한꺼번에 처리했다고 한다. 그래서 이러한 아키텍쳐를 이용한 키워드가 <em>ddx</em> 와 <em>ddy</em> 다. 기본적으로 쉐이더는 병렬로 처리되기 때문에, 4개의 <em>Pixel Shader</em> 가 한꺼번에 실행되는 것으로 생각할 수 있다. 아래 코드를 보면서 생각해보자.</p>
 
-<pre><code class="language-hlsl">    half3 dpdx = ddx(position);
-    half3 dpdy = ddy(position);
-</code></pre>
+<div class="language-hlsl highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kt">half3</span> <span class="n">dpdx</span> <span class="o">=</span> <span class="nb">ddx</span><span class="p">(</span><span class="n">position</span><span class="p">);</span>
+    <span class="kt">half3</span> <span class="n">dpdy</span> <span class="o">=</span> <span class="nb">ddy</span><span class="p">(</span><span class="n">position</span><span class="p">);</span>
+</code></pre></div></div>
 
 <p>4개의 픽셀 쉐이더가 첫번째 라인을 실행할 때 ddx 는 들어온 파라미터의 x축, 가로의 픽셀들의 파라미터의 차이를 구해 반환한다. 이는 <em>δ/δx</em> 의 의미와 같다. 즉 x 를 기준으로 편미분을 한것이라고 한다. 마찬가지로 ddy 는 y축을 기준으로 차이를 계산해 반환하는 키워드로 생각하면 된다.</p>
 
@@ -365,7 +363,7 @@ s.setAttribute('data-timestamp', +new Date());
       
 
 Content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a><br />
-&copy; 2015&ndash;2019 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+&copy; 2015&ndash;2021 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
 
     </p>
 

@@ -21,8 +21,7 @@
   
   <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
 
-  <meta name="google-site-verification" content="f8AsB97UC1pp_K4EwkRaJYJZVC0P4j36RK_TGOPPGAU" />
-
+  <meta name="google-site-verification" content="o3-a11YI0ZIYwUdcikrWBRObGOUHzk89IJF7CX0ieQk" />
 
   
   <meta name="twitter:card" content="summary">
@@ -59,7 +58,6 @@
     ga('send', 'pageview');
 
   </script>
-
 
 
 </head>
@@ -491,7 +489,7 @@
 
 <p><a href="/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0/">이전 글</a>에서 두가지 단계에 대해서 자세한 설명을 했었다. <em>Irregular Z-Buffer</em> 를 생성하고 <em>Visibility Test</em> 를 하는 것이였다. 실제 구현된 단계는 총 6개의 단계로 이루어진다고 한다.</p>
 
-<p>첫번째로는 <em>Eye-Space Z-Prepass</em> 를 해준다. 요즘의 엔진들이나 큰 규모가 아닌 게임이더라도 <em>Z-Prepass</em><sup id="fnref:L1"><a href="#fn:L1" class="footnote">1</a></sup> 는 거의 대부분 해준다. <em>Geometry Pass</em> 가 두번 걸리기는 하지만 <em>Fill Rate</em> 의 부하가 <em>Geometry Pass</em> 의 부하보다 많이 커서 그런 듯하다. 중요한건 단순히 언급한 <em>Eye-Space Z-Prepass</em> 를 뜻하는게 아니다. 이전에 언급한 <em>μQuad</em> 의 빠른 계산을 위해 <em>G-Buffer</em> 에 3개의 실수 값들을 넣는다. 이 3개의 실수는 실제 그려지는 카메라의 위치와 <em>Tangent Plane</em> 의 4개의 코너중에 3개의 거리를 나타낸다. 이는 <em>μQuad</em> 를 다시 계산하기에 충분하다고 한다.</p>
+<p>첫번째로는 <em>Eye-Space Z-Prepass</em> 를 해준다. 요즘의 엔진들이나 큰 규모가 아닌 게임이더라도 <em>Z-Prepass</em><sup id="fnref:L1" role="doc-noteref"><a href="#fn:L1" class="footnote">1</a></sup> 는 거의 대부분 해준다. <em>Geometry Pass</em> 가 두번 걸리기는 하지만 <em>Fill Rate</em> 의 부하가 <em>Geometry Pass</em> 의 부하보다 많이 커서 그런 듯하다. 중요한건 단순히 언급한 <em>Eye-Space Z-Prepass</em> 를 뜻하는게 아니다. 이전에 언급한 <em>μQuad</em> 의 빠른 계산을 위해 <em>G-Buffer</em> 에 3개의 실수 값들을 넣는다. 이 3개의 실수는 실제 그려지는 카메라의 위치와 <em>Tangent Plane</em> 의 4개의 코너중에 3개의 거리를 나타낸다. 이는 <em>μQuad</em> 를 다시 계산하기에 충분하다고 한다.</p>
 
 <p>이 방법은 <em>Visibility Test</em> 의 속도를 빠르게 하는데 도움이 되지만, 당연히 <em>G-Buffer</em> 의 공간이 부족한 경우에는 쓰지 못한다. AAA 급의 게임들은 <em>G-Buffer</em> 를 bit 단위로 최대한 아껴쓰기 경우가 많기 때문에 이와 같은 상황이 일어날 수도 있다. 이런 경우에는 명시적으로 <em>Visibility Test</em> 를 할때 <em>μQuad</em> 를 계산한다고 한다. 아래 그림은 2009년에 발매된 <em>KillZone 2</em> 의 <em>G-Buffer</em> 사용을 나타내는 PT의 한 부분이다.</p>
 
@@ -501,7 +499,7 @@
 </center>
 <p><br /></p>
 
-<p>두번째로는 씬의 경계를 설정해주는 것이다. <em>Shadow Mapping</em> 에서 <em>Light-Space Projection</em> 행렬은 씬에 딱 맞게 해주어야 한다.<sup id="fnref:C1"><a href="#fn:C1" class="footnote">2</a></sup> 딱 맞지 않는 경우에는 <em>IZB</em> 에 쓸모없는 텍셀을 생기게 하기 때문이다. 그래서 <em>Light-Space Projection</em> 행렬을 계산하기 위해 <em>Compute Shader</em> 와 <em>Z-Buffer</em> 를 사용하여 <em>Bounding Box</em> 를 계산한다. 이 계산은 화면의 해상도에 따라서 달라진다. 하지만 논문의 저자는 이 비용이 병목의 큰 원인이 아니기 때문에 특별한 해결 방법을 제시하지는 않는다.</p>
+<p>두번째로는 씬의 경계를 설정해주는 것이다. <em>Shadow Mapping</em> 에서 <em>Light-Space Projection</em> 행렬은 씬에 딱 맞게 해주어야 한다.<sup id="fnref:C1" role="doc-noteref"><a href="#fn:C1" class="footnote">2</a></sup> 딱 맞지 않는 경우에는 <em>IZB</em> 에 쓸모없는 텍셀을 생기게 하기 때문이다. 그래서 <em>Light-Space Projection</em> 행렬을 계산하기 위해 <em>Compute Shader</em> 와 <em>Z-Buffer</em> 를 사용하여 <em>Bounding Box</em> 를 계산한다. 이 계산은 화면의 해상도에 따라서 달라진다. 하지만 논문의 저자는 이 비용이 병목의 큰 원인이 아니기 때문에 특별한 해결 방법을 제시하지는 않는다.</p>
 
 <p>세번째는 <em>Irregular Z-Buffer</em> 를 만드는 것이다. 이전 글에서 <em>IZB</em> 에 대한 대략적인 아이디어는 언급했었다. 더 디테일하게 이를 말해보면, 우선 <em>Eye-Space Z Buffer</em> 를 참조해 <em>Light-Space</em> 로 변환한 후에 <em>Light-Space A-Buffer</em> 의 텍셀의 <em>Linked-List</em> 에 넣는다.</p>
 
@@ -556,13 +554,13 @@
   <li><a href="http://cwyman.org/papers/tvcg16_ftizbExtended.pdf">Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows</a></li>
 </ul>
 
-<div class="footnotes">
+<div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:L1">
-      <p>https://ypchoi.gitbooks.io/rendering-techniques/content/z_prepass.html <a href="#fnref:L1" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:L1" role="doc-endnote">
+      <p>https://ypchoi.gitbooks.io/rendering-techniques/content/z_prepass.html <a href="#fnref:L1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
-    <li id="fn:C1">
-      <p>Cascaded Shadow Map 의 Crop Matrix 를 떠올리면 된다. <a href="#fnref:C1" class="reversefootnote">&#8617;</a></p>
+    <li id="fn:C1" role="doc-endnote">
+      <p>Cascaded Shadow Map 의 Crop Matrix 를 떠올리면 된다. <a href="#fnref:C1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
 </div>
@@ -618,7 +616,7 @@ s.setAttribute('data-timestamp', +new Date());
       
 
 Content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a><br />
-&copy; 2015&ndash;2019 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+&copy; 2015&ndash;2021 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
 
     </p>
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ko">
-  <generator uri="http://jekyllrb.com" version="3.8.6">Jekyll</generator>
+  <generator uri="http://jekyllrb.com" version="4.2.0">Jekyll</generator>
   
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2019-07-20T16:18:35+00:00</updated>
+  <updated>2021-02-19T13:31:15+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -62,7 +62,7 @@
 
 &lt;p&gt;그렇다면 우리는 색을 RGB 튜플로 나타내니, 이에 대한 정의가 있을 것이라 생각할 수 있다. 그리고 이러한 정의가 존재한다. &lt;em&gt;color space&lt;/em&gt; 가 무엇이냐? 라고 묻는다면 단순히 색을 정의한 공간이라고 밖에 설명할 수 밖에 없다. 좀 더 목적에 치중하면, 색을 정량화 하기 위해서 정의한 것이다. 정도에 머무를 것이다. 이에 대한 정의를 먼저 알아야 대강의 이해가 될것이다. 아주 기본적인 &lt;em&gt;color space&lt;/em&gt; 에 대한 정의인 두가지, &lt;em&gt;CIE 1931 RGB color space&lt;/em&gt;, &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 가 있다. 사실상 가장 많이 활용되는 &lt;em&gt;color space&lt;/em&gt; 는 &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 이다. 하지만 우선 &lt;em&gt;CIE 1931 RGB color space&lt;/em&gt; 먼저 알아보자. 이 부분이 먼저 시작되는 부분이기 때문이다.&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;CIE 1931 RGB color space&lt;/em&gt; 의 정의에 대해서 언급해보자면, 특정 실험을 통해서 &lt;script type=&quot;math/tex&quot;&gt;\bar{r}(\lambda),\bar{g}(\lambda),\bar{b}(\lambda)&lt;/script&gt; 함수를 정의한다. 이 실험은 사람을 대상으로 해당 특정 파장의 색을 보여주고 r,g,b 값을 조절하여 색을 실험자가 직접 맞추는 실험이라고 한다. 자세한 내용은 &lt;a href=&quot;https://en.wikipedia.org/wiki/CIE_1931_color_space#CIE_RGB_color_space&quot;&gt;링크&lt;/a&gt;에 나와있다. 정의된 파장에 대한 함수가 아래에 나와있다.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;CIE 1931 RGB color space&lt;/em&gt; 의 정의에 대해서 언급해보자면, 특정 실험을 통해서 \(\bar{r}(\lambda),\bar{g}(\lambda),\bar{b}(\lambda)\) 함수를 정의한다. 이 실험은 사람을 대상으로 해당 특정 파장의 색을 보여주고 r,g,b 값을 조절하여 색을 실험자가 직접 맞추는 실험이라고 한다. 자세한 내용은 &lt;a href=&quot;https://en.wikipedia.org/wiki/CIE_1931_color_space#CIE_RGB_color_space&quot;&gt;링크&lt;/a&gt;에 나와있다. 정의된 파장에 대한 함수가 아래에 나와있다.&lt;/p&gt;
 
 &lt;p&gt;&lt;br /&gt;
 &lt;img src=&quot;https://upload.wikimedia.org/wikipedia/commons/6/69/CIE1931_RGBCMF.svg&quot; alt=&quot;Wikipedia : CIE 1931 color space&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
@@ -72,17 +72,17 @@
 &lt;/center&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;이렇게 정의된 함수를 &lt;em&gt;color matching function&lt;/em&gt; 이라 하는데, &lt;em&gt;color matching function&lt;/em&gt; 를 사용해 우리가 실질적으로 사용하는 RGB 값을 정의할 수 있다. 단 여기에 같이 사용되는 또 다른 측정값들이 있는데, &lt;em&gt;spectrum power distribution&lt;/em&gt; 이라는 것이다. 이는 해당 방정식에서 &lt;script type=&quot;math/tex&quot;&gt;S(\lambda)&lt;/script&gt; 로 표현된다. 이를 간단하게 말하자면 물체가 반사하는 파장의 분포다.&lt;/p&gt;
+&lt;p&gt;이렇게 정의된 함수를 &lt;em&gt;color matching function&lt;/em&gt; 이라 하는데, &lt;em&gt;color matching function&lt;/em&gt; 를 사용해 우리가 실질적으로 사용하는 RGB 값을 정의할 수 있다. 단 여기에 같이 사용되는 또 다른 측정값들이 있는데, &lt;em&gt;spectrum power distribution&lt;/em&gt; 이라는 것이다. 이는 해당 방정식에서 \(S(\lambda)\) 로 표현된다. 이를 간단하게 말하자면 물체가 반사하는 파장의 분포다.&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;R = \int_0^\infty \bar{r}(\lambda) d\lambda,\;
+\[R = \int_0^\infty \bar{r}(\lambda) d\lambda,\;
 G = \int_0^\infty \bar{g}(\lambda) d\lambda,\;
-B = \int_0^\infty \bar{b}(\lambda) d\lambda&lt;/script&gt;
+B = \int_0^\infty \bar{b}(\lambda) d\lambda\]
 
 &lt;p&gt;위와같이 정의가 가능하며, 해당 값은 절대적인 값들이기 때문에 보통은 이들을 합해 정규화한 값을 쓴다.&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;r = R/(R+G+B),\; g = G/(R+G+B),\; b = B/(R+G+B)&lt;/script&gt;
+\[r = R/(R+G+B),\; g = G/(R+G+B),\; b = B/(R+G+B)\]
 
-&lt;p&gt;정의에 대한 부분은 이해를 못하더라도 상관없다. 그저 우리가 아는 RGB 표현 방식이 있고, 이를 수학적으로, 명시적으로 정의한게 &lt;em&gt;CIE 1931 RGB color space&lt;/em&gt; 이라고 생각하면된다. 다음은 &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 인데, 위에서 정의한 방법: &lt;em&gt;color matching function&lt;/em&gt; 과 &lt;em&gt;spectrum power distribution&lt;/em&gt; 을 &lt;em&gt;convolution&lt;/em&gt; 하여 정의된다. 다만 실험을 통한 &lt;em&gt;color matching function&lt;/em&gt; 의 정의는 다르다. 실험을 통한 &lt;script type=&quot;math/tex&quot;&gt;\bar{x}(\lambda),\bar{y}(\lambda),\bar{z}(\lambda)&lt;/script&gt; 는 다음과 같다.&lt;/p&gt;
+&lt;p&gt;정의에 대한 부분은 이해를 못하더라도 상관없다. 그저 우리가 아는 RGB 표현 방식이 있고, 이를 수학적으로, 명시적으로 정의한게 &lt;em&gt;CIE 1931 RGB color space&lt;/em&gt; 이라고 생각하면된다. 다음은 &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 인데, 위에서 정의한 방법: &lt;em&gt;color matching function&lt;/em&gt; 과 &lt;em&gt;spectrum power distribution&lt;/em&gt; 을 &lt;em&gt;convolution&lt;/em&gt; 하여 정의된다. 다만 실험을 통한 &lt;em&gt;color matching function&lt;/em&gt; 의 정의는 다르다. 실험을 통한 \(\bar{x}(\lambda),\bar{y}(\lambda),\bar{z}(\lambda)\) 는 다음과 같다.&lt;/p&gt;
 
 &lt;p&gt;&lt;br /&gt;
 &lt;img src=&quot;https://upload.wikimedia.org/wikipedia/commons/8/8f/CIE_1931_XYZ_Color_Matching_Functions.svg&quot; alt=&quot;Wikipedia : CIE 1931 color space&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
@@ -94,60 +94,58 @@ B = \int_0^\infty \bar{b}(\lambda) d\lambda&lt;/script&gt;
 
 &lt;p&gt;이렇게 정의된 &lt;em&gt;color matching function&lt;/em&gt; 과 &lt;em&gt;spectrum power distribution&lt;/em&gt; 을 사용하여 다음과 같이 &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 의 값들을 나타낼 수 있다.&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;X = \int_0^\infty \bar{x}(\lambda) d\lambda,\; Y = \int_0^\infty \bar{y}(\lambda) d\lambda,\; Z = \int_0^\infty \bar{z}(\lambda) d\lambda&lt;/script&gt;
+\[X = \int_0^\infty \bar{x}(\lambda) d\lambda,\; Y = \int_0^\infty \bar{y}(\lambda) d\lambda,\; Z = \int_0^\infty \bar{z}(\lambda) d\lambda\]
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;x = X/(X+Y+Z),\; y = Y/(X+Y+Z),\; z = Z/(X+Y+Z)&lt;/script&gt;
+\[x = X/(X+Y+Z),\; y = Y/(X+Y+Z),\; z = Z/(X+Y+Z)\]
 
 &lt;p&gt;위의 &lt;em&gt;CIE 1931 RGB color space&lt;/em&gt; 와 굉장히 비슷하게 정의했지만 &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 는 그리 단순하게 설계되진 않았다. 총 5가지의 특징을 가지고 있다. 이는 다음과 같다.&lt;/p&gt;
 
 &lt;ol&gt;
   &lt;li&gt;&lt;em&gt;CIE 1931 RGB color space&lt;/em&gt; 와 확실하게 다른점으로 &lt;em&gt;color matching function&lt;/em&gt; 이 음수를 가지지 않는다. 즉 무조건 양수라는 이야기다.&lt;/li&gt;
-  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;\bar{y}(\lambda)&lt;/script&gt; &lt;em&gt;color matching function&lt;/em&gt; 은 해당 &lt;em&gt;spectrum power distribution&lt;/em&gt; 의 &lt;em&gt;luminance&lt;/em&gt; 를 추출해내는 &lt;em&gt;photopic luminous efficiency function&lt;/em&gt; 함수다. 즉 간단하게 말하자면 Y 값이 &lt;em&gt;luminance&lt;/em&gt; 라는 말이다.&lt;/li&gt;
-  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;x=y=z=1/3&lt;/script&gt; 인 지점에서 &lt;em&gt;white point&lt;/em&gt; 가 존재해야 한다고 한다.&lt;/li&gt;
+  &lt;li&gt;\(\bar{y}(\lambda)\) &lt;em&gt;color matching function&lt;/em&gt; 은 해당 &lt;em&gt;spectrum power distribution&lt;/em&gt; 의 &lt;em&gt;luminance&lt;/em&gt; 를 추출해내는 &lt;em&gt;photopic luminous efficiency function&lt;/em&gt; 함수다. 즉 간단하게 말하자면 Y 값이 &lt;em&gt;luminance&lt;/em&gt; 라는 말이다.&lt;/li&gt;
+  &lt;li&gt;\(x=y=z=1/3\) 인 지점에서 &lt;em&gt;white point&lt;/em&gt; 가 존재해야 한다고 한다.&lt;/li&gt;
   &lt;li&gt;&lt;em&gt;CIE xy chromaticity diagram&lt;/em&gt; 에서 &lt;em&gt;color gamut&lt;/em&gt; 보았을 때, 1사분면, 즉 &lt;em&gt;x,y&lt;/em&gt; 값이 무조건 양수인 상태에서 존재해야 한다고 한다.&lt;/li&gt;
-  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;\bar{z}(\lambda)&lt;/script&gt; 의 값이 650 nm 이상에서는 전부 0으로 세팅된다고 한다. 이는 아마도 실험 측정값의 에러를 잘라내기 위한 것인듯 싶다.&lt;/li&gt;
+  &lt;li&gt;\(\bar{z}(\lambda)\) 의 값이 650 nm 이상에서는 전부 0으로 세팅된다고 한다. 이는 아마도 실험 측정값의 에러를 잘라내기 위한 것인듯 싶다.&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;p&gt;4번의 정의에서 &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 자체는 색의 음수영역까지 포함하는 &lt;em&gt;imagenary color space&lt;/em&gt; 인걸 알 수 있다. 이는 &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 가 광범위한 &lt;em&gt;color space&lt;/em&gt; 인것을 알 수 있다.&lt;/p&gt;
 
 &lt;p&gt;이렇게 정의된 &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 의 쓰임새는 굉장히 다양하다. 우선 위와같은 사항을 고려해서 설계된것이 아마도 가장 큰게 아닐까 싶다. 많은 &lt;em&gt;color space&lt;/em&gt; 들이 &lt;em&gt;luminance&lt;/em&gt; 와 &lt;em&gt;chromaticity&lt;/em&gt; 를 구분해서 정의하는데, &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 는 이미 구분이 되어있기 때문에 여기에서 조금 더 변형을 가해서 원하는 성질을 추가하면 되기 때문이라고 고려된다. 즉 다양한 쓰임새는 &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 자체가 잘 정의되어 있기 때문이라고 고려된다. &lt;em&gt;CIE 1931 XYZ color space&lt;/em&gt; 는 &lt;em&gt;CIE 1931 RGB color space&lt;/em&gt; 로부터 선형변환할 수 있도록 되어있다. 물론 반대의 경우도 가능하다.&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\begin{bmatrix}
+\[\begin{bmatrix}
 X\\
 Y\\
 Z\\
 \end{bmatrix} =
 \cfrac{1}{0.17697}
 \begin{bmatrix}
-0.49000&amp;0.31000&amp;0.20000\\
-0.17697&amp;0.81240&amp;0.01063\\
-0.00000&amp;0.01000&amp;0.99000\\
+0.49000&amp;amp;0.31000&amp;amp;0.20000\\
+0.17697&amp;amp;0.81240&amp;amp;0.01063\\
+0.00000&amp;amp;0.01000&amp;amp;0.99000\\
 \end{bmatrix}
 \begin{bmatrix}
 R\\
 G\\
 B\\
-\end{bmatrix} %]]&gt;&lt;/script&gt;
+\end{bmatrix}\]
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\begin{bmatrix}
+\[\begin{bmatrix}
 R\\
 G\\
 B\\
 \end{bmatrix}  =
 \begin{bmatrix}
-0.41847&amp;-0.15866&amp;-0.082835\\
--0.091169&amp;0.25243&amp;0.015708\\
-0.00092090&amp;-0.0025498&amp;0.17860\\
+0.41847&amp;amp;-0.15866&amp;amp;-0.082835\\
+-0.091169&amp;amp;0.25243&amp;amp;0.015708\\
+0.00092090&amp;amp;-0.0025498&amp;amp;0.17860\\
 \end{bmatrix}
 \begin{bmatrix}
 X\\
 Y\\
 Z\\
-\end{bmatrix} %]]&gt;&lt;/script&gt;
+\end{bmatrix}\]
 
-&lt;p&gt;이제 자주 보이는 &lt;em&gt;CIE xy chromaticity diagram&lt;/em&gt; 이라는 것이 있다. 앞에서 정의된 &lt;em&gt;x,y&lt;/em&gt; 값을 사용하여 나타낸다. &lt;em&gt;z&lt;/em&gt; 값은 &lt;script type=&quot;math/tex&quot;&gt;1-x-y&lt;/script&gt; 로 쉽게 계산이 가능해서 단순하게 &lt;em&gt;x,y&lt;/em&gt; 값을 사용하여 나타낸다. 이는 &lt;em&gt;X,Y,Z&lt;/em&gt; 의 값의 비율로 계산되는 값으로 절대적인 수치와는 상관없이 그저 &lt;em&gt;chromaticity&lt;/em&gt; 만을 나타내기 위한 방법이다.&lt;/p&gt;
+&lt;p&gt;이제 자주 보이는 &lt;em&gt;CIE xy chromaticity diagram&lt;/em&gt; 이라는 것이 있다. 앞에서 정의된 &lt;em&gt;x,y&lt;/em&gt; 값을 사용하여 나타낸다. &lt;em&gt;z&lt;/em&gt; 값은 \(1-x-y\) 로 쉽게 계산이 가능해서 단순하게 &lt;em&gt;x,y&lt;/em&gt; 값을 사용하여 나타낸다. 이는 &lt;em&gt;X,Y,Z&lt;/em&gt; 의 값의 비율로 계산되는 값으로 절대적인 수치와는 상관없이 그저 &lt;em&gt;chromaticity&lt;/em&gt; 만을 나타내기 위한 방법이다.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;chromaticity&lt;/em&gt; 와 &lt;em&gt;luminance&lt;/em&gt; 에 대한 설명을 명확하게 하자면, &lt;em&gt;luminance&lt;/em&gt; 는 빛 자체의 밝기, 광도라고 말할 수 있겠다. 검은색에서 흰색의 차이는 단지 밝기의 정도만 차이나는 것이다. &lt;em&gt;chromaticity&lt;/em&gt; 는 밝기에 상관없이 보여지는 색 자체가 다른 것을 뜻한다. 예를들어 어두운 파란색과 어두운 빨간색은 비슷한 &lt;em&gt;luminance&lt;/em&gt; 를 가질 수 있지만, &lt;em&gt;chromaticity&lt;/em&gt; 는 전혀 다르다고 말할 수 있다. 아래 다이어그램은 &lt;em&gt;chromaticity diagram&lt;/em&gt; 이기 때문에 밝기에 대한 정보는 없고 단지 색의 차이, 색차만 나와있는 것을 알 수 있다.&lt;/p&gt;
 
@@ -179,19 +177,17 @@ Z\\
 
 &lt;p&gt;&lt;em&gt;sRGB&lt;/em&gt; 의 &lt;em&gt;encoding&lt;/em&gt; 은 아래와 같다. &lt;em&gt;CIE XYZ&lt;/em&gt; 을 변환시키려면 아래와 같이 &lt;em&gt;linear RGB&lt;/em&gt; 값으로 변환시킨 다음에, 해당 값을 꽤나 알려진 &lt;em&gt;gamma correction&lt;/em&gt; 이라는 과정, &lt;em&gt;gamma function&lt;/em&gt; 에 &lt;em&gt;linear RGB&lt;/em&gt; 값을 넣어 &lt;em&gt;sRGB&lt;/em&gt; 값을 얻을 수 있다.&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\begin{bmatrix}
+\[\begin{bmatrix}
 \mathit{R}_{linear} \\ \mathit{G}_{linear} \\ \mathit{B}_{linear} \\
 \end{bmatrix} =
 \begin{bmatrix}
-3.2406&amp;-1.5372&amp;-0.4986 \\ -0.9689&amp;1.8758&amp;0.0415 \\ 0.0557&amp;-0.2040&amp;1.0570 \\
+3.2406&amp;amp;-1.5372&amp;amp;-0.4986 \\ -0.9689&amp;amp;1.8758&amp;amp;0.0415 \\ 0.0557&amp;amp;-0.2040&amp;amp;1.0570 \\
 \end{bmatrix}
 \begin{bmatrix}
 \mathit{X}_{D65} \\ \mathit{Y}_{D65}\\ \mathit{Z}_{D65}\\
-\end{bmatrix} %]]&gt;&lt;/script&gt;
+\end{bmatrix}\]
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\gamma(\mathit{u}_{rgb}) = \begin{cases} 12.92\mathit{u}_{rgb}&amp;\mathit{u}_{rgb} \leq 0.0031308\\ (1.055\mathit{u}_{rgb}^{1/2.4}-0.055&amp;otherwise \end{cases}\\ %]]&gt;&lt;/script&gt;
+\[\gamma(\mathit{u}_{rgb}) = \begin{cases} 12.92\mathit{u}_{rgb}&amp;amp;\mathit{u}_{rgb} \leq 0.0031308\\ (1.055\mathit{u}_{rgb}^{1/2.4}-0.055&amp;amp;otherwise \end{cases}\\\]
 
 &lt;p&gt;역변환과 여러 정보에 대해서는 &lt;a href=&quot;https://en.wikipedia.org/wiki/SRGB&quot;&gt;Wikipedia : sRGB&lt;/a&gt;에서 확인할 수 있다.&lt;/p&gt;
 
@@ -397,7 +393,7 @@ $$
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\Omega = A / r^2&lt;/script&gt;
+\[\Omega = A / r^2\]
 
 &lt;p align=&quot;center&quot;&gt;definition of steradian&lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
@@ -434,7 +430,7 @@ $$
       
 
       
-        <summary type="html">solid angle 은 우리가 일반적으로 알고있는 angle 과는 다르게 생소할 가능성이 높다. 이의 단위는 steradian(sr) 으로 교과과정에서 많이 보이는 radian 과 이름이 비슷하다. 먼저 이름이 비슷한 radian 의 정의를 잘 보여주는 아래 이미지를 보자. 출처 : Wikipedia : Radian 주목할 것은 초반에 나오는 1rad 의 호의 길이가 반지름과 같은 것이라 정의한 부분이다. steradian 의 정의도 언급한 radian 의 정의와 비슷하다. 출처 : Wikipedia : Steradian solid angle 은 해당 표면의 면적이 반지름의 제곱인 값과 같으면 1 sr 으로 정의된다. 모든 구의 면적을 다 차지할 경우 4π sr 이라고 할 수 있겠다. 또한 아래 그림처럼 표면의 크기에 상관있기 때문에 표면의 모양이 어찌 되었든 상관없다. 출처 : SolitaryRoad.com : Photometry, Steradian, Intensity of a light source, Candlepower, Lumen, Illumination, Photometer 그리고 면적이 넓은것에 solid angle 이 비례하는 것이 아니라 전체 면적의 비율을 얼마나 차지하느냐에 따라서 solid angle 이 결정된다. 즉 반지름의 크기와는 상관이 없다. 그래서 solid angle 은 다음과 같이 나타낼 수 있다. definition of steradian 참조 Wikipedia : Steradian Wikipediad : Solid angle</summary>
+        <summary type="html">solid angle 은 우리가 일반적으로 알고있는 angle 과는 다르게 생소할 가능성이 높다. 이의 단위는 steradian(sr) 으로 교과과정에서 많이 보이는 radian 과 이름이 비슷하다. 먼저 이름이 비슷한 radian 의 정의를 잘 보여주는 아래 이미지를 보자. 출처 : Wikipedia : Radian 주목할 것은 초반에 나오는 1rad 의 호의 길이가 반지름과 같은 것이라 정의한 부분이다. steradian 의 정의도 언급한 radian 의 정의와 비슷하다. 출처 : Wikipedia : Steradian solid angle 은 해당 표면의 면적이 반지름의 제곱인 값과 같으면 1 sr 으로 정의된다. 모든 구의 면적을 다 차지할 경우 4π sr 이라고 할 수 있겠다. 또한 아래 그림처럼 표면의 크기에 상관있기 때문에 표면의 모양이 어찌 되었든 상관없다. 출처 : SolitaryRoad.com : Photometry, Steradian, Intensity of a light source, Candlepower, Lumen, Illumination, Photometer 그리고 면적이 넓은것에 solid angle 이 비례하는 것이 아니라 전체 면적의 비율을 얼마나 차지하느냐에 따라서 solid angle 이 결정된다. 즉 반지름의 크기와는 상관이 없다. 그래서 solid angle 은 다음과 같이 나타낼 수 있다. \[\Omega = A / r^2\] definition of steradian 참조 Wikipedia : Steradian Wikipediad : Solid angle</summary>
       
 
       
@@ -467,7 +463,7 @@ $$
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\int_{380}^{720} r(\lambda)c_p(\lambda) d\lambda&lt;/script&gt;
+\[\int_{380}^{720} r(\lambda)c_p(\lambda) d\lambda\]
 
 &lt;p align=&quot;center&quot;&gt;radiometric unit to photometric unit formula&lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
@@ -548,7 +544,7 @@ $$
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;φ = \frac{\partial Q}{\partial t}&lt;/script&gt;
+\[φ = \frac{\partial Q}{\partial t}\]
 
 &lt;p align=&quot;center&quot;&gt;definition of radiant flux&lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
@@ -557,7 +553,7 @@ $$
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;E = \frac{\partial φ}{\partial A}&lt;/script&gt;
+\[E = \frac{\partial φ}{\partial A}\]
 
 &lt;p align=&quot;center&quot;&gt;definition of irradiance&lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
@@ -582,7 +578,7 @@ $$
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;L = \frac{\partial^2 φ}{\partial A \partial Ω}&lt;/script&gt;
+\[L = \frac{\partial^2 φ}{\partial A \partial Ω}\]
 
 &lt;p align=&quot;center&quot;&gt;definition of radiance&lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
@@ -594,7 +590,7 @@ $$
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;I = \frac{\partial φ}{\partial Ω}&lt;/script&gt;
+\[I = \frac{\partial φ}{\partial Ω}\]
 
 &lt;p align=&quot;center&quot;&gt;definition of radiant intensity&lt;/p&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
@@ -978,7 +974,7 @@ $$
 &lt;p&gt;&lt;em&gt;Error Diffusion&lt;/em&gt; 은 픽셀과 픽셀사이의 &lt;em&gt;Alpha&lt;/em&gt; 값을 고르게 분포시킨다. 하지만 약간의 문제가 존재한다. 보이게 되던, 안보이게 되던 &lt;em&gt;Alpha&lt;/em&gt; 값이 0.3 ~ 0.7 정도로 중간값을 가지고 있다면, 한 픽셀은 강조되고, 옆의 픽셀은 보이지 않게 된다. 이러한 방법은 아래 이미지와 비슷한 결과를 만든다.&lt;/p&gt;
 
 &lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/Michelangelo's_David_-_Floyd-Steinberg.png&quot; alt=&quot;Michelangelo's_David_-_Floyd-Steinberg&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+![Michelangelo’s_David_-&lt;em&gt;Floyd-Steinberg](/images/Michelangelo’s_David&lt;/em&gt;-_Floyd-Steinberg.png){: .center-image}&lt;/p&gt;
 &lt;center&gt;출처 : &lt;a href=&quot;https://en.wikipedia.org/wiki/Dither&quot;&gt;Wikipedia : Dither&lt;/a&gt;
 &lt;/center&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
@@ -1084,23 +1080,23 @@ $$
 
 &lt;!-- more --&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;134.75
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;134.75
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;이와 같은 소수가 있다. 이는 10진법으로 나타낸 소숫점으로, 2진법으로 나타내면 다음과 같다.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;134.75(demical) = 10000110.11(binary)
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;134.75(demical) = 10000110.11(binary)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;이를 소수부와 정수부를 나누면 다음과 같다.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;134(demical) = 10000110(binary)
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;134(demical) = 10000110(binary)
 0.75(demical) = 0.11(binary)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;정수부는 오른쪽부터 2^0 인 1부터 나란히 2^¹, 2^², 2^³, 2^⁴, … 2^ⁿ 로 구성되고(n은 자리의 끝), 소수부는 점 이하인 숫자부터 2^-1, 2^-2, … 2^-n 으로 구성된다. 0.75 는 2^-1 * 1 + 2^-2 * 2 가 되니 위의 경우처럼 굉장히 쉽게 표현이 가능하다. 하지만 다음과 같은 숫자는 어떻게 표현할까?&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0.9999... = 0.1111...
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0.9999... = 0.1111...
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;이런식으로 표기는 가능할 것이다. 하지만 컴퓨터는 유한한 데이터만을 다루기 때문에 한계가 있다.&lt;/p&gt;
@@ -1333,7 +1329,7 @@ $$
 
 &lt;p&gt;하나는 &lt;em&gt;Unity&lt;/em&gt; 프로젝트상에서 파일을 처음 감지했을 때, 파일의 &lt;em&gt;GUID&lt;/em&gt; 를 생성한다. &lt;em&gt;GUID&lt;/em&gt; 란 고유의 16진수 32글자로 이루어지는 총 512비트로 이루어지는 &lt;em&gt;ID&lt;/em&gt; 로써 자동으로 생성되는 알고리즘을 가지고 있으며 겹칠 염려는 거의 없는 &lt;em&gt;ID&lt;/em&gt; 알고리즘이다. 그래서 생성된 &lt;em&gt;GUID&lt;/em&gt; 는 다른 곳에서 해당 파일을 참조할떄 쓰인다. 즉 파일이 삭제되서 같은 것으로 다시 생성한다고 해도 &lt;em&gt;GUID&lt;/em&gt; 가 랜덤으로 결정되기 때문에 다시 연결을 해주어야 한다. 이는 &lt;em&gt;Unity&lt;/em&gt; 내부에서 파일 링크를 &lt;em&gt;GUID&lt;/em&gt; 로 한다는 추측을 할 수 있게 해준다. 또한 &lt;em&gt;Edit -&amp;gt; Project Setting -&amp;gt; Editor&lt;/em&gt; 에서 &lt;em&gt;Asset Serialization&lt;/em&gt; 모드가 &lt;em&gt;Force Text&lt;/em&gt; 로 되어있을 시에는 &lt;em&gt;meta&lt;/em&gt; 파일들을 직접 텍스트 에디터로 확인이 가능하다.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fileFormatVersion: 2
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fileFormatVersion: 2
 guid: 5d44a238286f6904198ab78e914c229d
 MonoImporter:
   serializedVersion: 2
@@ -1394,9 +1390,9 @@ MonoImporter:
 
 &lt;p&gt;예전부터 &lt;em&gt;Pixel Shader&lt;/em&gt; 를 처리할 때 픽셀 단위로 하나하나 처리하는게 아닌 적어도 2x2 개의 픽셀들을 한꺼번에 처리했다고 한다. 그래서 이러한 아키텍쳐를 이용한 키워드가 &lt;em&gt;ddx&lt;/em&gt; 와 &lt;em&gt;ddy&lt;/em&gt; 다. 기본적으로 쉐이더는 병렬로 처리되기 때문에, 4개의 &lt;em&gt;Pixel Shader&lt;/em&gt; 가 한꺼번에 실행되는 것으로 생각할 수 있다. 아래 코드를 보면서 생각해보자.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-hlsl&quot;&gt;    half3 dpdx = ddx(position);
-    half3 dpdy = ddy(position);
-&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;language-hlsl highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;kt&quot;&gt;half3&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dpdx&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;ddx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;half3&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dpdy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;ddy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;4개의 픽셀 쉐이더가 첫번째 라인을 실행할 때 ddx 는 들어온 파라미터의 x축, 가로의 픽셀들의 파라미터의 차이를 구해 반환한다. 이는 &lt;em&gt;δ/δx&lt;/em&gt; 의 의미와 같다. 즉 x 를 기준으로 편미분을 한것이라고 한다. 마찬가지로 ddy 는 y축을 기준으로 차이를 계산해 반환하는 키워드로 생각하면 된다.&lt;/p&gt;
 
@@ -1558,7 +1554,7 @@ MonoImporter:
 
 &lt;p&gt;왼쪽의 그림은 정상적으로 그림자가 보일 때, 두번째는 정말 안좋은 경우들이 겹친 &lt;em&gt;Light Leak&lt;/em&gt; 이 발생하는 경우, 세번째 경우는 세팅값을 맞춰주어 &lt;em&gt;Light Leak&lt;/em&gt; 을 없엔 장면이다. 하지만 결과를 잘 모르는 경우에는 이 결과들이 맞는지 아닌지 쉽게 구별할 수 있는 정도는 아니다. 즉 아주 정확한 결과를 원하는게 아니라면 그냥 써도 된다는 말이다.&lt;/p&gt;
 
-&lt;p&gt;두번째는 데이터 구조와 메모리 레이아웃 최적화다. 가장 맨처음 이를 구현할 때는 링크드 리스트의 2D 그리드의 형태로 만들었다고 한다. 각각의 리스트의 노드는 다음노드를 가리키는 포인터와 &lt;em&gt;G-Buffer&lt;/em&gt; 를 참조하기 위한 명시적인&lt;sup id=&quot;fnref:C2&quot;&gt;&lt;a href=&quot;#fn:C2&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 인덱스로 구성되었다고 한다. 하지만 이 구조는 &lt;em&gt;GPU&lt;/em&gt; 에서의 두가지 쓰레드 동기화를 필요로 했다. 하나는 &lt;em&gt;Global Node Pool&lt;/em&gt; 에서 비어있는 노드를 찾기위한 &lt;em&gt;Global&lt;/em&gt; 동기화&lt;sup id=&quot;fnref:C1&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;, 나머지는 헤드 포인터(&lt;em&gt;Light-Space Data&lt;/em&gt;)를 업데이트하기 위한 &lt;em&gt;Per-Texel&lt;/em&gt; 동기화&lt;sup id=&quot;fnref:C1:1&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;였다. 동기화를 많이 걸면 걸수록 성능상으로는 그다지 좋지않다. 그렇기 때문에 데이터 구조를 바꾸었다고 한다.&lt;/p&gt;
+&lt;p&gt;두번째는 데이터 구조와 메모리 레이아웃 최적화다. 가장 맨처음 이를 구현할 때는 링크드 리스트의 2D 그리드의 형태로 만들었다고 한다. 각각의 리스트의 노드는 다음노드를 가리키는 포인터와 &lt;em&gt;G-Buffer&lt;/em&gt; 를 참조하기 위한 명시적인&lt;sup id=&quot;fnref:C2&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C2&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 인덱스로 구성되었다고 한다. 하지만 이 구조는 &lt;em&gt;GPU&lt;/em&gt; 에서의 두가지 쓰레드 동기화를 필요로 했다. 하나는 &lt;em&gt;Global Node Pool&lt;/em&gt; 에서 비어있는 노드를 찾기위한 &lt;em&gt;Global&lt;/em&gt; 동기화&lt;sup id=&quot;fnref:C1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;, 나머지는 헤드 포인터(&lt;em&gt;Light-Space Data&lt;/em&gt;)를 업데이트하기 위한 &lt;em&gt;Per-Texel&lt;/em&gt; 동기화&lt;sup id=&quot;fnref:C1:1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;였다. 동기화를 많이 걸면 걸수록 성능상으로는 그다지 좋지않다. 그렇기 때문에 데이터 구조를 바꾸었다고 한다.&lt;/p&gt;
 
 &lt;p&gt;여러 시도 끝에 가장 성공적인 결과는 리스트의 각 노드의 크기를 줄이는 것이였다. 이를 위한 준비는 노드를 저장하기 위한 &lt;em&gt;Screen-Space Grid&lt;/em&gt; 버퍼를 미리 할당한다. 그리고 각 노드들은 자신을 기준으로한 다음 노드의 오프셋을 저장한다. 이는 &lt;em&gt;Linked-List&lt;/em&gt; 의 기준으로 보자면 &lt;em&gt;Next Pointer&lt;/em&gt; 가 된다. 이를 논문에서는 간접적인(&lt;em&gt;Implcit&lt;/em&gt;) &lt;em&gt;G-Buffer&lt;/em&gt; 인덱스라고 부른다. 이렇게 계속 픽셀의 노드 정보를 참조하면서 픽셀의 위치를 &lt;em&gt;Linked-List&lt;/em&gt; 의 형태로 나타낼 수 있는 것이다. 아래 중간의 그림의 노란색 화살표는 이를 간단하게 나타냈다.&lt;/p&gt;
 
@@ -1572,7 +1568,7 @@ MonoImporter:
 
 &lt;p&gt;세번째는 헤드 포인터를 가지고 있는 &lt;em&gt;Light-Space Buffer&lt;/em&gt; 의 해상도다. 일반적인 &lt;em&gt;Shadow Mapping&lt;/em&gt; 기법의 &lt;em&gt;Shadow Map&lt;/em&gt; 의 해상도는 보여지는 정도를 결정하지만, 여기서의 해상도는 퍼포먼스를 결정한다.(&lt;em&gt;La&lt;/em&gt;) 1920 x 1080 을 기준으로 추천하는 해상도는 1400 ~ 2500 사이라고 한다.&lt;/p&gt;
 
-&lt;p&gt;네번째로는 기존의 &lt;em&gt;Shadow Mapping&lt;/em&gt; 의 잘 알려진 기법인 &lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt;&lt;sup id=&quot;fnref:P1&quot;&gt;&lt;a href=&quot;#fn:P1&quot; class=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt; 을 이 기법에 적용시키는 것이다. 이 기법의 원리는 &lt;em&gt;View frustum&lt;/em&gt; 을 원하는 갯수대로 쪼갠 후, 쪼개진 &lt;em&gt;frustum&lt;/em&gt; 안의 오브젝트들의 &lt;em&gt;Shadow&lt;/em&gt; 를 계산한다. 논문에서 쪼개는 방법은 &lt;em&gt;Sample Distribution Shadow Map&lt;/em&gt; 과 &lt;em&gt;Logarithm Partitioning&lt;/em&gt; 을 언급했다. 여기서는 쪼개진 &lt;em&gt;frustum&lt;/em&gt; 마다 전부 &lt;em&gt;IZB&lt;/em&gt; 를 생성한다. 이때 각각의 쪼개진 &lt;em&gt;frustum&lt;/em&gt; 의 끝부분이 잘 맞도록 신경써야줘야 한다고 언급했다. 논문의 저자는 구현할때 &lt;em&gt;2D Texture Array&lt;/em&gt; 를 사용하여 &lt;em&gt;IZB&lt;/em&gt; 를 저장하고, 병렬로 각각의 &lt;em&gt;Detph Texture&lt;/em&gt; 마다 &lt;em&gt;Light-Space Culling Prepass&lt;/em&gt; 를 넣어줬다고 한다. 일반적으로 각각의 &lt;em&gt;Cascade&lt;/em&gt; 를 계산할때는 한개당 하나의 &lt;em&gt;Pass&lt;/em&gt; 를 사용하여 계산하는데, 여기서는 1 Pass 로 적절히 프리미티브를 나누어 성능 향상을 고려했다고 한다.&lt;/p&gt;
+&lt;p&gt;네번째로는 기존의 &lt;em&gt;Shadow Mapping&lt;/em&gt; 의 잘 알려진 기법인 &lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt;&lt;sup id=&quot;fnref:P1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:P1&quot; class=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt; 을 이 기법에 적용시키는 것이다. 이 기법의 원리는 &lt;em&gt;View frustum&lt;/em&gt; 을 원하는 갯수대로 쪼갠 후, 쪼개진 &lt;em&gt;frustum&lt;/em&gt; 안의 오브젝트들의 &lt;em&gt;Shadow&lt;/em&gt; 를 계산한다. 논문에서 쪼개는 방법은 &lt;em&gt;Sample Distribution Shadow Map&lt;/em&gt; 과 &lt;em&gt;Logarithm Partitioning&lt;/em&gt; 을 언급했다. 여기서는 쪼개진 &lt;em&gt;frustum&lt;/em&gt; 마다 전부 &lt;em&gt;IZB&lt;/em&gt; 를 생성한다. 이때 각각의 쪼개진 &lt;em&gt;frustum&lt;/em&gt; 의 끝부분이 잘 맞도록 신경써야줘야 한다고 언급했다. 논문의 저자는 구현할때 &lt;em&gt;2D Texture Array&lt;/em&gt; 를 사용하여 &lt;em&gt;IZB&lt;/em&gt; 를 저장하고, 병렬로 각각의 &lt;em&gt;Detph Texture&lt;/em&gt; 마다 &lt;em&gt;Light-Space Culling Prepass&lt;/em&gt; 를 넣어줬다고 한다. 일반적으로 각각의 &lt;em&gt;Cascade&lt;/em&gt; 를 계산할때는 한개당 하나의 &lt;em&gt;Pass&lt;/em&gt; 를 사용하여 계산하는데, 여기서는 1 Pass 로 적절히 프리미티브를 나누어 성능 향상을 고려했다고 한다.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Cascade&lt;/em&gt; 의 적용은 &lt;em&gt;Occluder Geometry&lt;/em&gt; 의 &lt;em&gt;Rasterize&lt;/em&gt; 퍼포먼스를 안고 가면서 &lt;em&gt;Thread Divergence&lt;/em&gt; 의 시간을 줄여준다. 이는 사용시 적절한 타협점을 찾아야 한다는 뜻으로, 보통은 두개의 &lt;em&gt;Cascade&lt;/em&gt; 를 사용하고, 복잡한 게임에서는 3개나 4개의 &lt;em&gt;Cascade&lt;/em&gt; 를 사용하여 상황에 따라 뜀뛰는 시간을 최소화 시킨다. 아래 그림은 &lt;em&gt;Cascade&lt;/em&gt; 의 효과를 증명해준다.&lt;/p&gt;
 
@@ -1592,7 +1588,7 @@ MonoImporter:
 
 &lt;p&gt;시스템 구현에 대한 디테일한 사항은 여기까지가 끝이다.&lt;/p&gt;
 
-&lt;p&gt;마지막으로 &lt;em&gt;Transparency Geometry&lt;/em&gt; 를 처리하는 방법에 대해서 써보겠다. 이 기법의 &lt;em&gt;per-pixel&lt;/em&gt; 테스트는 &lt;em&gt;Visibility Mask Buffer&lt;/em&gt; 에 결과가 저장된다. &lt;em&gt;Visibility Mask Buffer&lt;/em&gt; 의 효율적인 사용을 위해 항상 각 픽셀의 여러개의 32bit 데이터를 저장해준다고 한다. 이정도의 크기라면 단지 &lt;em&gt;Visibility&lt;/em&gt; 만을 사용하는게 아니라 &lt;em&gt;Opacity&lt;/em&gt; 또한 저장이 가능하다. 통상적인 가시성을 위한 투명 오브젝트의 처리 방법은 &lt;em&gt;Alpha to Coverage&lt;/em&gt;&lt;sup id=&quot;fnref:C3&quot;&gt;&lt;a href=&quot;#fn:C3&quot; class=&quot;footnote&quot;&gt;4&lt;/a&gt;&lt;/sup&gt; 를 쓴다고 한다. 그리고 여기에서도 비슷한 방법을 사용할 수 있다고한다.&lt;/p&gt;
+&lt;p&gt;마지막으로 &lt;em&gt;Transparency Geometry&lt;/em&gt; 를 처리하는 방법에 대해서 써보겠다. 이 기법의 &lt;em&gt;per-pixel&lt;/em&gt; 테스트는 &lt;em&gt;Visibility Mask Buffer&lt;/em&gt; 에 결과가 저장된다. &lt;em&gt;Visibility Mask Buffer&lt;/em&gt; 의 효율적인 사용을 위해 항상 각 픽셀의 여러개의 32bit 데이터를 저장해준다고 한다. 이정도의 크기라면 단지 &lt;em&gt;Visibility&lt;/em&gt; 만을 사용하는게 아니라 &lt;em&gt;Opacity&lt;/em&gt; 또한 저장이 가능하다. 통상적인 가시성을 위한 투명 오브젝트의 처리 방법은 &lt;em&gt;Alpha to Coverage&lt;/em&gt;&lt;sup id=&quot;fnref:C3&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C3&quot; class=&quot;footnote&quot;&gt;4&lt;/a&gt;&lt;/sup&gt; 를 쓴다고 한다. 그리고 여기에서도 비슷한 방법을 사용할 수 있다고한다.&lt;/p&gt;
 
 &lt;p&gt;처음에는 &lt;em&gt;Coverage&lt;/em&gt; 를 계산하기 위해 &lt;em&gt;Visibility Test&lt;/em&gt; 를 해준다. 그리고 해당 알파가 저장된 텍스쳐를 참조하여 투명도를 가져오고, 해당 투명도를 사용하여 &lt;em&gt;Alpha to Coverage&lt;/em&gt; 를 실행하여 투명도 마스크를 얻는다. 이를 비트 AND 연산으로 합쳐서 &lt;em&gt;Coverage&lt;/em&gt; 를 &lt;em&gt;Visibility Buffer&lt;/em&gt; 에 저장한다.&lt;/p&gt;
 
@@ -1606,19 +1602,19 @@ MonoImporter:
   &lt;li&gt;&lt;a href=&quot;https://software.intel.com/en-us/articles/sample-distribution-shadow-maps&quot;&gt;Intel Developer Zone : Sample Distribution Shadow Maps&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;div class=&quot;footnotes&quot;&gt;
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
   &lt;ol&gt;
-    &lt;li id=&quot;fn:C2&quot;&gt;
-      &lt;p&gt;명시적이란 뜻은 바로 넣어서 계산할 수 있는 절대적인 위치의 텍셀 인덱스를 뜻한다. &lt;a href=&quot;#fnref:C2&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;li id=&quot;fn:C2&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;명시적이란 뜻은 바로 넣어서 계산할 수 있는 절대적인 위치의 텍셀 인덱스를 뜻한다. &lt;a href=&quot;#fnref:C2&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
-    &lt;li id=&quot;fn:C1&quot;&gt;
-      &lt;p&gt;여기서의 동기화는 &lt;em&gt;atomic&lt;/em&gt; 의 개념을 말한다. 성능상의 단점은 다른 쓰레드에서 선점하는 경우에는 기다리는 것이다. &lt;a href=&quot;#fnref:C1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt; &lt;a href=&quot;#fnref:C1:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;sup&gt;2&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+    &lt;li id=&quot;fn:C1&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;여기서의 동기화는 &lt;em&gt;atomic&lt;/em&gt; 의 개념을 말한다. 성능상의 단점은 다른 쓰레드에서 선점하는 경우에는 기다리는 것이다. &lt;a href=&quot;#fnref:C1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt; &lt;a href=&quot;#fnref:C1:1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;sup&gt;2&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
-    &lt;li id=&quot;fn:P1&quot;&gt;
-      &lt;p&gt;이 블로그에서 &lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt; 에 대한 내용을 다루었었다. &lt;a href=&quot;/2017/12/17/cascaded-shadow-mapping/&quot;&gt;여기&lt;/a&gt;에서 볼 수 있다. &lt;a href=&quot;#fnref:P1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;li id=&quot;fn:P1&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;이 블로그에서 &lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt; 에 대한 내용을 다루었었다. &lt;a href=&quot;/2017/12/17/cascaded-shadow-mapping/&quot;&gt;여기&lt;/a&gt;에서 볼 수 있다. &lt;a href=&quot;#fnref:P1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
-    &lt;li id=&quot;fn:C3&quot;&gt;
-      &lt;p&gt;&lt;a href=&quot;https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f&quot;&gt;https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f&lt;/a&gt; &lt;a href=&quot;#fnref:C3&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;li id=&quot;fn:C3&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;&lt;a href=&quot;https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f&quot;&gt;https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f&lt;/a&gt; &lt;a href=&quot;#fnref:C3&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
   &lt;/ol&gt;
 &lt;/div&gt;</content>
@@ -1675,7 +1671,7 @@ MonoImporter:
 
 &lt;p&gt;&lt;a href=&quot;/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0/&quot;&gt;이전 글&lt;/a&gt;에서 두가지 단계에 대해서 자세한 설명을 했었다. &lt;em&gt;Irregular Z-Buffer&lt;/em&gt; 를 생성하고 &lt;em&gt;Visibility Test&lt;/em&gt; 를 하는 것이였다. 실제 구현된 단계는 총 6개의 단계로 이루어진다고 한다.&lt;/p&gt;
 
-&lt;p&gt;첫번째로는 &lt;em&gt;Eye-Space Z-Prepass&lt;/em&gt; 를 해준다. 요즘의 엔진들이나 큰 규모가 아닌 게임이더라도 &lt;em&gt;Z-Prepass&lt;/em&gt;&lt;sup id=&quot;fnref:L1&quot;&gt;&lt;a href=&quot;#fn:L1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 는 거의 대부분 해준다. &lt;em&gt;Geometry Pass&lt;/em&gt; 가 두번 걸리기는 하지만 &lt;em&gt;Fill Rate&lt;/em&gt; 의 부하가 &lt;em&gt;Geometry Pass&lt;/em&gt; 의 부하보다 많이 커서 그런 듯하다. 중요한건 단순히 언급한 &lt;em&gt;Eye-Space Z-Prepass&lt;/em&gt; 를 뜻하는게 아니다. 이전에 언급한 &lt;em&gt;μQuad&lt;/em&gt; 의 빠른 계산을 위해 &lt;em&gt;G-Buffer&lt;/em&gt; 에 3개의 실수 값들을 넣는다. 이 3개의 실수는 실제 그려지는 카메라의 위치와 &lt;em&gt;Tangent Plane&lt;/em&gt; 의 4개의 코너중에 3개의 거리를 나타낸다. 이는 &lt;em&gt;μQuad&lt;/em&gt; 를 다시 계산하기에 충분하다고 한다.&lt;/p&gt;
+&lt;p&gt;첫번째로는 &lt;em&gt;Eye-Space Z-Prepass&lt;/em&gt; 를 해준다. 요즘의 엔진들이나 큰 규모가 아닌 게임이더라도 &lt;em&gt;Z-Prepass&lt;/em&gt;&lt;sup id=&quot;fnref:L1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:L1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 는 거의 대부분 해준다. &lt;em&gt;Geometry Pass&lt;/em&gt; 가 두번 걸리기는 하지만 &lt;em&gt;Fill Rate&lt;/em&gt; 의 부하가 &lt;em&gt;Geometry Pass&lt;/em&gt; 의 부하보다 많이 커서 그런 듯하다. 중요한건 단순히 언급한 &lt;em&gt;Eye-Space Z-Prepass&lt;/em&gt; 를 뜻하는게 아니다. 이전에 언급한 &lt;em&gt;μQuad&lt;/em&gt; 의 빠른 계산을 위해 &lt;em&gt;G-Buffer&lt;/em&gt; 에 3개의 실수 값들을 넣는다. 이 3개의 실수는 실제 그려지는 카메라의 위치와 &lt;em&gt;Tangent Plane&lt;/em&gt; 의 4개의 코너중에 3개의 거리를 나타낸다. 이는 &lt;em&gt;μQuad&lt;/em&gt; 를 다시 계산하기에 충분하다고 한다.&lt;/p&gt;
 
 &lt;p&gt;이 방법은 &lt;em&gt;Visibility Test&lt;/em&gt; 의 속도를 빠르게 하는데 도움이 되지만, 당연히 &lt;em&gt;G-Buffer&lt;/em&gt; 의 공간이 부족한 경우에는 쓰지 못한다. AAA 급의 게임들은 &lt;em&gt;G-Buffer&lt;/em&gt; 를 bit 단위로 최대한 아껴쓰기 경우가 많기 때문에 이와 같은 상황이 일어날 수도 있다. 이런 경우에는 명시적으로 &lt;em&gt;Visibility Test&lt;/em&gt; 를 할때 &lt;em&gt;μQuad&lt;/em&gt; 를 계산한다고 한다. 아래 그림은 2009년에 발매된 &lt;em&gt;KillZone 2&lt;/em&gt; 의 &lt;em&gt;G-Buffer&lt;/em&gt; 사용을 나타내는 PT의 한 부분이다.&lt;/p&gt;
 
@@ -1685,7 +1681,7 @@ MonoImporter:
 &lt;/center&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;두번째로는 씬의 경계를 설정해주는 것이다. &lt;em&gt;Shadow Mapping&lt;/em&gt; 에서 &lt;em&gt;Light-Space Projection&lt;/em&gt; 행렬은 씬에 딱 맞게 해주어야 한다.&lt;sup id=&quot;fnref:C1&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; 딱 맞지 않는 경우에는 &lt;em&gt;IZB&lt;/em&gt; 에 쓸모없는 텍셀을 생기게 하기 때문이다. 그래서 &lt;em&gt;Light-Space Projection&lt;/em&gt; 행렬을 계산하기 위해 &lt;em&gt;Compute Shader&lt;/em&gt; 와 &lt;em&gt;Z-Buffer&lt;/em&gt; 를 사용하여 &lt;em&gt;Bounding Box&lt;/em&gt; 를 계산한다. 이 계산은 화면의 해상도에 따라서 달라진다. 하지만 논문의 저자는 이 비용이 병목의 큰 원인이 아니기 때문에 특별한 해결 방법을 제시하지는 않는다.&lt;/p&gt;
+&lt;p&gt;두번째로는 씬의 경계를 설정해주는 것이다. &lt;em&gt;Shadow Mapping&lt;/em&gt; 에서 &lt;em&gt;Light-Space Projection&lt;/em&gt; 행렬은 씬에 딱 맞게 해주어야 한다.&lt;sup id=&quot;fnref:C1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; 딱 맞지 않는 경우에는 &lt;em&gt;IZB&lt;/em&gt; 에 쓸모없는 텍셀을 생기게 하기 때문이다. 그래서 &lt;em&gt;Light-Space Projection&lt;/em&gt; 행렬을 계산하기 위해 &lt;em&gt;Compute Shader&lt;/em&gt; 와 &lt;em&gt;Z-Buffer&lt;/em&gt; 를 사용하여 &lt;em&gt;Bounding Box&lt;/em&gt; 를 계산한다. 이 계산은 화면의 해상도에 따라서 달라진다. 하지만 논문의 저자는 이 비용이 병목의 큰 원인이 아니기 때문에 특별한 해결 방법을 제시하지는 않는다.&lt;/p&gt;
 
 &lt;p&gt;세번째는 &lt;em&gt;Irregular Z-Buffer&lt;/em&gt; 를 만드는 것이다. 이전 글에서 &lt;em&gt;IZB&lt;/em&gt; 에 대한 대략적인 아이디어는 언급했었다. 더 디테일하게 이를 말해보면, 우선 &lt;em&gt;Eye-Space Z Buffer&lt;/em&gt; 를 참조해 &lt;em&gt;Light-Space&lt;/em&gt; 로 변환한 후에 &lt;em&gt;Light-Space A-Buffer&lt;/em&gt; 의 텍셀의 &lt;em&gt;Linked-List&lt;/em&gt; 에 넣는다.&lt;/p&gt;
 
@@ -1740,13 +1736,13 @@ MonoImporter:
   &lt;li&gt;&lt;a href=&quot;http://cwyman.org/papers/tvcg16_ftizbExtended.pdf&quot;&gt;Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;div class=&quot;footnotes&quot;&gt;
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
   &lt;ol&gt;
-    &lt;li id=&quot;fn:L1&quot;&gt;
-      &lt;p&gt;https://ypchoi.gitbooks.io/rendering-techniques/content/z_prepass.html &lt;a href=&quot;#fnref:L1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;li id=&quot;fn:L1&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;https://ypchoi.gitbooks.io/rendering-techniques/content/z_prepass.html &lt;a href=&quot;#fnref:L1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
-    &lt;li id=&quot;fn:C1&quot;&gt;
-      &lt;p&gt;Cascaded Shadow Map 의 Crop Matrix 를 떠올리면 된다. &lt;a href=&quot;#fnref:C1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;li id=&quot;fn:C1&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;Cascaded Shadow Map 의 Crop Matrix 를 떠올리면 된다. &lt;a href=&quot;#fnref:C1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
   &lt;/ol&gt;
 &lt;/div&gt;</content>
@@ -1828,11 +1824,11 @@ MonoImporter:
 &lt;/center&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;간단하게 이런식으로 &lt;em&gt;IZB&lt;/em&gt; 가 구성되는 것을 알 수 있다. 이제 &lt;em&gt;Geometry&lt;/em&gt; 와 비교하는 &lt;em&gt;Visibility Test&lt;/em&gt; 가 필요하다. 일반적인 &lt;em&gt;Shadow Mapping&lt;/em&gt; 의 &lt;em&gt;Visibility Test&lt;/em&gt; 와는 조금 다르다. 기존의 &lt;em&gt;Shadow Mapping&lt;/em&gt; 은 정점을 &lt;em&gt;Light-Space&lt;/em&gt; 로 바꾸어 &lt;em&gt;Z&lt;/em&gt; 값을 비교하여 &lt;em&gt;Visibility Test&lt;/em&gt; 를 한다. 하지만 이 기법에서의 &lt;em&gt;Visibility Test&lt;/em&gt; 는 다르다. 위에서 언급한 것과 같이 &lt;em&gt;IZB&lt;/em&gt; 를 만든다. 그 다음 &lt;em&gt;Occlluder Geometry&lt;/em&gt; 들을 &lt;em&gt;Light-Space&lt;/em&gt; 를 기준으로 &lt;em&gt;Conservative Rasterization&lt;/em&gt; 을 해준다.&lt;sup id=&quot;fnref:C1&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 그렇게 나온 결과를 통해 &lt;em&gt;IZB&lt;/em&gt; 와 함께 &lt;em&gt;Visibility Test&lt;/em&gt; 를 한다. &lt;em&gt;Conservative Rasterization&lt;/em&gt; 의 결과는 거의 &lt;em&gt;Flag&lt;/em&gt; 로 사용될것으로 예측되고, &lt;em&gt;Eye-Space&lt;/em&gt; 픽셀의 그림자 계산은 복잡한 계산을 통해 구한다. 아래는 논문에 있던 &lt;em&gt;IZB&lt;/em&gt; 를 기준으로 쓰여진 수도 코드다.&lt;/p&gt;
+&lt;p&gt;간단하게 이런식으로 &lt;em&gt;IZB&lt;/em&gt; 가 구성되는 것을 알 수 있다. 이제 &lt;em&gt;Geometry&lt;/em&gt; 와 비교하는 &lt;em&gt;Visibility Test&lt;/em&gt; 가 필요하다. 일반적인 &lt;em&gt;Shadow Mapping&lt;/em&gt; 의 &lt;em&gt;Visibility Test&lt;/em&gt; 와는 조금 다르다. 기존의 &lt;em&gt;Shadow Mapping&lt;/em&gt; 은 정점을 &lt;em&gt;Light-Space&lt;/em&gt; 로 바꾸어 &lt;em&gt;Z&lt;/em&gt; 값을 비교하여 &lt;em&gt;Visibility Test&lt;/em&gt; 를 한다. 하지만 이 기법에서의 &lt;em&gt;Visibility Test&lt;/em&gt; 는 다르다. 위에서 언급한 것과 같이 &lt;em&gt;IZB&lt;/em&gt; 를 만든다. 그 다음 &lt;em&gt;Occlluder Geometry&lt;/em&gt; 들을 &lt;em&gt;Light-Space&lt;/em&gt; 를 기준으로 &lt;em&gt;Conservative Rasterization&lt;/em&gt; 을 해준다.&lt;sup id=&quot;fnref:C1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 그렇게 나온 결과를 통해 &lt;em&gt;IZB&lt;/em&gt; 와 함께 &lt;em&gt;Visibility Test&lt;/em&gt; 를 한다. &lt;em&gt;Conservative Rasterization&lt;/em&gt; 의 결과는 거의 &lt;em&gt;Flag&lt;/em&gt; 로 사용될것으로 예측되고, &lt;em&gt;Eye-Space&lt;/em&gt; 픽셀의 그림자 계산은 복잡한 계산을 통해 구한다. 아래는 논문에 있던 &lt;em&gt;IZB&lt;/em&gt; 를 기준으로 쓰여진 수도 코드다.&lt;/p&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// Step 1: Identify pixel locations we need to shadow
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// Step 1: Identify pixel locations we need to shadow
 G(x, y) ← RenderGBufferFromEye()
 
 // Step 2: Add pixels to our light-space IZB data structure
@@ -1882,9 +1878,9 @@ end for
 
 &lt;p&gt;또한 그림자를 멀티샘플링 하기 위해서는 여기서 언급한 &lt;em&gt;Shadow Volume&lt;/em&gt; 의 &lt;em&gt;Shadow Plane&lt;/em&gt; 들을 이용한다고 한다.&lt;/p&gt;
 
-&lt;p&gt;마지막으로 &lt;em&gt;Visibility Computation&lt;/em&gt; 이 남아있다. 이 부분의 대략적인 것은 위에서 언급했다. 자세한 계산방식을 말해보겠다. 위에서 언급한 &lt;em&gt;μQuad&lt;/em&gt; 와 &lt;em&gt;Shadow Plane&lt;/em&gt; 사용해서 해당 폴리곤들의 데이터 누적을 위해서는 &lt;em&gt;μQuad&lt;/em&gt; 에서 이산화된 &lt;em&gt;binary&lt;/em&gt; 샘플링이 필요하다. 논문의 저자는 32 번의 &lt;em&gt;Halton sampling&lt;/em&gt;&lt;sup id=&quot;fnref:C2&quot;&gt;&lt;a href=&quot;#fn:C2&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; 을 사용했다고 한다.&lt;/p&gt;
+&lt;p&gt;마지막으로 &lt;em&gt;Visibility Computation&lt;/em&gt; 이 남아있다. 이 부분의 대략적인 것은 위에서 언급했다. 자세한 계산방식을 말해보겠다. 위에서 언급한 &lt;em&gt;μQuad&lt;/em&gt; 와 &lt;em&gt;Shadow Plane&lt;/em&gt; 사용해서 해당 폴리곤들의 데이터 누적을 위해서는 &lt;em&gt;μQuad&lt;/em&gt; 에서 이산화된 &lt;em&gt;binary&lt;/em&gt; 샘플링이 필요하다. 논문의 저자는 32 번의 &lt;em&gt;Halton sampling&lt;/em&gt;&lt;sup id=&quot;fnref:C2&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C2&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; 을 사용했다고 한다.&lt;/p&gt;
 
-&lt;p&gt;가시성을 계산하기 위해서는 &lt;em&gt;Shadow Plane&lt;/em&gt; 을 &lt;em&gt;μQuad&lt;/em&gt; 에 &lt;em&gt;Projection&lt;/em&gt; 해줘야 한다. 그러면 &lt;em&gt;μQuad&lt;/em&gt; 는 최대 3개의 &lt;em&gt;line&lt;/em&gt; 을 얻게 된다. 논문에서는 이 &lt;em&gt;line&lt;/em&gt; 을 &lt;em&gt;μQuad&lt;/em&gt; 를 기준으로 극좌표계&lt;sup id=&quot;fnref:C3&quot;&gt;&lt;a href=&quot;#fn:C3&quot; class=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt; 데이터로 저장한다고 한다. 반지름과 각도가 5bit 크기로 저장된다. 해당 10bit 데이터를 사용하여 미리 계산된 테이블에서 32개의 이진 가시성 샘플을 가져온다. 결과와  bit 단위의 and 연산을 통해 &lt;em&gt;μQuad&lt;/em&gt; 의 가시성을 계산할 수 있다고 한다.&lt;/p&gt;
+&lt;p&gt;가시성을 계산하기 위해서는 &lt;em&gt;Shadow Plane&lt;/em&gt; 을 &lt;em&gt;μQuad&lt;/em&gt; 에 &lt;em&gt;Projection&lt;/em&gt; 해줘야 한다. 그러면 &lt;em&gt;μQuad&lt;/em&gt; 는 최대 3개의 &lt;em&gt;line&lt;/em&gt; 을 얻게 된다. 논문에서는 이 &lt;em&gt;line&lt;/em&gt; 을 &lt;em&gt;μQuad&lt;/em&gt; 를 기준으로 극좌표계&lt;sup id=&quot;fnref:C3&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C3&quot; class=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt; 데이터로 저장한다고 한다. 반지름과 각도가 5bit 크기로 저장된다. 해당 10bit 데이터를 사용하여 미리 계산된 테이블에서 32개의 이진 가시성 샘플을 가져온다. 결과와  bit 단위의 and 연산을 통해 &lt;em&gt;μQuad&lt;/em&gt; 의 가시성을 계산할 수 있다고 한다.&lt;/p&gt;
 
 &lt;p&gt;해당 기법을 고안한 사람은 두가지의 아이디어 : &lt;em&gt;Irregular Z-Buffer&lt;/em&gt; 와 &lt;em&gt;frustum-Triangle Test&lt;/em&gt; 를 통해  &lt;em&gt;Sub-pixel Hard Shadow&lt;/em&gt; 의 이론을 만들었다. 하지만 이 아이디어들과 구현을 위한 노력의 차이는 꽤 큰듯하다. 논문을 보면 아이디어에 대한 텍스트보다 최적화를 위한 텍스트가 2배가 될정도로 많다. 다음 글에서는 논문에서 나온 전체 과정과 디테일한 구현 사항에 대해 적어보겠다.&lt;/p&gt;
 
@@ -1898,16 +1894,16 @@ end for
   &lt;li&gt;&lt;a href=&quot;http://developer.download.nvidia.com/gameworks/events/GDC2016/jstory_hfts.pdf&quot;&gt;NVidia : Advanced Geometrically Correct Shadows for Modern Game Engines&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;div class=&quot;footnotes&quot;&gt;
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
   &lt;ol&gt;
-    &lt;li id=&quot;fn:C1&quot;&gt;
-      &lt;p&gt;일반적으로 오브젝트를 그리는 것과 다른 &lt;em&gt;Conservative Rasterization&lt;/em&gt; 을 해주는 이유는 일반적인 &lt;em&gt;Rasterization&lt;/em&gt; 은 픽셀의 반이상을 차지해야 해당 픽셀을 처리해준다. 하지만 정확한 &lt;em&gt;Visibility&lt;/em&gt; 를 계산하기 위해서는 폴리곤이 해당되는 모든 픽셀들을 처리해주어야 한다. &lt;em&gt;Conservative Rasterization&lt;/em&gt; 은 앞에서 말한바와 같이 모든 부분을 픽셀로 처리한다. &lt;em&gt;Conservative Rasterization&lt;/em&gt; 에 대한 자세한 정보는 &lt;a href=&quot;https://developer.nvidia.com/content/dont-be-conservative-conservative-rasterization&quot;&gt;NVidia : Don’t be conservative with Conservative Rasterization&lt;/a&gt; 에서 확인할 수 있다. &lt;a href=&quot;#fnref:C1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;li id=&quot;fn:C1&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;일반적으로 오브젝트를 그리는 것과 다른 &lt;em&gt;Conservative Rasterization&lt;/em&gt; 을 해주는 이유는 일반적인 &lt;em&gt;Rasterization&lt;/em&gt; 은 픽셀의 반이상을 차지해야 해당 픽셀을 처리해준다. 하지만 정확한 &lt;em&gt;Visibility&lt;/em&gt; 를 계산하기 위해서는 폴리곤이 해당되는 모든 픽셀들을 처리해주어야 한다. &lt;em&gt;Conservative Rasterization&lt;/em&gt; 은 앞에서 말한바와 같이 모든 부분을 픽셀로 처리한다. &lt;em&gt;Conservative Rasterization&lt;/em&gt; 에 대한 자세한 정보는 &lt;a href=&quot;https://developer.nvidia.com/content/dont-be-conservative-conservative-rasterization&quot;&gt;NVidia : Don’t be conservative with Conservative Rasterization&lt;/a&gt; 에서 확인할 수 있다. &lt;a href=&quot;#fnref:C1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
-    &lt;li id=&quot;fn:C2&quot;&gt;
-      &lt;p&gt;몬테카를로 시뮬레이션과 같은 방식의 점을 생성하는 방식이다. 쉽게 말하면 랜덤하게 생성하는 것이라고 생각하면 된다. 자세한 정보는 &lt;a href=&quot;https://en.wikipedia.org/wiki/Halton_sequence&quot;&gt;Wikipedia : Halton sequence&lt;/a&gt; 에서 확인할 수 있다. &lt;a href=&quot;#fnref:C2&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;li id=&quot;fn:C2&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;몬테카를로 시뮬레이션과 같은 방식의 점을 생성하는 방식이다. 쉽게 말하면 랜덤하게 생성하는 것이라고 생각하면 된다. 자세한 정보는 &lt;a href=&quot;https://en.wikipedia.org/wiki/Halton_sequence&quot;&gt;Wikipedia : Halton sequence&lt;/a&gt; 에서 확인할 수 있다. &lt;a href=&quot;#fnref:C2&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
-    &lt;li id=&quot;fn:C3&quot;&gt;
-      &lt;p&gt;여기서는 각도와 반지름(거리)를 사용하여 나나탠다. 극좌표계에 대한 자세한 정보는 &lt;a href=&quot;https://ko.wikipedia.org/wiki/%EA%B7%B9%EC%A2%8C%ED%91%9C%EA%B3%84&quot;&gt;위키피디아 : 극좌표계&lt;/a&gt; 에서 확인할 수 있다. &lt;a href=&quot;#fnref:C3&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;li id=&quot;fn:C3&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;여기서는 각도와 반지름(거리)를 사용하여 나나탠다. 극좌표계에 대한 자세한 정보는 &lt;a href=&quot;https://ko.wikipedia.org/wiki/%EA%B7%B9%EC%A2%8C%ED%91%9C%EA%B3%84&quot;&gt;위키피디아 : 극좌표계&lt;/a&gt; 에서 확인할 수 있다. &lt;a href=&quot;#fnref:C3&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
   &lt;/ol&gt;
 &lt;/div&gt;</content>

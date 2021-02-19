@@ -21,8 +21,7 @@
   
   <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
 
-  <meta name="google-site-verification" content="f8AsB97UC1pp_K4EwkRaJYJZVC0P4j36RK_TGOPPGAU" />
-
+  <meta name="google-site-verification" content="o3-a11YI0ZIYwUdcikrWBRObGOUHzk89IJF7CX0ieQk" />
 
   
   <meta name="twitter:card" content="summary">
@@ -59,7 +58,6 @@
     ga('send', 'pageview');
 
   </script>
-
 
 
 </head>
@@ -596,7 +594,7 @@
 
 <p>Unity 의 기본적인 쉐이더 코딩은 ShaderLab 이라는 언어를 사용한다. 아래 ShaderLab 으로 되어있는 예제를 살펴보자.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Shader "Custom/TextureColor" {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Shader "Custom/TextureColor" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Texture", 2D) = "white" {}
@@ -630,7 +628,7 @@
 
 <p>표면 쉐이더는 실제로는 없는 개념으로 쉐이더를 컴파일하면서 정점/픽셀 쉐이더로 변환되는 쉐이더 기능이다. 보통은 간단하고 빠르게 정점 라이팅을 코딩할 때 쓰인다. 기존에 존재하는 여러 라이팅 모델들을 지원하며 직접 정점 라이팅을 할 수도 있다. 다만 픽셀/프래그먼트 쉐이딩은 안된다. 그래서 상식적으로 생각하면 디퍼드 렌더링에서는 안되겠지만 디퍼드 렌더링에서도 가능하게 만들어 놓았다. 아래 표면 쉐이더의 예제를 보자. Unity 5.5.2f 버젼에서 기본으로 생성되는 쉐이더다.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Shader "Custom/NewSurfaceShader" {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Shader "Custom/NewSurfaceShader" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
@@ -669,19 +667,19 @@
 
 <p>ShdaderLab 에 비하면 코드가 상당히 길다. 새롭게 변수를 세팅해 주어야 하기도 하고 몇가지 세팅을 해주어야 하기 때문이기도 하다. 이 코드에서는 라이팅을 Unity Standard 의 PBR 라이팅 모델을 사용하고 있다. 몇가지 살펴보면, 처음과 마지막을 CGPROGRAM 과 ENDCG 로 감싸준다. 그리고 바로 아래에 C 계열에서 많이 쓰이는 <em>pragma</em> 전처리 키워드를 사용하여 뭔가 정의하고 있는데 바로 표면 쉐이더 함수의 정의를 써주는 곳이다.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#pragma surface surf Standard fullforwardshadows
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#pragma surface surf Standard fullforwardshadows
 </code></pre></div></div>
 
 <p>surface 는 표면 쉐이더 함수를 정의한다는 것을, surf 는 코드에 정의되어 있는 함수의 이름을, Standard 는 라이팅 모델을 뜻한다. Unity Standard 쉐이더의 PBR 을 모델이다. 그리고 fullforwardshadows 는 그림자에 대한 옵션이다. 메터리얼의 인자에 들어가는 텍스쳐 등 설정값을 변수로 정의해준다. 변수 이름을 위에 Properties 에 정의와 똑같이 써주면 알아서 Unity 에서는 이 값을들을 접근하게 해준다. 반드시 똑같이 써주어야 작동한다.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct Input {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct Input {
 	float2 uv_MainTex;
 };
 </code></pre></div></div>
 
 <p>사이에 Input 구조체가 있다. 이 구조체에는 단순히 uv_MainTex 라는 변수한개만 있다. 단순하게 이름을 풀이해보면 MainTex 텍스쳐의 uv 좌표를 뜻한다. 이 변수 이름 역시 반드시 맞춰주어야 한다. 앞에는 uv 가 붙어야 하며, 그 다음 존재하는 텍스쳐 이름을 붙여주어야 한다.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void surf (Input IN, inout SurfaceOutputStandard o) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void surf (Input IN, inout SurfaceOutputStandard o) {
 	// Albedo comes from a texture tinted by color
 	fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 	o.Albedo = c.rgb;
@@ -698,7 +696,7 @@
 
 <p>다음으로 살펴볼 쉐이더는 정점/픽셀 쉐이더를 조합한 쉐이더다. CG 를 사용하는 가장 낮은 단계의 쉐이더이며 실질적으로 돌아가는 쉐이더다. 그만큼 해야할 것도 많고 신경써야 할것도 많다. 특히 라이팅을 세팅할 때는 꽤나 코드가 길어지고 복잡해진다. 하지만 그만큼 세세하게 조정이 가능하다. 그래서 보통은 특수효과에 많이 쓰이며 최적화를 위한 쉐이딩을 할때도 쓰인다. 또한 여러 다른 쉐이더를 사용할 때에도 쓰인다. 아래 예제를 살펴보자.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Shader "Custom/ColorTextureCG" {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Shader "Custom/ColorTextureCG" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
@@ -757,7 +755,7 @@
 
 <p>이제 직접 정점 쉐이더와 픽셀 쉐이더를 계산하는 부분들이 남았다. <em>vert</em> 함수를 보면 <em>appdata</em> 라는 구조체 변수를 인자로 받아서 <em>v2f</em> 구조체 데이터를 반환하는 간단한 함수로 보인다. 이 함수의 코드를 보자.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>v2f vert (appdata v)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>v2f vert (appdata v)
 {
 	v2f o;
 	o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
@@ -770,7 +768,7 @@
 
 <p>내부적으로 복잡한 처리가 끝나고 다음으로 픽셀 쉐이더 단계로 넘어간다. 등록된 함수가 호출되며 위의 <em>frag</em> 함수가 호출되는데 여기서 텍스쳐와 UV 좌표로 폴리곤에 색을 입혀준다. 내용을 보자.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fixed4 frag (v2f i) : SV_Target
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fixed4 frag (v2f i) : SV_Target
 {
 	fixed4 col = tex2D(_MainTex, i.uv);
 	return col * _Color;
@@ -852,7 +850,7 @@ s.setAttribute('data-timestamp', +new Date());
       
 
 Content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a><br />
-&copy; 2015&ndash;2019 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+&copy; 2015&ndash;2021 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
 
     </p>
 
