@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>How To Represent Transparency Object</title>
+  <meta name="description" content="오래전부터 게임같은 실시간으로 안정적인 성능을 뽑아내야하는 컴퓨터 그래픽에서의 투명한 물체는 항상 골칫거리였다. “투명” 하다보니 일반적으로 사용되는 최적화 방법도 사용할 수 없기 때문에 퍼포먼스의 문제가 있으며, 일반적으로 지원하는 Alpha Blending 을 사용할시에는 물체의 순서를 직접 소팅해주어야 했다. 투명한 물체를 그리는 일반적인 방법의 문제에 대해서 알아보고, 문제를 부분적으로 해결할 수 있는 몇가지 방법들을 적어보겠다.">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://hrmrzizon.github.io/2018/05/27/how-to-represent-transparency-object">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
+
+  <meta name="google-site-verification" content="o3-a11YI0ZIYwUdcikrWBRObGOUHzk89IJF7CX0ieQk" />
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="How To Represent Transparency Object">
+  <meta name="twitter:description" content="오래전부터 게임같은 실시간으로 안정적인 성능을 뽑아내야하는 컴퓨터 그래픽에서의 투명한 물체는 항상 골칫거리였다. “투명” 하다보니 일반적으로 사용되는 최적화 방법도 사용할 수 없기 때문에 퍼포먼스의 문제가 있으며, 일반적으로 지원하는 Alpha Blending 을 사용할시에는 물체의 순서를 직접 소팅해주어야 했다. 투명한 물체를 그리는 일반적인 방법의...">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Appocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="/edu">Edu</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">How To Represent Transparency Object</h1>
+    
+    <p class="post-meta"><time datetime="2018-05-27T00:00:00+00:00" itemprop="datePublished">May 27, 2018</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/transparency/">transparency</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>오래전부터 게임같은 실시간으로 안정적인 성능을 뽑아내야하는 컴퓨터 그래픽에서의 투명한 물체는 항상 골칫거리였다. “투명” 하다보니 일반적으로 사용되는 최적화 방법도 사용할 수 없기 때문에 퍼포먼스의 문제가 있으며, 일반적으로 지원하는 <em>Alpha Blending</em> 을 사용할시에는 물체의 순서를 직접 소팅해주어야 했다. 투명한 물체를 그리는 일반적인 방법의 문제에 대해서 알아보고, 문제를 부분적으로 해결할 수 있는 몇가지 방법들을 적어보겠다.</p>
+
+<!-- more -->
+
+<p>일반적으로 아무런 방법없이 투명한 그리는 방법은 뒤에있는 물체부터 순서대로 그리는 것이다. 이를 형상화 시키면 아래 그림과 같다.</p>
+
+<p><img src="/images/over_operator_draw_order.png" alt="over operator" class="center-image" /></p>
+
+<p>그림에서는 아래부터 위쪽에 있는 문체를 순서대로 그린다. 파란색, 빨간색, 연두색 기준으로 그리게 된다. 그렇게 되면 이전에 그려진 결과와 오브젝트의 결과가 합쳐져서 표현되게 된다. 이는 다음과 같은 식으로 표현된다.</p>
+
+<p><br />
+<img src="/images/over-operator_polynomial.png" alt="over-operator polynomial" class="center-image" /></p>
+<center>출처 : <a href="http://cwyman.org/supplement/oitContinuum/2016_HPG_ExpandingOITContinuum.pdf">"Exploring and Expanding the Continuum of OIT Algorithms," HPG 2016.</a>
+</center>
+<p><br /></p>
+
+<p><em>a0,c0</em> 는 픽셀에서 출력될 <em>Alpha</em> 와 <em>Color</em> 를 의미한다. 그 뒤의 항에서 <em>a1,c1</em> 은 이전에 그려진 결과를 뜻한다. 이런 방식을 <em>“over”</em> 연산이라고 말한다. 이런 방식은 나중에 그려진 색이 조금 더 강조되고, 이전에 그려지는 색의 존재가 조금씩 흐려지는 것을 알 수 있다.</p>
+
+<p>이 방법의 문제는 그려지는 순서를 직접 맞춰줘야 하는 것이다. 이는 굉장히 짜증나는 문제로, 단순한 정렬만으로는 세세한 부분의 문제를 해결할 수 없다. 아래 그림은 해당 문제를 잘 나타내어 준다.</p>
+
+<p><br />
+<img src="/images/shared-OIT-example-animation_lumberyard.gif" alt="Lumberyard : OIT example animation" class="center-image" /></p>
+<center>출처 : <a href="https://docs.aws.amazon.com/ko_kr/lumberyard/latest/userguide/graphics-rendering-order-independent-transparency.html">lumberyard : OIT(Order Independent Transparency)</a>
+</center>
+<p><br /></p>
+
+<p>상단 두개의 그림이 일반적인 <em>“over”</em> 연산을 한 방법이다. 정렬되지 않아 미리 정해진 순서대로 출력되며 물체가 회전하면 공간상의 순서가 바뀌므로 상단 두개의 그림같이 출력된다. 그래서 이런 <em>Depth</em> 의 정렬 문제 때문에 만들어진 용어가 있다.</p>
+
+<h2>Order Independent Transparency(OIT)</h2>
+
+<p><em>OIT</em>, 순서에 구애받지 않는 투명물체를 그리는 방법을 통칭하는 용어다. 대부분의 게임에서는 <em>OIT</em> 를 사용하여 투명물체를 그린다. 많이 알려진 방식은 두가지가 있다. <em>Depth Peeling</em> 과 <em>Weighted Blended OIT</em> 다.</p>
+
+<p><em>Depth Peeling</em> 은 <em>Detph</em> 를 사용하여 카메라로부터 가장 가까운(<em>Depth</em> 값이 가장 작은) 표면의 색을 누적시키는 <em>OIT</em> 기법이다. 직역하자면 “<em>Depth</em> 껍질 벗기기” 인데, 조금 더 자세히 알아보자.</p>
+
+<p><br />
+<img src="/images/OIT_Lab_DepthPeeling.gif" alt="OIT-Lab DepthPeeling" class="center-image" /></p>
+<center>출처 : <a href="https://github.com/candycat1992/OIT_Lab">Github : candycat1992 / OIT_Lab</a>
+</center>
+<p><br /></p>
+
+<p><em>Depth Peeling</em> 은 총 3단계로 이루어진다. 맨 처음에는 <em>Alpha</em> 값에 관계없이 <em>Depth Test</em> 를 작거나 같은값에서 되게 해두고, <em>Depth Write</em> 가 가능하게 해준다. 그리고 그려준다. 그렇게 되면 카메라에서 가장 가까운 표면들이 처음에 그려지게 되고, 해당 상태에서 그려진 표면의 <em>Depth</em> 값들이 <em>Depth Buffer</em> 에 저장된다. 즉 처음에 그려진 결과를 가진 색들의 집합과 <em>Detph</em> 의 집합을 가지고 시작한다.</p>
+
+<p>이제 비슷한 그리기를 계속 반복한다. 어떻게 반복하냐면, 두가지의 <em>Depth Test</em> 를 사용해야 한다. 일단 처음과 같은 작거나 같은(<em>LessEqual</em>) <em>Depth Test</em> 를 계속 해주고, 여기서 추가적으로 이전에 했던 <em>Depth Buffer</em> 의 값을 가져와 출력되는 <em>Depth</em> 값이 작거나 같을 때 픽셀의 결과를 누락시킨다.(<em>Discard</em>) 즉 이전에 출력한 표면을 <em>Depth Test</em> 로 누락시키고 그 뒤에서 가장 <em>Depth</em> 값이 작은 것들을 출력한다. 이때 <em>Depth</em> 값은 계속 기록해야한다. 아래 그림을 보자.</p>
+
+<p><br />
+<img src="/images/depthpeeling-crosssection.png" alt="Depth Peeling Cross-Section" class="center-image" /></p>
+<center>출처 : <a href="http://developer.download.nvidia.com/assets/gamedev/docs/OrderIndependentTransparency.pdf">NVidia : Order-Independent Transparency</a>
+</center>
+<p><br /></p>
+
+<p>맨 처음에 했던 결과가 <em>Layer 0</em> 의 결과이고, 두번째 과정을 반복하면 뒷부분을 계속 출력하게 된다. 그래서 임의의 횟수만큼 이와 같은 과정을 계속 반복해준다. 그러면 두번쨰 과정, <em>Depth Peeling</em> 은 끝이다.</p>
+
+<p>다음은 임의의 횟수만큼 <em>Depth Peeling</em> 을 해서 출력된 색의 결과와 <em>Depth Buffer</em> 를 가지고 위에서 언급한 일반적인 <em>Alpha Blending</em> 의 과정인 <em>“over”</em> 연산을 해주면 된다. 순서는 가장 뒤에있는 결과, 마지막에 출력한 결과부터 처음 출력한 결과, 카메라에서 가장 가까운 결과까지 순서대로 <em>Layer</em> 를 <em>“over”</em> 연산을 통해 결합시켜주면 된다. 아래에는 <em>Layer</em> 의 크기를 점점 증가시킨 결과를 애니메이션으로 보여주는 그림이다.</p>
+
+<p><br />
+<img src="/images/depthpeeling.gif" alt="OIT-Lab DepthPeeling Anim" class="center-image" /></p>
+<center>출처 : <a href="https://github.com/candycat1992/OIT_Lab">Github : candycat1992 / OIT_Lab</a>
+</center>
+<p><br /></p>
+
+<p>다른 방법에 비해 <em>Depth Peeling</em> 은 그다지 좋은 방법은 아니다. 들어가는 비용이 너무 크다. <em>Depth Peeling</em> 은 <em>Layer</em> 가 크면 클수록 더 많은 것들을 표현할 수가 있다. 하지만 <em>Layer</em> 의 갯수에 맞춰서 들어가는 메모리가 굉장히 크다. 우선 화면 해상도를 기준으로 색과 <em>Depth</em> 를 저장하는 버퍼를 여러개 만들어야 한다. 그리고 <em>Layer</em> 의 갯수만큼 <em>Geometry Pass</em>(<em>Vertex Shader</em>, <em>Tesselation</em>, <em>Geometry Shader</em>)를 반복한다. 이는 정점 데이터가 많으면 많을수록 크리티컬하다. 이런 여러가지의 단점이 있기 때문에 <em>Depth Peeling</em> 은 잘 쓰이지 않는것으로 보인다. 또한 <em>Shader</em> 코드내에서 <em>Depth Test</em> 를 해주게 되면 GPU 의 <em>Early-Z Test</em> 가 비활성화가 되기 때문에 퍼포먼스 손실도 있을 것이라고 예측된다.</p>
+
+<p>그래서 <em>Depth Peeling</em> 보다는 나은 성능을 가진 <em>Weighted Blended OIT</em> 라는 방법이 어느정도 쓰이는 것으로 보인다. <em>Weighted Blended OIT</em> 는 2013년에 논문을 발표하였으며, 요즘에도 쓰이는 방법이다. GDC2018 에서 Agent of Mayhem 의 제작사가 <em>Weighted Blended OIT</em> 에 대한 내용을 발표했다.(<a href="https://www.dsvolition.com/publications/rendering-technology-in-agents-of-mayhem/">링크</a>) <em>Weighted Blended OIT</em> 는 2013년에 고안된 기법으로 <em>Depth Peeling</em> 보다는 덜 오래된 방법이다. <em>Weighted Blended OIT</em> 는 물체의 색을 표현할 떄, 특정한 가중치(<em>weight</em>)를 구해 곱해서 표현한다. 그리고 이전에 출력된 결과에 그대로 색값을 더해준다. 이제 자세한 방법에 대해서 알아보자.</p>
+
+<p><br />
+<img src="/images/weightedblendedOIT_formula_.png" alt="wboit formula" class="center-image" /></p>
+<center>출처 : <a href="http://jcgt.org/published/0002/02/09/">jcgt : Weighted Blended Order-Independent Transparency</a>
+</center>
+<p><br /></p>
+
+<p>위 그림은 최종으로 나온 픽셀이 가지고 있는 색을 보여준다. <em>n</em> 은 해당 픽셀에 그려지는 갯수이고, <em>α</em> 는 <em>Alpha</em>, <em>C</em> 는 <em>Color</em>, <em>Z</em> 는 <em>Depth</em>, <em>C0</em> 는 투명 오브젝트를 그리기 전에 그려진 불투명한 표면의 색이다. 식만 봐서는 자세히는 모르기 때문에 아래 그림을 보면서 알아보자.</p>
+
+<p><br />
+<img src="/images/weightedblendedOIT_formula_explain_.png" alt="wboit formula" class="center-image" /></p>
+<center>출처 : <a href="http://jcgt.org/published/0002/02/09/">jcgt : Weighted Blended Order-Independent Transparency</a>
+</center>
+<p><br /></p>
+
+<p>일단 총 3가지 단계로 나뉜다. <em>RGB * Weight</em>, <em>Alpha * Weight</em> 를 <em>RGBA</em> 로 저장해주는 누적값(<em>accumulate</em>)을 하나의 렌더 타겟에 저장하고, 얼마나 픽셀의 색이 덮는지에 대한 여부가 아닌, 반대로 이전의 색이 얼마만큼 노출이 될 수 있는지에 대한 노출값(<em>revealage</em>)을 다른 하나의 렌더 타겟에 저장한다. 그 다음 그 결과를 가지고 위의 식의 값을 계산한 결과가 <em>Weighted, Blended OIT</em> 의 끝이다. 다만 <em>accumulate</em> 와 <em>revealage</em> 값들은 <em>MRT</em> 를 통해서 <em>DrawCall</em> 을 단축시킬 수 있을 것 같다.</p>
+
+<p><em>Weight</em> 값을 계산하는 방법은 여러가지가 있다. 가장 중요한 것은 <em>Weight</em> 를 계산할 떄, <em>Depth</em>, <em>Alpha</em> 이 두가지를 사용하여 계산하는 것이 가장 중요한 점이다. <em>Depth</em> 는 카메라를 기준으로 앞 뒤를 판별하는 중요한 기준이며, <em>Alpha</em> 값은 투명한 정도를 나타내는 중요한 값이다. <em>weight</em> 를 구하는 공식은 아래 그림을 참고하자.</p>
+
+<p><br />
+<img src="/images/weightedblendedOIT_weight_formula_.png" alt="wboit formula" class="center-image" /></p>
+<center>출처 : <a href="http://jcgt.org/published/0002/02/09/">jcgt : Weighted Blended Order-Independent Transparency</a>
+</center>
+<p><br /></p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>_0.1 ≤</td>
+      <td>z</td>
+      <td>≤ 500_ 를 가정하고 만든 식이다. 이중에 <em>d(z)</em> 라는 식이 있는데 이는 아래를 보면된다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br />
+<img src="/images/weightedblendedOIT_weight_formula_additional_.png" alt="wboit formula" class="center-image" /></p>
+<center>출처 : <a href="http://jcgt.org/published/0002/02/09/">jcgt : Weighted Blended Order-Independent Transparency</a>
+</center>
+<p><br /></p>
+
+<p>이는 <em>GLSL</em> 기준으로, <em>HLSL</em> 에서 취급하는 <em>Depth</em> 의 범위가 달라지면 바뀔수도 있다. 식을 선택할 떄 중요한 점은 커브가 어떤식으로 생성되는지 보아야 한다. 아래 그림을 보자.</p>
+
+<p><br />
+<img src="/images/weightedblendedOIT_weight_curve_.png" alt="wboit formula" class="center-image" /></p>
+<center>출처 : <a href="http://jcgt.org/published/0002/02/09/">jcgt : Weighted Blended Order-Independent Transparency</a>
+</center>
+<p><br /></p>
+
+<p>논문에 실려있던 그림이며, 각 식에 따른 <em>weight</em> 의 커브를 잘 보여준다. 어느 정도 지식이 있다면 보여주고 싶은 컨텐츠의 특성에 따라서 식을 변형을 할 수도 있겠다.</p>
+
+<p><em>WBOIT</em> 의 장점은 굉장히 전통적인 방법으로 구현이 가능하기 때문에 어떠한 기계에도 사용할 수 있다는 장점이 있다. <em>Depth Peeling</em> 은 <em>MRT</em> 를 사용해서 해야하므로 <em>DX10+</em> 를 지원하는 디바이스부터 가능한 것에 비하면 굉장한 장점이다. <em>Occlusion Culling</em> 은 안되지만 거의 <em>O(n)</em> 의 속도와 많아봐야 2개의 해상도에 비례하는(<em>RGBA</em>, <em>R</em>) 메모리만 있으면 되기 때문에 투명 물체를 엄청나게 많이 출력하지 않는다면 일반적으로 쓸 수 있다.</p>
+
+<p><em>WBOIT</em> 또한 단점이 몇가지 존재한다. 첫번째로 불투명한 물체와 함께 <em>“over”</em> 연산을 한다면 앞의 물체에 의해 가려지게 된다. 하지만 <em>WBOIT</em> 는 물체가 다른색을 표현할 경우에는 불투명한 물체를 표현하지 못한다. 그리고 <em>Depth</em> 값의 정밀도에 따라서 표현할 수 있는 투명한 물체의 사이의 거리가 달라진다. 아무리 식을 변형시킨다고 하더라도 부동소수점 정밀도의 문제가 생길수가 있다. 마지막으로 모든 오브젝트가 카메라의 <em>Z</em> 축을 따라서 움직인다면 출력값은 달라질 것이다. 이는 <em>weight</em> 계산에 <em>Depth</em> 값이 들어가서 이러한 결과를 보여주는데, 해당 논문에는 그다지 신경쓰지 않았다고 적혀있다.</p>
+
+<p>하지만 위의 단점은 충분히 안고갈만한 단점이기 때문에 투명한 물체를 그릴 때는 <em>Weighted Blended OIT</em> 가 가장 나은 방법이라고 본다. 아래 <em>Alpha Blend, Detph Peeling, _Weighted Blended OIT</em> 이 세가지 방법에 대한 비교 영상이 있다.</p>
+
+<style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style>
+<div class="embed-container">    <iframe title="YouTube video player" width="640" height="390" src="//www.youtube.com/embed/JVa9xXddgbM" frameborder="0" allowfullscreen=""></iframe></div>
+
+<p>위에서 언급한 <a href="https://www.dsvolition.com/publications/rendering-technology-in-agents-of-mayhem/">Rendering Technology in ‘Agents of Mayhem’</a> PT 에서는 기존의 <em>WBOIT</em> 에서 <em>Emmisive</em> 한 물체를 위해 추가적인 화면 해상도에 비례하는 버퍼를 사용하여 빛나는 투명 물체를 표현하는 방법을 서술해놓았다. 또한 해당 논문의 저자가 1년전에 고안한 <a href="https://www.youtube.com/watch?v=jWe5Ae22Ffs&amp;t=555s"><em>Phenomenological Transparency</em></a> 라는 방법도 있다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="http://cwyman.org/papers.html">cwyman.org : “Exploring and Expanding the Continuum of OIT Algorithms,” HPG 2016.</a></li>
+  <li><a href="http://developer.download.nvidia.com/assets/gamedev/docs/OrderIndependentTransparency.pdf">NVidia : Order-Independent Transparency</a></li>
+  <li><a href="http://developer.download.nvidia.com/SDK/10.5/opengl/src/dual_depth_peeling/doc/DualDepthPeeling.pdf">NVidia : Order Independent Transparency with Dual Depth Peeling</a></li>
+  <li><a href="http://jcgt.org/published/0002/02/09/">jcgt : Weighted Blended Order-Independent Transparency</a></li>
+  <li><a href="http://casual-effects.blogspot.com/2015/03/implemented-weighted-blended-order.html">Implementing Weighted, Blended Order-Independent Transparency</a></li>
+  <li><a href="https://github.com/candycat1992/OIT_Lab">Github : candycat1992 / OIT_Lab</a></li>
+  <li><a href="https://www.dsvolition.com/publications/rendering-technology-in-agents-of-mayhem/">GDC2018 : Rendering Technology in ‘Agents of Mayhem’</a></li>
+  <li><a href="https://www.youtube.com/watch?v=jWe5Ae22Ffs&amp;t=555s">Youtube : Phenomenological Transparency</a></li>
+</ul>
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://zizon.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+    
+    <script>
+      $("script[type='math/tex']").replaceWith(function() {
+          var tex = $(this).text();
+          return katex.renderToString(tex, {displayMode: false});
+      });
+
+      $("script[type='math/tex; mode=display']").replaceWith(function() {
+          var tex = $(this).html();
+          return katex.renderToString(tex.replace(/%.*/g, ''), {displayMode: true});
+      });
+    </script>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+Content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a><br />
+&copy; 2015&ndash;2021 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Usage Of Attributes In Unity</title>
+  <meta name="description" content="C# 문법은 클래스, 구조체, 열거형, 멤버 변수, 메소드등 여러 타입에 표시를 하는 기능을 제공한다. 이 표시들을 C# 문법에서는 Attribute(속성) 라고 칭한다. 그리고 이 속성을 사용하여 Unity 에서는 많은 기능들을 제공한다. 아래 우리가 가장 많이 볼만한 속성을 사용한 예제가 있다.">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://hrmrzizon.github.io/2017/04/12/usage-of-attributes-in-unity">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
+
+  <meta name="google-site-verification" content="o3-a11YI0ZIYwUdcikrWBRObGOUHzk89IJF7CX0ieQk" />
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Usage Of Attributes In Unity">
+  <meta name="twitter:description" content="C# 문법은 클래스, 구조체, 열거형, 멤버 변수, 메소드등 여러 타입에 표시를 하는 기능을 제공한다. 이 표시들을 C# 문법에서는 Attribute(속성) 라고 칭한다. 그리고 이 속성을 사용하여 Unity 에서는 많은 기능들을 제공한다. 아래 우리가 가장 많이 볼만한 속성을 사용한 예제가 있다.">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Appocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="/edu">Edu</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Usage Of Attributes In Unity</h1>
+    
+    <p class="post-meta"><time datetime="2017-04-12T00:00:00+00:00" itemprop="datePublished">Apr 12, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>C# 문법은 클래스, 구조체, 열거형, 멤버 변수, 메소드등 여러 타입에 표시를 하는 기능을 제공한다. 이 표시들을 C# 문법에서는 <strong>Attribute</strong>(속성) 라고 칭한다. 그리고 이 속성을 사용하여 Unity 에서는 많은 기능들을 제공한다. 아래 우리가 가장 많이 볼만한 속성을 사용한 예제가 있다.
+<!-- more --></p>
+
+<h2>Property 직렬화 제어</h2>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="c1">// Unity 시스템에 데이터를 직렬화해 멤버변수 초기값을 지정한다.</span>
+<span class="p">[</span><span class="n">UnityEngine</span><span class="p">.</span><span class="n">SerializeField</span><span class="p">]</span>
+<span class="k">public</span> <span class="kt">int</span> <span class="n">limitCount</span><span class="p">;</span>
+
+<span class="c1">// 직렬화를 못하게 한다.</span>
+<span class="p">[</span><span class="n">System</span><span class="p">.</span><span class="n">NonSerialized</span><span class="p">]</span>
+<span class="k">public</span> <span class="kt">int</span> <span class="n">gameCount</span><span class="p">;</span></code></pre></figure>
+
+<p>Unity 스크립팅 시스템은 따로 멤버 직렬화에 대한 속성을 지정하지 않으면 접근 제한자(public, protected, private) 에 따라 직렬화를 할지 말지 결정한다. 하지만 접근 제한자로만 사용하기에는 부족한 부분이 있다 그래서 Unity 에서는 멤버 변수 직렬화를 <strong>Attribute</strong> 문법을 사용해 Unity 전용 속성을 만들어 제어를 할 수 있도록 해두었다.</p>
+
+<p>클래스 멤버 변수 직렬화를 제어하는 속성은 세개가 있다. <strong>UnityEngine.SerializeField</strong> 와 <strong>UnityEngine.HideInInspector</strong> 와 <strong>System.NonSerialized</strong> 이 세개다. <strong>UnityEngine.SerializeField</strong> 는 클래스 멤버 변수의 데이터를 직렬화 해주어 인스턴스가 생성되었을 떄 Unity 시스템에서 직렬화한 데이터로 초기화 시켜주는 속성이고, <strong>UnityEngine.HideInInspector</strong> 는 이전에 직렬화된 데이터와의 링크를 끊어 일시적으로 직렬화를 사용한 초기화를 막고 Inspector 에서도 안보이게 해준다. <strong>System.NonSerialized</strong> 는 해당 멤버 변수의 직렬화를 아예 막는 속성이다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">SerializeField</th>
+      <th style="text-align: center"> </th>
+      <th style="text-align: center">HideInInspector</th>
+      <th style="text-align: center"> </th>
+      <th style="text-align: center">NonSerialized</th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">변수 직렬화를 해주는 <strong>Attribute</strong></td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">직렬화된 데이터를 숨기는 <strong>Attribute</strong></td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center">변수 직렬화를 막는 <strong>Attribute</strong></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>위 세개의 속성들로 Unity 직렬화 시스템을 제어할 수 있다. <strong>UnityEngine.SerializeField</strong> 는 직렬화된 데이터가 필요할 때, <strong>System.NonSerialized</strong> 는 직렬화된 데이터가 전혀 필요 없을 때, <strong>UnityEngine.HideInInspector</strong> 는 개발 도중에 잠시 직렬화된 데이터와 연결을 끊을 때 사용한다.</p>
+
+<p>필자는 확실한 것을 지향하기 때문에 <a href="https://docs.unity3d.com/kr/current/ScriptReference/HideInInspector.html"><strong>UnityEngine.HideInInspector</strong></a> 를 잘 사용하진 않는다. 링크를 타고 들어가면 나오지만 정확한 행동의 정의되지 않았다. 단지 숨기기만 하는건지, 직렬화된 데이터를 없에는건지 설명이 명확하게 되어있지 않다. 또한 현재쓰는 Unity 5.5.2 버젼으로 테스트를 해보면 <strong>UnityEngine.HideInInspector</strong> 가 붙은 직렬화 데이터가 초기화 되는 경우가 있다.</p>
+
+<h2>사용자 정의 자료형 직렬화</h2>
+
+<p>Unity 는 위 예제에서 보다시피 C# 의 기본 자료형과 Unity 에서 지원하는 자료형들의 변수를 Inspector 에서 에디팅할 수 있게 지원한다. 아래 스크립트와 그림을 보자.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">public</span> <span class="k">class</span> <span class="nc">SomeScript</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span>
+    <span class="k">private</span> <span class="kt">float</span> <span class="n">someNumber</span><span class="p">;</span>
+
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span>
+    <span class="k">private</span> <span class="n">Color</span> <span class="n">someColor</span><span class="p">;</span>
+
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span>
+    <span class="k">private</span> <span class="n">Vector3</span> <span class="n">someVector</span><span class="p">;</span>
+
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span>
+    <span class="k">public</span> <span class="n">AnimationCurve</span> <span class="n">someCurve</span><span class="p">;</span>
+
+    <span class="p">...</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>SomeScript 가 붙은 GameObject 의 Inspector 창에 아래와 같은 모습이 보일것이다.</p>
+
+<p><img src="/images/unity_support_inspector_1.png" alt="Inspector" class="center-image" /></p>
+
+<p>위 그림과 같이 Unity 에서는 기본 자료형과 Unity 에서 지원하는 자료형을 Inspector 에서 에디팅하는 것을 지원한다. 하지만 클래스, 구조체 같은 사용자 정의 자료형은 경우가 조금 다르다. 무작정 <strong>SerializeField</strong> 속성을 붙인다고 되지는 않는다.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">public</span> <span class="k">class</span> <span class="nc">SomeDataObject</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">someName</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">int</span> <span class="n">someNumber</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">float</span> <span class="n">someYRotation</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">SomeScript</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="p">...</span>
+
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span>
+    <span class="k">private</span> <span class="n">SomeDataObject</span> <span class="n">someObject</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>이 코드를 직접 실행시켜보면 알겠지만 이렇게 해봤자 Inspector 에서는 별 변화가 없다. <strong>SomeDataObject</strong> 같이 <strong>MonoBehaviour</strong> 를 상속받지 않은 사용자 정의 자료형들은 Inspector 에서 에디팅을 가능하게 하고, 저장을 하려면 클래스에 직렬화(<strong>Serializable</strong>) 하다는 속성을 붙여주어야 한다.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="p">[</span><span class="n">System</span><span class="p">.</span><span class="n">Serializable</span><span class="p">]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">SomeDataObject</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span></code></pre></figure>
+
+<p>위와 같이 속성 하나만 붙여주면 Inspector 에서 에디팅이 가능하고 직렬화가 되어 자동으로 초기화가 가능해진다. 아래 그림과 같이 보일 것이다.</p>
+
+<p><img src="/images/unity_support_inspector_2.png" alt="Inspector" class="center-image" /></p>
+
+<h2>CustomPropertyDrawer 를 이용하여 변수의 Inspector 바꾸기</h2>
+
+<h4>클래스를 사용하여 커스터마이징하기</h4>
+
+<p>보통 클래스나 구조체를 사용해 자료를 저장하는 경우는 꽤 많다. 그리고 데이터가 많아지면 많아질 수록 넣어야할 변수는 많아지고 Inspector 창은 혼란의 도가니에 빠지게 된다. 아래와 같이 말이다.</p>
+
+<p><img src="/images/unity_support_inspector_3.png" alt="Inspector" class="center-image" /></p>
+
+<p>위의 예시는 조금 극단적이긴 하지만 변수가 6개씩만 넘어도 한눈에 보기에도 힘들고 편집하는데도 살짝 헷갈린다. 그리고 간단한 시스템이 아니면 대부분 꽤 많은 변수를 가지게 된다. 그래서 Unity 에서는 타입별로 Inpector 에서 보이는 에디팅 환경을 바꾸는 것을 지원한다. 위의 선언한 <strong>SomeDataObject</strong> 를 이용하여 바꾸어보기로 하자.</p>
+
+<p>우선 에디터 전용 스크립트를 만들어 주어야 한다. Unity 의 Project 창에서 아무 위치에나 <em>“Editor”</em> 라는 이름으로 폴더를 만들어주고, 그안에 스크립트를 만들어주자. 아래 그림과 같이 말이다.</p>
+
+<p><img src="/images/editor_code_location.png" alt="Project-editor" class="center-image" /></p>
+
+<p><strong>SomeDataObject</strong> 를 그리는 에디터이니 <strong>SomeDataObjectDrawer</strong> 로 이름을 지어주었다. 그리고 그 안의 내용을 아래와 같이 적어주자.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">using</span> <span class="nn">UnityEditor</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+
+<span class="p">[</span><span class="nf">CustomPropertyDrawer</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SomeDataObject</span><span class="p">))]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">SomeDataObjectDrawer</span> <span class="p">:</span> <span class="n">PropertyDrawer</span>
+<span class="p">{</span>
+  <span class="k">public</span> <span class="k">override</span> <span class="kt">float</span> <span class="nf">GetPropertyHeight</span><span class="p">(</span><span class="n">SerializedProperty</span> <span class="n">property</span><span class="p">,</span> <span class="n">GUIContent</span> <span class="n">label</span><span class="p">)</span>
+  <span class="p">{</span>
+      <span class="k">return</span> <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">GetPropertyHeight</span><span class="p">(</span><span class="n">property</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnGUI</span><span class="p">(</span><span class="n">Rect</span> <span class="n">position</span><span class="p">,</span> <span class="n">SerializedProperty</span> <span class="n">property</span><span class="p">,</span> <span class="n">GUIContent</span> <span class="n">label</span><span class="p">)</span>
+  <span class="p">{</span>
+      <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">PropertyField</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">property</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>위 예제는 원래 나오는 방식과 똑같이 구현을 해놓은 예제다. 여기서 주목해야할 점은 두개다. <strong>PropertyDrawer</strong> 클래스와 <strong>CustomPropertyDrawer</strong> 속성이다. <strong>PropertyDrawer</strong> 클래스는 Inspector 내에서 직접 그리는 클래스의 모체로써, Inspector 에서 보이는 변수의 모습을 바꾸려면 이 클래스를 상속받아 구현을 해놓아야 한다. <strong>CustomPropertyDrawer</strong> 속성은 클래스나 속성 타입을 명시적으로 넣어주어 해당 타입의 변수들이 Inspector 에서 보이는 모습을 바꾸겠다는 속성이다. 위 예제를 보면 <strong>CustomPropertyDrawer</strong> 속성에는 <strong>SomeDataObject</strong> 를 넣어주어 <strong>SomeDataObject</strong> 클래스의 모든 변수들을 <strong>SomeDataObjectDrawer</strong> 안의 코드를 이용해 보여준다는 의미다. 그리고 <strong>SomeDataObjectDrawer</strong> 클래스는 <strong>PropertyDrawer</strong> 를 상속해 <em>GetPropertyHeight</em> 메소드를 이용하여 높이값을 가져오고, <em>OnGUI</em> 메소드를 사용하여 실제로 Inspector 창안에서 보이는 것을 구현한다. 위 코드에서는 기본적으로 제공하는 높이와, Unity 에서 사용하는 에디터 구현 코드를 사용해서 기존 에디터와 같은 방식으로 보일 것이다.</p>
+
+<p>기본적인 구현 방법에 대해 알아보았으니 아래 그림처럼 구현해보자.</p>
+
+<p><img src="/images/unity_support_inspector_4.png" alt="Inspector" class="center-image" /></p>
+
+<p>아래에 구현 코드가 있다.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">const</span> <span class="kt">float</span> <span class="n">numberWidth</span> <span class="p">=</span> <span class="m">30</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnGUI</span><span class="p">(</span><span class="n">Rect</span> <span class="n">position</span><span class="p">,</span> <span class="n">SerializedProperty</span> <span class="n">property</span><span class="p">,</span> <span class="n">GUIContent</span> <span class="n">label</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// 왼쪽에 이름으로 나오는 라벨, 여기서는 변수 이름이 들어감.</span>
+    <span class="n">position</span> <span class="p">=</span> <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">PrefixLabel</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">label</span><span class="p">);</span>
+
+    <span class="kt">float</span> <span class="n">otherWidth</span> <span class="p">=</span> <span class="n">position</span><span class="p">.</span><span class="n">width</span> <span class="p">-</span> <span class="n">numberWidth</span> <span class="p">*</span> <span class="m">2</span><span class="p">;</span>
+
+    <span class="c1">// 각 위치별로 설정해줌.</span>
+    <span class="n">Rect</span> <span class="n">nameRect</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Rect</span><span class="p">(</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">otherWidth</span><span class="p">,</span> <span class="n">position</span><span class="p">.</span><span class="n">height</span><span class="p">),</span>
+        <span class="n">numberRect</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Rect</span><span class="p">(</span><span class="n">position</span><span class="p">.</span><span class="n">x</span> <span class="p">+</span> <span class="n">otherWidth</span><span class="p">,</span> <span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">numberWidth</span><span class="p">,</span> <span class="n">position</span><span class="p">.</span><span class="n">height</span><span class="p">),</span>
+        <span class="n">rotateRect</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Rect</span><span class="p">(</span><span class="n">position</span><span class="p">.</span><span class="n">x</span> <span class="p">+</span> <span class="n">otherWidth</span> <span class="p">+</span> <span class="n">numberWidth</span><span class="p">,</span> <span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">numberWidth</span><span class="p">,</span> <span class="n">position</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
+
+    <span class="c1">// 각 변수별로 Unity 에서 기본으로 지원하는 형식을 사용함.</span>
+    <span class="c1">// 끝에 GUIContent.none 를 안넣어주면 이름이 표시되어 에디터에서 밀리게 나옴.</span>
+    <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">PropertyField</span><span class="p">(</span><span class="n">nameRect</span><span class="p">,</span> <span class="n">property</span><span class="p">.</span><span class="nf">FindPropertyRelative</span><span class="p">(</span><span class="s">"someName"</span><span class="p">),</span> <span class="n">GUIContent</span><span class="p">.</span><span class="n">none</span><span class="p">);</span>
+    <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">PropertyField</span><span class="p">(</span><span class="n">numberRect</span><span class="p">,</span> <span class="n">property</span><span class="p">.</span><span class="nf">FindPropertyRelative</span><span class="p">(</span><span class="s">"someNumber"</span><span class="p">),</span> <span class="n">GUIContent</span><span class="p">.</span><span class="n">none</span><span class="p">);</span>
+    <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">PropertyField</span><span class="p">(</span><span class="n">rotateRect</span><span class="p">,</span> <span class="n">property</span><span class="p">.</span><span class="nf">FindPropertyRelative</span><span class="p">(</span><span class="s">"someYRotation"</span><span class="p">),</span> <span class="n">GUIContent</span><span class="p">.</span><span class="n">none</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>위 코드는 한 변수당 한줄이였던 방식에서 데이터를 한줄에 넣어주는 코드다. <strong>EditorGUI.PrefixLabel</strong> 메소드를 통해 앞에 표시되는 이름을 보여주고, 숫자를 넣어주는 부분의 넓이를 확보하고 나머지 넓이를 문자열을 보여주는데 사용한다.</p>
+
+<p>여기까지 클래스 변수가 Inspector 창에서 보이는 부분을 직접 커스터마이징 하는 방법에 대해서 알아보았다. 이 <strong>PropertyDrawer</strong> 기능을 이용하여 타입별로 고정하는게 아닌 <strong>Attribute</strong> 를 이용하여 필요한 부분만 바꾸는 방법도 있다.</p>
+
+<h4>속성을 사용하여 커스터마이징하기</h4>
+
+<p>C# 문법은 <strong>Enum</strong> 을 비트플래그로 사용하는 방법이 있다. 아래와 같이 말이다.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="p">[</span><span class="n">System</span><span class="p">.</span><span class="n">Flags</span><span class="p">]</span>
+<span class="k">public</span> <span class="k">enum</span> <span class="n">SomeEnumFlag</span>
+<span class="p">{</span>
+    <span class="n">Some</span>    <span class="p">=</span> <span class="m">1</span> <span class="p">&lt;&lt;</span> <span class="m">0</span><span class="p">,</span>
+    <span class="n">Any</span>     <span class="p">=</span> <span class="m">1</span> <span class="p">&lt;&lt;</span> <span class="m">1</span><span class="p">,</span>
+    <span class="n">Other</span>   <span class="p">=</span> <span class="m">1</span> <span class="p">&lt;&lt;</span> <span class="m">2</span><span class="p">,</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><strong>Enum</strong> 의 정의에다가 <strong>System.Flags</strong> 를 붙여 사용하면 된다. 그런데 Unity 에서는 이 <strong>Enum</strong> 을 황용하여 비트마스크를 보여주는 기능을 지원하지 않는다. 단지 한개의 아이템만 선택하는 기능만 지원한다. 그래서 Inspector 에서 비트 플래그를 사용하여 값을 설정하려면 직접 <strong>PropertyDrawer</strong> 를 사용하여 에디터를 바꿔주어야 한다. 그래서 아래처럼 코드를 짜보았다.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="p">[</span><span class="nf">CustomPropertyDrawer</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SomeEnumFlag</span><span class="p">))]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">SomeEnumFlagDrawer</span> <span class="p">:</span> <span class="n">PropertyDrawer</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">Type</span><span class="p">,</span> <span class="kt">string</span><span class="p">[</span><span class="k">]&gt;</span> <span class="n">enumTypeNameDict</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">Type</span><span class="p">,</span> <span class="kt">string</span><span class="p">[</span><span class="k">]&gt;</span><span class="p">();</span>
+
+    <span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnGUI</span><span class="p">(</span><span class="n">Rect</span> <span class="n">position</span><span class="p">,</span> <span class="n">SerializedProperty</span> <span class="n">property</span><span class="p">,</span> <span class="n">GUIContent</span> <span class="n">label</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">EnumFlagAttribute</span> <span class="n">attribute</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">attribute</span> <span class="k">as</span> <span class="n">EnumFlagAttribute</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">attribute</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kt">string</span><span class="p">[]</span> <span class="n">enumNames</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
+
+            <span class="k">if</span> <span class="p">(!</span><span class="n">enumTypeNameDict</span><span class="p">.</span><span class="nf">TryGetValue</span><span class="p">(</span><span class="n">attribute</span><span class="p">.</span><span class="n">enumType</span><span class="p">,</span> <span class="k">out</span> <span class="n">enumNames</span><span class="p">))</span>
+            <span class="p">{</span>
+                <span class="n">enumNames</span> <span class="p">=</span> <span class="n">Enum</span><span class="p">.</span><span class="nf">GetNames</span><span class="p">(</span><span class="n">attribute</span><span class="p">.</span><span class="n">enumType</span><span class="p">);</span>
+                <span class="n">enumTypeNameDict</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="n">attribute</span><span class="p">.</span><span class="n">enumType</span><span class="p">,</span> <span class="n">enumNames</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">enumNames</span> <span class="p">!=</span> <span class="k">null</span> <span class="p">&amp;&amp;</span> <span class="n">enumNames</span><span class="p">.</span><span class="n">Length</span> <span class="p">&gt;</span> <span class="m">0</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">property</span><span class="p">.</span><span class="n">intValue</span> <span class="p">=</span> <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">MaskField</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">property</span><span class="p">.</span><span class="n">intValue</span><span class="p">,</span> <span class="n">enumNames</span><span class="p">);</span>
+                <span class="k">return</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="n">EditorGUI</span><span class="p">.</span><span class="nf">PropertyField</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">property</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>직접 실행시켜보면 알겠지만 저 코드는 잘 동작하지 않는다. 왜냐하면 <strong>CustomPropertyDrawer</strong> 를 사용해서 바꿀 타입은 클래스들만 가능하기 때문이다. <strong>SomeEnumFlag</strong> 는 <strong>Enum</strong> 자료형이기 때문에 저 방식은 통하지 않는다. 이럴 때 <strong>Attribute</strong> 를 직접 만들어 설정이 가능하다.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">EnumFlagAttribute</span> <span class="p">:</span> <span class="n">PropertyAttribute</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">Type</span> <span class="n">enumType</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="nf">EnumFlagAttribute</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>위 코드는 속성을 직접 선언한 코드다. 중요한 점은 Unity 에서 지원하는 <strong>PropertyAttribute</strong> 를 상속받아서 정의하였다는 점이다. <strong>PropertyAttribute</strong> 를 사용해야만 Inspector 창에서 보이는 방식을 바꿀 수 있다. 위에서 만들어준 <strong>Enum</strong> 비트 플래그 에디터 코드에 아래와 같이 연결시켜준다.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="p">[</span><span class="nf">CustomPropertyDrawer</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">EnumFlagAttribute</span><span class="p">))]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">SomeEnumFlagDrawer</span> <span class="p">:</span> <span class="n">PropertyDrawer</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span></code></pre></figure>
+
+<p>그 다음 해당 속성을 변수에 붙여주면 Inspector 에서 아래 그림과 같이 보일것이다.</p>
+
+<p><img src="/images/unity_support_inspector_5.png" alt="Inspector" class="center-image" /></p>
+
+<p>클래스 또는 속성별로 변수별 Inspector 에디터를 바꿔보는 <strong>PropertyDrawer</strong> 설정 방법에 대해서 알아보았다.</p>
+
+<p>여태까지 설명했던 기능들은 전부 <strong>Attribute</strong> 를 사용하여 지원한다. 그리고 설명하지 않은 <strong>Attribute</strong> 문법을 사용하는 기능들도 엄~~청 많다. <strong>Attribute</strong> 에 대해 이해를 하고 있으면 앞으로의 추가적인 기능들을 사용하는데 많은 도움이 될것이다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="https://msdn.microsoft.com/ko-kr/library/mt653982.aspx">C# Attribute Usage</a></li>
+  <li><a href="https://docs.unity3d.com/ScriptReference/PropertyDrawer.html">Unity Custom Attribute</a></li>
+  <li><a href="http://blog.naver.com/PostView.nhn?blogId=hammerimpact&amp;logNo=220775187161&amp;redirect=Dlog&amp;widgetTypeCall=true">PropertyDrawer 번역 네이버 블로그</a></li>
+  <li><a href="http://www.tallior.com/unity-attributes/">Set of Unity Attribute</a></li>
+</ul>
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://zizon.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+    
+    <script>
+      $("script[type='math/tex']").replaceWith(function() {
+          var tex = $(this).text();
+          return katex.renderToString(tex, {displayMode: false});
+      });
+
+      $("script[type='math/tex; mode=display']").replaceWith(function() {
+          var tex = $(this).html();
+          return katex.renderToString(tex.replace(/%.*/g, ''), {displayMode: true});
+      });
+    </script>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+Content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a><br />
+&copy; 2015&ndash;2021 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

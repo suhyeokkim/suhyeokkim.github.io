@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Using Texture2darray In Unity</title>
+  <meta name="description" content="Unity 에서 렌더링에 관련된 최적화를 할때는 TextureArray 를 사용할 수 밖에 없다. 이는 Unity 에서 DrawCall 을 줄이기 위해 써먹는 Batching 이라는 개념 때문인데 단순하게 말하면 그리는 새로운 매터리얼과 메쉬의 종류가 많으면 많을 수록 DrawCall 을 많이 하게 된다. 하지만 이 DrawCall 의 비용은 싼편이 아니기 때문에 CPU 의 성능을 꽤나 잡아먹게 된다. 그래서 Unity 는 자동으로 Batching 을 해주게 된다. 같은 메터리얼을 쓰면 자동으로 묶어주고, 같은 메쉬를 쓰면 또 자동으로 묶어준다. 결국 Batching 이 DrawCall 의 횟수와 같은 개념이 되는 것이다. 그래서 Batching 의 횟수를 줄이기 위해 매터리얼을 줄이는 방법에 대한 것이 TextureArray 다. 이것보다 일반적으로 알려진 기법은 TexutreAtlas 인데, 이 방법은 상당히 단순하다. 그냥 텍스쳐 한장에 모든 그림을 때려박고 UV 를 수정해주는 작업을 할때 쓰인다. 보통은 UI 이미지에서 스프라이트를 설정할 때 쓰이며, Unity 는 UGUI 기능에 Sprite 들을 합쳐서 TextureAtlas 로 만들어주는 기능이 있다. 하지만 3D 오브젝트의 UV 에서는 말이 조금 달라진다. UV 좌표는 0과 1사이의 값으로 이루어지는데 텍스쳐 여러장과 세팅되어 있던 UV 좌표들을 한장으로 통합해 다시 세팅하려면 굉장히 귀찮아진다. 그리고 합쳐지기전의 텍스쳐의 갯수가 합쳐진 후에 추가된다면 그것또한 굉장히 귀찮아질 것이다. 결국 생산성의 문제가 된다. 그래서 다른 방법을 쓸 수 있는데, 이 방법이 바로 TextureArray 다. TextureArray 의 개념은 단순하게 텍스쳐를 배열로 묶은 것으로, 인덱스만 있으면 그냥 하나하나 참조하여 사용가능하다. 즉 UV 의 2차원 좌표와 함께 인덱스 한개만 더 있으면 된다. 그리고 TextureArray 의 장점은 TextureAtlas 마냥 합쳐주고 UV 를 수정할 일이 없고, 메쉬별로 인덱스를 따로 설정해주는 작업만 해주면 상당히 편하게 할 수 있다. 또한 텍스쳐 갯수가 몇개가 되던간에 메터리얼을 한개로 유지할 수 있기 때문에 굉장히 편하다. 근데 Unity 에서 사용하려면 몇가지 단점이 있다. Asset 생성을 지원하지 않기 때문에 굉장히 불편하고, 보여주는 GUI 또한 Unity 내부에서 지원하지 않는다. 편하게 사용하기 위해선 에디터 코드를 직접 만져야 한다. 물론 직접 생성해주는 것도 상관없지만 생산성 자체만 놓고보면 그다지 좋은 편은 아니다. 또한 Shader 코드들도 직접 바꿔주어야 하기 때문에 이것저것 세팅해줘야 할것이 많다. 즉 사용하기에 비용이 많이 든다. 이제 직접 Unity 에서 적용시켜보자.">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://hrmrzizon.github.io/2017/06/04/using-texture2darray-in-unity">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
+
+  <meta name="google-site-verification" content="o3-a11YI0ZIYwUdcikrWBRObGOUHzk89IJF7CX0ieQk" />
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Using Texture2darray In Unity">
+  <meta name="twitter:description" content="Unity 에서 렌더링에 관련된 최적화를 할때는 TextureArray 를 사용할 수 밖에 없다. 이는 Unity 에서 DrawCall 을 줄이기 위해 써먹는 Batching 이라는 개념 때문인데 단순하게 말하면 그리는 새로운 매터리얼과 메쉬의 종류가 많으면 많을 수록 DrawCall 을 많이 하게 된다. 하지만 이 DrawCall 의 비용은 싼편이 ...">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Appocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="/edu">Edu</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Using Texture2darray In Unity</h1>
+    
+    <p class="post-meta"><time datetime="2017-06-04T00:00:00+00:00" itemprop="datePublished">Jun 4, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/rendering/">rendering</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>Unity 에서 렌더링에 관련된 최적화를 할때는 <em>TextureArray</em> 를 사용할 수 밖에 없다. 이는 Unity 에서 <em>DrawCall</em> 을 줄이기 위해 써먹는 <em>Batching</em> 이라는 개념 때문인데 단순하게 말하면 그리는 새로운 매터리얼과 메쉬의 종류가 많으면 많을 수록 <em>DrawCall</em> 을 많이 하게 된다. 하지만 이 <em>DrawCall</em> 의 비용은 싼편이 아니기 때문에 CPU 의 성능을 꽤나 잡아먹게 된다. 그래서 Unity 는 자동으로 <em>Batching</em> 을 해주게 된다. 같은 메터리얼을 쓰면 자동으로 묶어주고, 같은 메쉬를 쓰면 또 자동으로 묶어준다. 결국 <em>Batching</em> 이 <em>DrawCall</em> 의 횟수와 같은 개념이 되는 것이다.</p>
+
+<p>그래서 <em>Batching</em> 의 횟수를 줄이기 위해 매터리얼을 줄이는 방법에 대한 것이 <em>TextureArray</em> 다. 이것보다 일반적으로 알려진 기법은 <em>TexutreAtlas</em> 인데, 이 방법은 상당히 단순하다. 그냥 텍스쳐 한장에 모든 그림을 때려박고 UV 를 수정해주는 작업을 할때 쓰인다. 보통은 UI 이미지에서 스프라이트를 설정할 때 쓰이며, Unity 는 UGUI 기능에 <em>Sprite</em> 들을 합쳐서 <em>TextureAtlas</em> 로 만들어주는 기능이 있다. 하지만 3D 오브젝트의 UV 에서는 말이 조금 달라진다. UV 좌표는 0과 1사이의 값으로 이루어지는데 텍스쳐 여러장과 세팅되어 있던 UV 좌표들을 한장으로 통합해 다시 세팅하려면 굉장히 귀찮아진다. 그리고 합쳐지기전의 텍스쳐의 갯수가 합쳐진 후에 추가된다면 그것또한 굉장히 귀찮아질 것이다. 결국 생산성의 문제가 된다.  그래서 다른 방법을 쓸 수 있는데, 이 방법이 바로 <em>TextureArray</em> 다.</p>
+
+<p><em>TextureArray</em> 의 개념은 단순하게 텍스쳐를 배열로 묶은 것으로, 인덱스만 있으면 그냥 하나하나 참조하여 사용가능하다. 즉 UV 의 2차원 좌표와 함께 인덱스 한개만 더 있으면 된다. 그리고 <em>TextureArray</em> 의 장점은 <em>TextureAtlas</em> 마냥 합쳐주고 UV 를 수정할 일이 없고, 메쉬별로 인덱스를 따로 설정해주는 작업만 해주면 상당히 편하게 할 수 있다. 또한 텍스쳐 갯수가 몇개가 되던간에 메터리얼을 한개로 유지할 수 있기 때문에 굉장히 편하다. 근데 Unity 에서 사용하려면 몇가지 단점이 있다. Asset 생성을 지원하지 않기 때문에 굉장히 불편하고, 보여주는 GUI 또한 Unity 내부에서 지원하지 않는다. 편하게 사용하기 위해선 에디터 코드를 직접 만져야 한다. 물론 직접 생성해주는 것도 상관없지만 생산성 자체만 놓고보면 그다지 좋은 편은 아니다. 또한 <em>Shader</em> 코드들도 직접 바꿔주어야 하기 때문에 이것저것 세팅해줘야 할것이 많다. 즉 사용하기에 비용이 많이 든다.</p>
+
+<p>이제 직접 Unity 에서 적용시켜보자.</p>
+
+<!-- more -->
+
+<p>할것들은 세가지다.</p>
+
+<ul>
+  <li>Mesh 안의 단순한 2차원 UV 좌표를 (UV + 텍스쳐 인덱스)를 좌표로 가진 3차원 좌표로 바꾸기</li>
+  <li>TextureArray 생성 및 적용하기</li>
+  <li>Shader 코드에서 TextureArray 를 사용하고 UV 좌표를 3차원 좌표로 바꾸기</li>
+</ul>
+
+<p><a href="https://github.com/hrmrzizon/TextureArrayExample">예제</a>를 짜놓았으니 볼사람들은 참조하길 바란다.</p>
+
+<p>UV 좌표를 바꾸는 것은 경우에 따라 다르다. 보통은 2차원 UV 좌표로 설정해놓았으니 프로그래머가 합치는 것만 생각하면 <em>Mesh</em> 별로 텍스쳐 인덱스를 심어주는 컴포넌트를 넣어주는게 편할 것이다. 시작시에만 UV 정보를 수정해주면 되니 로딩시간이 길어지는 것과 GPU 메모리를 조금 더 먹는 것 외에는 문제 될것은 없다. 초기 로드 시간이 걱정된다면 에디터에서 넣어주면 된다. 예제에서는 처음에 전부 생성하기 때문에 Vector2 로 저장하던 UV좌표를 Vector3 로 바꾸고 텍스쳐 인덱스만 끼워 넣었다.</p>
+
+<p>TextureArray 부분을 작업하는게 제일 귀찮다. 그냥 컴포넌트에서 동적으로 생성해주면 장땡이긴 하지만 그런식이면 매번 컴포넌트를 건드려야하니 여간 귀찮은게 아니다. 그래서 예제를 보면 알겠지만 간단하게 래핑한 에셋을 만들었다. 근데 귀찮은 점이 하나 있다. 생성후에 에디터에서 텍스쳐 갯수나 여러것들을 수정하는게 안되서 몇가지 조건 중 하나가 문제면 다시 생성한다. 그러면 매터리얼과 연결이 끊기는데.. 혐오스럽지만 여기까지만 해놓았다. 혹시 이 방법 해결책을 아시면 댓글 부탁드립니다.</p>
+
+<p>그리고 <strong>Texture2D</strong> 클래스와 <strong>Texture2DArray</strong> 에 <em>SetPixel</em> 류 함수들은 픽셀별로 접근하기 때문에 여러 텍스쳐 압축포맷이 먹힌 텍스쳐 복사는 안된다. <a href="https://docs.unity3d.com/ScriptReference/Graphics.CopyTexture.html"><em>Graphics.CopyTexture</em></a> 로 하라고 여러 포럼들에 적혀있었다. 조건에 맞아야 사용이 가능하니 레퍼런스에 있는 상세한 설명을 참고바란다. 근데 우리가 사용하려는 간단한 전체복사는 전부 된다.</p>
+
+<p>쉐이더 코드에서 TextureArray 를 사용하는건 굉장히 간단하다. <a href="https://docs.unity3d.com/Manual/SL-TextureArrays.html">Unity Manual : TextureArray</a>를 참조하면 된다. 크게 어려울 것 없이 예제에 나온대로만 하면 된다.</p>
+
+<p>전체적으로 사용하기에는 어렵지않다. 하지만 그에 비해 얻는 이득은 많으니 어떤 게임이든 당연히 쓰는게 좋을 것이다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="https://docs.unity3d.com/Manual/SL-TextureArrays.html">Unity Manual : TextureArray</a></li>
+</ul>
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://zizon.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+    
+    <script>
+      $("script[type='math/tex']").replaceWith(function() {
+          var tex = $(this).text();
+          return katex.renderToString(tex, {displayMode: false});
+      });
+
+      $("script[type='math/tex; mode=display']").replaceWith(function() {
+          var tex = $(this).html();
+          return katex.renderToString(tex.replace(/%.*/g, ''), {displayMode: true});
+      });
+    </script>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+Content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a><br />
+&copy; 2015&ndash;2021 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

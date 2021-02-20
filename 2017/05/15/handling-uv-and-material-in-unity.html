@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Handling Uv And Material In Unity</title>
+  <meta name="description" content="Handling vertices and indices 글에서 Unity 에서 정점과 인덱스를 사용해 물체를 그리는 방법에 대해서 알아보았다. 그런데 뭔가 설정해야 할것들이 빠진 것처럼 보인다. 실제로 그려지는 모습은 Unity 에서 아무것도 설정이 안되어 있을 때 나오는 분홍색으로 전부 칠해져 있다. 일반적으로 게임에서 나오는 3D 물체들은 전부 색이 칠해져 있거나 그림이 그려져 있다. 거기다가 빛을 받아서 반짝반짝이기도 할때도 있다. 이번 글에서는 3D 오브젝트에 색을 입히거나 그림을 입히는 방법에 대해서 알아보자.">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://hrmrzizon.github.io/2017/05/15/handling-uv-and-material-in-unity">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
+
+  <meta name="google-site-verification" content="o3-a11YI0ZIYwUdcikrWBRObGOUHzk89IJF7CX0ieQk" />
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Handling Uv And Material In Unity">
+  <meta name="twitter:description" content="Handling vertices and indices 글에서 Unity 에서 정점과 인덱스를 사용해 물체를 그리는 방법에 대해서 알아보았다. 그런데 뭔가 설정해야 할것들이 빠진 것처럼 보인다. 실제로 그려지는 모습은 Unity 에서 아무것도 설정이 안되어 있을 때 나오는 분홍색으로 전부 칠해져 있다. 일반적으로 게임에서 나오는 3D 물체들은 전부 색이...">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Appocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="/edu">Edu</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Handling Uv And Material In Unity</h1>
+    
+    <p class="post-meta"><time datetime="2017-05-15T00:00:00+00:00" itemprop="datePublished">May 15, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/rendering/">rendering</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p><a href="/2017/05/14/handling-vertices-and-indices-in-unity">Handling vertices and indices</a> 글에서 Unity 에서 정점과 인덱스를 사용해 물체를 그리는 방법에 대해서 알아보았다. 그런데 뭔가 설정해야 할것들이 빠진 것처럼 보인다. 실제로 그려지는 모습은 Unity 에서 아무것도 설정이 안되어 있을 때 나오는 분홍색으로 전부 칠해져 있다. 일반적으로 게임에서 나오는 3D 물체들은 전부 색이 칠해져 있거나 그림이 그려져 있다. 거기다가 빛을 받아서 반짝반짝이기도 할때도 있다. 이번 글에서는 3D 오브젝트에 색을 입히거나 그림을 입히는 방법에 대해서 알아보자.</p>
+
+<!-- more -->
+
+<p>폴리곤은 하나의 면으로써 폴리곤 안의 색으로 무언가를 표현해야 한다. 우리가 앞에서 보던 예제처럼 계속 분홍색으로 내버려 둘순 없지 않은가? 색을 직접 입힐만한 수단이 필요한데 이를 위해서는 몇가지 데이터들이 필요하다.</p>
+
+<p>제일 먼저 필요한 것은 폴리곤에 색을 입힐 방법을 컴퓨터에게 알려 주어야 한다. 이 방법은 보통 어떤 형식의 코드로 나타내는데 이를 쉐이더(<em>Shader</em>)라고 한다. Unity 는 매우 다양한 색을 입히는 방법 : 쉐이더를 지원한다. 물론 직접 쉐이더 코드를 만들 수도 있지만 전체적인 것들에 대한 이해가 있어야 쉽게 방법을 고안할 수 있으므로 나중에 직접 쉐이더 코드를 만들어 볼 것이다. 이 글에서는 Unity 에서 제공하는 쉐이더를 사용해 폴리곤에 색을 입힐 것이다.</p>
+
+<p>쉐이더는 다양한 방식으로 색을 입힐 수 있는데 일반적으로 쓰는 방법은 그림을 하나 가져다가 폴리곤에 그려주는 것이다. 이 그림은 텍스쳐라고 칭한다. 텍스쳐를 그릴 때는 항상 일정한 기준이 필요하다. 무턱대고 텍스쳐의 아무곳이나 그릴순 없지 않은가? 그래서 폴리곤의 정점과 상응되는 텍스쳐의 2차원 좌표가 필요하다. 이를 UV 좌표(Position) 이라고 한다. “U” 와 “V” 가 텍스쳐의 가로, 세로 위치를 나타내는 말이라 UV 좌표라고 한다.</p>
+
+<p><img src="/images/texturemapping.png" alt="Texture mapping" class="center-image" /></p>
+
+<p>위 그림에서 UV 좌표와 폴리곤을 구성하는 정점들이 나온 모습을 볼 수 있는데, 우리가 주목할것은 왼쪽 그림이다. 삼각형이 그려져 있는데 실제로 가지고 있는 데이터는 삼각형들의 각 꼭지점을 좌표로 가지고 있다. 그리고 각 UV 좌표들은 폴리곤을 구성하는 정점들과 매칭되어 오른쪽 아래의 결과가 그려진다.</p>
+
+<p>폴리곤에 색을 입히는 원리에 대하여 간단하게 알아보았다. 이제 Unity 에서 직접 색을 입히는 방법을 알아보자.</p>
+
+<h2>Mapping object in Unity</h2>
+
+<p>위에서 색을 입히기 위해서는 총 3가지가 필요하다고 말했다.</p>
+
+<blockquote>
+  <ol>
+    <li>
+      <p>쉐이더</p>
+    </li>
+    <li>
+      <p>UV 좌표</p>
+    </li>
+    <li>
+      <p>텍스쳐 및 기타 정보</p>
+    </li>
+  </ol>
+</blockquote>
+
+<p>Unity 에서는 이 3가지를 취급하기 위해 두가지 분류를 만들어 놓았다. 하나는 전 게시글에서 본 <strong>Mesh</strong> 클래스고 하나는 <strong>Material</strong> 이라는 개념이다. <strong>Mesh</strong> 클래스는 복수의 좌표 데이터를 저장하기 위한 목적으로 사용된다. 그래서 정점, 인덱스와 더불어 UV 좌표도 <strong>Mesh</strong> 인스턴스 안에 넣는다.</p>
+
+<p>이제 <strong>Material</strong> 하나만 남았다. 단어의 뜻은 “재료, 원료” 이런 뜻인데 색을 입히기 위한 재료라고 생각하면 편하다. 설정된 쉐이더와 쉐이더에서 필요한 여러 데이터들을 가지고 있는 Unity 의 애셋이다. 파일로도 존재할 수 있고, 런타임에서 생성해서 가지고 있을 수도 있다.</p>
+
+<p><img src="/images/mesh_and_materials.png" alt="mesh and materials" class="center-image" /></p>
+
+<p><a href="https://github.com/hrmrzizon/3DBasicExample">3DBasicExample</a> 의 edu/mat 브랜치에 우리가 봐야할 소스들이 있다. 씬안에 MeshToolTest2 스크립트가 붙어있을 텐데 uv 를 설정해주는 라인이 있을것이다.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">AddPlane</span><span class="p">(</span><span class="n">Mesh</span> <span class="n">mesh</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">isCube</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="p">...</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="cm">/*
+
+                  (0,1)       (1,1)
+                (0,0,1) 2   3 (1,0,1)
+                        * - *
+                        | / |
+                        * - *
+                (0,0,0) 0   1 (1,0,0)
+                  (0,0)       (1,0)
+
+            */</span>
+
+            <span class="p">...</span>
+
+            <span class="n">mesh</span><span class="p">.</span><span class="n">uv</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Vector2</span><span class="p">[]</span>
+                      <span class="p">{</span>
+                          <span class="k">new</span> <span class="nf">Vector2</span><span class="p">(</span><span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span>
+                          <span class="k">new</span> <span class="nf">Vector2</span><span class="p">(</span><span class="m">1f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span>
+                          <span class="k">new</span> <span class="nf">Vector2</span><span class="p">(</span><span class="m">0f</span><span class="p">,</span> <span class="m">1f</span><span class="p">),</span>
+                          <span class="k">new</span> <span class="nf">Vector2</span><span class="p">(</span><span class="m">1f</span><span class="p">,</span> <span class="m">1f</span><span class="p">),</span>
+                      <span class="p">};</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>이 코드는 정점을 다루는 게시물에서 한번 본 예제다. 크게 달라진 내용은 없다. 면을 정의하기 위해 4개의 점을 만들고, 폴리곤을 만들기 위해 인덱스 배열을 만들어 정점의 인덱스를 넣어준다. 아래 UV 좌표를 넣는 부분이 우리가 알아야할 부분이다. 위에서도 계속 언급했지만 UV 좌표 하나는 정점 하나에 맞춰져야 한다. 즉 정점 한개당 UV 좌표 한개가 무조건 있어야 한다. 만약 같은 좌표에 다른 UV 좌표가 필요하면 같은 정점이 여러개가 필요할 것이다.</p>
+
+<p>이렇게 UV 좌표를 설정해주면 <strong>Mesh</strong> 를 건드리는 일은 끝났다. 이제 <strong>Material</strong> 에셋을 만들거나 런타임에 직접 생성해주어 <strong>MeshRenderer</strong> 컴포넌트에 넣어주면 된다. 우선 만들어진 <strong>Material</strong> 에셋을 <strong>MeshRenderer</strong> 컴포넌트에 넣어보자. 실행시에 <strong>MeshRenderer</strong> 컴포넌트가 생성되는데 이 안에 <em>materials</em> 라는 항목이 있다. 한개가 비어있는 배열이 나올텐데, 비어있는 곳에다가 넣어주면 정상적으로 출력이 될것이다.</p>
+
+<p><img src="/images/empty_material.png" alt="empty material" class="center-image" /></p>
+
+<p>정상적으로 출력이 되었으면 직접 <strong>Material</strong> 을 만들어 넣어보자. Assset -&gt; Create -&gt; Material 메뉴를 사용하면 만들 수 있다. 또는 inspector 창에서 우클릭 후 Create -&gt; Material 메뉴를 사용하라.</p>
+
+<p><img src="/images/create_material.png" alt="Create material" class="center-image" /></p>
+
+<p>이제 만들면 새로운 <strong>Material</strong> 이 우리를 기다린다. 위에서 했던 방법으로 직접 넣어보자. 같은 방식으로 넣어주면 똑같이 나올것이다. 이렇게 <strong>Material</strong> 을 적용하는 방법에 대해 알아보았다. 이제 UV 좌표가 뜻하는 위치를 눈으로 확인 가능하다. UV 좌표를 조작하면서 어떤식으로 동작하는지 확인하는 것도 좋은 방법일 것이다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="https://en.wikipedia.org/wiki/UV_mapping">Wikipedia : UV Mapping</a></li>
+</ul>
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://zizon.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+    
+    <script>
+      $("script[type='math/tex']").replaceWith(function() {
+          var tex = $(this).text();
+          return katex.renderToString(tex, {displayMode: false});
+      });
+
+      $("script[type='math/tex; mode=display']").replaceWith(function() {
+          var tex = $(this).html();
+          return katex.renderToString(tex.replace(/%.*/g, ''), {displayMode: true});
+      });
+    </script>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+Content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a><br />
+&copy; 2015&ndash;2021 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

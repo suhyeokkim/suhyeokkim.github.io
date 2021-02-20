@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Hbao Plus Analysis 3</title>
+  <meta name="description" content="HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다. 이전 hbao plus analysis 2 글에서 Horizon based ambient occlusion 와 Cross Bilateral Filter 대해서 알아보았다. 이번 글에서는 부록의 느낌으로 HLSL 코드를 읽으면서 생소했던 기타 기법들에 대해서 써볼 것이다. 첫번째로 Full Screen Triangle 이라는 기법이다. 알고마면 굉장히 단순한 개념으로, 화면을 모두 덮는 한개의 삼각형을 그려서 모든 픽셀에 쉐이더를 돌릴 수 있게 해주는 기법이다. 아래 슬라이드를 보면 쉽게 이해가 갈것이다. 출처 : GDC 2014 : Vertex Sahder Tricks 단순하지만 처음 봤을 때는 조금 신박하게 느껴질 수도 있다. 두번째로는 모든 계산에 최대한 HLSL Intrisic 을 사용한다. 특히 벡터와 벡터사이의 거리를 계산할때 dot product 를 써서 하는게 정말 많았다. 어셈블리 레벨에서 달라지는것 같긴하나 정확한 이유는 알지 못했다. 추측해보면 GPU 에서 해당 명령어가 있지 않을까.. 라고 생각한다. 세번째도 위의 것과 비슷하다. 대부분의 데이터에 MAD 방식을 사용해서 계산한다. 하지만 이는 거의 공식적으로 정해진게 있다. MSDN : mad function 레퍼런스에서도 나오듯이 어떤 GPU 에서는 위에서 추측한대로 하드웨어에서 지원하는 명령어라고 한다. … Shaders can then take advantage of potential performance improvements by using a native mad instruction (versus mul + add) on some hardware. … 또한 HBAO+ 소스에서 찾은 주석에는 GK104 부터 특정 구간에서 10% 퍼포먼스 이득이 있다고 쓰여져 있다. 네번째는 나누기를 절대 쓰지 않는다. 나머지 연산(mod, A % B)는 간혹 쓰이지만 나누기는 절대로 쓰이지 않았었다. 혹시라도 필요하다면 전부 Constant Buffer 에 CPU 에서 역수를 취해서 넘겨주는 방식으로 되어 있었다. 이도 역시 하드웨어에서 동작하는 부분을 알고 짠듯하다. 다섯번째는 HLSL 코드를 cpp 소스에 include 하여 Constant Buffer 값을 갱신하는 코드였다. 여태까지 예전의 DirectX 소스만 보거나 Unity 에서만 작업을 해서 그런지 이런 기능은 굉장히 낯설었다. 참조 자료 NVIDIA HBAO+ GDC 2014 : Vertex Sahder Tricks MSDN : mad function">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://hrmrzizon.github.io/2017/11/15/hbao-plus-analysis-3">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
+
+  <meta name="google-site-verification" content="o3-a11YI0ZIYwUdcikrWBRObGOUHzk89IJF7CX0ieQk" />
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Hbao Plus Analysis 3">
+  <meta name="twitter:description" content="HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다. 이전 hbao plus analysis 2 글에서 Horizon based ambient occlusion 와 Cross Bilateral Filter 대해서 알아보았다. 이번 글에서는 부록의 느낌으로 HLSL 코드를 읽으면서 생소했던 기타 기법들에 대해서 써볼 것이다. 첫번째로 Full Scre...">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Appocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="/edu">Edu</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Hbao Plus Analysis 3</h1>
+    
+    <p class="post-meta"><time datetime="2017-11-15T00:00:00+00:00" itemprop="datePublished">Nov 15, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/render/">render</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/hlsl/">hlsl</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/analysis/">analysis</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/hbao/">hbao+</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p><strong>HBAO+ 3.1 버젼을 기준으로 글이 작성되었습니다.</strong></p>
+
+<p>이전 <a href="/2017/11/15/hbao-plus-analysis-2">hbao plus analysis 2</a> 글에서 <em>Horizon based ambient occlusion</em> 와 <em>Cross Bilateral Filter</em> 대해서 알아보았다. 이번 글에서는 부록의 느낌으로 <em>HLSL</em> 코드를 읽으면서 생소했던 기타 기법들에 대해서 써볼 것이다.</p>
+
+<p>첫번째로 <em>Full Screen Triangle</em> 이라는 기법이다. 알고마면 굉장히 단순한 개념으로, 화면을 모두 덮는 한개의 삼각형을 그려서 모든 픽셀에 쉐이더를 돌릴 수 있게 해주는 기법이다. 아래 슬라이드를 보면 쉽게 이해가 갈것이다.</p>
+
+<p><br />
+<img src="/images/vertex-shader-tricks-by-bill-bilodeau-amd-at-gdc14-14-638.jpg" alt="Full Screen Triangle" class="center-image" /></p>
+<center>출처 : <a href="https://www.gdcvault.com/play/1020624/Advanced-Visual-Effects-with-DirectX">GDC 2014 : Vertex Sahder Tricks</a>
+</center>
+<p><br /></p>
+
+<p>단순하지만 처음 봤을 때는 조금 신박하게 느껴질 수도 있다. 두번째로는 모든 계산에 최대한 <em>HLSL Intrisic</em> 을 사용한다. 특히 벡터와 벡터사이의 거리를 계산할때 <em>dot product</em> 를 써서 하는게 정말 많았다. 어셈블리 레벨에서 달라지는것 같긴하나 정확한 이유는 알지 못했다. 추측해보면 GPU 에서 해당 명령어가 있지 않을까.. 라고 생각한다.</p>
+
+<p>세번째도 위의 것과 비슷하다. 대부분의 데이터에 <em>MAD</em> 방식을 사용해서 계산한다. 하지만 이는 거의 공식적으로 정해진게 있다. <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff471418.aspx">MSDN : mad  function</a> 레퍼런스에서도 나오듯이 어떤 GPU 에서는 위에서 추측한대로 하드웨어에서 지원하는 명령어라고 한다.</p>
+
+<blockquote>
+  <p>…
+Shaders can then take advantage of potential performance improvements by using a native mad instruction (versus mul + add) on some hardware.
+…</p>
+</blockquote>
+
+<p>또한 <em>HBAO+</em> 소스에서 찾은 주석에는 <em>GK104</em> 부터 특정 구간에서 10% 퍼포먼스 이득이 있다고 쓰여져 있다.</p>
+
+<p>네번째는 나누기를 절대 쓰지 않는다. 나머지 연산(mod, A % B)는 간혹 쓰이지만 나누기는 절대로 쓰이지 않았었다. 혹시라도 필요하다면 전부 <em>Constant Buffer</em> 에 CPU 에서 역수를 취해서 넘겨주는 방식으로 되어 있었다. 이도 역시 하드웨어에서 동작하는 부분을 알고 짠듯하다.</p>
+
+<p>다섯번째는 <em>HLSL</em> 코드를 <em>cpp</em> 소스에 <em>include</em> 하여 <em>Constant Buffer</em> 값을 갱신하는 코드였다. 여태까지 예전의 <em>DirectX</em> 소스만 보거나 <em>Unity</em> 에서만 작업을 해서 그런지 이런 기능은 굉장히 낯설었다.</p>
+
+<h1>참조 자료</h1>
+
+<ul>
+  <li><a href="http://docs.nvidia.com/gameworks/content/gameworkslibrary/visualfx/hbao/index.html">NVIDIA HBAO+</a></li>
+  <li><a href="https://www.gdcvault.com/play/1020624/Advanced-Visual-Effects-with-DirectX">GDC 2014 : Vertex Sahder Tricks</a></li>
+  <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff471418.aspx">MSDN : mad function</a></li>
+</ul>
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://zizon.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+    
+    <script>
+      $("script[type='math/tex']").replaceWith(function() {
+          var tex = $(this).text();
+          return katex.renderToString(tex, {displayMode: false});
+      });
+
+      $("script[type='math/tex; mode=display']").replaceWith(function() {
+          var tex = $(this).html();
+          return katex.renderToString(tex.replace(/%.*/g, ''), {displayMode: true});
+      });
+    </script>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+Content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a><br />
+&copy; 2015&ndash;2021 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

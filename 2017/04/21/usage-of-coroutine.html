@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Usage Of Coroutine</title>
+  <meta name="description" content="Unity 는 코루틴이라는 괴상한(?) 코딩 방식을 지원한다. 맨 처음에 발견했을 때는 Synchronize 한 코딩 방식에 익숙해져 있어 상당히 낯설고 적응이 안됐다. 하지만 응용 범위를 늘려가다보니 상당히 편한 코딩 방식이라는 것을 깨닳았다. 한번 코루틴에 대해 알아보자.">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://hrmrzizon.github.io/2017/04/21/usage-of-coroutine">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
+
+  <meta name="google-site-verification" content="o3-a11YI0ZIYwUdcikrWBRObGOUHzk89IJF7CX0ieQk" />
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Usage Of Coroutine">
+  <meta name="twitter:description" content="Unity 는 코루틴이라는 괴상한(?) 코딩 방식을 지원한다. 맨 처음에 발견했을 때는 Synchronize 한 코딩 방식에 익숙해져 있어 상당히 낯설고 적응이 안됐다. 하지만 응용 범위를 늘려가다보니 상당히 편한 코딩 방식이라는 것을 깨닳았다. 한번 코루틴에 대해 알아보자.">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Appocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="/edu">Edu</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Usage Of Coroutine</h1>
+    
+    <p class="post-meta"><time datetime="2017-04-21T00:00:00+00:00" itemprop="datePublished">Apr 21, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/c/">c#</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>Unity 는 코루틴이라는 괴상한(?) 코딩 방식을 지원한다. 맨 처음에 발견했을 때는 Synchronize 한 코딩 방식에 익숙해져 있어 상당히 낯설고 적응이 안됐다. 하지만 응용 범위를 늘려가다보니 상당히 편한 코딩 방식이라는 것을 깨닳았다. 한번 코루틴에 대해 알아보자.</p>
+
+<!-- more -->
+
+<h2>Coroutine 사용하기</h2>
+
+<p>아래 예제를 보자. 몇초를 기다리는 로직을 코루틴을 사용해 구현했다.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">void</span> <span class="nf">Awake</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nf">StartCoroutine</span><span class="p">(</span><span class="s">"Wait3Second"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">IEnumerator</span> <span class="nf">Wait3Second</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Start."</span><span class="p">);</span>
+    <span class="k">yield</span> <span class="k">return</span> <span class="k">new</span> <span class="nf">WaitForSecond</span><span class="p">(</span><span class="m">3f</span><span class="p">);</span>
+    <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"After 3 second."</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">void</span> <span class="nf">Update</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="nf">GetKeyDown</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">Space</span><span class="p">))</span>
+        <span class="nf">StopCoroutine</span><span class="p">(</span><span class="s">"Wait3Second"</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>시작 후 3초를 기다리는 간단한 코드다. 이 코드는 시작할 때 로그가 출력되고, 3초가 지난 후에 로그를 출력한다. 그리고 3초가 지가가기 전에 스페이스바를 누르면 실행하던 코루틴을 취소한다. <strong>StartCoroutine</strong> 으로 코루틴 함수를 실행하면 코드에서 <em>yield return</em> 구문이 나오기 전까지 실행하다가 <em>yield return</em> 에서 반환하는 데이터에 따라 기다리기를 끝날때까지 반복한다. 아래 그림을 보면 이해가 쉬울 것 이다.</p>
+
+<p><img src="/images/common_coroutine_execute.png" alt="coroutine execute" class="center-image" /></p>
+
+<p>코루틴의 동작을 매우 간단하게 표현한 그림이다. 그런데 코루틴은 위 예제에서 호출한 방식 말고도 다른 방식으로 제어가 가능하다. 아래 예제를 살펴보자.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="n">Coroutine</span> <span class="n">coroutine</span><span class="p">;</span>
+<span class="n">IEnumerator</span> <span class="n">enumerator</span><span class="p">;</span>
+
+<span class="n">IEnumerator</span> <span class="nf">Wait</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">float</span> <span class="n">startTime</span> <span class="p">=</span> <span class="n">Time</span><span class="p">.</span><span class="n">time</span><span class="p">;</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"Wait Start: "</span> <span class="p">+</span> <span class="n">startTime</span> <span class="p">+</span> <span class="s">", number: "</span> <span class="p">+</span> <span class="n">num</span><span class="p">);</span>
+    <span class="k">yield</span> <span class="k">return</span> <span class="k">new</span> <span class="nf">WaitForSeconds</span><span class="p">(</span><span class="m">2f</span><span class="p">);</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"Wait Mid: "</span> <span class="p">+</span> <span class="n">startTime</span> <span class="p">+</span> <span class="s">" ~ "</span> <span class="p">+</span> <span class="n">Time</span><span class="p">.</span><span class="n">time</span> <span class="p">+</span> <span class="s">", number: "</span> <span class="p">+</span> <span class="n">num</span><span class="p">);</span>
+    <span class="k">yield</span> <span class="k">return</span> <span class="k">new</span> <span class="nf">WaitForSeconds</span><span class="p">(</span><span class="m">2f</span><span class="p">);</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"Wait End: "</span> <span class="p">+</span> <span class="n">startTime</span> <span class="p">+</span> <span class="s">" ~ "</span> <span class="p">+</span> <span class="n">Time</span><span class="p">.</span><span class="n">time</span> <span class="p">+</span> <span class="s">", number: "</span> <span class="p">+</span> <span class="n">num</span><span class="p">);</span>
+    <span class="k">yield</span> <span class="k">return</span> <span class="k">null</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="kt">int</span> <span class="n">num</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+
+<span class="k">void</span> <span class="nf">Update</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="nf">GetKeyDown</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">A</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"[Start] \"Wait\" by method call and store enumerator, coroutine"</span><span class="p">);</span>
+        <span class="n">enumerator</span> <span class="p">=</span> <span class="nf">Wait</span><span class="p">(</span><span class="n">num</span><span class="p">++);</span>
+        <span class="n">coroutine</span> <span class="p">=</span> <span class="nf">StartCoroutine</span><span class="p">(</span><span class="n">enumerator</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="nf">GetKeyDown</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">S</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"[Start] \"Wait\" by method name and store coroutine"</span><span class="p">);</span>
+        <span class="n">coroutine</span> <span class="p">=</span> <span class="nf">StartCoroutine</span><span class="p">(</span><span class="s">"Wait"</span><span class="p">,</span> <span class="n">num</span><span class="p">++);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="nf">GetKeyDown</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">Z</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="nf">StopCoroutine</span><span class="p">(</span><span class="n">enumerator</span><span class="p">);</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"[Stop] \"Wait\" by using enumerator"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="nf">GetKeyDown</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">X</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="nf">StopCoroutine</span><span class="p">(</span><span class="s">"Wait"</span><span class="p">);</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"[Stop] \"Wait\" by using method name"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="nf">GetKeyDown</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">C</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="nf">StopCoroutine</span><span class="p">(</span><span class="n">coroutine</span><span class="p">);</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"[Stop] \"Wait\" by using coroutine"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="nf">GetKeyDown</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">V</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="nf">StopAllCoroutines</span><span class="p">();</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"[Stop] all \"Wait\" context"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>위 예제는 A, S 키를 누르면 <em>Wait</em> 코루틴을 실행시키고, Z,X,C,V 키를 누르면 실행하던 <em>Wait</em> 코루틴을 멈추는 코드로 되어 있다.</p>
+
+<p>조금 더 자세하게 설명하자면, 실행한 방식과 멈추는 방식이 비슷한 제어 방법은 두가지가 있다. 하나는 메소드를 실행시켜 나온 <strong>IEnumerator</strong> 객체를 통하여 실행하고(A키) 멈추는(Z키) 방법, 나머지 하나는 메소드 이름을 통하여 코루틴을 실행시키고(S키) 멈추는(X키) 방법이 있다.</p>
+
+<p>다만 이름을 통해서 코루틴을 실행하는 방법은 같은 이름의 메소드가 존재할 때는 코드의 위쪽에 있는 것을 실행하고, 이름을 통해 코루틴을 멈추는 방법은 같은 메소드로 호출한 코루틴을 전부 멈추기 때문에 주의하기 바란다.</p>
+
+<p>그리고 코루틴을 멈추는 방법 중 두가지가 더 있는데, 하나는 MonoBehaviour 인스턴스에서 실행한 코루틴을 전부 멈추는 방법, 나머지 하나는 <strong>StartCoroutine</strong> 이 반환한 객체 <strong>Coroutine</strong> 을 사용하여 실행한 코루틴 하나를 멈추는 방법이다. <strong>Coroutine</strong> 객체는 단지 코루틴을 실행했을 때, 실행한 코루틴을 제어하기 위해 사용하는 객체다. 이 <strong>Coroutine</strong> 객체를 이용해 코루틴을 멈추는게 가장 좋은 듯 하다. <strong>IEnumerator</strong> 객체를 통하여 멈추는 방식은 중간에 <em>yield return</em> 으로 반환한 객체를 확인 가능하고 직접 제어가 가능하기 때문에 꼭 참조해야할 일이 아니면 <strong>Coroutine</strong> 객체를 사용하는게 안전할 것이다.</p>
+
+<p>또한 <strong>Coroutine</strong> 객체는 멈추는 역할 말고도 다른 역할 한가지를 더 수행할 수 있다. 바로 코루틴을 중첩하는 경우에 사용가능한데, 위 예제에 아래 코드를 보자.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="n">IEnumerator</span> <span class="nf">Start</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="k">true</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">Coroutine</span> <span class="n">justWait</span> <span class="p">=</span> <span class="nf">StartCoroutine</span><span class="p">(</span><span class="s">"Wait"</span><span class="p">,</span> <span class="p">-</span><span class="m">1</span><span class="p">);</span>
+
+        <span class="k">yield</span> <span class="k">return</span> <span class="n">justWait</span><span class="p">;</span>
+
+        <span class="n">transform</span><span class="p">.</span><span class="n">localScale</span> <span class="p">=</span> <span class="n">transform</span><span class="p">.</span><span class="n">localScale</span> <span class="p">*</span> <span class="m">1.1f</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>위 코드는 맨 처음 <em>Wait</em> 메소드를 <strong>StartCoroutine</strong> 을 사용하여 실행한 후, 반환한 <strong>Coroutine</strong> 객체를 <em>yield return</em> 으로 반환해주면 해당 코루틴이 끝날 때까지 기다려준다. 그리고 기다리는 코루틴이 끝나면 크기를 1.1배 늘려주는 루틴을 계속 반복한다. 위와 같이 <strong>WaitForSeconds</strong> 나, 실행된 코루틴 객체를 넣어주면 해당 루틴이 끝날 때까지 기다려 주기 때문에, 프레임별로 코딩을 하는 방식에서 시간과 여러 타이밍을 생각하는 비동기적 방식의 코딩이 가능하다. 이는 Unity 의 C# 스크립팅에 혁신적인 변화를 주었다. 그리고 Update 의 사용을 적게 해주기 때문에 Update 콜을 적게해주어 아주 조금의 퍼포먼스 향상도 기대할 수 있다.</p>
+
+<p>하지만 코루틴은 숙달되지 않은 프로그래머가 쓰게되면 그다지 좋은 코딩 방식은 아니다. 코루틴을 처음 접하게 되는 프로그래머는 기존의 프레임별로 실행하던 코드에서 Unity 에서만 쓰이는 코루틴의 개념을 생각하면서 코딩을 해야하기 때문에 상당히 혼란스러울 것이다. 또한 코루틴은 비동기 시스템이기 때문에 Multi Threading 이라 착각하는 경우가 있는데, 단지 Multi tasking 일 뿐이고, 같은 쓰레드에서 실행된다. 아래 그림을 보면 알 수 있을것이다.</p>
+
+<p><img src="/images/unity-callback-order.png" alt="Unity callback order" class="center-image" /></p>
+
+<p>결국 단일 쓰레드에서 실행되는 시스템이면 코루틴을 쓴다고해서 혁신적인 성능향상을 기대하기는 힘들다. 단지 다른 Update 방식이라 생각하면 될듯하다.</p>
+
+<h2>Unity 에서 지원하는 코루틴 대기 제어 기능들</h2>
+
+<p>코루틴을 사용할 때 기다려야 할 때 여러 기능들을 제공한다.</p>
+
+<p>대표적인 예는 시간을 기다리는 기능들이다. <strong>WaitForSeconds</strong> 와 <strong>WaitForSecondsRealtime</strong> 가 있는데 게임 어플리케이션의 시간과 실제 시간을 기다리는 기능이다. 위에서 <strong>WaitForSeconds</strong> 를 사용했다.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="n">IEnumerator</span> <span class="nf">Wait</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">float</span> <span class="n">startTime</span> <span class="p">=</span> <span class="n">Time</span><span class="p">.</span><span class="n">time</span><span class="p">;</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"Wait Start: "</span> <span class="p">+</span> <span class="n">startTime</span> <span class="p">+</span> <span class="s">", number: "</span> <span class="p">+</span> <span class="n">num</span><span class="p">);</span>
+    <span class="k">yield</span> <span class="k">return</span> <span class="k">new</span> <span class="nf">WaitForSeconds</span><span class="p">(</span><span class="m">2f</span><span class="p">);</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"Wait Mid: "</span> <span class="p">+</span> <span class="n">startTime</span> <span class="p">+</span> <span class="s">" ~ "</span> <span class="p">+</span> <span class="n">Time</span><span class="p">.</span><span class="n">time</span> <span class="p">+</span> <span class="s">", number: "</span> <span class="p">+</span> <span class="n">num</span><span class="p">);</span>
+    <span class="k">yield</span> <span class="k">return</span> <span class="k">new</span> <span class="nf">WaitForSeconds</span><span class="p">(</span><span class="m">2f</span><span class="p">);</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"Wait End: "</span> <span class="p">+</span> <span class="n">startTime</span> <span class="p">+</span> <span class="s">" ~ "</span> <span class="p">+</span> <span class="n">Time</span><span class="p">.</span><span class="n">time</span> <span class="p">+</span> <span class="s">", number: "</span> <span class="p">+</span> <span class="n">num</span><span class="p">);</span>
+    <span class="k">yield</span> <span class="k">return</span> <span class="k">null</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>위 콜백이 실행되는 그림을 살펴보면 Game Logic 레이어에서 대부분 멈춰준다. 이 타이밍은 <em>Update</em> 가 호출된 후, <em>LateUpdate</em> 가 호출되기 전인데 누군가는 이 시점 말고 다른 시점에 코루틴을 멈추고 싶을 수도 있다. 그래서 Unity 에서는 다른 두 타이밍에 기다림을 멈추는 기능이 있다. <strong>WaitForFixedUpdate</strong> 과 <strong>WaitForEndOfFrame</strong> 인데,  <strong>WaitForFixedUpdate</strong> 는 <em>FixedUpdate</em> 들이 호출된 후 타이밍에 멈춰주는 기능으로써 물리 기반 기능과 같은 타이밍을 공유하고 싶을 때 사용하면 된다. <strong>WaitForEndOfFrame</strong> 은 한 프레임의 모든 처리가 끝난 후까지 기다려주는 기능으로써 무언가 후처리를 할 때 사용해주면 된다.</p>
+
+<p>또한 사용자가 멈추고 싶은 타이밍에 멈추는 경우도 필요할 것이다. 그래서 두가지 논리적인 조건이 충족할 때 멈춰주는 기능도 있다. <strong>WaitUntil</strong> 과 <strong>WaitWhile</strong> 인데, 단순하게 <em>Func&lt;bool&gt;</em> 델리게이트만 받아 참이냐, 거짓이냐에 따라서 기다림을 제어한다. <strong>WaitUntil</strong> 은 델리게이트가 반환하는 값이 <em>false</em> 일 때 다음으로 넘어가고, <strong>WaitWhile</strong> 델리게이트가 반환하는 값이 <em>true</em> 일 때 다음으로 넘어가기 된다.</p>
+
+<p>마지막으로 프로토콜로 통신하는 기능을 사용할 때 사용하는 <strong>WWW</strong> 라는 특수한 제어 객체가 있다. 이는 보통 <em>http</em> 통신을 해서 무언가 받아올 때 사용한다. 아래 예제가 대표적인 예시다.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="n">IEnumerator</span> <span class="nf">getGoogle</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">WWW</span> <span class="n">google</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">WWW</span><span class="p">(</span><span class="s">"https://www.google.com"</span><span class="p">);</span>
+  <span class="k">yield</span> <span class="k">return</span> <span class="n">google</span><span class="p">;</span>
+  <span class="nf">print</span><span class="p">(</span><span class="n">google</span><span class="p">.</span><span class="n">text</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>보통은 위 예제처럼 <em>http</em> 통신을 해서 데이터를 가져올 때 사용한다. 로컬 파일 시스템이나 ftp 프로토콜도 가능하다. 자세한 사항은 <a href="https://docs.unity3d.com/kr/current/ScriptReference/WWW.html">Unity WWW</a> 여기서 확인하라.</p>
+
+<p>이렇게 Unity 에서 기다림을 제어하는 기능에 대해서 알아보았다. 하지만 이 기능들 가지고는 약간 부족한 부분이 있을 것이다. 이를 위해 Unity 에서는 <strong>CustomYieldInstruction</strong> 이라는 기능을 제공한다.</p>
+
+<h2>CustomYieldInstruction 를 사용해서 커스터마이징하기</h2>
+
+<p><strong>CustomYieldInstruction</strong> 을 통해 기다리는 기능을 상당히 간단하게 구현이 가능하다. <strong>CustomYieldInstruction</strong> 는 <em>keepWaiting</em> 이라는 abstract 프로퍼티를 통해 값이 <em>false</em> 일 때는 기다리고, <em>true</em> 일 때는 넘어가는 간단한 <strong>IEnumerator</strong> 구현체다. 즉 <strong>CustomYieldInstruction</strong> 을 상속받아 <em>keepWaiting</em> 프로퍼티만 구현하면 끝이다. 아래 transform 의 scale 을 검사해서 일정 값을 초과하게 되면 다음으로 넘어가는 기능을 아래 예제에 첨부했다.</p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">public</span> <span class="k">class</span> <span class="nc">ScaleOverYieldInstruction</span> <span class="p">:</span> <span class="n">CustomYieldInstruction</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="n">Transform</span> <span class="n">transform</span><span class="p">;</span>
+    <span class="k">private</span> <span class="n">Vector3</span> <span class="n">limit</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="nf">ScaleOverYieldInstruction</span><span class="p">(</span><span class="n">Transform</span> <span class="n">transform</span><span class="p">,</span> <span class="n">Vector3</span> <span class="n">limit</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">transform</span> <span class="p">=</span> <span class="n">transform</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">limit</span> <span class="p">=</span> <span class="n">limit</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">override</span> <span class="kt">bool</span> <span class="n">keepWaiting</span>
+    <span class="p">{</span>
+        <span class="k">get</span>
+        <span class="p">{</span>
+            <span class="n">Vector3</span> <span class="n">scale</span> <span class="p">=</span> <span class="n">transform</span><span class="p">.</span><span class="n">localScale</span><span class="p">;</span>
+            <span class="k">return</span> <span class="n">limit</span><span class="p">.</span><span class="n">x</span> <span class="p">&gt;</span> <span class="n">scale</span><span class="p">.</span><span class="n">x</span> <span class="p">&amp;&amp;</span> <span class="n">limit</span><span class="p">.</span><span class="n">y</span> <span class="p">&gt;</span> <span class="n">scale</span><span class="p">.</span><span class="n">y</span> <span class="p">&amp;&amp;</span> <span class="n">limit</span><span class="p">.</span><span class="n">z</span> <span class="p">&gt;</span> <span class="n">scale</span><span class="p">.</span><span class="n">z</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>구현 자체는 상당히 간단하다. 일반적인 클래스 인스턴스 처럼 생성자에서 초기화를 해주고, <em>keepWaiting</em> 구현을 한 것이 보인다. 다만 조금 의문이 드는점은 <em>keepWaiting</em> 은 도대체 언제 호출이 되냐는 것이다.</p>
+
+<p>사실 위의 소개한 기능중에 CustomYieldInstruction 이용해 구현한 기능이 있다. <strong>WaitUntil</strong> 과 <strong>WaitWhile</strong> 이다.
+<a href="https://docs.unity3d.com/ScriptReference/CustomYieldInstruction.html">Unity CustomYieldInstruction</a> 을 보면 Update 가 호출된 후, LateUpdate 를 호출하기 전 즉 타이밍이 적혀있는 그림에서 보았을 떄 GameLogic 레이어에서 체크가 된다는 것을 알 수 있다.</p>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="https://docs.unity3d.com/kr/current/Manual/Coroutines.html">Unity 코루틴 메뉴얼</a>
+&lt;!–</li>
+  <li><a href="https://msdn.microsoft.com/ko-kr/library/system.collections.ienumerator.aspx">MSDN : IEnumerator</a></li>
+  <li><a href="https://msdn.microsoft.com/ko-kr/library/65zzykke.aspx">MSDN : 반복기 사용</a>
+–&gt;</li>
+  <li><a href="https://docs.unity3d.com/ScriptReference/Coroutine.html">Unity Coroutine ref</a></li>
+  <li><a href="https://docs.unity3d.com/ScriptReference/CustomYieldInstruction.html">Unity CustomYieldInstruction ref</a></li>
+  <li><a href="https://docs.unity3d.com/ScriptReference/YieldInstruction.html">Unity YieldInstruction ref</a></li>
+  <li><a href="http://unityindepth.tistory.com/21">Unity In Depth 코루틴 글</a></li>
+  <li><a href="https://docs.unity3d.com/kr/current/ScriptReference/WWW.html">Unity WWW ref</a></li>
+</ul>
+
+<!--
+ok  유니티의 기본적인 코루틴 사용법? StopCoroutine:Coroutine
+ok  장단점?
+ok  구현 클래스 예시 WaitUntil, WaitWhile
+~~  CustomYieldInstruction : keepwaiting 을 씀, Update 다 된 이후, LateUpdate 하기 전에 체크함
+xx  C# 에서의 코드 블록 지원, 코드에서 사용되는 IEnumerator 의 구조
+-->
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://zizon.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+    
+    <script>
+      $("script[type='math/tex']").replaceWith(function() {
+          var tex = $(this).text();
+          return katex.renderToString(tex, {displayMode: false});
+      });
+
+      $("script[type='math/tex; mode=display']").replaceWith(function() {
+          var tex = $(this).html();
+          return katex.renderToString(tex.replace(/%.*/g, ''), {displayMode: true});
+      });
+    </script>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+Content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a><br />
+&copy; 2015&ndash;2021 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
