@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Eastl Kor</title>
+  <meta name="description" content="※ open-std : EASTL의 내용을 번역하는 포스팅입니다. 시간이 꽤 지난 내용으로 글의 내용은 현재 상황과 다를 수 있습니다.">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://hrmrzizon.github.io/2021/01/31/EASTL-KOR">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://hrmrzizon.github.io/feed.xml">
+
+  <meta name="google-site-verification" content="o3-a11YI0ZIYwUdcikrWBRObGOUHzk89IJF7CX0ieQk" />
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Eastl Kor">
+  <meta name="twitter:description" content="※ open-std : EASTL의 내용을 번역하는 포스팅입니다. 시간이 꽤 지난 내용으로 글의 내용은 현재 상황과 다를 수 있습니다.">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Appocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="/edu">Edu</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Eastl Kor</h1>
+    
+    <p class="post-meta"><time datetime="2021-01-31T00:00:00+00:00" itemprop="datePublished">Jan 31, 2021</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/eastl/">EASTL</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>※ <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html">open-std : EASTL</a>의 내용을 번역하는 포스팅입니다. 시간이 꽤 지난 내용으로 글의 내용은 현재 상황과 다를 수 있습니다.</p>
+
+<!-- more -->
+
+<h2>Abstract</h2>
+
+<p>Gaming platforms and game designs place requirements on game software which differ from requirements of other platforms. Most significantly, game software requires large amounts of memory but has a limited amount to work with. Gaming software is also faced with other limitations such as weaker processor caches, weaker CPUs, and non-default memory alignment requirements. A result of this is that game software needs to be careful with its use of memory and the CPU. The C++ standard library’s containers, iterators, and algorithms are potentially useful for a variety of game programming needs. However, weaknesses and omissions of the standard library prevent it from being ideal for high performance game software. Foremost among these weaknesses is the allocator model. An extended and partially redesigned replacement (EASTL) for the C++ standard library was implemented at Electronic Arts in order to resolve these weaknesses in a portable and consistent way. This paper describes game software development issues, perceived weaknesses of the current C++ standard, and the design of EASTL as a partial solution for these weaknesses.</p>
+
+<p>게이밍 플랫폼과 게이밍 디자인은 다른 플랫폼과 차별화된 것들을 요구한다. 가장 중요한 것은 게임 소프트웨어는 한정된 양의 많은 메모리를 필요로 한다. 또한 게이밍 소프트웨어는 부족한 캐시 히트, 부족한 코어 연산량, 정렬되지 않은 메모리 상태에 직면해있다. 이의 결과는 게임 소프트웨어가 메모리와 CPU의 사용을 조심하도록 만들었다. C++ 표준 라이브러리의 컨테이너, 반복자, 알고리즘은 게임 프로그래밍의 필요의 여러 방면으로 인해 잠재적인 유용함을 가진다. 하지만 표준 라이브러리의 약점과 누락은 고성능이 필요한 게임 소프트웨어의 경우 이상적이지 않다. C++ 표준 라이브러리를 위한 부분적으로 재설계된, 확장된 대체제:EASTL은 portable 하고 일관적인 방법으로 표준 STL의 약점을 보완하기 위해 구현되었다.</p>
+
+<h2>Introduction</h2>
+
+<p>The purpose of this document is to explain the motivation and design of EASTL so that it may help the C++ community better understand the needs of game software development. This document is not a proposal, though some of EASTL’s changes and extensions could form the basis for such discussions. The large majority of EASTL would be useful to any kind of C++ software development.</p>
+
+<p>이 문서는 C++ 커뮤니티에서 게임 소프트웨어의 개발 시의 요구사항을 이해하는데 도움이 되도록, EASTL의 개발 동기와 구조를 설명한다. 이 문서는 표준 제안이 아니지만 EASTL의 일부 변경 및 확장 사항들이 제안의 기초를 닦을 수 있다고 생각한다. EASTL의 주요 사항들이 여러 C++ 소프트웨어 개발에 유용할 것이기 때문이다.</p>
+
+<p>This document describes an STL implementation (EASTL) developed within Electronic Arts as an alternative to and extension of the STL defined by the C++ standard library. By STL, we mean the container, iterator, and algorithm components of the C++ standard library, hereafter referred to as std STL (with std referring to the std namespace, whereas the S in STL refers to standard C++). By C++ standard, we mean <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#cpp_standard">ISO 14882 (1998)</a> and the 2003 update. The large majority of the design of std STL is excellent and achieves its intended purpose. However, some aspects of it make it hard to use and other aspects prevent it from performing as well as it could. Among game developers the most fundamental weakness is the std allocator design, and it is this weakness that was the largest contributing factor to the creation of EASTL. Secondarily was the lack of std STL containers designed to be memory-friendly. There are additional reasons that will be discussed below.</p>
+
+<p>이 문서는 Electronic Art 에서 개발된 C++ 표준 라이브러리에 정의된 STL의 대안 및 확장한 EASTL 구현을 설명한다. STL 이라함은, C++ 표준 라이브러리의 컨테이너, 반복자(iterator) 및 알고리즘 같은 구성 요소를 통칭하는 단어이며 해당 문서에서는 이를 EASTL과 구별하기 위하여 표준 STL이라 칭한다. (표준은 std namespace를 말하고, STL의 S는 stardard C++을 의미함) 여기서의 표준은 ISO 140882(1998)을 말한다. 표준 STL의 큰 범위를 커버하는 설계는 훌륭하고 의도된 바를 이룬다. 하지만 특정 경우에 사용하기 힘들고, 또 다른 경우에서는 성능 저하를 일으킬 수 있다. 게임 소프트웨어 개발자 사이에서 가장 근본적인 약점은 표준 STL의 할당자 설계이며, 이는 EASTL 개발의 가장 큰 동기이다. 두번째 이유는 표준 STL이 메모리-친화적이지 않은 것이다. 이외의 여러 이유를 아래에서 논의될 것이다.</p>
+
+<p>We hope that those reading this document have an open mind to the idea that std STL may not be ideal for all purposes. Before this document was written, sketches of it were shown to some outside of the game development industry. In some cases we found that there was an initial reaction to dismiss an alternative STL and assume that the somebody must be misunderstanding or misusing the STL. But upon explaining game development and high performance software issues and comparing these to std STL’s design and implementation by current vendors, people usually reduce their skepticism. Indeed we have found that those have the most extensive and deep STL experience have been those most enthusiastic about EASTL. We nevertheless have a great respect for the C++ standard library and the great work that has gone into its design and implementation, especially after having gone through the long and difficult process of implementing it.</p>
+
+<p>이 문서를 읽는 분들이 std STL이 모든 목적에 이상적이지 않을 수 있다는 생각에 열린 마음을 갖기를 바란다. 이 문서가 쓰여지기 전에, 게임 산업 외부의 일부 사람들에게 스케치가 공개되었다. 어떤 경우에는 대체 STL을 무시하고 STL을 오해하거나 오용한다고 가정하는 반응을 보인다. 그러나 게임 개발 및 고성능 소프트웨어 상의 문제를 설명하고, 이를 표준 STL 설계 및 구현과 비교하면 보통 회의론적인 의견을 줄인다. 실제로 우리는 가장 광범위하고 깊은 STL 경험을 겪은 사람들이 EASTL에 대해 가장 열정적이라는 것을 발견했다. 그럼에도 불구하고 우리는 C++ 표준 라이브러리와 특히 그것을 구현하는 길고 어려운 과정을 거친 후 설꼐 및 구현한 작업에 대해 큰 존경을 표한다.</p>
+
+<p>This document is divided into the following sections. The first section summarizes the motivation for the creation of EASTL and its design; the subsequent sections flow from this.</p>
+
+<p>이 문서는 아래에 명기된 섹션으로 나뉜다. 첫번째 섹션은 EASTL의 개발 동기와 설계에 대하여, 이후의 섹션들은 이후의 흐름이다.</p>
+
+<p><a href="#abstract">Abstract</a>
+<a href="#itroduction">Introduction</a>
+<a href="#motivation-for-eastl">Motivation for EASTL</a>
+<a href="#differences-between-std-stl-and-eastl">Differences between std STL and EASTL</a>
+<a href="#">EASTL functionality summary</a>
+<a href="#">Game software issues</a>
+<a href="#">std::allocator</a>
+<a href="#">eastl::allocator</a>
+<a href="#">EASTL containers</a>
+<a href="#">EASTL flaws</a>
+<a href="#">Appendix</a>
+<a href="#Acknowledgements">Acknowledgements</a>
+<a href="#References">References</a></p>
+
+<p>Throughout this document there are references to the Appendix. The Appendix contains supplementary material which provides more detail about some item of discussion. This material is placed there in order to avoid getting in the way of the primary text, as the material is a bit verbose and is sometimes tangential to the discussion of EASTL. It was nevertheless felt to be important that the Appendix exist in order to provide a better understanding of practical game development issues.</p>
+
+<p>이 문서를 전체에 Appendix에 대한 참조가 있다. Appendix에는 특정 경우에 대한 논의에 대한 더 디테일한 정보를 담고있는 참고자료가 있다. 이 참고자료는 본문의 주된 논의인 EASTL에서 벗어나지 않고, 디테일한 정보를 담기 위하여 분리되었다. 그럼에도 불구하고 실제 게임 개발의 문제에 대한 더 나은 이해를 제공하기 위해 Appendix를 수록했다.</p>
+
+<h2>Motivation for EASTL</h2>
+
+<p>The following is a listing of some of the reasons why std STL and its current implementations are not currently ideal for game development. There are additional reasons, but the list here should hopefully convey to you some sense of the situation. Each of the items listed below deserves a document of its own, as a single sentence alone cannot fully convey the nature or significance of these items. Some of the items refer to the STL design, whereas some of the items refer to existing STL implementations. It would be best if these were discussed independently, but to many users this distinction is often of little practical significance because they have little choice but to use the standard library that comes with their compiler.</p>
+
+<p>아래 사항들은 표준 STL과 이의 구현이 왜 게임 개발에 이상적이지 않은 이유들이다. 추가적인 이유가 있지만, 명기된 이유들은 상황에 대한 몇가지 이해를 얻을 수 있을 것이다. 아래에 리스팅된 각각의 이유들은 몇개의 문장으로는 의미를 전달할 수 없고 더 자세한 문서화가 필요하다. 몇몇 이유들은 STL의 설계를 이야기 하고, 몇몇 이유들은 존재하는 STL의 구현에 대하여 말한다. 각각 논의된다면 좋겠지만, 많은 사용자들에게  컴파일러와 함께 제공되는 표준 라이브러리를 사용하는 것 외에는 선택의 여지가 거의 없기 때문에 이런 구별은 쓸모있지는 않다.</p>
+
+<ul>
+  <li>std STL allocators are painful to work with and lead to code bloat and sub-optimal performance. This topic is addressed <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#std_allocator">separately within this document</a>.</li>
+  <li>표준 STL 할당자는 작업하기 어렵고, 코드를 부풀리고 최선의 퍼포먼스를 이끌지 못한다. 이 주제는 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#std_allocator">여기</a>에서 다룬다.</li>
+  <li>Useful STL extensions (e.g. slist, hash_map, shared_ptr) found in some std STL implementations are not portable because they don’t exist in other versions of STL or are inconsistent between STL versions (though they are present in the current C++09 draft).</li>
+  <li>어떤 표준 STL 구현에서 발견된 유용한 STL 확장은 포터블하지 않다. 해당 확장은 다른 버젼의 STL에서 존재하지 않거나, STL 버젼별로 일관적이지 않다.(하지만 C++09 드래프트에 존재한다.)</li>
+  <li>The STL lacks functionality that game programmers find useful (e.g. <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#intrusive_containers">intrusive containers</a>) and which could be best optimized in a portable STL environment. See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_16">Appendix item 16</a>.</li>
+  <li>STL은 게임 프로그래머가 유용하게 사용할 기능이 부족하고(예: <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#intrusive_containers">intrusive containers</a>), 그 기능들은 포터블한 STL환경에서 최대한의 최적화될 수 있다. <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_16">Appendix item 16</a>를 보라.</li>
+  <li>Existing std STL implementations use deep function calls. This results in low performance with compilers that are weak at inlining, as is the currently prevalent open-source C++ compiler. See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_15">Appendix item 15</a> and <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_10">Appendix item 10</a>.</li>
+  <li>존재하는 표준 STL 구현은 깊은 함수 호출을 사용한다. 이는 인라이닝 기능이 약한 컴파일러에서(현재 나타난 오픈소스 C++ 컴파일러) 낮은 성능이 나타난다. <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_15">Appendix item 15</a> 와 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_10">Appendix item 10</a>를 보라.</li>
+  <li>Existing STL implementations are hard to debug. For example, you typically cannot browse the contents of a std::list container with a debugger due to std::list’s usage of void pointers. On the other hand, EASTL allows you to view lists without incurring a performance or memory cost. See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_2">Appendix item 2</a>.</li>
+  <li>존재하는 STL 구현은 디버깅이 힘들다. 예를 들어 std::list 컨테이너는 void 포인터를 사용하기 때문에 디버거에서 컨테이너의 아이템을 관찰할 수 없다. 반면, EASTL은 성능이나 추가적인 메모리 비용없이 리스트를 들여다 볼 수 잇다. <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_2">Appendix item 2</a>를 보라.</li>
+  <li>The STL doesn’t explicitly support alignment requirements of contained objects, yet non-default alignment requirements are common in game development. A std STL allocator has no way of knowing the alignment requirements of the objects it is being asked to allocate, aside from compiler extensions. Granted, this is part of the larger problem of the C++ language providing minimal support for alignment requirements. Alignment support is proposed for C++09.</li>
+  <li>STL은 명시적으로 컨테이너 내의 개체에 대해 정렬을 지원하지 않지만 아직 디폴트가 아닌 정렬은 게임 개발에서 일반적이다. 표준 STL 할당자는 컴파일러 확장을 제외하면, 할당을 요청하는 객체의 정렬 여부 및 디테일을 알 수 없다. 물론 이는 메모리 정렬에 대한 최소한의 지원을 제공하는 C++언어의 더 큰 문제의 일부다. C++09에서는 이러한 제안이 있긴하다.</li>
+  <li>STL containers won’t let you insert an entry into a container without supplying an entry to copy from. This can be inefficient in the case of elements that are expensive to construct.
+The STL implementations that are provided by compiler vendors for the most popular PC and console (box connected to TV) gaming platforms have performance problems. EASTL generally outperforms all existing STL implementations; it does so partly due to algorithmic improvements but mostly due to practical improvements that take into account compiler and hardware behavior. See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_20">Appendix item 20</a>.</li>
+  <li>1234</li>
+  <li>Existing STL implementations are hard to debug/trace, as some STL implementations use cryptic variable names and unusual data structures and have no code documentation. See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_2">Appendix item 2</a>.</li>
+  <li>1234</li>
+  <li>STL containers have private implementations that don’t allow you to work with their data structures in a portable way, yet sometimes this is an important thing to be able to do (e.g. node pools). See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_22">Appendix item 22</a>.</li>
+  <li>1234</li>
+  <li>Many current versions of std STL allocate memory in empty versions of at least some of their containers. This is not ideal and prevents optimizations such as container memory resets that can significantly increase performance in some situations. An empty container should allocate no memory.</li>
+  <li>1234</li>
+  <li>All current std STL algorithm implementations fail to support the use of predicate references, which results in inefficient hacks to work around the problem. See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_3">Appendix item 3</a>.</li>
+  <li>1234
+The STL puts an emphasis on correctness before practicality and - performance. This is an understandable policy but in some cases (particularly <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#std_allocator">std::allocator</a>) it gets in the way of usability and optimized performance.</li>
+</ul>
+
+<h2>Differences between std STL and EASTL</h2>
+
+<p>First, EASTL provides a set of containers, iterators, and algorithms that are identical in interface and behavior to std STL versions with one exception: allocators. EASTL has a different allocator specification which is simpler, more efficient, more flexible, and easier to use than std::allocator. Both <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#std_allocator">std::allocator</a> and <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#eastl_allocator">eastl::allocator</a> are described below. EASTL follows the <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#defect_report_list">defect reports</a> and <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#TR1">TR1</a> as well. EASTL additionally provides and uses some of the TR1 functionality as well, including most significantly the smart pointers, type traits, and hashing containers.</p>
+
+<p>Second, EASTL provides extension functionality to the above containers, iterators, and algorithms. An example of this is the push_back(void), set_capacity(size), and validate() functions added to eastl::vector. The majority of these extensions are driven by the need for higher performance (push_back(void)), higher clarity (set_capacity), or higher debuggability (validate()). There are about 30 such extensions to the various entities in the library. These are described in detail <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#EASTL_augmentations">below</a>.</p>
+
+<p>Third, EASTL provides additional containers and algorithms that don’t correspond to std STL. These include intrusive_list, vector_map, fixed_hash_set, slist, ring_buffer, radix_sort, has_trivial_relocate, and others. These are described in detail <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#EASTL_additions">below</a>.</p>
+
+<p>There are additional differences not related to the functional specification. They include a programming philosophy that emphasizes readability, consistency, and optimal performance on limited hardware. See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_23">Appendix item 23</a>.</p>
+
+<h2>EASTL functionality summary</h2>
+
+<p>(이곳은 생략합니다.)</p>
+
+<h2>Game software issues</h2>
+
+<h2>std::allocator</h2>
+
+<h2>eastl::allocator</h2>
+
+<h2>참조</h2>
+
+<ul>
+  <li><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html">open-std : EASTL</a></li>
+</ul>
+
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://zizon.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+    
+    <script>
+      $("script[type='math/tex']").replaceWith(function() {
+          var tex = $(this).text();
+          return katex.renderToString(tex, {displayMode: false});
+      });
+
+      $("script[type='math/tex; mode=display']").replaceWith(function() {
+          var tex = $(this).html();
+          return katex.renderToString(tex.replace(/%.*/g, ''), {displayMode: true});
+      });
+    </script>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+Content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a><br />
+&copy; 2015&ndash;2021 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://hrmrzizon.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

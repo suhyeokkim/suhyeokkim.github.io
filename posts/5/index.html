@@ -105,6 +105,486 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2017/07/22/optimized-center-of-rotation">Optimized Center Of Rotation</a>
+          </h1>
+
+          <p class="post-meta">Jul 22, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/skinning/">skinning</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/vertex-deformation/">vertex deformation</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>이전 <a href="/2017/07/20/dual-quaternion-skinning">dual quaternion skinning</a> 글에서 <em>dual quaternion skinning</em> 에 대해서 설명해 보았다. 이전 글에서는 단순히 <em>dual quaternion skinning</em> 에 대해서 알아보고 장점에 대해서 알아보았다. 단점에 대해서는 언급을 하지않았는데 사실 단점도 존재하긴 한다. 새로 소개할 방법의 논문에서 <em>dual quaternion skinning</em> 의 단점에 대해서 언급했다.</p>
+
+<p><em>joint bulging artifact</em> 라고 하는 것인데, 90도 정도 휜 부분의 바깥쪽이 튀어나오는 현상을 말한다. 아래 그림에서 볼 수 있다.</p>
+
+<p><img src="/images/dqs_ocor_bent.png" alt="both bent" class="center-image" /></p>
+
+<p>왼쪽은 <em>dual quaternion skinning</em> 을 표현한 그림이고, 오른쪽은 곧 소개할 <em>optimized center of rotation</em> 방법이 적용된 스키닝이다. 각 그림의 오른쪽의 90도 휜 부분을 관찰하면 <em>dual quternion skinning</em> 이 약간 아래가 부푼 모습을 볼 수 있다. 이를 <em>joint bulging artifact</em> 라고 한다. 그리고 오른쪽 위의 확대된 그림을 보면 <em>dual quaternion skinning</em> 은 약간 움푹 들어간 것을 볼 수 있다.</p>
+
+<p>그래서 디즈니 리서치라는 연구소에서 새로운 방법을 2016 년 Siggraph 에서 소개했다. 논문의 이름은 <em>Real-time Skeletal Skinning with Optimized Centers of Rotation</em> 이다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/07/22/optimized-center-of-rotation">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/07/20/dual-quaternion-skinning">Dual Quaternion Skinning</a>
+          </h1>
+
+          <p class="post-meta">Jul 20, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/skinning/">skinning</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/vertex-deformation/">vertex deformation</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>이전 <a href="/2017/07/07/introduce-of-skinning">Introduce of skinning</a> 글에서 Skinning 에 대한 설명과 LBS 에 관한 내용을 간단하게 다루어 보았다. 하지만 글 마지막에 해결되지 않은 문제가 하나 있었다. <em>Linear Blend Skinning</em> 의 <em>“Candy Wrapper”</em> 라는 현상이였는데, 이 글에서는 그 문제를 위해 2008년에 고안된 방법에 대해서 알아볼 것이다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2017/07/20/dual-quaternion-skinning">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2017/07/07/introduce-of-skinning">Introduce Of Skinning</a>
           </h1>
 
@@ -203,6 +683,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -246,6 +736,16 @@
   
     
       <a href="/categories/vertex-deformation/">vertex deformation</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -419,6 +919,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
 </p>
         </header>
@@ -454,6 +964,16 @@
   
     
       <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -635,6 +1155,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -672,6 +1202,16 @@
   
     
       <a href="/categories/gpuinstancing/">gpuinstancing</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -851,6 +1391,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -946,6 +1496,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -971,6 +1531,16 @@
   
     
       <a href="/categories/rendering/">rendering</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1166,6 +1736,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1261,6 +1841,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1286,6 +1876,16 @@
   
     
       <a href="/categories/rendering/">rendering</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1483,6 +2083,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1578,6 +2188,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1603,6 +2223,16 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1768,6 +2398,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1803,6 +2443,16 @@
   
     
       <a href="/categories/shaderlab/">shaderlab</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1994,6 +2644,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -2021,6 +2681,16 @@
   
     
       <a href="/categories/rig/">rig</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -2118,6 +2788,16 @@
   
     
       <a href="/categories/animate/">animate</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -2309,6 +2989,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -2334,6 +3024,16 @@
   
     
       <a href="/categories/rendering/">rendering</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -2417,468 +3117,6 @@
         
           <p class="post-continue">
             <a href="/2017/05/15/handling-uv-and-material-in-unity">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/05/14/mesh-components-in-unity">Mesh Components In Unity</a>
-          </h1>
-
-          <p class="post-meta">May 14, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/rendering/">rendering</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>Unity 에서는 Mesh 를 활용하기 위해 몇가지의 컴포넌트를 지원한다. 간단하게 알아보자.</p>
-
-<h3>Mesh 를 가지고 있는 컴포넌트 : MeshFilter</h3>
-
-<p>이 컴포넌트는 Unity 컴퓨넌트가 아닌 <strong>Mesh</strong> 클래스의 인스턴스를 가지고 있는 목적으로 만들어진 클래스다. <strong>Mesh</strong> 의 인스턴스를 보관하고 외부에서 <strong>Mesh</strong> 인스턴스에 접근할 수도 있다. 다만 조금 유의해야할 사항은 사용법이다. <a href="https://docs.unity3d.com/ScriptReference/MeshFilter.html">MeshFilter</a> 문서를 보면 사용할 수 있는 프로퍼티가 두개가 있는데 하나는 <em>MeshFilter.sharedMesh</em> 와 <em>MeshFilter.mesh</em> 두개가 있다.  <em>MeshFilter.sharedMesh</em> 는 실제 가지고 있는 <strong>Mesh</strong> 인스턴스이고 <em>MeshFilter.mesh</em> 는 원래의 인스턴스를 복사해 새로 생성한 것을 반환하기 때문에 주의해야 한다.</p>
-
-<h3>Mesh 를 통해 그리는 컴포넌트 : MeshRenderer</h3>
-
-<p><strong>MeshRenderer</strong> 컴포넌트는 <strong>Mesh</strong> 인스턴스와 등록된 Material 들을 통해 화면상에서 실제로 보여주는 역할을 하는 컴포넌트다. 같은 GameObject 안에 있는 <strong>MeshFilter</strong> 를 통해 <strong>Mesh</strong> 인스턴스에 접근한다. 또한 여러 옵션들을 통해 렌더링을 제어할 수 있다. 중요한 기능은 그림자를 받는 기능과 그림자를 생기게 하는 기능이다. 그 외에도 Unity 에서 지원하는 여러 옵션을 설정할 수 있다. 그리고 여러개의 <strong>Material</strong> 들을 가지고 있을 수 있는데 <strong>Mesh</strong> 의 <em>submesh</em> 별로 <strong>Material</strong> 을 매칭해주어야 알맞게 그릴 수 있다. 기본값은 한개이므로 특별히 세팅을 안했다면 한개씩만 넣어주면 된다.</p>
-
-<h3>SkinnedMeshRenderer</h3>
-
-<p>위에서 설명한 <strong>MeshRenderer</strong> 와 이름이 매우 비슷하다. 앞에 <em>Skinned</em> 라는 키워드만 붙어있다. 이름은 비슷하지만 Unity 안에서 처리되는 것은 조금 다르다. <strong>MeshRenderer</strong> 는 정점이 실시간으로 움직이지 않는 것들을 대상으로 그리는 컴포넌트다. 하지만 <strong>SkinnedMeshRenderer</strong> 는 다르다. 이 컴포넌트도 <strong>Mesh</strong> 를 그리기 위해 만들어진 컴포넌트지만 특정한 <em>Bone</em> 을 기준으로 위치를 전부 계산하고 그려야 한다.</p>
-
-<p>특정한 <em>Bone</em> 을(Unity 에서는 Bone 한개마다 GameObject 하나로 나타낸다.) 기준으로 정점들을 움직이게 하게 해주는 작업을 <em>Rigging</em> 이라고 하는데 <em>Rigging</em> 이 적용된 것을 그릴려면 <strong>SkinnedMeshRenderer</strong> 컴포넌트를 붙여 주어야 한다. <strong>MeshRenderer</strong> 를 사용하면 <em>Bone</em> 을 움직여도 움직임이 적용이 안된채로 그려져서 말짱 꽝이 되버린다.</p>
-
-<h3>MeshCollider</h3>
-
-<p>충돌 감지를 <strong>Mesh</strong> 를 활용해서 하는 컴포넌트로 일반적으로는 안쓴다. 폴리곤의 갯수가 많으면 많을수록 체크에 병목이 생기기 때문이다. 상황에 따라 폴리곤이 적은 경우에는 써도 무방하다. 이 컴포넌트는 생성될 때 <strong>MeshFilter</strong> 컴포넌트가 존재하면 <em>sharedMesh</em> 를 통해 <strong>Mesh</strong> 인스턴스에 접근한다.</p>
-
-<p>이렇게 <strong>Mesh</strong> 를 활용하는 여러가지 컴포넌트들에 대하여 알아보았다. 할말은 많지만 간단한 소개를 위해 쓰여졌기에 여기까지 하겠다.</p>
-
-<h2>참조</h2>
-
-<ul>
-  <li><a href="https://docs.unity3d.com/kr/current/Manual/class-MeshFilter.html">Unity Manual - MeshFilter</a></li>
-  <li><a href="https://docs.unity3d.com/kr/current/Manual/class-MeshRenderer.html">Unity Manual - MeshRenderer</a></li>
-  <li><a href="https://docs.unity3d.com/kr/current/Manual/class-SkinnedMeshRenderer.html">Unity Manual - SkinnedMeshRenderer</a></li>
-  <li><a href="https://docs.unity3d.com/ScriptReference/MeshFilter.html">Unity ref - MeshFilter</a></li>
-  <li><a href="https://docs.unity3d.com/ScriptReference/MeshRenderer.html">Unity ref - MeshRenderer</a></li>
-  <li><a href="https://docs.unity3d.com/kr/current/ScriptReference/SkinnedMeshRenderer.html">Unity ref - SkinnedMeshRenderer</a></li>
-</ul>
-
-        </div>
-
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/05/14/handling-vertices-and-indices-in-unity">Handling Vertices And Indices In Unity</a>
-          </h1>
-
-          <p class="post-meta">May 14, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/rendering/">rendering</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>여태까지 많은 게임들은 Graphics API 를 사용하여 만들어졌다. 1992년에 OpenGL 의 첫버젼이 릴리즈 되었고 이어서 1995년에 DirectX 가 Windows Game SDK 안에 포함되어 릴리즈 되었다. 그 이후로 수많은 게임들이 이 두가지의 Graphics API 를 사용하여 개발되었다. 다만 Graphics API 를 직접 사용하려면 꽤 많은 배경지식과(선형대수학, Graphics 이론 등) 해당 Graphics API 에 대한 경험이 많이 필요했다. 즉 일반적인 프로그래머들이 접근하기 조금 어려운 분야였다. 하지만 이를 꽤 뚫어본 많은 사람들이 게임을 만들기 위한 소프트웨어 이른바 게임 엔진이라는 소프트웨어를 개발하면서 널리 퍼지게 되었고  요즘에는 많은 지식 없이 게임을 만들 수 있게 되었다.</p>
-
-<p>하지만 프로그래머로써 성장하려면 한계단씩 내려가 보면서 원리를 깨우쳐야 한다. 특히 게임 클라이언트 프로그래머는 결국 Graphics API 를 활용한 프로그램을 짜는 것이기 때문에 지식이 없으면 없을수록 난항을 겪기 마련이다. 수학적인 지식이 부족하면 직접 계산하는 코드를 짤수가 없고, Graphics API 의 구성을 모른다면 최적화를 할때 하나하나 삽질해가며 바꿔보아야 한다.</p>
-
-<p>이 게시물에서는 Graphics API 를 공부하면 처음 나오게는 지식들(정점, 폴리곤, UV)에 대해서 알아보고 Unity 에서 이 지식들을 시험해보겠다.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/05/14/handling-vertices-and-indices-in-unity">Read on &rarr;</a>
           </p>
         
       </li>

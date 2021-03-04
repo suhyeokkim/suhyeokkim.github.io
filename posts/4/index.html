@@ -105,7 +105,254 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
-            <a class="post-link" href="/2017/10/30/shader-pipeline-0-opening">Shader Pipeline 0 Opening</a>
+            <a class="post-link" href="/2017/10/31/shader-pipeline-2-rasterizer">Shader Pipeline 2 Rasterizer</a>
+          </h1>
+
+          <p class="post-meta">Oct 31, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/render/">render</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/hlsl/">hlsl</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>이전 포스트 “<a href="/2017/10/30/shader-pipeline-1-vertex-shader">Vertex Shader</a>” 에서 <em>Vertex Shader</em> 에 대해 간단히 알아보았다. 이번 글에서는 <em>Rasterizer</em> 에 대해서 간단히 써보려 한다.</p>
+
+<p><em>Rasterizer</em> 는 쉐이더 파이프라인에 존재하는 고정 기능 단계이다. 간단하게 정의하면, <em>Rasterizer</em> 이전 단계를 거쳐 나온 Geometry 데이터들(vertex, mesh, …)을 정해진 해상도에 맞춰 픽셀별로 조각내어 주는 단계다. 아래 그림을 보자.</p>
+
+<p><img src="https://i-msdn.sec.s-msft.com/dynimg/IC520311.png" alt="MSDN : Traignel Rasterization Rule" /></p>
+
+<p>이는 일반적인 삼각형 폴리곤을 <em>Rasterizer</em> 단계에서 어떻게 픽셀로 변환하는지 한눈에 알게 해놓은 사진이다. 겹치는 정도에 따라 검은색에 가깝게 해놓은 것을 볼 수있다. <a href="https://msdn.microsoft.com/ko-kr/library/windows/desktop/cc627092.aspx">MSDN : Rasterization Rules</a> 에서 다른 프리미티브의 <em>Rasterize</em> 과정도 살펴볼 수 있다.</p>
+
+<p>쉐이더 파이프라인에서 <em>Rasterizer</em> 가 가지는 의미도 조금 특별하다. 이는 3차원 메시 데이터를 2차원 이미지 데이터로 바꿔주는 과정이기 때문에 <em>Geometry Stage</em> 에서 <em>Rasterizer Stage</em> 로 넘어가는 관문이다.</p>
+
+<p>또 하나 중요한 것은, <em>Rasterizer</em> 이전의 <em>Geometry Stage</em> 에서 각각 스테이지별로 넘어오던 데이터들을 <em>Interpolator</em> 라고 하는데, <em>Interpolator</em> 의 갯수들은 <em>render target</em> 의 <em>Pixel</em> 이 많으면 많을수록 큰 영향을 미친다. 왜냐하면 <em>Rasterizer</em> 는 단순히 <em>Geometry</em> 를 <em>Pixel</em> 로 변환하는 것만 있는게 아니라 <em>Vertex</em> 별로 가지고 있던 <em>Interpolator</em> 들을 <em>Pixel</em> 별로 보간하여 넣어주어야 하기 때문이다. 또한 <em>VRAM</em> 의 공간도 차지한다. 즉 갯수가 많으면 많을수록 데이터를 처리하는데 많은 비용이 든다는 것을 알 수 있다. 퍼포먼스를 생각한다면 최대한 갯수를 줄이는게 좋은 것 이다.</p>
+
+<h1>참조 자료</h1>
+
+<ul>
+  <li><a href="https://msdn.microsoft.com/ko-kr/library/windows/desktop/cc627092.aspx">MSDN : Rasterization Rules</a></li>
+</ul>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/10/30/shader-pipeline-1-vertex-shader">Shader Pipeline 1 Vertex Shader</a>
           </h1>
 
           <p class="post-meta">Oct 30, 2017 • 
@@ -157,6 +404,16 @@
   
     
       <a href="/categories/render/">render</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -298,6 +555,631 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/cg/">cg</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/hlsl/">hlsl</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unity/">unity</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>이번 글에서 언급할 쉐이더는 <em>Vertex Shader</em> 다. 한글로는 <em>정점 쉐이더</em> 라고 보통 말한다. <em>Vertex Shader</em> 에서 할 수 있는 것은, 정점별로 들어온 정보들을 코딩을 해서 프로그래머가 원하는대로 바꾸어 다음 쉐이더에서 처리할 수 있도록 해주는 <em>Shader</em> 다.</p>
+
+<p>Unity 에서의 CG/HLSL 일반적인 <em>Vertex Shader</em> 코드는 아래와 같다.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#pragma vertex vert
+#include "UnityCG.cginc"
+</span>
+<span class="k">struct</span> <span class="n">appdata_tan</span>
+<span class="p">{</span>
+    <span class="n">float4</span> <span class="n">vertex</span> <span class="o">:</span> <span class="n">POSITION</span><span class="p">;</span>
+    <span class="n">float4</span> <span class="n">tangent</span> <span class="o">:</span> <span class="n">TANGENT</span><span class="p">;</span>
+    <span class="n">float3</span> <span class="n">normal</span> <span class="o">:</span> <span class="n">NORMAL</span><span class="p">;</span>
+    <span class="n">float4</span> <span class="n">texcoord</span> <span class="o">:</span> <span class="n">TEXCOORD0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="n">v2f</span>
+<span class="p">{</span>
+    <span class="n">float4</span> <span class="n">vertex</span> <span class="o">:</span> <span class="n">SV_POSITION</span><span class="p">;</span>
+    <span class="n">float4</span> <span class="n">tangent</span> <span class="o">:</span> <span class="n">TANGENT</span><span class="p">;</span>
+    <span class="n">float3</span> <span class="n">normal</span> <span class="o">:</span> <span class="n">NORMAL</span><span class="p">;</span>
+    <span class="n">float4</span> <span class="n">texcoord</span> <span class="o">:</span> <span class="n">TEXCOORD0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">v2f</span> <span class="nf">vert</span><span class="p">(</span><span class="n">appdata_tan</span> <span class="n">i</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">v2f</span> <span class="n">o</span><span class="p">;</span>
+
+    <span class="n">o</span><span class="p">.</span><span class="n">vertex</span> <span class="o">=</span> <span class="n">mul</span><span class="p">(</span><span class="n">UNITY_MATRIX_MVP</span><span class="p">,</span> <span class="n">i</span><span class="p">.</span><span class="n">vertex</span><span class="p">);</span>
+    <span class="n">o</span><span class="p">.</span><span class="n">tangent</span> <span class="o">=</span> <span class="n">i</span><span class="p">.</span><span class="n">tangent</span><span class="p">;</span>
+    <span class="n">o</span><span class="p">.</span><span class="n">normal</span> <span class="o">=</span> <span class="n">i</span><span class="p">.</span><span class="n">normal</span><span class="p">;</span>
+    <span class="n">o</span><span class="p">.</span><span class="n">texcoord</span> <span class="o">=</span> <span class="n">i</span><span class="p">.</span><span class="n">texcoord</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">o</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/*
+  기타 코드들..
+*/</span>
+</code></pre></div></div>
+
+<p>위 코드에서 <em>vert</em> 함수에서 반환하는 값을 <em>Varying</em> 이라고 보통 말한다. 이는 바뀔수도 있는 값이라는 의미이며, <em>GLSL</em> 에서 사용하는 <em>syntax</em> 명명이나, <em>HLSL</em> 에서는 따로 이름이 없어 보통 <em>shader</em> 함수에서 넘어가는 데이터들을 <em>Varying</em> 이라고 통칭한다. 참고로 <em>vert</em> 의 입력 파라미터로 들어오는 것은 <em>Input Assembly</em> 단계에서 처리해준 값으로 이는 <em>Varying</em> 이라고 잘 부르지 않는다.</p>
+
+<p>굉장히 단순한 <em>Vertex Shader</em> 코드다. 코드가 단순한 만큼 이 <em>Shader</em> 는 최소한의 역할만 하고 있다. <em>model-space</em> 에 있는 정점을 <em>clipping-space</em> 의 정점으로 변환 시켜 다음으로(fragment shader) 넘긴다. 위에서 위치 데이터를 바꿀 수 있다고 언급했는데, 이 변환은 정상적인 메커니즘을 통해 오브젝트를 출력하려면 <em>Rasterizer Stage</em> 로 넘어가기전에 반드시 정점값에 적용시켜주어야 하는 변환이다. 해당 변환에 대해서는 <a href="https://docs.google.com/presentation/d/10VzsjfifKJlRTHDlBq7e8vNBTu4D5jOWUF87KYYGwlk/edit?usp=sharing">Model, View, Projection</a>에 설명해 놓았으니 간단하게 참고하길 바란다.</p>
+
+<p>위 코드에서 보여준 것들은 최소한의 것들이다. 코드를 짜는 것은 프로그래머의 역량이기 때문에 더 창의적인 것들을 할 수 있다. 쉬운 것들 중에서는 표면에서 웨이브를 주어 표면이 일렁이는 것처럼 보이게 할 수 있다. 이는 시간을 키값으로 두어 삼각함수를 이용해 할 수 있겠다.</p>
+
+<pre><code class="language-C">float time;
+
+struct appdata
+{
+    float4 vertex : POSITION;
+};
+
+struct v2f
+{
+    float4 vertex : SV_POSITION;
+}
+
+v2f vert(appdata i)
+{
+    v2f o;
+
+    i.vertex = i.vertex + i.normal * sin(time + i.vertex.x + i.vertex.z);
+    o.vertex = mul(UNITY_MATRIX_MVP, i.vertex);
+
+    return o;
+}
+</code></pre>
+
+<p>메쉬는 여러개의 정사각형 모양으로 잘라진 평평한 판의 형태의 메쉬를 준비하고, 간단하게 x 좌표와 z 좌표를 기준으로 오브젝트가 일렁이는 것을 만들어 보았다. 이렇게 <em>Vertex Shader</em> 를 응용해서 정점 데이터를 프로그래머가 원하는데로 움직일 수 있다. 정점 쉐이더는 사용하기에 크게 어려운점은 없기에 <em>Shader</em> 를 처음 다룰 때 가지고 놀만하다. 또한 <em>Vertex Shader</em> 가 가장 응용되기 쉬운 것은 바로 <em>skinning</em> 이다. <em>skinning</em> 자체가 정점 데이터들을 움직이고 움직임을 기반으로 바꾸는 것이기 때문에 <em>Vertex Shader</em> 의 형태가 <em>skinning</em> 을 적용하기 가장 알맞다.</p>
+
+        </div>
+
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2017/10/30/shader-pipeline-0-opening">Shader Pipeline 0 Opening</a>
+          </h1>
+
+          <p class="post-meta">Oct 30, 2017 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/render/">render</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -349,6 +1231,16 @@
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -531,6 +1423,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -562,6 +1464,16 @@
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -677,6 +1589,16 @@
   
     
       <a href="/categories/hlsl/">hlsl</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -887,6 +1809,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -918,6 +1850,16 @@
   
     
       <a href="/categories/shader/">shader</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1121,6 +2063,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1170,6 +2122,16 @@
   
     
       <a href="/categories/render/">render</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1350,6 +2312,16 @@ camera.RenderToCubemap(cubemapRT, 63);
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1399,6 +2371,16 @@ camera.RenderToCubemap(cubemapRT, 63);
   
     
       <a href="/categories/render/">render</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1589,6 +2571,16 @@ camera.SetReplacementShader(shader, replacementTag);
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1620,6 +2612,16 @@ camera.SetReplacementShader(shader, replacementTag);
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1721,6 +2723,16 @@ camera.SetReplacementShader(shader, replacementTag);
   
     
       <a href="/categories/gpuinstancing/">gpuinstancing</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1934,6 +2946,16 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1981,6 +3003,16 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
       <a href="/categories/study/">study</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -2150,6 +3182,16 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -2245,212 +3287,6 @@ void Process (uint3 id : SV_DispatchThreadID)
   
     
   
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>Graphics 를 공부하다보면 노말(normal), 탄젠트(tangent), 바이노말(binormal) 를 굉장히 많이보게 된다. 특히 노말이라는 단어는 꽤나 많이 보인다. 보통은 어떤 역할을 하는 벡터앞에 이름을 붙여서 말한다. 아래와 같이 정리된다.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/07/30/normal-tangent-binormal">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/07/22/optimized-center-of-rotation">Optimized Center Of Rotation</a>
-          </h1>
-
-          <p class="post-meta">Jul 22, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/skinning/">skinning</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/vertex-deformation/">vertex deformation</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -2466,238 +3302,14 @@ void Process (uint3 id : SV_DispatchThreadID)
         </header>
 
         <div class="post-content">
-          <p>이전 <a href="/2017/07/20/dual-quaternion-skinning">dual quaternion skinning</a> 글에서 <em>dual quaternion skinning</em> 에 대해서 설명해 보았다. 이전 글에서는 단순히 <em>dual quaternion skinning</em> 에 대해서 알아보고 장점에 대해서 알아보았다. 단점에 대해서는 언급을 하지않았는데 사실 단점도 존재하긴 한다. 새로 소개할 방법의 논문에서 <em>dual quaternion skinning</em> 의 단점에 대해서 언급했다.</p>
-
-<p><em>joint bulging artifact</em> 라고 하는 것인데, 90도 정도 휜 부분의 바깥쪽이 튀어나오는 현상을 말한다. 아래 그림에서 볼 수 있다.</p>
-
-<p><img src="/images/dqs_ocor_bent.png" alt="both bent" class="center-image" /></p>
-
-<p>왼쪽은 <em>dual quaternion skinning</em> 을 표현한 그림이고, 오른쪽은 곧 소개할 <em>optimized center of rotation</em> 방법이 적용된 스키닝이다. 각 그림의 오른쪽의 90도 휜 부분을 관찰하면 <em>dual quternion skinning</em> 이 약간 아래가 부푼 모습을 볼 수 있다. 이를 <em>joint bulging artifact</em> 라고 한다. 그리고 오른쪽 위의 확대된 그림을 보면 <em>dual quaternion skinning</em> 은 약간 움푹 들어간 것을 볼 수 있다.</p>
-
-<p>그래서 디즈니 리서치라는 연구소에서 새로운 방법을 2016 년 Siggraph 에서 소개했다. 논문의 이름은 <em>Real-time Skeletal Skinning with Optimized Centers of Rotation</em> 이다.</p>
+          <p>Graphics 를 공부하다보면 노말(normal), 탄젠트(tangent), 바이노말(binormal) 를 굉장히 많이보게 된다. 특히 노말이라는 단어는 꽤나 많이 보인다. 보통은 어떤 역할을 하는 벡터앞에 이름을 붙여서 말한다. 아래와 같이 정리된다.</p>
 
 
         </div>
 
         
           <p class="post-continue">
-            <a href="/2017/07/22/optimized-center-of-rotation">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2017/07/20/dual-quaternion-skinning">Dual Quaternion Skinning</a>
-          </h1>
-
-          <p class="post-meta">Jul 20, 2017 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/skinning/">skinning</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/vertex-deformation/">vertex deformation</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>이전 <a href="/2017/07/07/introduce-of-skinning">Introduce of skinning</a> 글에서 Skinning 에 대한 설명과 LBS 에 관한 내용을 간단하게 다루어 보았다. 하지만 글 마지막에 해결되지 않은 문제가 하나 있었다. <em>Linear Blend Skinning</em> 의 <em>“Candy Wrapper”</em> 라는 현상이였는데, 이 글에서는 그 문제를 위해 2008년에 고안된 방법에 대해서 알아볼 것이다.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2017/07/20/dual-quaternion-skinning">Read on &rarr;</a>
+            <a href="/2017/07/30/normal-tangent-binormal">Read on &rarr;</a>
           </p>
         
       </li>

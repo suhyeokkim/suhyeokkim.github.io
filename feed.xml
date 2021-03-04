@@ -5,7 +5,7 @@
   
   <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2021-02-20T04:24:09+00:00</updated>
+  <updated>2021-03-04T13:21:20+00:00</updated>
   <id>https://hrmrzizon.github.io//</id>
 
   
@@ -24,6 +24,344 @@
     </author>
   
 
+  
+  
+    <entry>
+      
+      <title type="html">Cpp Lib Allocators</title>
+      
+      <link href="https://hrmrzizon.github.io/2021/01/31/cpp-lib-allocators" rel="alternate" type="text/html" title="Cpp Lib Allocators" />
+      <published>2021-01-31T00:00:00+00:00</published>
+      <updated>2021-01-31T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2021/01/31/cpp-lib-allocators</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2021/01/31/cpp-lib-allocators">&lt;p&gt;C++ 에서 메모리 관리는 중요한 문제다. &lt;em&gt;garbage collector&lt;/em&gt; 를 지원하는 현대의 많은 언어들과 달리 C++은 OS에서 제공하는 시스템콜을 사용하여 메모리를 직접 할당 받고 반환한다. 하지만 메모리 할당/해제 시스템콜은 가상 페이지 로드 및 병합 비용이 큰 편이고, 성능에 민감한 프로그래머들은 이를 줄이기 위해 고민의 벽에 부딫친다. 이를 개선시키기 위해 많은 사람들이 방법을 고민했다. 그 중에서 필자가 일반적으로 사용하는 방법은 영구/가변 메모리 영역 처럼 단계를 나누어 가상 메모리 페이지 크기 이상의 단위로 할당받아 각각의 뭉텅이에서 공간을 나눠쓰는 방법이다.&lt;/p&gt;
+
+&lt;p&gt;그렇지만 단순히 할당자를 구현하는 것만으로 끝날 문제는 아니다. 직접 컨테이너를 구현하면 입맛에 맞게 쓸 수 있겠지만 여러 비용이 허락해야 가능하고, 사용자 정의 할당자를 지원하는 표준 STL은 여러 제약사항이 존재하기에 쉽지 않다. 하지만 표준 STL과 비슷하게 게임 응용 프로그램을 위해 표준 STL을 개량한 EASTL이라는 대체제를 통해 원하는 메모리 할당자 기능을 쉽게 구현할 수 있었다. 이 글에서는  EASTL에서의 커스텀 메모리 할당자 및 이의 장단점을 서술한다. 해당 포스팅은 EASTL 3.17.06을 기준으로 작성되었다.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;누군가의 프로젝트에 EASTL을 처음부터 적용하기 위해선 추가적인 세팅이 몇가지 필요하다. 기본적인 세팅 방법은 다음과 같다.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;EASTL은 cmake로 프로젝트 파일을 생성해준다. 즉 cmake가 설치되어야 한다.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/electronicarts/EASTL&quot;&gt;깃헙 레포지토리&lt;/a&gt;에서 소스를 가져온다.&lt;/li&gt;
+  &lt;li&gt;해당 경로에 가서 &lt;em&gt;cmake ./&lt;/em&gt; 를 커맨드라인에서 실행해주면 OS와 프로그램에 맞게 파일을 생성해준다. (conan, vcpkg 를 사용해서도 설치 가능하다고 한다.)&lt;/li&gt;
+  &lt;li&gt;cmake가 만든 프로젝트 파일을 통해 정적 라이브러리 파일을 생성한다.&lt;/li&gt;
+  &lt;li&gt;라이브러리와 인클루드 헤더를 프로젝트에 적용시킨다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;여기까지는 플랫폼 별로, 사용하는 프로그램 별로 전부 다를 수 있다. 그러니 각자의 상황에 맞게 세팅해야 한다.&lt;/p&gt;
+
+&lt;p&gt;문제는 이대로 사용할 수 없다는 점이다. 링크 에러가 나기 때문이다. 이는 EASTL에서 오버로딩한 new 연산자를 내부에서 참조하고, EASTL 내부에는 참조할 new 연산자가 없기 때문이다. 아래에 명시된 두 new 연산자를 정의해주어야 실행을 위한 프로그램을 빌드할 수 있다. 함수안의 메모리 할당에서 유의할 점은 정렬된 메모리를 항상 할당 해주어야 한다. 아닌 경우에도 최소한의 정렬을 정의해 놓은 &lt;em&gt;EASTL_ALLOCATOR_MIN_ALIGNMENT&lt;/em&gt; 을 사용하여 정렬된 메모리 할당이 필요하다. 아래 소스에서는 정렬된 메모리를 할당하는 vc 기반의 코드를 볼 수 있다.&lt;/p&gt;
+
+&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;operator&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[](&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flags&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;unsigned&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;debugFlags&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_aligned_offset_malloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EASTL_ALLOCATOR_MIN_ALIGNMENT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;operator&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[](&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alignment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alignmentOffset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flags&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;unsigned&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;debugFlags&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_aligned_offset_malloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alignment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alignmentOffset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;여기까지 실행하고 빌드한다면 동작은 된다. 이제 EASTL에서 제공하는 컨테이너를 돌려보며 확인해볼 수 있다.&lt;/p&gt;
+
+&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt; 
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;eastl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FbxNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nodeVector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;nodeVector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;push_back&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fbxScene&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetRootNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;여기까지 왔다면 기본적인 세팅은 끝났다. 이제 사용자 지정 할당자를 어떻게 구현했는지 소개해보겠다.&lt;/p&gt;
+
+&lt;p&gt;필자가 원하는 방식대로 구현하기 위해선 사용자 지정 메모리 할당자를 구현해야 했다. 자세한 구현은 아래에서 볼 수 있다.&lt;/p&gt;
+
+&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;EASTLAllocator&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;public:&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;EASTLAllocator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;nullptr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nullptr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+			&lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;len&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strlen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nullptr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__FILE__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__LINE__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;len&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;strcpy_s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;len&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;EASTLAllocator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EASTLAllocator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nullptr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+			&lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;len&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strlen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nullptr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__FILE__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__LINE__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;len&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;strcpy_s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;len&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;EASTLAllocator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EASTLAllocator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;EASTLAllocator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;operator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EASTLAllocator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;len&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strlen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nullptr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__FILE__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__LINE__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;len&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)];&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;strcpy_s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;len&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;EASTLAllocator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;operator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EASTLAllocator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;allocate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num_bytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flags&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__FILE__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__LINE__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;num_bytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;allocate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num_bytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alignment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;offset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flags&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;alignment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;offset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__FILE__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__LINE__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;num_bytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;deallocate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;size_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num_bytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;operator&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__FILE__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__LINE__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;get_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+	&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;set_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nl&quot;&gt;protected:&lt;/span&gt;
+	&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;operator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EASTLAllocator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EASTLAllocator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;operator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EASTLAllocator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EASTLAllocator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;위의 EASTLAllocator는 단순하게 오버로딩한 new/delete를 감싼 구현으로, 중요한 점은 할당될 영역의 이름을 통하여 영역을 선택한다는 것과 EASTL에서 allocate/deallocate로 메모리 할당/해제를 한다는 점이다. 
+ 처음 보는 사람의 입장에서 의문이 들만한 부분은, delete 또한 오버로딩하여 사용한다는 점이다. 이유는 아래와 같다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;논리적으로 new/delete는 한 쌍이어서 이를 구현하는게 직관적이다.&lt;/li&gt;
+  &lt;li&gt;컨테이너가 아닌 경우에도 new/delete를 사용하여 원하는 방식의 메모리 할당이 가능하다.&lt;/li&gt;
+  &lt;li&gt;(필자의 특수한 케이스)작업 당시 이동 생성자는 작동하지 않고 복사 생성자만 작동했다. 그래서 할당자 클래스에서의 구현에서 연산자 오버로딩으로 일반화 했다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;이렇게 구현한 할당자를 바탕으로, 표준 STL에서 사용하든 템플릿 선언을 통해 사용하면 된다. 방법은 아래와 같다.&lt;/p&gt;
+
+&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;cp&quot;&gt;#define EASTL_TEMPARARY_NAME &quot;temp&quot;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt; 
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;eastl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FbxNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EASTLAllocator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nodeVector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EASTL_TEMPARARY_NAME&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;nodeVector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;push_back&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fbxScene&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetRootNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;위의 소스에서 표준 STL과 사용 방법이 다른 점은 컨테이너의 생성자에 할당자를 식별하기 위한 문자열을 넣는다는 점이다. 이를 통해 컨테이너는 추가적인 메모리 할당이 필요할 시 오버로딩된 new/delete 함수를 호출하여 할당을 받으려 할 것이다. 필자가 구현한 new/delete 는 &lt;a href=&quot;https://github.com/suhyeokkim/RenderFromScratch/blob/master/Framework/source/allocators.cpp&quot;&gt;RenderFromScratch: allocators.cpp&lt;/a&gt; 에서 볼 수 있다.&lt;/p&gt;
+
+&lt;p&gt;소개한 커스텀 할당자의 구현 이외에도 EASTL은 SSE 지원을 위한 메모리 정렬을 구현하게 만들고, 고정된 크기의 컨테이너와 컨테이너에서 하나의 노드를 사용자가 직접 정의할 수 있는 instrutive 컨테이너도 지원하고, 이외에도 게임 프로그램에서 필요한 세심한 경우들을 처리해 놓았고, 여러 플랫폼(콘솔, PC 등)에서 테스트가 되었다고 한다. 만약 자신이 게임을 밑바닥부터 구현하고, STL의 사용법을 조금이라도 안다면 EASTL을 사용하는 것도 좋은 방법이라고 생각된다.&lt;/p&gt;
+
+&lt;h2&gt;참조&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/electronicarts/EASTL&quot;&gt;github : EASTL&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://eastl.docsforge.com/&quot;&gt;EASTL docsforge&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html&quot;&gt;open-std : EASTL&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://jacking75.github.io/Cpp_EASTL/&quot;&gt;C++ - EASTL&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://ohyecloudy.com/pnotes/archives/250/&quot;&gt;EASTL - 할당자(allocator)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="cpp" />
+      
+        <category term="unmanaged_language" />
+      
+        <category term="memory_management" />
+      
+        <category term="game_programming" />
+      
+
+      
+
+      
+        <summary type="html">C++ 에서 메모리 관리는 중요한 문제다. garbage collector 를 지원하는 현대의 많은 언어들과 달리 C++은 OS에서 제공하는 시스템콜을 사용하여 메모리를 직접 할당 받고 반환한다. 하지만 메모리 할당/해제 시스템콜은 가상 페이지 로드 및 병합 비용이 큰 편이고, 성능에 민감한 프로그래머들은 이를 줄이기 위해 고민의 벽에 부딫친다. 이를 개선시키기 위해 많은 사람들이 방법을 고민했다. 그 중에서 필자가 일반적으로 사용하는 방법은 영구/가변 메모리 영역 처럼 단계를 나누어 가상 메모리 페이지 크기 이상의 단위로 할당받아 각각의 뭉텅이에서 공간을 나눠쓰는 방법이다. 그렇지만 단순히 할당자를 구현하는 것만으로 끝날 문제는 아니다. 직접 컨테이너를 구현하면 입맛에 맞게 쓸 수 있겠지만 여러 비용이 허락해야 가능하고, 사용자 정의 할당자를 지원하는 표준 STL은 여러 제약사항이 존재하기에 쉽지 않다. 하지만 표준 STL과 비슷하게 게임 응용 프로그램을 위해 표준 STL을 개량한 EASTL이라는 대체제를 통해 원하는 메모리 할당자 기능을 쉽게 구현할 수 있었다. 이 글에서는 EASTL에서의 커스텀 메모리 할당자 및 이의 장단점을 서술한다. 해당 포스팅은 EASTL 3.17.06을 기준으로 작성되었다.</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Eastl Kor</title>
+      
+      <link href="https://hrmrzizon.github.io/2021/01/31/EASTL-KOR" rel="alternate" type="text/html" title="Eastl Kor" />
+      <published>2021-01-31T00:00:00+00:00</published>
+      <updated>2021-01-31T00:00:00+00:00</updated>
+      <id>https://hrmrzizon.github.io/2021/01/31/EASTL-KOR</id>
+      <content type="html" xml:base="https://hrmrzizon.github.io/2021/01/31/EASTL-KOR">&lt;p&gt;※ &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html&quot;&gt;open-std : EASTL&lt;/a&gt;의 내용을 번역하는 포스팅입니다. 시간이 꽤 지난 내용으로 글의 내용은 현재 상황과 다를 수 있습니다.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;h2&gt;Abstract&lt;/h2&gt;
+
+&lt;p&gt;Gaming platforms and game designs place requirements on game software which differ from requirements of other platforms. Most significantly, game software requires large amounts of memory but has a limited amount to work with. Gaming software is also faced with other limitations such as weaker processor caches, weaker CPUs, and non-default memory alignment requirements. A result of this is that game software needs to be careful with its use of memory and the CPU. The C++ standard library’s containers, iterators, and algorithms are potentially useful for a variety of game programming needs. However, weaknesses and omissions of the standard library prevent it from being ideal for high performance game software. Foremost among these weaknesses is the allocator model. An extended and partially redesigned replacement (EASTL) for the C++ standard library was implemented at Electronic Arts in order to resolve these weaknesses in a portable and consistent way. This paper describes game software development issues, perceived weaknesses of the current C++ standard, and the design of EASTL as a partial solution for these weaknesses.&lt;/p&gt;
+
+&lt;p&gt;게이밍 플랫폼과 게이밍 디자인은 다른 플랫폼과 차별화된 것들을 요구한다. 가장 중요한 것은 게임 소프트웨어는 한정된 양의 많은 메모리를 필요로 한다. 또한 게이밍 소프트웨어는 부족한 캐시 히트, 부족한 코어 연산량, 정렬되지 않은 메모리 상태에 직면해있다. 이의 결과는 게임 소프트웨어가 메모리와 CPU의 사용을 조심하도록 만들었다. C++ 표준 라이브러리의 컨테이너, 반복자, 알고리즘은 게임 프로그래밍의 필요의 여러 방면으로 인해 잠재적인 유용함을 가진다. 하지만 표준 라이브러리의 약점과 누락은 고성능이 필요한 게임 소프트웨어의 경우 이상적이지 않다. C++ 표준 라이브러리를 위한 부분적으로 재설계된, 확장된 대체제:EASTL은 portable 하고 일관적인 방법으로 표준 STL의 약점을 보완하기 위해 구현되었다.&lt;/p&gt;
+
+&lt;h2&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;The purpose of this document is to explain the motivation and design of EASTL so that it may help the C++ community better understand the needs of game software development. This document is not a proposal, though some of EASTL’s changes and extensions could form the basis for such discussions. The large majority of EASTL would be useful to any kind of C++ software development.&lt;/p&gt;
+
+&lt;p&gt;이 문서는 C++ 커뮤니티에서 게임 소프트웨어의 개발 시의 요구사항을 이해하는데 도움이 되도록, EASTL의 개발 동기와 구조를 설명한다. 이 문서는 표준 제안이 아니지만 EASTL의 일부 변경 및 확장 사항들이 제안의 기초를 닦을 수 있다고 생각한다. EASTL의 주요 사항들이 여러 C++ 소프트웨어 개발에 유용할 것이기 때문이다.&lt;/p&gt;
+
+&lt;p&gt;This document describes an STL implementation (EASTL) developed within Electronic Arts as an alternative to and extension of the STL defined by the C++ standard library. By STL, we mean the container, iterator, and algorithm components of the C++ standard library, hereafter referred to as std STL (with std referring to the std namespace, whereas the S in STL refers to standard C++). By C++ standard, we mean &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#cpp_standard&quot;&gt;ISO 14882 (1998)&lt;/a&gt; and the 2003 update. The large majority of the design of std STL is excellent and achieves its intended purpose. However, some aspects of it make it hard to use and other aspects prevent it from performing as well as it could. Among game developers the most fundamental weakness is the std allocator design, and it is this weakness that was the largest contributing factor to the creation of EASTL. Secondarily was the lack of std STL containers designed to be memory-friendly. There are additional reasons that will be discussed below.&lt;/p&gt;
+
+&lt;p&gt;이 문서는 Electronic Art 에서 개발된 C++ 표준 라이브러리에 정의된 STL의 대안 및 확장한 EASTL 구현을 설명한다. STL 이라함은, C++ 표준 라이브러리의 컨테이너, 반복자(iterator) 및 알고리즘 같은 구성 요소를 통칭하는 단어이며 해당 문서에서는 이를 EASTL과 구별하기 위하여 표준 STL이라 칭한다. (표준은 std namespace를 말하고, STL의 S는 stardard C++을 의미함) 여기서의 표준은 ISO 140882(1998)을 말한다. 표준 STL의 큰 범위를 커버하는 설계는 훌륭하고 의도된 바를 이룬다. 하지만 특정 경우에 사용하기 힘들고, 또 다른 경우에서는 성능 저하를 일으킬 수 있다. 게임 소프트웨어 개발자 사이에서 가장 근본적인 약점은 표준 STL의 할당자 설계이며, 이는 EASTL 개발의 가장 큰 동기이다. 두번째 이유는 표준 STL이 메모리-친화적이지 않은 것이다. 이외의 여러 이유를 아래에서 논의될 것이다.&lt;/p&gt;
+
+&lt;p&gt;We hope that those reading this document have an open mind to the idea that std STL may not be ideal for all purposes. Before this document was written, sketches of it were shown to some outside of the game development industry. In some cases we found that there was an initial reaction to dismiss an alternative STL and assume that the somebody must be misunderstanding or misusing the STL. But upon explaining game development and high performance software issues and comparing these to std STL’s design and implementation by current vendors, people usually reduce their skepticism. Indeed we have found that those have the most extensive and deep STL experience have been those most enthusiastic about EASTL. We nevertheless have a great respect for the C++ standard library and the great work that has gone into its design and implementation, especially after having gone through the long and difficult process of implementing it.&lt;/p&gt;
+
+&lt;p&gt;이 문서를 읽는 분들이 std STL이 모든 목적에 이상적이지 않을 수 있다는 생각에 열린 마음을 갖기를 바란다. 이 문서가 쓰여지기 전에, 게임 산업 외부의 일부 사람들에게 스케치가 공개되었다. 어떤 경우에는 대체 STL을 무시하고 STL을 오해하거나 오용한다고 가정하는 반응을 보인다. 그러나 게임 개발 및 고성능 소프트웨어 상의 문제를 설명하고, 이를 표준 STL 설계 및 구현과 비교하면 보통 회의론적인 의견을 줄인다. 실제로 우리는 가장 광범위하고 깊은 STL 경험을 겪은 사람들이 EASTL에 대해 가장 열정적이라는 것을 발견했다. 그럼에도 불구하고 우리는 C++ 표준 라이브러리와 특히 그것을 구현하는 길고 어려운 과정을 거친 후 설꼐 및 구현한 작업에 대해 큰 존경을 표한다.&lt;/p&gt;
+
+&lt;p&gt;This document is divided into the following sections. The first section summarizes the motivation for the creation of EASTL and its design; the subsequent sections flow from this.&lt;/p&gt;
+
+&lt;p&gt;이 문서는 아래에 명기된 섹션으로 나뉜다. 첫번째 섹션은 EASTL의 개발 동기와 설계에 대하여, 이후의 섹션들은 이후의 흐름이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;#abstract&quot;&gt;Abstract&lt;/a&gt;
+&lt;a href=&quot;#itroduction&quot;&gt;Introduction&lt;/a&gt;
+&lt;a href=&quot;#motivation-for-eastl&quot;&gt;Motivation for EASTL&lt;/a&gt;
+&lt;a href=&quot;#differences-between-std-stl-and-eastl&quot;&gt;Differences between std STL and EASTL&lt;/a&gt;
+&lt;a href=&quot;#&quot;&gt;EASTL functionality summary&lt;/a&gt;
+&lt;a href=&quot;#&quot;&gt;Game software issues&lt;/a&gt;
+&lt;a href=&quot;#&quot;&gt;std::allocator&lt;/a&gt;
+&lt;a href=&quot;#&quot;&gt;eastl::allocator&lt;/a&gt;
+&lt;a href=&quot;#&quot;&gt;EASTL containers&lt;/a&gt;
+&lt;a href=&quot;#&quot;&gt;EASTL flaws&lt;/a&gt;
+&lt;a href=&quot;#&quot;&gt;Appendix&lt;/a&gt;
+&lt;a href=&quot;#Acknowledgements&quot;&gt;Acknowledgements&lt;/a&gt;
+&lt;a href=&quot;#References&quot;&gt;References&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Throughout this document there are references to the Appendix. The Appendix contains supplementary material which provides more detail about some item of discussion. This material is placed there in order to avoid getting in the way of the primary text, as the material is a bit verbose and is sometimes tangential to the discussion of EASTL. It was nevertheless felt to be important that the Appendix exist in order to provide a better understanding of practical game development issues.&lt;/p&gt;
+
+&lt;p&gt;이 문서를 전체에 Appendix에 대한 참조가 있다. Appendix에는 특정 경우에 대한 논의에 대한 더 디테일한 정보를 담고있는 참고자료가 있다. 이 참고자료는 본문의 주된 논의인 EASTL에서 벗어나지 않고, 디테일한 정보를 담기 위하여 분리되었다. 그럼에도 불구하고 실제 게임 개발의 문제에 대한 더 나은 이해를 제공하기 위해 Appendix를 수록했다.&lt;/p&gt;
+
+&lt;h2&gt;Motivation for EASTL&lt;/h2&gt;
+
+&lt;p&gt;The following is a listing of some of the reasons why std STL and its current implementations are not currently ideal for game development. There are additional reasons, but the list here should hopefully convey to you some sense of the situation. Each of the items listed below deserves a document of its own, as a single sentence alone cannot fully convey the nature or significance of these items. Some of the items refer to the STL design, whereas some of the items refer to existing STL implementations. It would be best if these were discussed independently, but to many users this distinction is often of little practical significance because they have little choice but to use the standard library that comes with their compiler.&lt;/p&gt;
+
+&lt;p&gt;아래 사항들은 표준 STL과 이의 구현이 왜 게임 개발에 이상적이지 않은 이유들이다. 추가적인 이유가 있지만, 명기된 이유들은 상황에 대한 몇가지 이해를 얻을 수 있을 것이다. 아래에 리스팅된 각각의 이유들은 몇개의 문장으로는 의미를 전달할 수 없고 더 자세한 문서화가 필요하다. 몇몇 이유들은 STL의 설계를 이야기 하고, 몇몇 이유들은 존재하는 STL의 구현에 대하여 말한다. 각각 논의된다면 좋겠지만, 많은 사용자들에게  컴파일러와 함께 제공되는 표준 라이브러리를 사용하는 것 외에는 선택의 여지가 거의 없기 때문에 이런 구별은 쓸모있지는 않다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;std STL allocators are painful to work with and lead to code bloat and sub-optimal performance. This topic is addressed &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#std_allocator&quot;&gt;separately within this document&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;표준 STL 할당자는 작업하기 어렵고, 코드를 부풀리고 최선의 퍼포먼스를 이끌지 못한다. 이 주제는 &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#std_allocator&quot;&gt;여기&lt;/a&gt;에서 다룬다.&lt;/li&gt;
+  &lt;li&gt;Useful STL extensions (e.g. slist, hash_map, shared_ptr) found in some std STL implementations are not portable because they don’t exist in other versions of STL or are inconsistent between STL versions (though they are present in the current C++09 draft).&lt;/li&gt;
+  &lt;li&gt;어떤 표준 STL 구현에서 발견된 유용한 STL 확장은 포터블하지 않다. 해당 확장은 다른 버젼의 STL에서 존재하지 않거나, STL 버젼별로 일관적이지 않다.(하지만 C++09 드래프트에 존재한다.)&lt;/li&gt;
+  &lt;li&gt;The STL lacks functionality that game programmers find useful (e.g. &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#intrusive_containers&quot;&gt;intrusive containers&lt;/a&gt;) and which could be best optimized in a portable STL environment. See &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_16&quot;&gt;Appendix item 16&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;STL은 게임 프로그래머가 유용하게 사용할 기능이 부족하고(예: &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#intrusive_containers&quot;&gt;intrusive containers&lt;/a&gt;), 그 기능들은 포터블한 STL환경에서 최대한의 최적화될 수 있다. &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_16&quot;&gt;Appendix item 16&lt;/a&gt;를 보라.&lt;/li&gt;
+  &lt;li&gt;Existing std STL implementations use deep function calls. This results in low performance with compilers that are weak at inlining, as is the currently prevalent open-source C++ compiler. See &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_15&quot;&gt;Appendix item 15&lt;/a&gt; and &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_10&quot;&gt;Appendix item 10&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;존재하는 표준 STL 구현은 깊은 함수 호출을 사용한다. 이는 인라이닝 기능이 약한 컴파일러에서(현재 나타난 오픈소스 C++ 컴파일러) 낮은 성능이 나타난다. &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_15&quot;&gt;Appendix item 15&lt;/a&gt; 와 &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_10&quot;&gt;Appendix item 10&lt;/a&gt;를 보라.&lt;/li&gt;
+  &lt;li&gt;Existing STL implementations are hard to debug. For example, you typically cannot browse the contents of a std::list container with a debugger due to std::list’s usage of void pointers. On the other hand, EASTL allows you to view lists without incurring a performance or memory cost. See &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_2&quot;&gt;Appendix item 2&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;존재하는 STL 구현은 디버깅이 힘들다. 예를 들어 std::list 컨테이너는 void 포인터를 사용하기 때문에 디버거에서 컨테이너의 아이템을 관찰할 수 없다. 반면, EASTL은 성능이나 추가적인 메모리 비용없이 리스트를 들여다 볼 수 잇다. &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_2&quot;&gt;Appendix item 2&lt;/a&gt;를 보라.&lt;/li&gt;
+  &lt;li&gt;The STL doesn’t explicitly support alignment requirements of contained objects, yet non-default alignment requirements are common in game development. A std STL allocator has no way of knowing the alignment requirements of the objects it is being asked to allocate, aside from compiler extensions. Granted, this is part of the larger problem of the C++ language providing minimal support for alignment requirements. Alignment support is proposed for C++09.&lt;/li&gt;
+  &lt;li&gt;STL은 명시적으로 컨테이너 내의 개체에 대해 정렬을 지원하지 않지만 아직 디폴트가 아닌 정렬은 게임 개발에서 일반적이다. 표준 STL 할당자는 컴파일러 확장을 제외하면, 할당을 요청하는 객체의 정렬 여부 및 디테일을 알 수 없다. 물론 이는 메모리 정렬에 대한 최소한의 지원을 제공하는 C++언어의 더 큰 문제의 일부다. C++09에서는 이러한 제안이 있긴하다.&lt;/li&gt;
+  &lt;li&gt;STL containers won’t let you insert an entry into a container without supplying an entry to copy from. This can be inefficient in the case of elements that are expensive to construct.
+The STL implementations that are provided by compiler vendors for the most popular PC and console (box connected to TV) gaming platforms have performance problems. EASTL generally outperforms all existing STL implementations; it does so partly due to algorithmic improvements but mostly due to practical improvements that take into account compiler and hardware behavior. See &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_20&quot;&gt;Appendix item 20&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;1234&lt;/li&gt;
+  &lt;li&gt;Existing STL implementations are hard to debug/trace, as some STL implementations use cryptic variable names and unusual data structures and have no code documentation. See &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_2&quot;&gt;Appendix item 2&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;1234&lt;/li&gt;
+  &lt;li&gt;STL containers have private implementations that don’t allow you to work with their data structures in a portable way, yet sometimes this is an important thing to be able to do (e.g. node pools). See &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_22&quot;&gt;Appendix item 22&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;1234&lt;/li&gt;
+  &lt;li&gt;Many current versions of std STL allocate memory in empty versions of at least some of their containers. This is not ideal and prevents optimizations such as container memory resets that can significantly increase performance in some situations. An empty container should allocate no memory.&lt;/li&gt;
+  &lt;li&gt;1234&lt;/li&gt;
+  &lt;li&gt;All current std STL algorithm implementations fail to support the use of predicate references, which results in inefficient hacks to work around the problem. See &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_3&quot;&gt;Appendix item 3&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;1234
+The STL puts an emphasis on correctness before practicality and - performance. This is an understandable policy but in some cases (particularly &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#std_allocator&quot;&gt;std::allocator&lt;/a&gt;) it gets in the way of usability and optimized performance.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Differences between std STL and EASTL&lt;/h2&gt;
+
+&lt;p&gt;First, EASTL provides a set of containers, iterators, and algorithms that are identical in interface and behavior to std STL versions with one exception: allocators. EASTL has a different allocator specification which is simpler, more efficient, more flexible, and easier to use than std::allocator. Both &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#std_allocator&quot;&gt;std::allocator&lt;/a&gt; and &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#eastl_allocator&quot;&gt;eastl::allocator&lt;/a&gt; are described below. EASTL follows the &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#defect_report_list&quot;&gt;defect reports&lt;/a&gt; and &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#TR1&quot;&gt;TR1&lt;/a&gt; as well. EASTL additionally provides and uses some of the TR1 functionality as well, including most significantly the smart pointers, type traits, and hashing containers.&lt;/p&gt;
+
+&lt;p&gt;Second, EASTL provides extension functionality to the above containers, iterators, and algorithms. An example of this is the push_back(void), set_capacity(size), and validate() functions added to eastl::vector. The majority of these extensions are driven by the need for higher performance (push_back(void)), higher clarity (set_capacity), or higher debuggability (validate()). There are about 30 such extensions to the various entities in the library. These are described in detail &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#EASTL_augmentations&quot;&gt;below&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Third, EASTL provides additional containers and algorithms that don’t correspond to std STL. These include intrusive_list, vector_map, fixed_hash_set, slist, ring_buffer, radix_sort, has_trivial_relocate, and others. These are described in detail &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#EASTL_additions&quot;&gt;below&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;There are additional differences not related to the functional specification. They include a programming philosophy that emphasizes readability, consistency, and optimal performance on limited hardware. See &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_23&quot;&gt;Appendix item 23&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2&gt;EASTL functionality summary&lt;/h2&gt;
+
+&lt;p&gt;(이곳은 생략합니다.)&lt;/p&gt;
+
+&lt;h2&gt;Game software issues&lt;/h2&gt;
+
+&lt;h2&gt;std::allocator&lt;/h2&gt;
+
+&lt;h2&gt;eastl::allocator&lt;/h2&gt;
+
+&lt;h2&gt;참조&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html&quot;&gt;open-std : EASTL&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="EASTL" />
+      
+
+      
+
+      
+        <summary type="html">※ open-std : EASTL의 내용을 번역하는 포스팅입니다. 시간이 꽤 지난 내용으로 글의 내용은 현재 상황과 다를 수 있습니다.</summary>
+      
+
+      
+      
+    </entry>
+  
   
   
     <entry>
@@ -2286,275 +2624,6 @@ end for
 
       
         <summary type="html">What is Shadow Mapping 에서 Shadow Mapping 에 대한 간단한 번역 &amp;amp; 설명을 적어놓았다. 해당 글에서 PCF 를 잠깐 언급했었다. 이 글에서는 PCF 를 포함해서 Shadow Map 을 필터링하는 방법에 대해서 알아보겠다.</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Cascaded Shadow Mapping</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/12/17/cascaded-shadow-mapping" rel="alternate" type="text/html" title="Cascaded Shadow Mapping" />
-      <published>2017-12-17T00:00:00+00:00</published>
-      <updated>2017-12-17T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/12/17/cascaded-shadow-mapping</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/12/17/cascaded-shadow-mapping">&lt;p&gt;&lt;a href=&quot;/2017/11/30/what-is-shadow-mapping&quot;&gt;What is Shadow Mapping&lt;/a&gt; 에서 &lt;em&gt;Shadow Mapping&lt;/em&gt; 에 대한 간단한 번역 &amp;amp; 설명을 적어놓았다. 이번 글에서는 &lt;em&gt;Shadow Mapping&lt;/em&gt; 을 효과적으로 사용하기 위한 &lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt; 에 대하여 적어보겠다.&lt;/p&gt;
-
-&lt;!-- more --&gt;
-
-&lt;p&gt;&lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt; 을 구글 번역기에 돌려보면 &lt;em&gt;“계단식 그림자 매핑”&lt;/em&gt; 이라고 나온다. 조금 직관적이지 않은 말이지만 뜻 자체는 맞다. 간단하게 &lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt; 에 대하여 말하자면 넓은 환경의 그림자를 위해 거리에(거의 &lt;em&gt;Depth&lt;/em&gt;) 따라서 여러개의 &lt;em&gt;Shadow Map&lt;/em&gt; 을 생성하는 방법이다.&lt;/p&gt;
-
-&lt;p&gt;넓은 범위의 &lt;em&gt;Directional Light&lt;/em&gt; 가 닿는 그림자를 정확하게 표현하려면 꽤나 큰 크기의 &lt;em&gt;Shadow Map&lt;/em&gt; 을 사용해야 한다. 하지만 &lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt; 을 사용한다면 여러개의 &lt;em&gt;Shadow Map&lt;/em&gt; 을 사용하여 보다 조금의 메모리를 사용하여 넓은 범위의 그림자를 표현할 수 있다.&lt;/p&gt;
-
-&lt;h2&gt;Shadow-map generation&lt;/h2&gt;
-
-&lt;p&gt;&lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt; 을 위한 &lt;em&gt;Shadow Map&lt;/em&gt; 생성은 앞서쓴 &lt;a href=&quot;/2017/11/30/what-is-shadow-mapping&quot;&gt;글&lt;/a&gt;에서 설명한 방법과 거의 유사하다. 앞서 여러개의 &lt;em&gt;Shadow Map&lt;/em&gt; 을 생성하여 그림자를 표현한다고 언급했었다. 여러개의 &lt;em&gt;Shaodw Map&lt;/em&gt; 을 생성하는 기준은 &lt;em&gt;View frustum&lt;/em&gt; 을 &lt;em&gt;Depth&lt;/em&gt; 를 기준으로 여러개로 쪼개어 각 쪼개진 &lt;em&gt;frustum&lt;/em&gt; 을 기준으로 &lt;em&gt;Shadow Map&lt;/em&gt; 을 그린다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;frustum&lt;/em&gt; 은 보통 &lt;em&gt;Depth&lt;/em&gt; 값을 정하거나 어떤 알고리즘을 사용하여 쪼갠다. 이는 다음 포스팅에서 언급할 예정이다. &lt;em&gt;frustum&lt;/em&gt; 을 쪼개주면 다음은 쪼개진 &lt;em&gt;Camera View frustum&lt;/em&gt; 의 각각의 8개의 꼭지점들을 &lt;em&gt;Light-Space&lt;/em&gt; 로 변환한다. 변환된 각각 꼭지점으로 2차원의 &lt;em&gt;aligned axis bounding box&lt;/em&gt; 의 위치를 구해준다. 가장 작은 X,Y 값과 가장 큰 X, Y 값을 구해주면 된다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/CSM_EffectOfCropMatrix.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf&quot;&gt;NVidia : Cascaded Shadow Mapping&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;위 그림에서 XY 평면에서의 빨간색 선으로 되어있는 사각형이 언급한 &lt;em&gt;aligned axis bounding box&lt;/em&gt; 를 말한다. 이 &lt;em&gt;AABB&lt;/em&gt; 는 아래에서 특정한 행렬을 만들때 쓰인다.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf&quot;&gt;NVidia : Cascaded Shadow Maps  &lt;/a&gt; 에서는 이 &lt;em&gt;Light-Space&lt;/em&gt; 로 변환하는 &lt;em&gt;MVP 변환&lt;/em&gt; 에서 &lt;em&gt;Projection&lt;/em&gt; 변환을 바꿔준다고 설명한다. 두개의 행렬이 나오는데, 하나는 직교 투영 행렬로(&lt;em&gt;orthogonal projection&lt;/em&gt;) 나눠진 &lt;em&gt;frustum&lt;/em&gt; 의 &lt;em&gt;Far&lt;/em&gt; 값과 &lt;em&gt;Near&lt;/em&gt; 값을 통해 생성해준다. 그리고 나머지 하나는 &lt;em&gt;Crop Matrix&lt;/em&gt; 라는 변환 행렬이다.&lt;/p&gt;
-
-&lt;p&gt;위에서 구한 &lt;em&gt;Light-Space&lt;/em&gt; 의 &lt;em&gt;AABB&lt;/em&gt; 값을 통해 &lt;em&gt;Crop Matrix&lt;/em&gt; 를 계산한다. 아래 그림에서나오는 Mx, My 와 mx, my 는 각각 Maximum X,Y, Minimum X,Y 를 뜻한다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/CSM_CropMatrixCalc.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf&quot;&gt;NVidia : Cascaded Shadow Mapping&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;이렇게 계산된 &lt;em&gt;Crop Matrix&lt;/em&gt; 의 역할은 해당 &lt;em&gt;AABB&lt;/em&gt; 로 &lt;em&gt;Shadow Map&lt;/em&gt; 이 그려질 범위를 결정해주는 역할을 한다. 다만 범위가 아주 정확하지는 않다. 아래 그림을 보자.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/CSM_FarMiddleNear.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://ogldev.atspace.co.uk/www/tutorial49/tutorial49.html&quot;&gt;OGLdev : Cascaded Shadow Mapping&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;위 그림과 같이 보통은 겹치는 부분이 생긴다. 사용시에는 &lt;em&gt;Depth&lt;/em&gt; 에 따라서 다르게 사용하기 때문에 크게 문제는 없다. 사용시에는 &lt;em&gt;Depth&lt;/em&gt; 값에 따라서 다른 텍스쳐를 가져오는 것과 텍스쳐를 샘플링할때 UV 값을 정점의 위치를 &lt;em&gt;Light-Space&lt;/em&gt; 로 변환해서 변환된 정점의 위치의 X,Y 좌표를 UV 값으로 사용하면 된다. 다만 각각의 &lt;em&gt;Shadow Map&lt;/em&gt; 마다 변환 행렬은 &lt;em&gt;Crop Matrix&lt;/em&gt; 때문에 다르기 때문에 따로 접근해야 한다.&lt;/p&gt;
-
-&lt;p&gt;자세한 사용법을 알고 싶으면 &lt;a href=&quot;http://developer.download.nvidia.com/SDK/10/Samples/cascaded_shadow_maps.zip&quot;&gt;NVidia : Cascaded Shadow Map Example&lt;/a&gt;에서 소스를 받아 보면 된다.&lt;/p&gt;
-
-&lt;h2&gt;추가&lt;/h2&gt;
-
-&lt;p&gt;&lt;em&gt;Cascaded Shadow Map&lt;/em&gt; 을 &lt;em&gt;1 pass&lt;/em&gt; 로 그리는 방법은 간단하다. 우선 &lt;em&gt;Shadow Map&lt;/em&gt; 들을 &lt;em&gt;TextureArray&lt;/em&gt; 를 통해 저장하고, &lt;em&gt;RenderTarget&lt;/em&gt; 을 &lt;em&gt;Geometry Shader&lt;/em&gt; 에서 각각의 렌더타겟별로 지오메트리를 추가해주어 각각의 &lt;em&gt;Pixel Shader&lt;/em&gt; 를 실행시키면 된다. 자세한 코드는 &lt;a href=&quot;https://www.slideshare.net/dgtman/implements-cascaded-shadow-maps-with-using-texture-array&quot;&gt;여기&lt;/a&gt;에서 볼 수 있다.&lt;/p&gt;
-
-&lt;h2&gt;참조&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf&quot;&gt;NVidia : Cascaded Shadow Maps  &lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://msdn.microsoft.com/en-us/library/windows/desktop/ee416307.aspx&quot;&gt;MSDN : Cascaded Shadow Maps&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/TheRealMJP/Shadows&quot;&gt;Github : TheRealMJP - Shadows&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://ogldev.atspace.co.uk/www/tutorial49/tutorial49.html&quot;&gt;OGLDev : Cascaded Shadow Mapping&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.slideshare.net/dgtman/implements-cascaded-shadow-maps-with-using-texture-array&quot;&gt;Slideshare : implements Cascaded Shadow Maps with using TexturArray(한글)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="shader" />
-      
-        <category term="shadow" />
-      
-        <category term="rendering" />
-      
-        <category term="csm" />
-      
-
-      
-
-      
-        <summary type="html">What is Shadow Mapping 에서 Shadow Mapping 에 대한 간단한 번역 &amp;amp; 설명을 적어놓았다. 이번 글에서는 Shadow Mapping 을 효과적으로 사용하기 위한 Cascaded Shadow Mapping 에 대하여 적어보겠다.</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">What Is Shadow Mapping</title>
-      
-      <link href="https://hrmrzizon.github.io/2017/11/30/what-is-shadow-mapping" rel="alternate" type="text/html" title="What Is Shadow Mapping" />
-      <published>2017-11-30T00:00:00+00:00</published>
-      <updated>2017-11-30T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/11/30/what-is-shadow-mapping</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/11/30/what-is-shadow-mapping">&lt;p&gt;※ 이 글은 &lt;a href=&quot;http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/&quot;&gt;opengl-tutorial : shadow mapping&lt;/a&gt; 게시물을 참고하여 쓰여졌습니다. 자세한 내용은 원문을 보는게 좋습니다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Shadow Mapping&lt;/em&gt; 실시간으로 그림자를 구현하기 위한 방법 중에 가장 널리 알려진 방법이다. 다른 방법들보다 구현하기 조금 쉬운편이긴 하나 이 방법은 완벽하지가 않기 때문에 방법 자체로는 완벽한 모습을 보이기 어렵고 다른 방법과 같이 사용하여 부족한 부분을 보완하여 사용해야 한다.&lt;/p&gt;
-
-&lt;!-- more --&gt;
-
-&lt;p&gt;일반적으로 &lt;em&gt;Shadow Mapping&lt;/em&gt; 이라 말하면 아는 사람은 머릿속에 쉽게 떠오르는 방식이 있다. 빛의 반대쪽 방향에서 충분히 멀리 떨어져 한번 오브젝트를 그린다. 이때 &lt;em&gt;Pixel Shader&lt;/em&gt; 를 null 로 설정해서 &lt;em&gt;Depth Buffer&lt;/em&gt; 의 데이터만 가져온다. 또는 &lt;em&gt;Pixel Shader&lt;/em&gt; 의 출력을 &lt;em&gt;Depth&lt;/em&gt; 로 해도 된다. 그러면 보통 아래와 비슷한 2D 텍스쳐를 얻게 된다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/OGLTuto_DepthTexture.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/&quot;&gt;opengl-tutorial&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;검은색에 가까워질수록(0에 가까워질수록) 해당 오브젝트의 위치가 가깝고, 흰색에 가까워질수록(1에 가까워질수록) 물체가 먼것이다. 오브젝트의 &lt;em&gt;Depth&lt;/em&gt; 를 렌더링할 때 정점에 사용되는 &lt;em&gt;MVP&lt;/em&gt; 변환 중 &lt;em&gt;View&lt;/em&gt; 변환은 임의의 위치와 빛의 방향을 계산하여 적용해준다. &lt;em&gt;Camera&lt;/em&gt; 를 기준으로 한게 아닌 &lt;em&gt;Light&lt;/em&gt; 의 방향을 기준으로 하여 관련된 것을 &lt;em&gt;Light-Space&lt;/em&gt; 라고 명명하는 경우도 더러 있다.&lt;/p&gt;
-
-&lt;p&gt;이제 생성된 &lt;em&gt;Shadow Map&lt;/em&gt; 을 사용하는 방법에 대해 알아보자.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/OGLTuto_lightandshadow.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/&quot;&gt;opengl-tutorial&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;위 그림에서 노란색으로 보이는 표면은 빛이 닿는 부분이고, 검은색으로 보이는 표면은 어떤 오브젝트에 의해 가려져 그림자가 드리운 표면이다. 해당 그림 위의 &lt;em&gt;Depth Buffer&lt;/em&gt; 를 응용하여 위처럼 가려지는 표면과 안가려지는 표면을 알아낼 수 있다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Depth Buffer&lt;/em&gt; 는 &lt;em&gt;Light-Space&lt;/em&gt; 를 기준으로 데이터를 저장하고 있다. 그리고 &lt;em&gt;Shader&lt;/em&gt; 에서는 &lt;em&gt;Local-Space&lt;/em&gt; 로 정점의 위치가 들어오기 때문에 &lt;em&gt;Depth&lt;/em&gt; 값을 비교하려면 두 값을 같은 공간으로 맞춰주어야 한다. &lt;a href=&quot;http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/&quot;&gt;OpenGL Tutorial : Shadow Mapping&lt;/a&gt; 에서는 &lt;em&gt;bias&lt;/em&gt; 행렬과 &lt;em&gt;Light-Space&lt;/em&gt; 가 적용된 행렬을 합성하여 입력으로 들어온 정점 데이터를 &lt;em&gt;Light-Space&lt;/em&gt; 기준으로 바꿔준다.&lt;/p&gt;
-
-&lt;p&gt;그 다음 정점의 &lt;em&gt;Depth&lt;/em&gt;(&lt;em&gt;Z&lt;/em&gt;) 값과 &lt;em&gt;Depth Buffer&lt;/em&gt; 에서 샘플링한 &lt;em&gt;Depth&lt;/em&gt;(&lt;em&gt;Z&lt;/em&gt;) 값을 비교하여 현재 정점의 &lt;em&gt;Depth&lt;/em&gt; 값이 더 크면(멀면) 그림자를 적용시킨다. 이러면 기본적인 &lt;em&gt;Shadwo Mapping&lt;/em&gt; 의 이론은 끝이다. 아래 간단한 &lt;em&gt;GLSL&lt;/em&gt; 코드가 있다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;vec4 ShadowCoord = DepthBiasMVP * vec4(vertexPosition_modelspace, 1);
-
-float visibility = 1.0;
-
-if (texture( shadowMap, ShadowCoord.xy ).z &amp;lt; ShadowCoord.z) {
-    visibility = 0.5;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;정점의 위치를 변환시키고, &lt;em&gt;Depth&lt;/em&gt; 값에 따라 &lt;em&gt;visibility&lt;/em&gt; 값을 변경시켜 그림자를 적용시킨다. 하지만 위에서도 언급했지만 &lt;em&gt;Shadow Mapping&lt;/em&gt; 자체에는 조금 문제가 있다고 언급했다. 해당 코드의 결과를 보자.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/OGLTuto_1rstTry.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/&quot;&gt;opengl-tutorial&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;위 그림은 굉장히 난장판이다. 세가지의 문제가 있는데 사진의 전체를 봐도 쉽게 알 수 있는 빛이 닿는 영역이 그림자 처리되는 것, &lt;em&gt;Shadow acne&lt;/em&gt; 가 생겼다고 말한다. 그리고 왼쪽아래 구석부분에 아주 조금 빛이 들어오는 것처럼 처리되는 것이 있다. 이는 &lt;em&gt;Peter Panning&lt;/em&gt; 이라고 부른다. 그리고 마지막으로 그림자와 빛이 닿는 부분의 경계가 울퉁불퉁한게 보일 것이다. 이를 계단현상, &lt;em&gt;aliasing&lt;/em&gt; 이라고 부르는데 흔히 게임에서 적용되는 &lt;em&gt;antialiasing&lt;/em&gt; 의 반대말이 맞다.&lt;/p&gt;
-
-&lt;p&gt;첫번째로 해결할 문제는 &lt;em&gt;Shadow acne&lt;/em&gt; 다. 이 문제는 아래 그림을 보면 쉽게 이해가 된다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/OGLTuto_shadow-acne.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/&quot;&gt;opengl-tutorial&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;사선으로 나와있는 노란색 선들은 &lt;em&gt;Shadow Map&lt;/em&gt; 을 기준으로 &lt;em&gt;Light-Space&lt;/em&gt; 로 변환한 정점의 &lt;em&gt;Depth&lt;/em&gt; 값의 기준을 뜻한다. 그리고 표면 자체는 &lt;em&gt;Shadow Map&lt;/em&gt; 의 기준이 된다. 그림의 검은색 부분은 빛이 닿는 부분임에도 불구하고 그림자로 처리되는 부분인데, 이를 없에기 위해서는 값을 비교할때 단순하게 &lt;em&gt;bias&lt;/em&gt; 를 더해주면 된다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;float bias = 0.005;
-float visibility = 1.0;
-
-if (texture( shadowMap, ShadowCoord.xy ).z &amp;lt; ShadowCoord.z-bias) {
-    visibility = 0.5;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;이렇게 적용시키면 평면에서의 &lt;em&gt;acne&lt;/em&gt; 들은 제거가 가능하지만 곡면에서의 &lt;em&gt;acne&lt;/em&gt; 들이 제거가 안되기 때문에 &lt;em&gt;bias&lt;/em&gt; 를 조금 수정해준다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;float bias = 0.005*tan(acos(cosTheta)); // cosTheta is dot( n,l ), clamped between 0 and 1
-bias = clamp(bias, 0,0.01);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;이러면 &lt;em&gt;Shadow acne&lt;/em&gt; 들은 제거된다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/OGLTuto_VariableBias.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/&quot;&gt;opengl-tutorial&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;다음은 &lt;em&gt;Peter Panning&lt;/em&gt; 을 언급할 차례다. &lt;a href=&quot;http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/&quot;&gt;OpenGL Tutorial&lt;/a&gt; 에서는 이 문제의 해결책으로 굉장히 단순한 방법을 제시한다. &lt;em&gt;Peter Panning&lt;/em&gt; 이 생기지 않도록 충분히 두꺼운 오브젝트를 배치하는 것이다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/OGLTuto_NoPeterPanning.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/&quot;&gt;opengl-tutorial&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;이렇게 쉽게 해결된다.&lt;/p&gt;
-
-&lt;p&gt;마지막으로 다룰 문제는 &lt;em&gt;aliasing&lt;/em&gt; 이다. 이는 &lt;em&gt;Shadow Mapping&lt;/em&gt; 의 고질적인 문제로써 &lt;em&gt;anti-alisasing&lt;/em&gt; 기법을 통해 해결해왔다.&lt;/p&gt;
-
-&lt;p&gt;첫번째로 &lt;em&gt;Shadow Map&lt;/em&gt; 을 샘플링할 때 일반적인 색을 가져오는 샘플링이 아닌 다른 방식을 사용한다. &lt;em&gt;Shadow Map&lt;/em&gt; 을 한번 샘플링할 때 하드웨어에서 주변의 텍셀을 샘플링해 주변 텍셀과 비교를 수행해 모든 비교결과를 이중선형 보간을 적용한 결과를 주는 샘플링 방식을 사용한다고 한다. 만약 이중선형 보간을 사용하지 않는다면 &lt;em&gt;Point Sampling&lt;/em&gt; 을 여러번 하여 결과들을 사용해 &lt;em&gt;PCF&lt;/em&gt; 를 적용시켜주면 된다. 이렇게 해주면 조금 부드러운 결과가 나오게 된다.&lt;/p&gt;
-
-&lt;p&gt;하지만 이로써는 만족할만한 결과를 얻을 수 없어 주변을 여러번 샘플링해 값을 가져온다. 미리 생성된 &lt;em&gt;offset&lt;/em&gt; 을 사용해 기준 &lt;em&gt;UV&lt;/em&gt; 주변을 샘플링한다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-C&quot;&gt;for (int i=0;i&amp;lt;4;i++){
-  if ( texture( shadowMap, ShadowCoord.xy + poissonDisk[i]/700.0 ).z  &amp;lt;  ShadowCoord.z-bias ){
-    visibility-=0.2;
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;미리 생성된 &lt;em&gt;offset&lt;/em&gt; 은 &lt;em&gt;Poisson Disc&lt;/em&gt; 방식으로 생성된듯하다. &lt;em&gt;visibility&lt;/em&gt; 변수는 색의 어두움을 결정하는 변수로 한번 &lt;em&gt;Depth Test&lt;/em&gt; 에 걸리면 0.2를 줄여 0.2 ~ 1 사이의 값을 가진다.&lt;/p&gt;
-
-&lt;p&gt;이렇게 두가지 방식으로 &lt;em&gt;anti-aliasing&lt;/em&gt; 을 해주면 제법 그럴듯한 결과가 나온다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;img src=&quot;/images/OGLTuto_SoftShadows_Wide.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/&quot;&gt;opengl-tutorial&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;또한 &lt;em&gt;UV&lt;/em&gt; 좌표에 &lt;em&gt;offset&lt;/em&gt; 을 주는 방법은 꽤나 많다. 위의 방법은 랜덤으로 고정된 부분만 체크하지만 이 방법에 임의로 &lt;em&gt;offset&lt;/em&gt; 돌려주는 방법도 있다.&lt;/p&gt;
-
-&lt;h2&gt;참조&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://www.opengl-tutorial.org/kr/intermediate-tutorials/tutorial-16-shadow-mapping/&quot;&gt;OpenGL Tutorial : Tutorial 16 Shadow mapping&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://ogldev.atspace.co.uk/www/tutorial42/tutorial42.html&quot;&gt;OGLdev : Percentage Closer Filtering&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://developer.nvidia.com/gpugems/GPUGems/gpugems_ch11.html&quot;&gt;GPU Gems : Chapter 11. Shadow Map Antialiasing&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Supersampling#Poisson_disc&quot;&gt;Wikipedia : SuperSampling#poisson_disc&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="shader" />
-      
-        <category term="shadow" />
-      
-        <category term="rendering" />
-      
-
-      
-
-      
-        <summary type="html">※ 이 글은 opengl-tutorial : shadow mapping 게시물을 참고하여 쓰여졌습니다. 자세한 내용은 원문을 보는게 좋습니다. Shadow Mapping 실시간으로 그림자를 구현하기 위한 방법 중에 가장 널리 알려진 방법이다. 다른 방법들보다 구현하기 조금 쉬운편이긴 하나 이 방법은 완벽하지가 않기 때문에 방법 자체로는 완벽한 모습을 보이기 어렵고 다른 방법과 같이 사용하여 부족한 부분을 보완하여 사용해야 한다.</summary>
       
 
       

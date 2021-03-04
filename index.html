@@ -105,6 +105,585 @@
       <li>
         <header class="post-header">
           <h1 class="post-title">
+            <a class="post-link" href="/2021/01/31/cpp-lib-allocators">Cpp Lib Allocators</a>
+          </h1>
+
+          <p class="post-meta">Jan 31, 2021 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/cpp/">cpp</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/unmanaged-language/">unmanaged_language</a>,
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/memory-management/">memory_management</a>,
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/game-programming/">game_programming</a>
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>C++ 에서 메모리 관리는 중요한 문제다. <em>garbage collector</em> 를 지원하는 현대의 많은 언어들과 달리 C++은 OS에서 제공하는 시스템콜을 사용하여 메모리를 직접 할당 받고 반환한다. 하지만 메모리 할당/해제 시스템콜은 가상 페이지 로드 및 병합 비용이 큰 편이고, 성능에 민감한 프로그래머들은 이를 줄이기 위해 고민의 벽에 부딫친다. 이를 개선시키기 위해 많은 사람들이 방법을 고민했다. 그 중에서 필자가 일반적으로 사용하는 방법은 영구/가변 메모리 영역 처럼 단계를 나누어 가상 메모리 페이지 크기 이상의 단위로 할당받아 각각의 뭉텅이에서 공간을 나눠쓰는 방법이다.</p>
+
+<p>그렇지만 단순히 할당자를 구현하는 것만으로 끝날 문제는 아니다. 직접 컨테이너를 구현하면 입맛에 맞게 쓸 수 있겠지만 여러 비용이 허락해야 가능하고, 사용자 정의 할당자를 지원하는 표준 STL은 여러 제약사항이 존재하기에 쉽지 않다. 하지만 표준 STL과 비슷하게 게임 응용 프로그램을 위해 표준 STL을 개량한 EASTL이라는 대체제를 통해 원하는 메모리 할당자 기능을 쉽게 구현할 수 있었다. 이 글에서는  EASTL에서의 커스텀 메모리 할당자 및 이의 장단점을 서술한다. 해당 포스팅은 EASTL 3.17.06을 기준으로 작성되었다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2021/01/31/cpp-lib-allocators">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2021/01/31/EASTL-KOR">Eastl Kor</a>
+          </h1>
+
+          <p class="post-meta">Jan 31, 2021 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/eastl/">EASTL</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>※ <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html">open-std : EASTL</a>의 내용을 번역하는 포스팅입니다. 시간이 꽤 지난 내용으로 글의 내용은 현재 상황과 다를 수 있습니다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2021/01/31/EASTL-KOR">Read on &rarr;</a>
+          </p>
+        
+      </li>
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
             <a class="post-link" href="/2019/07/11/what-is-color-spaces-and-gamuts">What Is Color Spaces And Gamuts</a>
           </h1>
 
@@ -199,6 +778,16 @@
   
     
       <a href="/categories/color/">color</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -298,6 +887,16 @@
       <a href="/categories/colorimetry/">colorimetry</a>
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
 </p>
         </header>
@@ -333,6 +932,16 @@
   
     
       <a href="/categories/unity/">unity</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -514,6 +1123,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
 </p>
         </header>
@@ -664,6 +1283,16 @@
   
     
       <a href="/categories/terminology/">terminology</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -835,6 +1464,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
 </p>
         </header>
@@ -886,6 +1525,16 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1051,6 +1700,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
 </p>
         </header>
@@ -1102,6 +1761,16 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1267,6 +1936,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1298,6 +1977,16 @@
   
     
       <a href="/categories/shader/">shader</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1485,6 +2174,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1566,6 +2265,16 @@
   
     
       <a href="/categories/floating-point/">floating_point</a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
@@ -1701,6 +2410,16 @@
   
     
   
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
 
   
   
@@ -1796,212 +2515,6 @@
   
     
   
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>보통 사용되는 <em>Texture Fltering</em> 들은 <em>Axis Align</em> 된 방향을 기준으로 추가적인 샘플링을 하는 방법들이 대부분이다.(bilinear, bicubic, etc..) 하지만 특이한 것이 하나 있다. 바로 <em>Anisotropic Filtering</em> 이다.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2018/05/13/anisotropic-filtering">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2018/03/13/recommandation-of-gpu-skinning-in-github">Recommandation Of Gpu Skinning In Github</a>
-          </h1>
-
-          <p class="post-meta">Mar 13, 2018 • 
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/gpu-skinning/">gpu-skinning</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     
@@ -2017,154 +2530,15 @@
         </header>
 
         <div class="post-content">
-          <p>최근 급하게 어떤 프로젝트에 투입되서 작업을 하고 있다. 다른 회사와 같이 일을 하고 있는데, 다른 회사에서 해놓은 것들이 너무 느려서 최적화를 해야했다. 결국 일반적인 잔머리로는 도저히 해결할 수 없는 상황에 봉착했다. 1년 전의 필자였다면 포기하고 안된다고 했었겠지만 다행히 약간의 노하우를 통해 해결할 수 있었다.</p>
+          <p>보통 사용되는 <em>Texture Fltering</em> 들은 <em>Axis Align</em> 된 방향을 기준으로 추가적인 샘플링을 하는 방법들이 대부분이다.(bilinear, bicubic, etc..) 하지만 특이한 것이 하나 있다. 바로 <em>Anisotropic Filtering</em> 이다.</p>
 
 
         </div>
 
         
           <p class="post-continue">
-            <a href="/2018/03/13/recommandation-of-gpu-skinning-in-github">Read on &rarr;</a>
+            <a href="/2018/05/13/anisotropic-filtering">Read on &rarr;</a>
           </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2018/03/06/dualized-asset-management-of-unity">Dualized Asset Management Of Unity</a>
-          </h1>
-
-          <p class="post-meta">Mar 6, 2018 • 
-  
-  
-    
-  
-    
-  
-    
-      <a href="/categories/unity/">unity</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p><em>Unity</em> 에서는 모든 사용자의 작업물을 <em>Assets</em> 폴더에 저장한다. 그리고 <em>Assets</em> 폴더안의 파일의 변경이 발생할 시 안의 파일들을 재가공하여 다시 로드한다. 보통 파일의 변경은 <em>assetDatabaseX</em> 바이너리 파일로 들어가게 되며, 스크립트, 바이너리의 변경은 다시 컴파일을 함으로써 현재 변경사항을 프로젝트에 적용시킨다.</p>
-
-<p>이러한 시스템을 위해 <em>Unity</em> 에서는 모든 파일, 디렉토리에 <em>meta</em> 파일을 생성한다. 파일별 <em>meta</em> 파일에는 해당 파일의 순수한 정보가 아닌 메타 정보가 들어간다. 중요한 정보는 두개로 나뉜다.</p>
-
-<p>하나는 <em>Unity</em> 프로젝트상에서 파일을 처음 감지했을 때, 파일의 <em>GUID</em> 를 생성한다. <em>GUID</em> 란 고유의 16진수 32글자로 이루어지는 총 512비트로 이루어지는 <em>ID</em> 로써 자동으로 생성되는 알고리즘을 가지고 있으며 겹칠 염려는 거의 없는 <em>ID</em> 알고리즘이다. 그래서 생성된 <em>GUID</em> 는 다른 곳에서 해당 파일을 참조할떄 쓰인다. 즉 파일이 삭제되서 같은 것으로 다시 생성한다고 해도 <em>GUID</em> 가 랜덤으로 결정되기 때문에 다시 연결을 해주어야 한다. 이는 <em>Unity</em> 내부에서 파일 링크를 <em>GUID</em> 로 한다는 추측을 할 수 있게 해준다. 또한 <em>Edit -&gt; Project Setting -&gt; Editor</em> 에서 <em>Asset Serialization</em> 모드가 <em>Force Text</em> 로 되어있을 시에는 <em>meta</em> 파일들을 직접 텍스트 에디터로 확인이 가능하다.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fileFormatVersion: 2
-guid: 5d44a238286f6904198ab78e914c229d
-MonoImporter:
-  serializedVersion: 2
-  defaultReferences: []
-  executionOrder: 0
-  icon: {instanceID: 0}
-  userData:
-  assetBundleName:
-</code></pre></div></div>
-
-<p>어떤 스크립트에 딸린 <em>meta</em> 파일의 내용이다. 두번째 줄에 생성된 <em>guid</em> 가 존재한다. 이는 <em>Library/metadata</em> 디렉토리에 쓰여진 이름들과 매칭된다.</p>
-
-<p>두번째는 바로 해당 파일의 <em>Importer</em> 정보가 들어있다. 위의 <em>meta</em> 파일은 스크립트이기 때문에 3번째 줄에 <em>MonoImporter</em> 라고 쓰여져 있으며, 파일의 성질에 따라서 <em>built-in importer</em> 가 달라진다. 바이너리 파일들은 <em>NativeImporter</em>, 텍스쳐 파일들은 <em>TextureImporter</em>, 3D 모델 파일들은 <em>ModelImporter</em> 로 자동으로 매칭된다.</p>
-
-<p>이러한 <em>Importer</em> 정보들은 보통 해당 <em>Asset</em> 의 옵션을 세팅할 떄 쓰인다. 또한 <em>2017</em> 버젼에서는 파일의 확장자를 사용자가 직접 지정해 <em>Importer</em> 를 사용할 수도 있게 해두었다.(<a href="/2018/01/11/unity-scripted-importer">링크</a>)</p>
-
-<p>즉 <em>Unity</em> 에서는 새로운 파일을 감지했을 때, <em>GUID</em> 를 생성하고 파일의 확장자에 따라 <em>Importer</em> 정보를 갱신한 후, 정보를 <em>Library/metadata</em> 에 갱신하는 것으로 볼 수 있다. <em>Library/metadata</em> 에서는 <em>GUID</em> 로 된 파일과 (해당 <em>GUID</em>).info 로 파일이 구성되어 있다. 각각의 파일은 파일의 유형별로 다른 것으로 보인다.</p>
-
-        </div>
-
         
       </li>
     
