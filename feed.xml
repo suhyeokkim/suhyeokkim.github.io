@@ -3,10 +3,10 @@
   <generator uri="http://jekyllrb.com" version="4.2.0">Jekyll</generator>
   
   
-  <link href="https://hrmrzizon.github.io/feed.xml" rel="self" type="application/atom+xml" />
-  <link href="https://hrmrzizon.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2021-03-06T01:23:47+00:00</updated>
-  <id>https://hrmrzizon.github.io//</id>
+  <link href="https://suhyeokim.github.io/feed.xml" rel="self" type="application/atom+xml" />
+  <link href="https://suhyeokim.github.io/" rel="alternate" type="text/html" hreflang="ko" />
+  <updated>2021-03-06T02:27:55+00:00</updated>
+  <id>https://suhyeokim.github.io//</id>
 
   
     <title type="html">Appocrypha</title>
@@ -30,11 +30,11 @@
       
       <title type="html">Eastl Allocator</title>
       
-      <link href="https://hrmrzizon.github.io/2021/01/31/eastl-allocator" rel="alternate" type="text/html" title="Eastl Allocator" />
+      <link href="https://suhyeokim.github.io/2021/01/31/eastl-allocator" rel="alternate" type="text/html" title="Eastl Allocator" />
       <published>2021-01-31T00:00:00+00:00</published>
       <updated>2021-01-31T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2021/01/31/eastl-allocator</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2021/01/31/eastl-allocator">&lt;p&gt;C++ 에서 메모리 관리는 중요한 문제다. &lt;em&gt;garbage collector&lt;/em&gt; 를 지원하는 현대의 많은 언어들과 달리 C++은 OS에서 제공하는 시스템콜을 사용하여 메모리를 직접 할당 받고 반환한다. 하지만 메모리 할당/해제 시스템콜은 가상 페이지 로드 및 병합 비용이 큰 편이고, 성능에 민감한 프로그래머들은 이를 줄이기 위해 고민의 벽에 부딫친다. 이를 개선시키기 위해 많은 사람들이 방법을 고민했다. 그 중에서 필자가 일반적으로 사용하는 방법은 영구/가변 메모리 영역 처럼 단계를 나누어 가상 메모리 페이지 크기 이상의 단위로 할당받아 각각의 뭉텅이에서 공간을 나눠쓰는 방법이다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2021/01/31/eastl-allocator</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2021/01/31/eastl-allocator">&lt;p&gt;C++ 에서 메모리 관리는 중요한 문제다. &lt;em&gt;garbage collector&lt;/em&gt; 를 지원하는 현대의 많은 언어들과 달리 C++은 OS에서 제공하는 시스템콜을 사용하여 메모리를 직접 할당 받고 반환한다. 하지만 메모리 할당/해제 시스템콜은 가상 페이지 로드 및 병합 비용이 큰 편이고, 성능에 민감한 프로그래머들은 이를 줄이기 위해 고민의 벽에 부딫친다. 이를 개선시키기 위해 많은 사람들이 방법을 고민했다. 그 중에서 필자가 일반적으로 사용하는 방법은 영구/가변 메모리 영역 처럼 단계를 나누어 가상 메모리 페이지 크기 이상의 단위로 할당받아 각각의 뭉텅이에서 공간을 나눠쓰는 방법이다.&lt;/p&gt;
 
 &lt;p&gt;그렇지만 단순히 할당자를 구현하는 것만으로 끝날 문제는 아니다. 직접 컨테이너를 구현하면 입맛에 맞게 쓸 수 있겠지만 여러 비용이 허락해야 가능하고, 사용자 정의 할당자를 지원하는 표준 STL은 여러 제약사항이 존재하기에 쉽지 않다. 하지만 표준 STL과 비슷하게 게임 응용 프로그램을 위해 표준 STL을 개량한 EASTL이라는 대체제를 통해 원하는 메모리 할당자 기능을 쉽게 구현할 수 있었다. 이 글에서는  EASTL에서의 커스텀 메모리 할당자 및 이의 장단점을 서술한다. 해당 포스팅은 EASTL 3.17.06을 기준으로 작성되었다.&lt;/p&gt;
 
@@ -225,11 +225,11 @@
       
       <title type="html">Eastl Kor</title>
       
-      <link href="https://hrmrzizon.github.io/2021/01/31/EASTL-KOR" rel="alternate" type="text/html" title="Eastl Kor" />
+      <link href="https://suhyeokim.github.io/2021/01/31/EASTL-KOR" rel="alternate" type="text/html" title="Eastl Kor" />
       <published>2021-01-31T00:00:00+00:00</published>
       <updated>2021-01-31T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2021/01/31/EASTL-KOR</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2021/01/31/EASTL-KOR">&lt;p&gt;※ &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html&quot;&gt;open-std : EASTL&lt;/a&gt;의 내용을 번역하는 포스팅입니다. 시간이 꽤 지난 내용으로 글의 내용은 현재 상황과 다를 수 있습니다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2021/01/31/EASTL-KOR</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2021/01/31/EASTL-KOR">&lt;p&gt;※ &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html&quot;&gt;open-std : EASTL&lt;/a&gt;의 내용을 번역하는 포스팅입니다. 시간이 꽤 지난 내용으로 글의 내용은 현재 상황과 다를 수 있습니다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -368,11 +368,11 @@ The STL puts an emphasis on correctness before practicality and - performance. T
       
       <title type="html">What Is Color Spaces And Gamuts</title>
       
-      <link href="https://hrmrzizon.github.io/2019/07/11/what-is-color-spaces-and-gamuts" rel="alternate" type="text/html" title="What Is Color Spaces And Gamuts" />
+      <link href="https://suhyeokim.github.io/2019/07/11/what-is-color-spaces-and-gamuts" rel="alternate" type="text/html" title="What Is Color Spaces And Gamuts" />
       <published>2019-07-11T00:00:00+00:00</published>
       <updated>2019-07-11T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2019/07/11/what-is-color-spaces-and-gamuts</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2019/07/11/what-is-color-spaces-and-gamuts">&lt;p&gt;HDR 에 대한 내용들을 찾다보면 &lt;em&gt;color space&lt;/em&gt; 에 대한 개념을 기본적으로 알고 있어야 수학적인 내용을 배울 때 단계적으로 학습해야 하는 것처럼 대부분의 내용들을 쉽게 이해할 수 있다. 필자의 경우 이에 대한 학습이 전혀 없었고, 직접 자료를 찾아보기 전까지 무슨 소리인지 전혀 몰랐던 상태였다. 다행히 여러 분야에 걸쳐 꽤 많이 알려진 지식들이고 받아들이기에 어려운 개념은 아니라서 이에 대해 글을 쓰면서 정리해보려 한다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2019/07/11/what-is-color-spaces-and-gamuts</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2019/07/11/what-is-color-spaces-and-gamuts">&lt;p&gt;HDR 에 대한 내용들을 찾다보면 &lt;em&gt;color space&lt;/em&gt; 에 대한 개념을 기본적으로 알고 있어야 수학적인 내용을 배울 때 단계적으로 학습해야 하는 것처럼 대부분의 내용들을 쉽게 이해할 수 있다. 필자의 경우 이에 대한 학습이 전혀 없었고, 직접 자료를 찾아보기 전까지 무슨 소리인지 전혀 몰랐던 상태였다. 다행히 여러 분야에 걸쳐 꽤 많이 알려진 지식들이고 받아들이기에 어려운 개념은 아니라서 이에 대해 글을 쓰면서 정리해보려 한다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -610,11 +610,11 @@ $$
       
       <title type="html">What Is Srp Batcher In Unity</title>
       
-      <link href="https://hrmrzizon.github.io/2019/07/02/what-is-srp-batcher-in-unity" rel="alternate" type="text/html" title="What Is Srp Batcher In Unity" />
+      <link href="https://suhyeokim.github.io/2019/07/02/what-is-srp-batcher-in-unity" rel="alternate" type="text/html" title="What Is Srp Batcher In Unity" />
       <published>2019-07-02T00:00:00+00:00</published>
       <updated>2019-07-02T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2019/07/02/what-is-srp-batcher-in-unity</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2019/07/02/what-is-srp-batcher-in-unity">&lt;p&gt;Unity의 SRP 의 개발과 같이 여러 기능들이 생겨나는 것 같다. 아마도 기존의 Unity 의 렌더링 모듈들을 최대한 개선하려는 시도로 보인다. 이번 년초에 공개된 &lt;em&gt;SRP Batcher&lt;/em&gt; 또한 효율을 개선하기 위한 것으로 보인다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2019/07/02/what-is-srp-batcher-in-unity</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2019/07/02/what-is-srp-batcher-in-unity">&lt;p&gt;Unity의 SRP 의 개발과 같이 여러 기능들이 생겨나는 것 같다. 아마도 기존의 Unity 의 렌더링 모듈들을 최대한 개선하려는 시도로 보인다. 이번 년초에 공개된 &lt;em&gt;SRP Batcher&lt;/em&gt; 또한 효율을 개선하기 위한 것으로 보인다.&lt;/p&gt;
 
 &lt;p&gt;종종 보이는 용어 &lt;em&gt;batch&lt;/em&gt; 라는 용어는 “한꺼번에 처리한다.” 라는 뜻으로 보통 쓰인다. 일반적인 렌더링 시스템에서의 &lt;em&gt;batch&lt;/em&gt; 는 최소한의 drawcall-driver overhead- 을 위해 렌더링할 것들의 데이터들을 최대한 묶어주는 시스템의 기능을 말하기 위해 사용되는 것 같다. 그리고 Unity 또한 기존의 &lt;em&gt;built-in batcher&lt;/em&gt; 시스템이 존재한다. 근데 이에 성능을 향상시키기 위해 &lt;em&gt;SRP batcher&lt;/em&gt; 라는게 만들어 졌다고 한다. 이는 곧 기존의 &lt;em&gt;built-in batcher&lt;/em&gt; 시스템에 비효율적인 부분이 존재한다는 것을 알 수 있다.&lt;/p&gt;
 
@@ -694,11 +694,11 @@ $$
       
       <title type="html">Steradian And Solid Angle</title>
       
-      <link href="https://hrmrzizon.github.io/2019/03/08/steradian-and-solid-angle" rel="alternate" type="text/html" title="Steradian And Solid Angle" />
+      <link href="https://suhyeokim.github.io/2019/03/08/steradian-and-solid-angle" rel="alternate" type="text/html" title="Steradian And Solid Angle" />
       <published>2019-03-08T00:00:00+00:00</published>
       <updated>2019-03-08T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2019/03/08/steradian-and-solid-angle</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2019/03/08/steradian-and-solid-angle">&lt;p&gt;solid angle 은 우리가 일반적으로 알고있는 angle 과는 다르게 생소할 가능성이 높다. 이의 단위는 steradian(sr) 으로 교과과정에서 많이 보이는 radian 과 이름이 비슷하다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2019/03/08/steradian-and-solid-angle</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2019/03/08/steradian-and-solid-angle">&lt;p&gt;solid angle 은 우리가 일반적으로 알고있는 angle 과는 다르게 생소할 가능성이 높다. 이의 단위는 steradian(sr) 으로 교과과정에서 많이 보이는 radian 과 이름이 비슷하다.&lt;/p&gt;
 
 &lt;p&gt;먼저 이름이 비슷한 radian 의 정의를 잘 보여주는 아래 이미지를 보자.&lt;/p&gt;
 
@@ -781,11 +781,11 @@ $$
       
       <title type="html">Unit Of Light Radiation</title>
       
-      <link href="https://hrmrzizon.github.io/2019/02/10/unit-of-light-radiation" rel="alternate" type="text/html" title="Unit Of Light Radiation" />
+      <link href="https://suhyeokim.github.io/2019/02/10/unit-of-light-radiation" rel="alternate" type="text/html" title="Unit Of Light Radiation" />
       <published>2019-02-10T00:00:00+00:00</published>
       <updated>2019-02-10T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2019/02/10/unit-of-light-radiation</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2019/02/10/unit-of-light-radiation">&lt;p&gt;real-time rendering 분야에서 PBR 이 정착하게 되면서, 빛에 대한 측정 기준을 알아야 되게 되었다. 단순하지만 확실하게 정의해놓지 않으면 헷갈리는 개념이기 때문에 정리 해보려 한다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2019/02/10/unit-of-light-radiation</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2019/02/10/unit-of-light-radiation">&lt;p&gt;real-time rendering 분야에서 PBR 이 정착하게 되면서, 빛에 대한 측정 기준을 알아야 되게 되었다. 단순하지만 확실하게 정의해놓지 않으면 헷갈리는 개념이기 때문에 정리 해보려 한다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -981,11 +981,11 @@ $$
       
       <title type="html">How To Represent Transparency Object</title>
       
-      <link href="https://hrmrzizon.github.io/2018/05/27/how-to-represent-transparency-object" rel="alternate" type="text/html" title="How To Represent Transparency Object" />
+      <link href="https://suhyeokim.github.io/2018/05/27/how-to-represent-transparency-object" rel="alternate" type="text/html" title="How To Represent Transparency Object" />
       <published>2018-05-27T00:00:00+00:00</published>
       <updated>2018-05-27T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2018/05/27/how-to-represent-transparency-object</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2018/05/27/how-to-represent-transparency-object">&lt;p&gt;오래전부터 게임같은 실시간으로 안정적인 성능을 뽑아내야하는 컴퓨터 그래픽에서의 투명한 물체는 항상 골칫거리였다. “투명” 하다보니 일반적으로 사용되는 최적화 방법도 사용할 수 없기 때문에 퍼포먼스의 문제가 있으며, 일반적으로 지원하는 &lt;em&gt;Alpha Blending&lt;/em&gt; 을 사용할시에는 물체의 순서를 직접 소팅해주어야 했다. 투명한 물체를 그리는 일반적인 방법의 문제에 대해서 알아보고, 문제를 부분적으로 해결할 수 있는 몇가지 방법들을 적어보겠다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2018/05/27/how-to-represent-transparency-object</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2018/05/27/how-to-represent-transparency-object">&lt;p&gt;오래전부터 게임같은 실시간으로 안정적인 성능을 뽑아내야하는 컴퓨터 그래픽에서의 투명한 물체는 항상 골칫거리였다. “투명” 하다보니 일반적으로 사용되는 최적화 방법도 사용할 수 없기 때문에 퍼포먼스의 문제가 있으며, 일반적으로 지원하는 &lt;em&gt;Alpha Blending&lt;/em&gt; 을 사용할시에는 물체의 순서를 직접 소팅해주어야 했다. 투명한 물체를 그리는 일반적인 방법의 문제에 대해서 알아보고, 문제를 부분적으로 해결할 수 있는 몇가지 방법들을 적어보겠다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -1159,11 +1159,11 @@ $$
       
       <title type="html">Opaque As Alpha Test</title>
       
-      <link href="https://hrmrzizon.github.io/2018/05/22/opaque-as-alpha-test" rel="alternate" type="text/html" title="Opaque As Alpha Test" />
+      <link href="https://suhyeokim.github.io/2018/05/22/opaque-as-alpha-test" rel="alternate" type="text/html" title="Opaque As Alpha Test" />
       <published>2018-05-22T00:00:00+00:00</published>
       <updated>2018-05-22T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2018/05/22/opaque-as-alpha-test</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2018/05/22/opaque-as-alpha-test">&lt;p&gt;&lt;em&gt;Shader&lt;/em&gt; 에서 샘플링하는 &lt;em&gt;Texutre&lt;/em&gt; 에서 &lt;em&gt;Alpha&lt;/em&gt; 값을 가지고 있어, &lt;em&gt;Alpha&lt;/em&gt; 을 참조해서 실제 픽셀에 출력을 하는지 안하는지를 결정하는 것을 &lt;em&gt;Alpha Test&lt;/em&gt; 라고 한다. 이런 &lt;em&gt;Material&lt;/em&gt; 이나 &lt;em&gt;Texture&lt;/em&gt; 를  &lt;em&gt;Cutout&lt;/em&gt; 이라고 통칭하는 경우가 많다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2018/05/22/opaque-as-alpha-test</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2018/05/22/opaque-as-alpha-test">&lt;p&gt;&lt;em&gt;Shader&lt;/em&gt; 에서 샘플링하는 &lt;em&gt;Texutre&lt;/em&gt; 에서 &lt;em&gt;Alpha&lt;/em&gt; 값을 가지고 있어, &lt;em&gt;Alpha&lt;/em&gt; 을 참조해서 실제 픽셀에 출력을 하는지 안하는지를 결정하는 것을 &lt;em&gt;Alpha Test&lt;/em&gt; 라고 한다. 이런 &lt;em&gt;Material&lt;/em&gt; 이나 &lt;em&gt;Texture&lt;/em&gt; 를  &lt;em&gt;Cutout&lt;/em&gt; 이라고 통칭하는 경우가 많다.&lt;/p&gt;
 
 &lt;p&gt;보통 게임에서의 &lt;em&gt;Alpha Test&lt;/em&gt; 를 사용하는 것들은 나무, 풀 같은 식생들(&lt;em&gt;Vegetation&lt;/em&gt;)이 있고, 중간에 구멍이 뚫린 펜스같은 것들도 존재한다. 자연을 배경으로하는 게임의 경우에는 식생들이 굉장히 많기 때문에 &lt;em&gt;Alpha Test&lt;/em&gt; 를 사용하는 &lt;em&gt;Shader&lt;/em&gt; 가 굉장히 많이 사용될 것이다.&lt;/p&gt;
 
@@ -1410,11 +1410,11 @@ $$
       
       <title type="html">Ieee 754 Floaing Number</title>
       
-      <link href="https://hrmrzizon.github.io/2018/05/18/IEEE-754-floaing-number" rel="alternate" type="text/html" title="Ieee 754 Floaing Number" />
+      <link href="https://suhyeokim.github.io/2018/05/18/IEEE-754-floaing-number" rel="alternate" type="text/html" title="Ieee 754 Floaing Number" />
       <published>2018-05-18T00:00:00+00:00</published>
       <updated>2018-05-18T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2018/05/18/IEEE-754-floaing-number</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2018/05/18/IEEE-754-floaing-number">&lt;p&gt;코딩을 하던 도중, 비트로 나타내어진 2 byte floating number(half-precision) 데이터를 일반적인 4byte floating number(single-precision) 으로 나타내야 할 일이 있었다. 그래서 귀찮아서 알아보지 않았던 컴퓨터의 소수를 표현하는 방법에 대해서 알아보았다. 이 글에서는 간략하게 어떤식으로 표현되는지에 대해서만 적어보기로 하겠다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2018/05/18/IEEE-754-floaing-number</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2018/05/18/IEEE-754-floaing-number">&lt;p&gt;코딩을 하던 도중, 비트로 나타내어진 2 byte floating number(half-precision) 데이터를 일반적인 4byte floating number(single-precision) 으로 나타내야 할 일이 있었다. 그래서 귀찮아서 알아보지 않았던 컴퓨터의 소수를 표현하는 방법에 대해서 알아보았다. 이 글에서는 간략하게 어떤식으로 표현되는지에 대해서만 적어보기로 하겠다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -1512,11 +1512,11 @@ $$
       
       <title type="html">Anisotropic Filtering</title>
       
-      <link href="https://hrmrzizon.github.io/2018/05/13/anisotropic-filtering" rel="alternate" type="text/html" title="Anisotropic Filtering" />
+      <link href="https://suhyeokim.github.io/2018/05/13/anisotropic-filtering" rel="alternate" type="text/html" title="Anisotropic Filtering" />
       <published>2018-05-13T00:00:00+00:00</published>
       <updated>2018-05-13T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2018/05/13/anisotropic-filtering</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2018/05/13/anisotropic-filtering">&lt;p&gt;보통 사용되는 &lt;em&gt;Texture Fltering&lt;/em&gt; 들은 &lt;em&gt;Axis Align&lt;/em&gt; 된 방향을 기준으로 추가적인 샘플링을 하는 방법들이 대부분이다.(bilinear, bicubic, etc..) 하지만 특이한 것이 하나 있다. 바로 &lt;em&gt;Anisotropic Filtering&lt;/em&gt; 이다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2018/05/13/anisotropic-filtering</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2018/05/13/anisotropic-filtering">&lt;p&gt;보통 사용되는 &lt;em&gt;Texture Fltering&lt;/em&gt; 들은 &lt;em&gt;Axis Align&lt;/em&gt; 된 방향을 기준으로 추가적인 샘플링을 하는 방법들이 대부분이다.(bilinear, bicubic, etc..) 하지만 특이한 것이 하나 있다. 바로 &lt;em&gt;Anisotropic Filtering&lt;/em&gt; 이다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -1583,11 +1583,11 @@ $$
       
       <title type="html">Recommandation Of Gpu Skinning In Github</title>
       
-      <link href="https://hrmrzizon.github.io/2018/03/13/recommandation-of-gpu-skinning-in-github" rel="alternate" type="text/html" title="Recommandation Of Gpu Skinning In Github" />
+      <link href="https://suhyeokim.github.io/2018/03/13/recommandation-of-gpu-skinning-in-github" rel="alternate" type="text/html" title="Recommandation Of Gpu Skinning In Github" />
       <published>2018-03-13T00:00:00+00:00</published>
       <updated>2018-03-13T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2018/03/13/recommandation-of-gpu-skinning-in-github</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2018/03/13/recommandation-of-gpu-skinning-in-github">&lt;p&gt;최근 급하게 어떤 프로젝트에 투입되서 작업을 하고 있다. 다른 회사와 같이 일을 하고 있는데, 다른 회사에서 해놓은 것들이 너무 느려서 최적화를 해야했다. 결국 일반적인 잔머리로는 도저히 해결할 수 없는 상황에 봉착했다. 1년 전의 필자였다면 포기하고 안된다고 했었겠지만 다행히 약간의 노하우를 통해 해결할 수 있었다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2018/03/13/recommandation-of-gpu-skinning-in-github</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2018/03/13/recommandation-of-gpu-skinning-in-github">&lt;p&gt;최근 급하게 어떤 프로젝트에 투입되서 작업을 하고 있다. 다른 회사와 같이 일을 하고 있는데, 다른 회사에서 해놓은 것들이 너무 느려서 최적화를 해야했다. 결국 일반적인 잔머리로는 도저히 해결할 수 없는 상황에 봉착했다. 1년 전의 필자였다면 포기하고 안된다고 했었겠지만 다행히 약간의 노하우를 통해 해결할 수 있었다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -1657,11 +1657,11 @@ $$
       
       <title type="html">Dualized Asset Management Of Unity</title>
       
-      <link href="https://hrmrzizon.github.io/2018/03/06/dualized-asset-management-of-unity" rel="alternate" type="text/html" title="Dualized Asset Management Of Unity" />
+      <link href="https://suhyeokim.github.io/2018/03/06/dualized-asset-management-of-unity" rel="alternate" type="text/html" title="Dualized Asset Management Of Unity" />
       <published>2018-03-06T00:00:00+00:00</published>
       <updated>2018-03-06T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2018/03/06/dualized-asset-management-of-unity</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2018/03/06/dualized-asset-management-of-unity">&lt;p&gt;&lt;em&gt;Unity&lt;/em&gt; 에서는 모든 사용자의 작업물을 &lt;em&gt;Assets&lt;/em&gt; 폴더에 저장한다. 그리고 &lt;em&gt;Assets&lt;/em&gt; 폴더안의 파일의 변경이 발생할 시 안의 파일들을 재가공하여 다시 로드한다. 보통 파일의 변경은 &lt;em&gt;assetDatabaseX&lt;/em&gt; 바이너리 파일로 들어가게 되며, 스크립트, 바이너리의 변경은 다시 컴파일을 함으로써 현재 변경사항을 프로젝트에 적용시킨다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2018/03/06/dualized-asset-management-of-unity</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2018/03/06/dualized-asset-management-of-unity">&lt;p&gt;&lt;em&gt;Unity&lt;/em&gt; 에서는 모든 사용자의 작업물을 &lt;em&gt;Assets&lt;/em&gt; 폴더에 저장한다. 그리고 &lt;em&gt;Assets&lt;/em&gt; 폴더안의 파일의 변경이 발생할 시 안의 파일들을 재가공하여 다시 로드한다. 보통 파일의 변경은 &lt;em&gt;assetDatabaseX&lt;/em&gt; 바이너리 파일로 들어가게 되며, 스크립트, 바이너리의 변경은 다시 컴파일을 함으로써 현재 변경사항을 프로젝트에 적용시킨다.&lt;/p&gt;
 
 &lt;p&gt;이러한 시스템을 위해 &lt;em&gt;Unity&lt;/em&gt; 에서는 모든 파일, 디렉토리에 &lt;em&gt;meta&lt;/em&gt; 파일을 생성한다. 파일별 &lt;em&gt;meta&lt;/em&gt; 파일에는 해당 파일의 순수한 정보가 아닌 메타 정보가 들어간다. 중요한 정보는 두개로 나뉜다.&lt;/p&gt;
 
@@ -1720,11 +1720,11 @@ MonoImporter:
       
       <title type="html">What Is Ddx And Ddy</title>
       
-      <link href="https://hrmrzizon.github.io/2018/03/04/what-is-ddx-and-ddy" rel="alternate" type="text/html" title="What Is Ddx And Ddy" />
+      <link href="https://suhyeokim.github.io/2018/03/04/what-is-ddx-and-ddy" rel="alternate" type="text/html" title="What Is Ddx And Ddy" />
       <published>2018-03-04T00:00:00+00:00</published>
       <updated>2018-03-04T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2018/03/04/what-is-ddx-and-ddy</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2018/03/04/what-is-ddx-and-ddy">&lt;p&gt;&lt;em&gt;HLSL&lt;/em&gt; 에는 &lt;em&gt;ddx&lt;/em&gt; 와 &lt;em&gt;ddy&lt;/em&gt; &lt;em&gt;intrisic&lt;/em&gt; 이 &lt;em&gt;Shader Model 2.0&lt;/em&gt; 부터 존재했다. 필자는 이를 이해하기 위해 자료를 찾아보았지만 쉽게 이해되는 것들은 거의 없었다. 이해한 것을 정리하기 위해 이글을 쓴다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2018/03/04/what-is-ddx-and-ddy</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2018/03/04/what-is-ddx-and-ddy">&lt;p&gt;&lt;em&gt;HLSL&lt;/em&gt; 에는 &lt;em&gt;ddx&lt;/em&gt; 와 &lt;em&gt;ddy&lt;/em&gt; &lt;em&gt;intrisic&lt;/em&gt; 이 &lt;em&gt;Shader Model 2.0&lt;/em&gt; 부터 존재했다. 필자는 이를 이해하기 위해 자료를 찾아보았지만 쉽게 이해되는 것들은 거의 없었다. 이해한 것을 정리하기 위해 이글을 쓴다.&lt;/p&gt;
 
 &lt;p&gt;예전부터 &lt;em&gt;Pixel Shader&lt;/em&gt; 를 처리할 때 픽셀 단위로 하나하나 처리하는게 아닌 적어도 2x2 개의 픽셀들을 한꺼번에 처리했다고 한다. 그래서 이러한 아키텍쳐를 이용한 키워드가 &lt;em&gt;ddx&lt;/em&gt; 와 &lt;em&gt;ddy&lt;/em&gt; 다. 기본적으로 쉐이더는 병렬로 처리되기 때문에, 4개의 &lt;em&gt;Pixel Shader&lt;/em&gt; 가 한꺼번에 실행되는 것으로 생각할 수 있다. 아래 코드를 보면서 생각해보자.&lt;/p&gt;
 
@@ -1781,11 +1781,11 @@ MonoImporter:
       
       <title type="html">Gpu Branching And Divergence</title>
       
-      <link href="https://hrmrzizon.github.io/2018/02/19/gpu-branching-and-divergence" rel="alternate" type="text/html" title="Gpu Branching And Divergence" />
+      <link href="https://suhyeokim.github.io/2018/02/19/gpu-branching-and-divergence" rel="alternate" type="text/html" title="Gpu Branching And Divergence" />
       <published>2018-02-19T00:00:00+00:00</published>
       <updated>2018-02-19T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2018/02/19/gpu-branching-and-divergence</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2018/02/19/gpu-branching-and-divergence">&lt;p&gt;요즘은 꽤나 많은 것들을 GPU 로 처리할 수 있다. GPGPU 기술이 나온지 10년이 넘어가는 이 시점에서 꽤나 많은 것들이 GPU 로 처리되고 있다. 그 중에서도 GPGPU 를 다뤄볼 사람이라면 필수적인 상식하나가 있다. 아래 그림을 보자.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2018/02/19/gpu-branching-and-divergence</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2018/02/19/gpu-branching-and-divergence">&lt;p&gt;요즘은 꽤나 많은 것들을 GPU 로 처리할 수 있다. GPGPU 기술이 나온지 10년이 넘어가는 이 시점에서 꽤나 많은 것들이 GPU 로 처리되고 있다. 그 중에서도 GPGPU 를 다뤄볼 사람이라면 필수적인 상식하나가 있다. 아래 그림을 보자.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -1851,11 +1851,11 @@ MonoImporter:
       
       <title type="html">Frustum Traced Shadow With Irrelgular Z Buffer 2</title>
       
-      <link href="https://hrmrzizon.github.io/2018/01/14/frustum-traced-shadow-with-irrelgular-z-buffer-2" rel="alternate" type="text/html" title="Frustum Traced Shadow With Irrelgular Z Buffer 2" />
+      <link href="https://suhyeokim.github.io/2018/01/14/frustum-traced-shadow-with-irrelgular-z-buffer-2" rel="alternate" type="text/html" title="Frustum Traced Shadow With Irrelgular Z Buffer 2" />
       <published>2018-01-14T00:00:00+00:00</published>
       <updated>2018-01-14T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2018/01/14/frustum-traced-shadow-with-irrelgular-z-buffer-2</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2018/01/14/frustum-traced-shadow-with-irrelgular-z-buffer-2">&lt;p&gt;&lt;a href=&quot;/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1&quot;&gt;frustum Traced Shadow with Irregular Z-Buffer 1&lt;/a&gt; 에서 포괄적인 전체 시스템과 복잡도에 대하여 알아보았다. 이번 글에서는 시스템 구현에 관한 디테일한 사항들을 알아볼 것이다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2018/01/14/frustum-traced-shadow-with-irrelgular-z-buffer-2</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2018/01/14/frustum-traced-shadow-with-irrelgular-z-buffer-2">&lt;p&gt;&lt;a href=&quot;/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1&quot;&gt;frustum Traced Shadow with Irregular Z-Buffer 1&lt;/a&gt; 에서 포괄적인 전체 시스템과 복잡도에 대하여 알아보았다. 이번 글에서는 시스템 구현에 관한 디테일한 사항들을 알아볼 것이다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -1997,11 +1997,11 @@ MonoImporter:
       
       <title type="html">Frustum Traced Shadow With Irrelgular Z Buffer 1</title>
       
-      <link href="https://hrmrzizon.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1" rel="alternate" type="text/html" title="Frustum Traced Shadow With Irrelgular Z Buffer 1" />
+      <link href="https://suhyeokim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1" rel="alternate" type="text/html" title="Frustum Traced Shadow With Irrelgular Z Buffer 1" />
       <published>2018-01-13T00:00:00+00:00</published>
       <updated>2018-01-13T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1">&lt;p&gt;&lt;a href=&quot;/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0&quot;&gt;frustum Traced Shadow with Irregular Z-Buffer 0&lt;/a&gt; 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1">&lt;p&gt;&lt;a href=&quot;/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0&quot;&gt;frustum Traced Shadow with Irregular Z-Buffer 0&lt;/a&gt; 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -2125,11 +2125,11 @@ MonoImporter:
       
       <title type="html">Frustum Traced Shadow With Irrelgular Z Buffer 0</title>
       
-      <link href="https://hrmrzizon.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0" rel="alternate" type="text/html" title="Frustum Traced Shadow With Irrelgular Z Buffer 0" />
+      <link href="https://suhyeokim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0" rel="alternate" type="text/html" title="Frustum Traced Shadow With Irrelgular Z Buffer 0" />
       <published>2018-01-13T00:00:00+00:00</published>
       <updated>2018-01-13T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0">&lt;p&gt;&lt;a href=&quot;/2017/12/27/percentage-closer-soft-shadows&quot;&gt;Percentage-Closer Filtering Shadows&lt;/a&gt; 에서 &lt;em&gt;PCF&lt;/em&gt; 를 응용한 &lt;em&gt;PCSS&lt;/em&gt; 라는 &lt;em&gt;Soft Shadow&lt;/em&gt; 를 나타내는 기법에 대해서 알아보았다. 이번 글에서는 여태까지 알아본 것들에 비해 굉장히 최근에 나온 기법인 &lt;em&gt;frustum-Traced Shadow&lt;/em&gt; 에 대해서 알아볼것이다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0">&lt;p&gt;&lt;a href=&quot;/2017/12/27/percentage-closer-soft-shadows&quot;&gt;Percentage-Closer Filtering Shadows&lt;/a&gt; 에서 &lt;em&gt;PCF&lt;/em&gt; 를 응용한 &lt;em&gt;PCSS&lt;/em&gt; 라는 &lt;em&gt;Soft Shadow&lt;/em&gt; 를 나타내는 기법에 대해서 알아보았다. 이번 글에서는 여태까지 알아본 것들에 비해 굉장히 최근에 나온 기법인 &lt;em&gt;frustum-Traced Shadow&lt;/em&gt; 에 대해서 알아볼것이다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -2286,11 +2286,11 @@ end for
       
       <title type="html">Unity Scripted Importer</title>
       
-      <link href="https://hrmrzizon.github.io/2018/01/11/unity-scripted-importer" rel="alternate" type="text/html" title="Unity Scripted Importer" />
+      <link href="https://suhyeokim.github.io/2018/01/11/unity-scripted-importer" rel="alternate" type="text/html" title="Unity Scripted Importer" />
       <published>2018-01-11T00:00:00+00:00</published>
       <updated>2018-01-11T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2018/01/11/unity-scripted-importer</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2018/01/11/unity-scripted-importer">&lt;p&gt;Unity 의 에디터 시스템은 꽤나 유연하다. 이번 글에서는 &lt;em&gt;AssetImporter&lt;/em&gt; 에 대한 기능들에 대하여 알아볼 것이다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2018/01/11/unity-scripted-importer</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2018/01/11/unity-scripted-importer">&lt;p&gt;Unity 의 에디터 시스템은 꽤나 유연하다. 이번 글에서는 &lt;em&gt;AssetImporter&lt;/em&gt; 에 대한 기능들에 대하여 알아볼 것이다.&lt;/p&gt;
 
 &lt;p&gt;Unity 의 각각의 Asset 들은 확장자의 이름에 따라서 &lt;em&gt;AssetImporter&lt;/em&gt; 가 하나씩 만들어지고, 해당 &lt;em&gt;AssetImporter&lt;/em&gt; 에 따라서 &lt;em&gt;Post-Process&lt;/em&gt; 가 진행된다. 필자가 많이 봤던 &lt;em&gt;AssetImporter&lt;/em&gt; 는 &lt;a href=&quot;https://docs.unity3d.com/ScriptReference/TextureImporter.html&quot;&gt;&lt;em&gt;TextureImporter&lt;/em&gt;&lt;/a&gt; 와 &lt;a href=&quot;https://docs.unity3d.com/ScriptReference/ModelImporter.html&quot;&gt;&lt;em&gt;ModelImporter&lt;/em&gt;&lt;/a&gt; 가 있었다. 확인할 당시에는 당연히 &lt;em&gt;AssetImporter&lt;/em&gt; 를 커스터마이징 할 수 있겠다는 생각이 들어 찾아봤지만 전혀 없었다.(Unity 5 버젼을 사용할 때다.) 이렇게 시스템을 만들어 놓고 왜 없냐는 의문이 들었지만 이는 정말 할수있는게 없었기에 넘어갔었다.&lt;/p&gt;
 
@@ -2339,11 +2339,11 @@ end for
       
       <title type="html">Percentage Closer Soft Shadows</title>
       
-      <link href="https://hrmrzizon.github.io/2017/12/27/percentage-closer-soft-shadows" rel="alternate" type="text/html" title="Percentage Closer Soft Shadows" />
+      <link href="https://suhyeokim.github.io/2017/12/27/percentage-closer-soft-shadows" rel="alternate" type="text/html" title="Percentage Closer Soft Shadows" />
       <published>2017-12-27T00:00:00+00:00</published>
       <updated>2017-12-27T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/12/27/percentage-closer-soft-shadows</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/12/27/percentage-closer-soft-shadows">&lt;p&gt;&lt;a href=&quot;/2017/12/19/shadow-map-filtering&quot;&gt;Shadow Map Filtering&lt;/a&gt; 에서 &lt;em&gt;PCF&lt;/em&gt; 와 &lt;em&gt;VSM&lt;/em&gt; 에 대하여 간단히 알아보았다. 이번 글에서 설명할 것은 &lt;em&gt;PCF&lt;/em&gt; 를 활용한 &lt;em&gt;PCSS&lt;/em&gt; 다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2017/12/27/percentage-closer-soft-shadows</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2017/12/27/percentage-closer-soft-shadows">&lt;p&gt;&lt;a href=&quot;/2017/12/19/shadow-map-filtering&quot;&gt;Shadow Map Filtering&lt;/a&gt; 에서 &lt;em&gt;PCF&lt;/em&gt; 와 &lt;em&gt;VSM&lt;/em&gt; 에 대하여 간단히 알아보았다. 이번 글에서 설명할 것은 &lt;em&gt;PCF&lt;/em&gt; 를 활용한 &lt;em&gt;PCSS&lt;/em&gt; 다.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;PCSS&lt;/em&gt; 는 &lt;em&gt;Soft Shadow&lt;/em&gt; 를 구현하는 기법 중 하나로써 2005년에 발표되어 여태까지도 꽤나 알려진 기법이다. 우선 &lt;em&gt;Soft Shadow&lt;/em&gt; 가 무엇인지 알아보자.&lt;/p&gt;
 
@@ -2493,11 +2493,11 @@ end for
       
       <title type="html">Shadow Map Filtering</title>
       
-      <link href="https://hrmrzizon.github.io/2017/12/19/shadow-map-filtering" rel="alternate" type="text/html" title="Shadow Map Filtering" />
+      <link href="https://suhyeokim.github.io/2017/12/19/shadow-map-filtering" rel="alternate" type="text/html" title="Shadow Map Filtering" />
       <published>2017-12-19T00:00:00+00:00</published>
       <updated>2017-12-19T00:00:00+00:00</updated>
-      <id>https://hrmrzizon.github.io/2017/12/19/shadow-map-filtering</id>
-      <content type="html" xml:base="https://hrmrzizon.github.io/2017/12/19/shadow-map-filtering">&lt;p&gt;&lt;a href=&quot;/2017/11/30/what-is-shadow-mapping&quot;&gt;What is Shadow Mapping&lt;/a&gt; 에서 &lt;em&gt;Shadow Mapping&lt;/em&gt; 에 대한 간단한 번역 &amp;amp; 설명을 적어놓았다. 해당 글에서 &lt;em&gt;PCF&lt;/em&gt; 를 잠깐 언급했었다. 이 글에서는 &lt;em&gt;PCF&lt;/em&gt; 를 포함해서 &lt;em&gt;Shadow Map&lt;/em&gt; 을 필터링하는 방법에 대해서 알아보겠다.&lt;/p&gt;
+      <id>https://suhyeokim.github.io/2017/12/19/shadow-map-filtering</id>
+      <content type="html" xml:base="https://suhyeokim.github.io/2017/12/19/shadow-map-filtering">&lt;p&gt;&lt;a href=&quot;/2017/11/30/what-is-shadow-mapping&quot;&gt;What is Shadow Mapping&lt;/a&gt; 에서 &lt;em&gt;Shadow Mapping&lt;/em&gt; 에 대한 간단한 번역 &amp;amp; 설명을 적어놓았다. 해당 글에서 &lt;em&gt;PCF&lt;/em&gt; 를 잠깐 언급했었다. 이 글에서는 &lt;em&gt;PCF&lt;/em&gt; 를 포함해서 &lt;em&gt;Shadow Map&lt;/em&gt; 을 필터링하는 방법에 대해서 알아보겠다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
