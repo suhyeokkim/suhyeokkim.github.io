@@ -311,16 +311,28 @@
     <p>최근 급하게 어떤 프로젝트에 투입되서 작업을 하고 있다. 다른 회사와 같이 일을 하고 있는데, 다른 회사에서 해놓은 것들이 너무 느려서 최적화를 해야했다. 결국 일반적인 잔머리로는 도저히 해결할 수 없는 상황에 봉착했다. 1년 전의 필자였다면 포기하고 안된다고 했었겠지만 다행히 약간의 노하우를 통해 해결할 수 있었다.</p>
 
 <!-- more -->
-
-<h2>상황과 문제?</h2>
+      <h2>
+        
+        
+          상황과 문제?
+        
+        
+      </h2>
+    
 
 <p>요즘 한국에서는 VR 게임/컨텐츠들이 굉장히 많이 개발되고 있다. 필자도 그 와중에 떨어진 프로젝트를 하나 받아진행하게 되었다. 개발은 주변 3D 환경을 다른 회사에서 해주고, 게임이 돌아가는 코어 시스템을 필자의 회사에서 작업하기로 되어 있었다. 게임에서의 코어 시스템은 개발을 하였으나 <em>Unity</em> 에 의존적인 코딩은 거의 진행되지 않은 상태에서 한달전 프로젝트에 투입되었다.</p>
 
 <p>그렇게 하나하나 작업을 하면서 코어 시스템과 3D 환경을 결합하는 도중, 터무니 없는 경우를 만났다. 바로 <strong>SkinnedMeshRenderer</strong> 와 <em>Animator</em> 가 약 800 개 정도되는 상황에 부딫쳤다. 여기서는 두가지의 큰 부하가 있었다. 절대적인 <em>Vertex Skinning</em> 부하와 <em>Animator</em> 가 800개가 한꺼번에 계산되는 부하였다. <em>Vertex</em> 숫자는 <em>LOD</em> 베이커를 구해서 어떻게든 해결이 되었으나, 800개의 <em>Animator</em> 부하는 우회방법이 없었다. 즉 이는 <em>Vertex Shader</em> 나 <em>Compute Shader</em> 안에서 <em>AnimationClip</em> 의 정보들을 처리하는 정공법이 필요했다.</p>
 
 <p>하지만 기한도 얼마 남지않아 급한 와중에 저것들을 직접 코딩할 여유는 없었다. 게다가 처음 건드려보는 부분이라서 헤멜 코스트까지 합하면 굉장히 암울했다. 혹시 오픈소스가 있나 싶어서 생각을 해보았는데 예전에 <em>SkinRenderer</em> 를 직접 구현하면서 찾아본 오픈소스 레포지토리가 하나 있었다.</p>
-
-<h2>Github : <a href="https://github.com/chengkehan/GPUSkinning">GPUSkinning</a></h2>
+      <h2>
+        
+        
+          Github : <a href="https://github.com/chengkehan/GPUSkinning">GPUSkinning</a>
+        
+        
+      </h2>
+    
 
 <p>한 중국인이 개발한 스키닝 툴이다. 이는 두가지의 큰 기능을 담고있다. 하나는 <em>Vertex Shader</em> 에서 <em>Skinning</em> 처리를 해주는 기능과, 하나는 <em>AnimationClip</em> 들을 직접 샘플링해 바이너리 파일로 저장해 GPU 메모리에 텍스쳐의 형태로 올려두어 사용하는 기능이 있다.</p>
 
@@ -335,8 +347,14 @@
 <p>써보면서 이게 본격적으로 쓰려고 만들어진 코드는 아닌 것 같다는 생각이 들었다. 기본적인 캐싱도 안되있어서 약간의 삽질을 했었다.</p>
 
 <p>가장 큰 문제는 <em>AnimationClip</em> 이 많으면 많을수록 에디터, 런타임 로드시에 엄청나게 로딩이 걸린다. 아마 ScriptableObject 에 Serialization 으로 저장한 정보들이 많아서 그런듯 하다. 이는 따로 텍스쳐든 뭐든 Unity 에서 직접 관리하는 리소스로 바꾸어야 겠다.</p>
-
-<h2>참조</h2>
+      <h2>
+        
+        
+          참조
+        
+        
+      </h2>
+    
 
 <ul>
   <li><a href="https://github.com/chengkehan/GPUSkinning">Github : GPUSkining</a></li>
@@ -359,7 +377,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

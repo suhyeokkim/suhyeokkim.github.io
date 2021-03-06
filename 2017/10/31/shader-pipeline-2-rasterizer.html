@@ -319,8 +319,14 @@
 <p>쉐이더 파이프라인에서 <em>Rasterizer</em> 가 가지는 의미도 조금 특별하다. 이는 3차원 메시 데이터를 2차원 이미지 데이터로 바꿔주는 과정이기 때문에 <em>Geometry Stage</em> 에서 <em>Rasterizer Stage</em> 로 넘어가는 관문이다.</p>
 
 <p>또 하나 중요한 것은, <em>Rasterizer</em> 이전의 <em>Geometry Stage</em> 에서 각각 스테이지별로 넘어오던 데이터들을 <em>Interpolator</em> 라고 하는데, <em>Interpolator</em> 의 갯수들은 <em>render target</em> 의 <em>Pixel</em> 이 많으면 많을수록 큰 영향을 미친다. 왜냐하면 <em>Rasterizer</em> 는 단순히 <em>Geometry</em> 를 <em>Pixel</em> 로 변환하는 것만 있는게 아니라 <em>Vertex</em> 별로 가지고 있던 <em>Interpolator</em> 들을 <em>Pixel</em> 별로 보간하여 넣어주어야 하기 때문이다. 또한 <em>VRAM</em> 의 공간도 차지한다. 즉 갯수가 많으면 많을수록 데이터를 처리하는데 많은 비용이 든다는 것을 알 수 있다. 퍼포먼스를 생각한다면 최대한 갯수를 줄이는게 좋은 것 이다.</p>
-
-<h1>참조 자료</h1>
+      <h1>
+        
+        
+          참조 자료
+        
+        
+      </h1>
+    
 
 <ul>
   <li><a href="https://msdn.microsoft.com/ko-kr/library/windows/desktop/cc627092.aspx">MSDN : Rasterization Rules</a></li>
@@ -343,7 +349,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

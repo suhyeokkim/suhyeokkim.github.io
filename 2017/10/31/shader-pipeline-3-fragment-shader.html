@@ -446,8 +446,14 @@ fixed4 frag(v2f i)
 <p>해당 쉐이더는 단순하게 흰색만 출력해주는 쉐이더다. 그만큼 매우 단순하고 쉽다. 하지만 많은 것들을 표현하려면 <em>frag</em> 함수의 코드는 점점 길어질 것이다.</p>
 
 <p>또한 <em>Fragment Shader</em> 가 실행되는 시점에서 하드웨어, 드라이버 단계에서 지원하는 기능들도 있다. 일반적인 것들에 대해서 이야기 하자면 <em>Depth Buffer</em> 와 <em>Stencil Buffer</em> 가 있다. 두가지의 공통점은 각 픽셀 단위별로 데이터를 저장하는 버퍼들이다. <em>Depth Buffer</em> 는 <em>Clip-Space</em> 로 변환된 정점 값의 Z 값을 저장하는 용도로 쓰이는 버퍼로, 요즘 개발되거나 쓰이는 기술들은 <em>Depth Buffer</em> 를 엄청 많이 쓴다. 대표적으로 <em>Depth Pre-Pass</em> 가 있다. <em>Stencil Buffer</em> 는 픽셀별로 정수 데이터를 저장해서 사용하는 버퍼로써, 대부분 마스킹을 할 때 쓰인다.</p>
-
-<h1>참조 자료</h1>
+      <h1>
+        
+        
+          참조 자료
+        
+        
+      </h1>
+    
 
 <ul>
   <li><a href="https://www.slideshare.net/kyruie/everything-about-earlyz">SlideShader : Everything about Early-Z</a></li>
@@ -470,7 +476,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

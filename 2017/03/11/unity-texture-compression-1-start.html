@@ -415,9 +415,22 @@
   <div class="post-content" itemprop="articleBody">
     <p>Unity 로 게임을 개발하던 도중 텍스쳐 압축에 호기심이 생겨 공부하기 + 호기심을 풀기 위해 텍스쳐 압축에 대해 알아보기로 하였다.
 <!-- more --></p>
-<h2>1. 텍스쳐 압축(Texture Compression)이란?</h2>
-
-<h4>1) 뜻</h4>
+      <h2>
+        
+        
+          1. 텍스쳐 압축(Texture Compression)이란?
+        
+        
+      </h2>
+    
+      <h4>
+        
+        
+          1) 뜻
+        
+        
+      </h4>
+    
 
 <p>일반적으로 압축(Compression) 이란 원본 데이터를 조금 없에거나, 보존해서 파일의 크기를 줄이는 방법을 칭한다. 대표적인 예로 우리가 큰 파일을 전송할 때 압축을 해서 전송하는 경우가 있겠다.(zip, 7z) 이러한 파일 압축 기법들은 모든 데이터를 보존해야 하기 때문에 비손실 압축으로 되어 있다. 하지만 미디어 파일(오디오, 영상, 이미지) 들은 모든 데이터를 저장하지 않고 사람이 인식할 정도만 데이터를 저장하는 비손실 압축 기법이 대부분을 차지한다. (mp3, mp4, jpg) 비 손실 압축방법 중 잘 알려진 포맷은 PNG 포맷이 있다. JPEG, PNG 방식들은 통칭 이미지 압축(Image Compression) 이라 부른다. 하지만 텍스쳐 압축과 이미지 압축의 의미는 조금 다르다.</p>
 
@@ -432,8 +445,14 @@
 <p>텍스쳐 압축 알고리즘 자체는 이미지 압축 알고리즘이라 할 수 있다. 하지만 텍스쳐 압축 알고리즘이 이미지 압축과 다른 점은 3D 렌더링 시스템에서 빠르게 접근하기 위해 이미지의 픽셀별로 빠르게 접근이 가능하다는 것이다. 빠르게 접근 한다는 뜻은, <strong>압축된 텍스쳐 데이터 그대로에서 픽셀별로 데이터를 가져올 수 있어야 한다는 뜻이다.</strong></p>
 
 <p>대부분의 미디어 압축 포맷에 응용되어 상당히 많이 쓰이는 <a href="https://ko.wikipedia.org/wiki/%EB%9F%B0_%EB%A0%9D%EC%8A%A4_%EB%B6%80%ED%98%B8%ED%99%94">Run-Length Encoding</a>, <a href="https://ko.wikipedia.org/wiki/%ED%97%88%ED%94%84%EB%A7%8C_%EB%B6%80%ED%98%B8%ED%99%94">Huffman Encoding</a> 방식들은 Encode 된 상태에서 원하는 픽셀의 정보만 가져올려면 모든 데이터를 Decoding 한 후에 가져와야 한다.  즉 저 방식들이 들어간 압축 방식들은 빠른 무작위 접근이 힘들기 때문에 텍스쳐 압축 알고리즘에 응용될 수 없다.</p>
-
-<h4>2) 쓰임새 </h4>
+      <h4>
+        
+        
+          2) 쓰임새 
+        
+        
+      </h4>
+    
 
 <p>실제로 텍스쳐 압축을 사용하려면 요구조건이 몇가지 있다.</p>
 
@@ -479,7 +498,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

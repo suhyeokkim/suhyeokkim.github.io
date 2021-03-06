@@ -310,12 +310,25 @@
   <div class="post-content" itemprop="articleBody">
     <p>아는 지인이 좋다고 추천해서 jekyll+github 으로 블로그를 만들게 되었다.
 한글로 된 자료가 그리 많지 않아 직접 기록해보려 한다.</p>
-
-<h2>개요</h2>
+      <h2>
+        
+        
+          개요
+        
+        
+      </h2>
+    
 
 <p>원리는 간단하다. GitHub 에서 jekyll 로 만들어진 블로그 백엔드 서비스(BaaS)를 지원하고, 사용자는 일정한 형식으로 레포지토리를 구성하면 블로그가 짠! 하고 나타난다.
 <!-- more --></p>
-<h2>GitHub 에서 작업할 것들</h2>
+      <h2>
+        
+        
+          GitHub 에서 작업할 것들
+        
+        
+      </h2>
+    
 
 <p>순서는 아래와 같다.</p>
 
@@ -329,32 +342,62 @@
     </li>
   </ol>
 </blockquote>
-
-<h3>GitHub 가입하기</h3>
+      <h3>
+        
+        
+          GitHub 가입하기
+        
+        
+      </h3>
+    
 
 <p><img src="/images/github_homepage_signup.png" alt="Github.com" /></p>
 
 <p><a href="https://github.com">Github.com</a>에서 가입하면 된다. 가입 절차는 간단하니 직접 해보라.</p>
-
-<h3>GitHub 에 블로그 레포지토리 만들기</h3>
+      <h3>
+        
+        
+          GitHub 에 블로그 레포지토리 만들기
+        
+        
+      </h3>
+    
 
 <p>하나의 저장소를 만든다. 이때 중요한 것은 레포지토리 이름을 반드시 “<strong>(닉네임)</strong>.githum.com” 으로 적어주여야 한다.</p>
 
 <p><img src="/images/github_make_repo.png" alt="make_repo" /></p>
 
 <p>위와 같이 말이다. 우리는 원격 블로그 저장소를 만들었다. 이제 저장할 블로그 내용물을 만들 차례다.</p>
-
-<h2>블로그 만들기</h2>
+      <h2>
+        
+        
+          블로그 만들기
+        
+        
+      </h2>
+    
 
 <p>Github 에서는 Ruby 로 만들어진 Jekyll 프레임워크 기반의 블로그를 지원한다. 즉 Jekyll 로 블로그를 만들어 GitHub 레포지토리에 올리면 잘 보인다. 만들어진 GitHub 레포지토리를 들어가보면 기본적으로 만들어진 블로그가 있다. 포스팅이 가능하고 기본적인 정보를 올릴 수 있다.</p>
 
 <p>하지만 이 블로그는 만들어진 테마를 가져와서 세팅하는 것이기 때문에 내 멋대로 커스터마이징이 힘들다. 그렇다고 직접 스킨을 만들기에는.. 아무것도 모르는 사람이 처음부터 직접 만들기는 힘들다. 그러면 다른 사람이 만들어진걸 가져다 쓰는게 가장 빠르고 간편한 방법이다.</p>
-
-<h3>만들어진 테마 가져오기</h3>
+      <h3>
+        
+        
+          만들어진 테마 가져오기
+        
+        
+      </h3>
+    
 
 <p>우선 <a href="https://jekyllthemes.org">jekyll 테마 홈페이지</a>이나 github에서 민들어진 jekyll 테마들을 찾아볼 수 있다. github 에서 가져오거나, <a href="https://jekyllthemes.org">jekyll 테마 홈페이지</a>에서 직접 파일을 받아 쓸 수 있다.</p>
-
-<h4>1. GitHub 에서 테마 가져오기</h4>
+      <h4>
+        
+        
+          1. GitHub 에서 테마 가져오기
+        
+        
+      </h4>
+    
 
 <p>여러 방법이 있지만 필자는</p>
 
@@ -405,8 +448,14 @@ git remote add origin <span class="o">(</span>repository-url<span class="o">)</s
 <p>등록한 url 로 나오면 성공이다. 이제 연결을 해주었으니 원할 때 remote repository 로 보내면 된다.</p>
 
 <p>정석인 방법은 원본 프로젝트를 fork 해서 나의 레포지토리로 바꾼 후 수정을 거쳐 하는것이지만, 언제 스킨을 바꿀지 모르기에 위 방식대로 진행했다.</p>
-
-<h4>2. jekyll 테마 프로젝트를 구해서 설정하기</h4>
+      <h4>
+        
+        
+          2. jekyll 테마 프로젝트를 구해서 설정하기
+        
+        
+      </h4>
+    
 
 <p>이 방법도 크게 다르지 않다. 단지 local repository의 설정이 다를뿐이다. 아래와 같이 진행하면 된다.</p>
 
@@ -434,8 +483,14 @@ git remote add origin <span class="o">(</span>repository-url<span class="o">)</s
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">git remote add origin <span class="o">(</span>repository-url<span class="o">)</span> // 본인 블로그 레포지토리 url 을 등록시켜 준다.</code></pre></figure>
 
 <p>여기까지 하면 local repository 를 설정하는건 끝이다.</p>
-
-<h3>jekyll 개발환경 설정하기</h3>
+      <h3>
+        
+        
+          jekyll 개발환경 설정하기
+        
+        
+      </h3>
+    
 
 <p>테마까지 로컬 저장소에 설정을 해놓았으니 컴퓨터에서 가상의 서버를 돌려가면서 본인의 포스팅을 확인할 환경을 만들어 주어야 한다. 물론 세팅을 하지않고 포스팅을 할수는 있다. 변경하고 push 하고, 확인하고, 변경후 push하고 확인하는 루틴이 계속될 것이다.</p>
 
@@ -450,15 +505,20 @@ git remote add origin <span class="o">(</span>repository-url<span class="o">)</s
 <p>이제 jekyll 만 깔아주면 개발 환경 구축은 끝이다. 아래 명령어를 입력하자.</p>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">gem <span class="nb">install </span>jekyll</code></pre></figure>
-
-<h3>로컬 환경에서 블로그 확인하기</h3>
+      <h3>
+        
+        
+          로컬 환경에서 블로그 확인하기
+        
+        
+      </h3>
+    
 
 <p>모든 세팅이 다 끝났다면 이제 블로그를 직접 확인할 수 있다.</p>
 
 <p>jekyll serve</p>
 
 <p>위 명령어를 입력 후, 루프백 IP(127.0.0.1)나, localhost 도메인을 통해 블로그 서버를 직접 확인할 수 있다. 참고로 jekyll 은 4000 포트를 쓰니 참고 바란다.</p>
-
 
   </div>
 
@@ -477,7 +537,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

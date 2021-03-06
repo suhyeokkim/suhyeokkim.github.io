@@ -419,8 +419,14 @@
 <p><em>Delegate</em> 의 원조는 아무래도 <em>C Langauge</em> 에서의 함수 포인터의 개념일듯 하다. 이는 직접 함수의 메모리 주소로 들어가 대신 함수를 호출할 수 있는 언어에서 지원하는 기능으로써 <em>C</em> 로 개발된 API 들에서 쉽게 볼 수 있다.(<em>WinAPI</em> 가 가장 대표적) C# 에서는 함수 포인터 문법보다 더 문법을 확장하여 사용자가 쉽게 함수를 다른 곳에서 호출할 수 있도록 해준다.</p>
 
 <p><em>Delegate</em> 의 개념은 <em>Managed Language</em> 에서는 대부분 존재하는 개념 중 하나다. 이 것으로 보았을 때 꽤나 공통적으로 언어에서 지원하는 메커니즘이라는걸 알 수 있다.</p>
-
-<h2>행동을 대신하다. Delegate</h2>
+      <h2>
+        
+        
+          행동을 대신하다. Delegate
+        
+        
+      </h2>
+    
 
 <p>간단한 예제를 살펴보자.</p>
 
@@ -467,8 +473,14 @@
 <p>내부적으로 C# 에서는 <a href="https://msdn.microsoft.com/ko-kr/library/system.delegate(v=vs.110).aspx"><em>Delegate</em></a> 라는 클래스로 관리된다.</p>
 
 <p>그리고 일일히 타입을 지정하지 않고도 미리 지정된 대리자들을 사용가능하다. (참고 : <a href="https://msdn.microsoft.com/ko-kr/library/018hxwa8.aspx">Action</a>, <a href="https://msdn.microsoft.com/ko-kr/library/bb549151.aspx">Func</a> 등 많은 타입이 있다.)</p>
-
-<h2>특정 정보를 전달해준다. Event</h2>
+      <h2>
+        
+        
+          특정 정보를 전달해준다. Event
+        
+        
+      </h2>
+    
 
 <p>C# 에서 event 키워드는 대리자(Delgate) 선언에 같이 쓸 수 있는 키워드로, 선언된 대리자(Delgate)의 접근을 제한하는 역할을 한다. 근데 “접근을 제한할려면 접근 키워드를 쓰지 왜 event 라는 다른 키워드를 쓰는 것인가?” 라는 생각이 들 수도 있다. 아래 예제를 보면서 생각해보자.</p>
 
@@ -513,8 +525,14 @@
 <p>위의 코드는 event 의 접근 제한이 어디에 걸려있는지 알 수 있다. 자기 자신의 이벤트 대리자는 얼마든지 접근이 가능하지만, 외부에서 이벤트 대리자를 접근할 때는 대입 연산자는 불가능하고, 등록(+=) 하거나 취소(-=) 하는 연산자만 쓸 수 있다.</p>
 
 <p>즉 이벤트 키워드는 인스턴스 외부에서 대리자를 보호하는 역할을 하며, 외부에서 이벤트 키워드가 붙은 대리자 자체를 이벤트를 전달받는 용도로만 쓰도록 한다.</p>
-
-<h2>Serializable 한 이벤트 : UnityEvent</h2>
+      <h2>
+        
+        
+          Serializable 한 이벤트 : UnityEvent
+        
+        
+      </h2>
+    
 
 <p>위에서 C# 에서 지원하는 Event, Delegate 문법을 알아보았다. 저 문법들만 잘 활용해도 깔끔하게 스크립팅이 가능하지만, Unity 시스템에서는 조금은 모자란 부분이 있다. 그래서 Unity 에서는 C# 의 Event, Delegate 기능을 따로 구현을 해서 지원한다. 구현을 클래스로 제공하는데 이름은 <a href="https://docs.unity3d.com/ScriptReference/Events.UnityEvent.html">UnityEvent</a> 다.</p>
 
@@ -539,8 +557,14 @@
 <p>그리고 UnityEvent 클래스에 직접 정의된 <em>AddListener/RemoveListener</em> 은 비지속성 리스너를 취급하는 메소드다. 이들은 런타임에서 등록, 제거가 가능하다. 하지만 지속되지 않는(저장되지 않는) 리스너로 위에서 설명한 C# event, delgate 문법과 같은 기능을 한다.</p>
 
 <p>파라미터 설정도 사용자 마음대로 설정할수 있다. 자세한 설정 방법은 <a href="https://docs.unity3d.com/ScriptReference/Events.UnityEvent_1.html">UnityEvent</a> 를 참조하면 된다.</p>
-
-<h2>실제 사용 사례 및 장단점</h2>
+      <h2>
+        
+        
+          실제 사용 사례 및 장단점
+        
+        
+      </h2>
+    
 
 <p>C# Delegate 문법은 정말 무궁무진하게 쓰인다. 특히 일시적인 루틴이 아닌 비동기 처리가 필요할 때 유용하게 쓸 수 있다. 아래 예시를 보자.</p>
 
@@ -597,8 +621,14 @@
 <p>위에서 말한 내용을 예제에서 확인하면 편리할 것이다. 아래 Github 링크를 올려놓았으니 확인해보길 바란다.</p>
 
 <p>링크 : <a href="https://github.com/hrmrzizon/Extended-Roll-a-Ball">Extended-Roll-a-Ball</a></p>
-
-<h2>참조</h2>
+      <h2>
+        
+        
+          참조
+        
+        
+      </h2>
+    
 
 <ul>
   <li><a href="https://msdn.microsoft.com/ko-kr/library/ms173176.aspx">MSDN 방법: 대리자 선언, 인스턴스화 및 사용</a></li>
@@ -625,7 +655,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

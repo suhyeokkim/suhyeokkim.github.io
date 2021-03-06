@@ -418,8 +418,14 @@
 <!-- more -->
 
 <p><em>HBAO+</em> 는 NVidia 에서 만든 라이브러리로써, 현재 <a href="https://developer.nvidia.com/shadowworks"><em>ShadowWorks</em></a> 라는 프로젝트에 포함되어 있다. <a href="https://developer.nvidia.com/shadowworks"><em>ShadowWorks</em></a> 에는 <em>HBAO+</em> 뿐만 아니라 <em>ShadowLib</em> 이라는 그림자 렌더링을 위한 라이브러리로써 HFTS, PCSS, CSM 등 많은 기능들을 포함하고 있는 라이브러리가 있다. 현재 <em>ShadowLib</em> 은 오픈소스가 아니지만 이번에 알아볼 <em>HBAO+</em> 는 <em>Github</em> 에서 소스를 받을 수 있다. 이에 대한 자세한 사항은 <a href="https://developer.nvidia.com/gameworks-source-github">“Access GameWorks Source on Github”</a> 에서 확인할 수 있다.</p>
-
-<h3>Ambient Occlusion?</h3>
+      <h3>
+        
+        
+          Ambient Occlusion?
+        
+        
+      </h3>
+    
 
 <p><em>Ambient Occlusion</em> 이란 말은 처음 들어본 사람에게는 생소한 말이지만 한번이라도 들어본 사람들에게는 꽤나 익숙한 말일 것이다. 빠른 이해를 위해 아래 그림을 보자.</p>
 
@@ -434,8 +440,14 @@
 <p>글로 간단하게 설명하자면 물체가 모이면 좁은 공간이 생기게 되고, 구석이면 구석일 수록 직접 들어오는 빛은 있으나 반사되어 오는 빛이 적어지므로 어두워진다. 이를 말하는 것이바로 <em>Ambient Occlusion</em> 이다. <em>Ambient</em> 는 주변을 뜻하고, <em>Occlusion</em> 은 무언가 가리는 것을 뜻한다. 빛을 가려서 주변에 보이는 것이 어두워지는 것을 말하는 것이다.</p>
 
 <p>보통 <em>Ambient Occlusion</em> 은 개발시에 미리 시간을 들여 계산해 미리 저장해놓은 다음 실시간으로 저장된 데이터를 읽어서 사용하는 <em>precomputed AO</em> 방식으로 사용한다. 이유는 간단하다. 실시간으로 계산되기에는 요즘 컴퓨터로는 연산량을 버틸 수 없어서 그렇다. 월드가 복잡할수록, 넓을수록, 고퀄리티의 <em>AO</em> 를 계산할수록 시간이 대폭 증가한다. 하지만 이는 물체와 물체간의 <em>AO</em> 를 계산할때의 이야기이다.</p>
-
-<h3>Screen-Space AO?</h3>
+      <h3>
+        
+        
+          Screen-Space AO?
+        
+        
+      </h3>
+    
 
 <p><em>Deffered Rendering</em> 이 많이 쓰이면서 이를 위한 많은 기술들이 연구되었다. <em>Deffered Rendering</em> 의 대부분의 기술들은 이름앞에 보통 <em>Screen-Space</em> 라는 단어를 달고 나왔다. <em>Screen-Space</em> 란 <em>Geometry Stage</em> 아닌 <em>Rasterizer Stage</em> 로 넘어가서 처리되는 부분을 말한다. 말 뜻대로 해석한다면 2D 이미지의 공간이라는 뜻도 되겠다. 다만 <em>Pixel Shader</em> 로 넘어간다고 해서 <em>Depth(Z value)</em> 가 사라지지는 않기 때문에 이를 온전히 2D 공간이라고도 볼 수는 없다. 실제 좌표계는 <em>Clipping-Space</em> 로 되어 있을 것이다.(x,y,z 가 -1 ~ 1 범위의 좌표로 되어있는 공간, Driver API 에 따라 조금씩 다르다.) 쉽게 이해하기 위해 아래 그림을 보자.</p>
 
@@ -468,8 +480,14 @@
 <p>우리가 살펴볼 것은 가장 아래에 있는 <em>HBAO+</em> 에 대한 것들이다. <em>Resolution</em> 은 <em>Depth Buffer</em> 의 해상도를 뜻한다. 당연히 큰 사이즈여야 디테일한 것까지 표현할 수 있다. 가장 왼쪽에 있는 것은 시간이다. <em>HBAO+</em> 가 2.4ms 로 조금 느리지만 그 오른쪽에 있는 <em>Occlusion Samples Per AO Pixel</em> 의 숫자와 같이 비교하면 이야기가 다르다. 이는 한 픽셀별로 몇번 다른 텍스쳐의 데이터 샘플링 숫자다. <em>HBAO</em> 는 4번만 하지만, <em>HBAO+</em> 는 이의 9배인 36번이다. 샘플링을 많이하게 되면 더욱더 사실적인 <em>SSAO</em> 를 표현할 수 있다. 샘플링 숫자에 비하면 시간은 내어줄 수 있는 자원인 것이다.</p>
 
 <p>이 글에서는 <em>HBAO+</em> 를 분석하기 전 배경이 되는 개념에 대해서 알아보았다. 다음 <a href="/2017/11/15/hbao-plus-analysis-1">hbao plus analysis 1</a> 에서는 <em>HBAO+</em> 라이브러리에 대한 본격적인 분석을 해보려고 한다.</p>
-
-<h1>참조 자료</h1>
+      <h1>
+        
+        
+          참조 자료
+        
+        
+      </h1>
+    
 
 <ul>
   <li><a href="https://en.wikipedia.org/wiki/Ambient_occlusion">Wikipedia : Ambient Occlusion</a></li>
@@ -495,7 +513,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

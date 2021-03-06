@@ -525,8 +525,14 @@
 <p><em>Cascaded Shadow Mapping</em> 을 구글 번역기에 돌려보면 <em>“계단식 그림자 매핑”</em> 이라고 나온다. 조금 직관적이지 않은 말이지만 뜻 자체는 맞다. 간단하게 <em>Cascaded Shadow Mapping</em> 에 대하여 말하자면 넓은 환경의 그림자를 위해 거리에(거의 <em>Depth</em>) 따라서 여러개의 <em>Shadow Map</em> 을 생성하는 방법이다.</p>
 
 <p>넓은 범위의 <em>Directional Light</em> 가 닿는 그림자를 정확하게 표현하려면 꽤나 큰 크기의 <em>Shadow Map</em> 을 사용해야 한다. 하지만 <em>Cascaded Shadow Mapping</em> 을 사용한다면 여러개의 <em>Shadow Map</em> 을 사용하여 보다 조금의 메모리를 사용하여 넓은 범위의 그림자를 표현할 수 있다.</p>
-
-<h2>Shadow-map generation</h2>
+      <h2>
+        
+        
+          Shadow-map generation
+        
+        
+      </h2>
+    
 
 <p><em>Cascaded Shadow Mapping</em> 을 위한 <em>Shadow Map</em> 생성은 앞서쓴 <a href="/2017/11/30/what-is-shadow-mapping">글</a>에서 설명한 방법과 거의 유사하다. 앞서 여러개의 <em>Shadow Map</em> 을 생성하여 그림자를 표현한다고 언급했었다. 여러개의 <em>Shaodw Map</em> 을 생성하는 기준은 <em>View frustum</em> 을 <em>Depth</em> 를 기준으로 여러개로 쪼개어 각 쪼개진 <em>frustum</em> 을 기준으로 <em>Shadow Map</em> 을 그린다.</p>
 
@@ -561,12 +567,24 @@
 <p>위 그림과 같이 보통은 겹치는 부분이 생긴다. 사용시에는 <em>Depth</em> 에 따라서 다르게 사용하기 때문에 크게 문제는 없다. 사용시에는 <em>Depth</em> 값에 따라서 다른 텍스쳐를 가져오는 것과 텍스쳐를 샘플링할때 UV 값을 정점의 위치를 <em>Light-Space</em> 로 변환해서 변환된 정점의 위치의 X,Y 좌표를 UV 값으로 사용하면 된다. 다만 각각의 <em>Shadow Map</em> 마다 변환 행렬은 <em>Crop Matrix</em> 때문에 다르기 때문에 따로 접근해야 한다.</p>
 
 <p>자세한 사용법을 알고 싶으면 <a href="http://developer.download.nvidia.com/SDK/10/Samples/cascaded_shadow_maps.zip">NVidia : Cascaded Shadow Map Example</a>에서 소스를 받아 보면 된다.</p>
-
-<h2>추가</h2>
+      <h2>
+        
+        
+          추가
+        
+        
+      </h2>
+    
 
 <p><em>Cascaded Shadow Map</em> 을 <em>1 pass</em> 로 그리는 방법은 간단하다. 우선 <em>Shadow Map</em> 들을 <em>TextureArray</em> 를 통해 저장하고, <em>RenderTarget</em> 을 <em>Geometry Shader</em> 에서 각각의 렌더타겟별로 지오메트리를 추가해주어 각각의 <em>Pixel Shader</em> 를 실행시키면 된다. 자세한 코드는 <a href="https://www.slideshare.net/dgtman/implements-cascaded-shadow-maps-with-using-texture-array">여기</a>에서 볼 수 있다.</p>
-
-<h2>참조</h2>
+      <h2>
+        
+        
+          참조
+        
+        
+      </h2>
+    
 
 <ul>
   <li><a href="http://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf">NVidia : Cascaded Shadow Maps  </a></li>
@@ -593,7 +611,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

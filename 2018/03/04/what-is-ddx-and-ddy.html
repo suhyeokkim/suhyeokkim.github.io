@@ -319,8 +319,14 @@
 <p>4개의 픽셀 쉐이더가 첫번째 라인을 실행할 때 ddx 는 들어온 파라미터의 x축, 가로의 픽셀들의 파라미터의 차이를 구해 반환한다. 이는 <em>δ/δx</em> 의 의미와 같다. 즉 x 를 기준으로 편미분을 한것이라고 한다. 마찬가지로 ddy 는 y축을 기준으로 차이를 계산해 반환하는 키워드로 생각하면 된다.</p>
 
 <p><em>Shader Model 5.0</em> 부터는 <em>ddx_coarse/ddy_coarse</em> 와 <em>ddx_fine/ddy_fine</em> 으로 키워드가 나뉜다. 기존의 <em>ddx/ddy</em> 는 <em>ddx_coarse/ddy_coarse</em> 와 같다고 한다. <em>fine</em> 과 <em>coarse</em> 의 차이는 간단하다. 4개의 픽셀을 기준으로 각각의 차이를 전부 구하는게 <em>fine</em>, 한쪽의 차이만 구하는게 <em>coarse</em> 라고 한다. 자세한 것은 아래 참조에서 보는 것을 추천한다.</p>
-
-<h2>참조</h2>
+      <h2>
+        
+        
+          참조
+        
+        
+      </h2>
+    
 <ul>
   <li><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb509588.aspx">MSDN HLSL Intrisic : ddx</a></li>
   <li><a href="https://gamedev.stackexchange.com/questions/62648/what-does-ddx-hlsl-actually-do">gamedev.stackexchange.net : What does ddx (hlsl) actually do?</a></li>
@@ -346,7 +352,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

@@ -413,15 +413,26 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <p>모든 내용은 전부 Jacob Ström 홈페이지의 자료등을 참고했습니다.(<a href="http://www.jacobstrom.com/output.html">http://www.jacobstrom.com/output.html</a>)</p>
-
-<hr />
-
-<h2>2. ETC(Erricsson Texture Compression)</h2>
+    <p>모든 내용은 전부 Jacob Ström 홈페이지의 자료등을 참고했습니다.(<a href="http://www.jacobstrom.com/output.html">http://www.jacobstrom.com/output.html</a>)</p><hr />
+      <h2>
+        
+        
+          2. ETC(Erricsson Texture Compression)
+        
+        
+      </h2>
+    
 
 <p>처음 알아볼 압축 방식은 ETC(Erricsson Texture Comperssion) 이다. Jacob Ström<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote">1</a></sup>, Tomas Akenine-Möller 두 사람이 학부 실저에 고안해낸 PACKMAN(2004) 을 더 발전시켜 iPACKMAN(2005) 이라는 학명으로 SIGGRAPH 라는 유명한 컨퍼런스에 등장했다. 이 후 iPACKMAN 의 공식 명칭이 Errcisson Texture Compression(ETC1) 으로 되어 쓰이게 된다. ETC 를 알아보기 전, 먼저 고안된 PACKMAN 을 알아보기로 하자.
 <!-- more --></p>
-<h4>(1) PACKMAN?</h4>
+      <h4>
+        
+        
+          (1) PACKMAN?
+        
+        
+      </h4>
+    
 
 <p>PACKMAN 은 블록 방식의 텍스쳐 압축 기법으로, 직사각형 픽셀 그룹을 만들어 압축한다. RGB 채널이 각각 8bit인 픽셀 8개를(2*4=8) 총 32bit로 압축시킨다. 압축을 안할 시 192bit 이니 1/6 의 공간을 차지하게 압축한다.</p>
 
@@ -474,8 +485,14 @@
 </blockquote>
 
 <p>평균색은 RGB444 방식으로 12bit로 표현되며, table codeword 는 총 16개가 있으니 4bit 가 필요하다, 그리고 픽셀별 인덱스는 4가지의 숫자만 표현하면 되니 2bit 면 충분하다. 그래서 8개의 픽셀색을 표현하는데 필요한 비트는 12+4+2*8= 32bit 가 필요하다.</p>
-
-<h4>(2) iPACKMAN?</h4>
+      <h4>
+        
+        
+          (2) iPACKMAN?
+        
+        
+      </h4>
+    
 
 <p>PACKMAN 압축 방식은 문제가 있었다. PACKMAN 방식으로 압축된 이미지와 각 픽셀당 RGB444 로 압축된 이미지를 비교했을 때 휘도(luminance)만 보면 더 좋은 결과를 보여주었지만 색차(chrominance) 면에서 보면 더 안좋은 결과를 보였다. 특히 그라데이션 같이 색이 천천히 바뀌는 이미지에서 색차 밴딩(chrominance banding)이 심했다고 한다. RGB444 방식을 사용해서 작은 차이를 표현하기 어렵고, 한 블록(8개의 픽셀)당 한개의 RGB444 색만 사용하기 때문이다.</p>
 
@@ -531,8 +548,14 @@
     </tr>
   </tbody>
 </table>
-
-<h4>(3) 특징</h4>
+      <h4>
+        
+        
+          (3) 특징
+        
+        
+      </h4>
+    
 
 <p>ETC 의 특징은 아래와 같다.</p>
 
@@ -571,7 +594,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

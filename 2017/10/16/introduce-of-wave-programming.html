@@ -319,12 +319,24 @@
 <p><em>Shader Model 6.0</em> 은 DirectX12 과 Vulkan 에서 지원한다. DirectX 에서는 <em>Pixel Shader</em> 와 <em>Computer Shader</em> 에서 지원한다. Vulkan 에서는 모든 쉐이더 단계에서 지원한다. 그래픽 카드 벤더별로 조금씩 다른게 있으니 <a href="http://32ipi028l5q82yhj72224m8j.wpengine.netdna-cdn.com/wp-content/uploads/2017/07/GDC2017-Wave-Programming-D3D12-Vulkan.pdf">GDCVault(GDC 2017) : Wave Programming D3D12 Vulkan </a> 에서 참고 바란다.</p>
 
 <p>이 API 는 여러 쓰레드들 끼리 쉽게 협력하여 보다 효율적인 쉐이더 병렬 프로그래밍을 가능하게 해줄듯하다. 다만 <em>Shader Model 5.0</em> 에서 소개된 <em>ComputeShader</em> 만큼의 임팩트는 없다. 패러다임의 아주 큰 변화는 없다는 뜻이다. DirectX12 가 지향하는 드라이버 시스템에서의 부담을 줄이는 것과 <em>Shader Model 6.0</em> 은 서로 방향이 비슷하다고 생각된다.</p>
-
-<h1>추가</h1>
+      <h1>
+        
+        
+          추가
+        
+        
+      </h1>
+    
 
 <p><a href="/2018/02/19/gpu-branching-and-divergence">gpu branching and divergence</a>에서 <em>NVidia</em> 의 <em>Volta</em> 아키텍쳐에 대해서 잠깐 언급했었다. <em>Volta</em> 아키텍쳐는 <em>GPGPU</em> 기능을 강화하기 위해 <em>Thread</em> 의 관리 꽤나 향상시켰다. <em>Wave Intrisic</em> 들은 다른 <em>Thread</em> 와의 처리를 도와주기 때문에 <em>Shader Model 6.0</em> 을 지원하는 <em>GPU</em> 가 나온다면 재미있는 시도들이 나올듯 하다.</p>
-
-<h1>참조 자료</h1>
+      <h1>
+        
+        
+          참조 자료
+        
+        
+      </h1>
+    
 
 <ul>
   <li><a href="http://www.gdcvault.com/play/1024732/Advanced-Graphics-Tech-D3D12-and">GDCVault(GDC 2017) : D3D12 &amp; Vulkan Done Right</a></li>
@@ -350,7 +362,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

@@ -521,8 +521,14 @@
     <p><a href="/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0">frustum Traced Shadow with Irregular Z-Buffer 0</a> 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다.</p>
 
 <!-- more -->
-
-<h3>전체 시스템</h3>
+      <h3>
+        
+        
+          전체 시스템
+        
+        
+      </h3>
+    
 
 <p><a href="/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0">이전 글</a>에서 두가지 단계에 대해서 자세한 설명을 했었다. <em>Irregular Z-Buffer</em> 를 생성하고 <em>Visibility Test</em> 를 하는 것이였다. 실제 구현된 단계는 총 6개의 단계로 이루어진다고 한다.</p>
 
@@ -575,8 +581,14 @@
 <p>컬링을 된 이후에는 픽셀별로 <em>Visibility Test</em> 를 해준다. 이때 각각의 폴리곤들은 임의의 텍셀 집합을 가리기 된다. 그리고 각각의 텍셀이 가진 리스트를 순회하면서 <em>Visibility Test</em> 를 한다. 이때 <em>atomic OR</em> 을 사용하여 <em>Visibility Buffer</em> 에 기록한다. 여기서 가장 병목이 되는 구간은 각각의 폴리곤이 임의의 서로다른 길이를 가진 텍셀의 리스트를 커버링하여 각각의 쓰레드별로 실행되는 시간이 제각각이 된다. 문제는 시간이 제각각인 경우, 가장 느린 시간을 소모한 쓰레드를 기준으로 <em>divergence</em> 하여 각각의 텍셀의 리스트의 길이 중 가장 긴 길이의 시간으로 맞춰진다. 이는 최악의 상황을 유발할 수 있다.</p>
 
 <p>마지막으로 <em>Visibility Buffer</em> 를 사용하여 실제 오브젝트들을 렌더링하면 된다.</p>
-
-<h3>복잡도 계산</h3>
+      <h3>
+        
+        
+          복잡도 계산
+        
+        
+      </h3>
+    
 
 <p>위에서도 언급햇다시피 이 기법은 <em>N</em> 번의 <em>Visibility Test</em> 한다면, 시간 복잡도는 O(<em>N</em>) 과 같다. 여기서 <em>N</em> 을 분해하면 다음과 같다. O(<em>La</em> * <em>F</em>), <em>F</em> 는 <em>Light-Space</em> 의 <em>Fragment</em> 갯수이고, <em>La</em> 는 <em>Linked-List</em> 의 평균 길이다.</p>
 
@@ -585,8 +597,14 @@
 <p>하지만 위에서 언급했던 것과 같이 <em>SIMT</em> 기반의 GPU 에서는 O(<em>La</em> * <em>F</em>) 가 아닌 O(<em>Lm</em> * <em>F</em>) 이 될 수 밖에 없다. <em>Lm</em> 은 <em>Linked-List</em> 의 최대 길이다. 결국 퍼포먼스를 내기 위해선 <em>Lm</em> 의 길이를 줄이는 것이 가장 중요하다는 것이 된다.</p>
 
 <p>이번 글에서는 전체 시스템과 복잡도에 대해서 알아보았다. 다음은 더 디테일한 구현 부분의 내용을과 <em>Alpha</em> 처리에 대한 부분을 알아볼것이다.</p>
-
-<h2>참조</h2>
+      <h2>
+        
+        
+          참조
+        
+        
+      </h2>
+    
 <ul>
   <li><a href="http://cwyman.org/papers/tvcg16_ftizbExtended.pdf">Frustum-Traced Irregular Z-Buffers: Fast, Sub-pixel Accurate Hard Shadows</a></li>
 </ul>
@@ -619,7 +637,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

@@ -204,8 +204,14 @@
 
   <div class="post-content" itemprop="articleBody">
     <p>unirx 를 살펴보다 모르는 문법이 나와서 기록해둔다. <a href="https://msdn.microsoft.com/ko-kr/library/bb383977.aspx">MSDN 확장 메서드 문서</a> 를 참고했다.</p>
-
-<h2>C# 클래스 확장 메서드</h2>
+      <h2>
+        
+        
+          C# 클래스 확장 메서드
+        
+        
+      </h2>
+    
 
 <p>C# 3.0 문법부터 사용자가 기존에 정의된 클래스에 메소드를 확장 가능하게 되었다. obj-c 의 카테고리와 조금 비슷한것 같다. 자세한 사항은 코드와 함께 보자.
 <!-- more --></p>
@@ -250,8 +256,14 @@
 <span class="p">}</span></code></pre></figure>
 
 <p>사용 방법은 간단하다. 구현한 네임스페이스를 임포트 해주고, 확장한 메서드를 (인스턴스).(메서드) 형식으로 호출해주면 된다. 첫번째 타겟 클래스 인스턴스는 생략하고 파라미터를 넣어주면 된다. 다만 자기 자신의 함수를 호출해줄 때도 this 를 활용해 (인스턴스).(메서드) 형식으로 호출해주어야 한다.</p>
-
-<h2>주의점</h2>
+      <h2>
+        
+        
+          주의점
+        
+        
+      </h2>
+    
 
 <p>이 기능은 참 편하다. 쉽게 클래스의 기능을 확장하기 때문이다. 근데 잘못 남용하다가는 아주 개판이 날 가능성이 높다. MSDN 에서는 반드시 필요한 곳에서만 사용하라고 권장하고 있다. 그리고 내 생각도 별반 다를바 없다.</p>
 
@@ -272,7 +284,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

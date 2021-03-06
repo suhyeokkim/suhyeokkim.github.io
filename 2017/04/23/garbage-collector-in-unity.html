@@ -518,7 +518,14 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <h4>해당 글은 2017년 4월 23일에 작성되었습니다. 이후의 상황은 반영되지 않았습니다.</h4>
+    <h4>
+        
+        
+          해당 글은 2017년 4월 23일에 작성되었습니다. 이후의 상황은 반영되지 않았습니다.
+        
+        
+      </h4>
+    
 
 <p>C, C++ 을 제외한 C#, Java, Python 등 주류 애플리케이션 언어들은 대부분 메모리 관리를 garbage-collector(이하 GC) 라는 개념을 차용해 메모리를 관리한다. GC 는 특정한 메커니즘을 가지고 어플리케이션에서 사용하는 메모리를 관리해주는 개념이다. GC 는 언어별로, 구현된 사항별로 다르기 때문에 모든 개념이 통용되는 것은 아니지만 대부분 같은 개념에서 출발한다.</p>
 
@@ -547,8 +554,14 @@
 <p>reference-couting 이란 객체를 참조하는 횟수를 세서 참조 횟수가 0이 되면 할당을 해제하는 방식이다. 위의 예제에서는 첫줄에 오브젝트를 생성할 때 ref-count 를 1 올려주고, 사용이 끝난 후에는 <strong>release</strong> 메소드를 사용해 ref-count 를 1 낮추어 메모리를 해제하는 것을 보여준다.</p>
 
 <p>하지만 reference-couting 은 조금 불편하다. 사용자가 직접 카운트를 관리해야하는 것은 결국 메모리 관리 전략을 직접 짜는것이기 때문이다. 그 후 1990년 대 후반에 등장한 언어들은 전부 개념을 차용했는데 대표적인 언어가 위에서도 언급한 JAVA 와 C# 이다. 그 이후에도 많은 고수준 언어들이 GC 개념을 차용했다. 그 중 우리는 Unity 에서 쓰이는 GC 의 개념에 대해서 알아볼 것이다.</p>
-
-<h2>Mono-runtime 에서의 GC</h2>
+      <h2>
+        
+        
+          Mono-runtime 에서의 GC
+        
+        
+      </h2>
+    
 
 <p>Unity 는 여러 언어를 지원하기 위해 Mono 라는 오픈소스 언어 변환 프레임워크를 사용한다. 현재 Unity 에서 사용 가능한 언어들은 C#, JavaScript, Boo 가 있는데 전부 Mono 지원 언어의 하위 집합들이다. 즉 Unity 가 돌아가는 것은 Mono 기반의 가상머신에서 돌아가는 것이다. 이렇게 실제 runtime 상에서 돌아가는 가상머신을 <a href="http://www.mono-project.com/docs/advanced/runtime/">Mono-runtime</a> 이라 칭하는데 Mono 는 C# 을 주로 타게팅하고 만들어진 프레임워크이기 때문에 <a href="http://www.mono-project.com/docs/advanced/runtime/">Mono-runtime</a> 은 GC 를 탑재해야 했다.</p>
 
@@ -563,12 +576,24 @@
 <p>그나마 다행인 것은 최근 Unity 에서는 Mono 버젼업을 하겠다는 의지를 보였다. Unity 5.5 버젼에서는 Mono 컴파일러 버젼업을 했으며, 당장은 아니지만 이전에 Mono 업데이트를 하겠다는 글이 올라왔었다.(<a href="http://blogs.unity3d.com/2016/04/01/unity-joins-the-net-foundation/">joins-the-net-foundation</a>) 하지만 가장 최근에 릴리즈된 5.6 버젼에서는 Mono-runtime 자체는 그대로 구버젼을 쓰고 있다. 아직은 기다려야 할듯하다.</p>
 
 <p>현재 Unity 에서 쓰이는 Mono-runtime 에 대해서 알아보았다. 아래에서는 언제가 될지 모르는 Mono 프레임워크 업데이트에 대비해 <em>SGen</em> 의 간단한 동작방식과 쓰이는 여러 알고리즘에 대해서 알아볼것이다.</p>
-
-<h2>SGen 에서 쓰이는 GC 알고리즘</h2>
+      <h2>
+        
+        
+          SGen 에서 쓰이는 GC 알고리즘
+        
+        
+      </h2>
+    
 
 <p>SGen 에서는 전통적으로 많이 쓰이는 여러 알고리즘을 사용한다. 대부분 대중적으로 많이 알려진 알고리즘을 채용해 알아두면 꽤 많은 도움이 될것이다.</p>
-
-<h3><em>mark-and-sweep</em> GC</h3>
+      <h3>
+        
+        
+          <em>mark-and-sweep</em> GC
+        
+        
+      </h3>
+    
 
 <p><em>mark-and-sweep</em> 은 GC 알고리즘 중에서도 시초가 되는 알고리즘이며, 가장 간단한 GC 방법이다. 이름만 살펴보면 표시하고(<em>mark</em>) 쓸어담기(<em>sweep</em>) 로 알 수 있는데 조금 더 풀어보면, 메모리가 부족하거나 안쓰는 메모리를 없에야 할 때 사용하는 메모리를 표시하고(<em>mark</em>) 표시가 해제된 메모리 영역을 쓸어담아(<em>sweep</em>) 청소하는 방식이라 할 수 있다. 그림으로 표현하자면</p>
 
@@ -603,8 +628,14 @@
 </table>
 
 <p>위 그림은 1,2,3,4 숫자 순서대로 실행되는 그림인데, 저 순서대로 진행되어 중간중간에 16kb 가 비게 되어 메모리가 조각난다면(fragmentation), 16kb 보다 더 큰 메모리를 한꺼번에 할당할 때 문제가 생긴다. 그래서 상용에서 쓰이는 GC 가 <em>mark-and-sweep</em> 을 사용했을 때에 대비한 많은 해결책이 있는데,  단점을 보완한 개량된 여러 버젼의 알고리즘이 꽤 많이 존재한다. <em>mark-and-sweep</em> 자체를 개량한 <a href="https://en.wikipedia.org/wiki/Mark-compact_algorithm"><em>mark-and-compact</em></a> 알고리즘이 <em>mark-and-sweep</em> 과 가까운 알고리즘이다. 하지만 <em>SGen</em> 은 다른 알고리즘을 사용했다.</p>
-
-<h3><em>Copying</em> GC</h3>
+      <h3>
+        
+        
+          <em>Copying</em> GC
+        
+        
+      </h3>
+    
 
 <p>한글로는 객체 이동 기법이라 하고, 영어로는 “<em>Copying</em>” 이라고 한다. <em>mark-and-sweep</em> 에서 중간 중간 비는 메모리 파편화(fragmentation)를 메커니즘을 바꾸어 해결한 케이스인데 자세한 사항은 아래 그림을 보자.</p>
 
@@ -625,8 +656,14 @@
 </table>
 
 <p>위 그림에서는 3단계를 나누어 <em>Copying</em> GC 를 설명하고 있는데, 쓰레기 수집(collection) 전에 이미 흰색으로 마크된 닿을 수 없는(unreachable), 버려진 메모리와 현재 사용중인 메모리가 한 공간에 존재한다. 또한 첫번째 그림에는 없지만 현재 실제로 사용하는 메모리가 있는 공간 외에도 같은 크기의 크기를 가진 공간이 하나 더 존재한다. 두번째 그림을 보면 이해가 갈것이다. 쓰레기 수집(collection) 을 하게 되면, 사용하던 메모리들이 존재하던 공간말고 다른 공간에 사용하던 메모리들만 복사한다. 이때 버려진(unreachable, dead) 메모리들은 복사하지 않는다. 복사 과정이 끝나면 기존에 있던 메모리 정보들은 싹다 지운다. 다음 쓰레기 수집(collection) 과정에서 싹다 지워버린 공간(남겨진 공간)으로 복사 후 쓰던 공간을 지우는 것을 반복한다. 이렇게 복사(copying)하고, 지우고 하는 과정이 무한 반복되는 방법이 <em>Copying</em> GC 알고리즘이다.</p>
-
-<h3><em>Generational</em> GC</h3>
+      <h3>
+        
+        
+          <em>Generational</em> GC
+        
+        
+      </h3>
+    
 
 <p>위에서 GC 알고리즘 2가지에 대해서 알아 보았는데, 두 방법들이 메모리를 직접 관리하는 방법에 대한 것이라면, <em>Generational</em> GC 의 접근 방법은 조금 다르다. 일반적인 메모리의 생명 주기는 아주 짧게 있다가 사라지거나, 아주 오랜 기간 동안 쓰인다. 그래서 힙을 두개 이상의 세대(<em>Generational</em>)로 나누어 다른 방식으로 관리하는 “<em>generational hypothesis</em>“(세대 별 가설) 을 사용하는 것이 <em>Generational</em> GC 의 기본적인 접근 방식이다.</p>
 
@@ -649,12 +686,24 @@
 <p>어떤 규칙이나, 혹은 <em>Nursery</em> 의 공간이 거의 가득 찼을 때, 쓰레기 수집을 하고 몇번의 쓰레기 수집에서 살아남은 메모리 개체들을 <em>Nursery</em> 에서 <em>Major Heap</em> 으로 승진시킨다. 옆의 <em>Large Object Space</em> 는 지정된 크기(기본값은 8000바이트)를 초과하는 큰 메모리 개체들을 관리하는 공간이다.</p>
 
 <p><em>SGen</em> 에서 쓰이는 GC 알고리즘들에 대해 간단히 알아보았다. 자세히 알아보지 않는 이유는 어차피 몰라도 코드를 짤때도 몇가지 사항들만 조심한다면 크게 문제될 것은 없다. 하지만 프로그래머로써의 최소한의 상식들을 위해 알아보았다. 한가지 상식을 위해 덧붙이자면 <em>Boehm</em> 은 <em>mark-and-sweep</em> 을 기본 개념으로 차용한다. 아래 항목들에서는 실제 스크립팅에서 억울하게 버려지는 메모리를 발생시키는 코드들에 대해서 알아볼 것이다.</p>
-
-<h2>Unity 스크립팅에서 실질적인 가비지 컬렉션 원인 및 대안</h2>
+      <h2>
+        
+        
+          Unity 스크립팅에서 실질적인 가비지 컬렉션 원인 및 대안
+        
+        
+      </h2>
+    
 
 <p>위에서 우리는 실제로 코딩과는 그다지 상관없는 정보를 얻었다. 결국 프로그래머에게 가장 중요한것은 본인의 코딩이 어떤 영향을 끼치는 것인지가 중요하다. Unity 스크립팅에서 쓰레기를 남겨 청소를 하게 만드는(Garbage Collecting 을 유발하는) 몇가지 방법에 대해 알아보자.</p>
-
-<h3>ToString(), ToArray() 등의 데이터 컨버팅 메소드</h3>
+      <h3>
+        
+        
+          ToString(), ToArray() 등의 데이터 컨버팅 메소드
+        
+        
+      </h3>
+    
 
 <p>C# 에서 지원하는 대부분의 자료형들은 <em>ToString</em> 이라는 메소드를 지원한다. 이는 데이터를 문자열로 변환하는 메소드 인데, 정확히 말하자면 문자열을 새로 만들어(allocation) 그 문자열에다가 데이터의 타입, 값 자체를 쓴다. 우리가 주목할 부분은 문자열을 새로 만드는게 중요한 것이다. 대부분 코드에서는 <em>ToString</em> 을 남발하기 십상인데, 매 프레임마다 호출되는 <em>Update</em> 메소드에서 <em>ToString</em> 을 남발했다가는 꽤나 심한 프레임 드랍이 일어날 것이다.</p>
 
@@ -664,8 +713,14 @@
 <span class="p">}</span></code></pre></figure>
 
 <p>이렇게 To 접두사가 붙는 데이터 컨버팅 메소드는 메모리 공간을 새로 할당하는 메소드가 대부분이다. 최대한 사용을 자제해야 하고, <strong>List</strong> 컨테이너의 <em>ToArray</em> 메소드 같은 컨테이너 컨터팅 메소드는 대부분 <strong>ref</strong> 문법을 사용해 존재하는 배열에 값을 써주는 메소드가 존재한다.</p>
-
-<h3>string + 연산자 사용</h3>
+      <h3>
+        
+        
+          string + 연산자 사용
+        
+        
+      </h3>
+    
 
 <p>C# 은 문자열 자체도 객체로 보기 때문에 여러 기능을 사용할 수 있는데 그 중 편리하게 사용되는 기능은 ‘+’ 연산자 오버로딩이다. 이 기능은 문자열과 문자열을 합쳐주는 기능으로 사용시 조금 부담이 있다.</p>
 
@@ -680,8 +735,14 @@
 
 <span class="nf">print</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">"check : {0}.."</span><span class="p">,</span> <span class="n">data</span><span class="p">));</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">builder</span><span class="p">.</span><span class="nf">Append</span><span class="p">(</span><span class="s">"check : "</span><span class="p">).</span><span class="nf">Append</span><span class="p">(</span><span class="n">data</span><span class="p">).</span><span class="nf">Append</span><span class="p">(</span><span class="s">".."</span><span class="p">).</span><span class="nf">ToString</span><span class="p">());</span></code></pre></figure>
-
-<h3>박싱 : 스택 데이터를 <strong>object</strong> 로 변환시킬 때</h3>
+      <h3>
+        
+        
+          박싱 : 스택 데이터를 <strong>object</strong> 로 변환시킬 때
+        
+        
+      </h3>
+    
 
 <p>이 설명은 <a href="https://msdn.microsoft.com/ko-kr/library/yz2be5wk.aspx">MSDN</a> 에서 가져왔다.</p>
 
@@ -693,8 +754,14 @@
 <p><img src="https://i-msdn.sec.s-msft.com/dynimg/IC165510.jpeg" alt="MSDN : boxing" class="center-image" /></p>
 
 <p>위 코드처럼 객체가 아닌 stack 에 존재하는 데이터를 박싱할 때 사본은 heap 에 생성하므로써, 잠시 이용하고 버려지는 메모리가 발생하게 된다. 또한 이런 코드는 성능에도 영 좋지 않으니 남발하지 않는게 좋다.</p>
-
-<h2>참조</h2>
+      <h2>
+        
+        
+          참조
+        
+        
+      </h2>
+    
 
 <ul>
   <li><a href="https://ko.wikipedia.org/wiki/%EC%93%B0%EB%A0%88%EA%B8%B0_%EC%88%98%EC%A7%91_%28%EC%BB%B4%ED%93%A8%ED%84%B0_%EA%B3%BC%ED%95%99%29">위키피디아(한글) 쓰레기 수집기</a></li>
@@ -739,7 +806,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

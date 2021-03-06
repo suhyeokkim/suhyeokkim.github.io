@@ -311,8 +311,14 @@
     <p>Unity 는 코루틴이라는 괴상한(?) 코딩 방식을 지원한다. 맨 처음에 발견했을 때는 Synchronize 한 코딩 방식에 익숙해져 있어 상당히 낯설고 적응이 안됐다. 하지만 응용 범위를 늘려가다보니 상당히 편한 코딩 방식이라는 것을 깨닳았다. 한번 코루틴에 대해 알아보자.</p>
 
 <!-- more -->
-
-<h2>Coroutine 사용하기</h2>
+      <h2>
+        
+        
+          Coroutine 사용하기
+        
+        
+      </h2>
+    
 
 <p>아래 예제를 보자. 몇초를 기다리는 로직을 코루틴을 사용해 구현했다.</p>
 
@@ -421,8 +427,14 @@
 <p><img src="/images/unity-callback-order.png" alt="Unity callback order" class="center-image" /></p>
 
 <p>결국 단일 쓰레드에서 실행되는 시스템이면 코루틴을 쓴다고해서 혁신적인 성능향상을 기대하기는 힘들다. 단지 다른 Update 방식이라 생각하면 될듯하다.</p>
-
-<h2>Unity 에서 지원하는 코루틴 대기 제어 기능들</h2>
+      <h2>
+        
+        
+          Unity 에서 지원하는 코루틴 대기 제어 기능들
+        
+        
+      </h2>
+    
 
 <p>코루틴을 사용할 때 기다려야 할 때 여러 기능들을 제공한다.</p>
 
@@ -455,8 +467,14 @@
 <p>보통은 위 예제처럼 <em>http</em> 통신을 해서 데이터를 가져올 때 사용한다. 로컬 파일 시스템이나 ftp 프로토콜도 가능하다. 자세한 사항은 <a href="https://docs.unity3d.com/kr/current/ScriptReference/WWW.html">Unity WWW</a> 여기서 확인하라.</p>
 
 <p>이렇게 Unity 에서 기다림을 제어하는 기능에 대해서 알아보았다. 하지만 이 기능들 가지고는 약간 부족한 부분이 있을 것이다. 이를 위해 Unity 에서는 <strong>CustomYieldInstruction</strong> 이라는 기능을 제공한다.</p>
-
-<h2>CustomYieldInstruction 를 사용해서 커스터마이징하기</h2>
+      <h2>
+        
+        
+          CustomYieldInstruction 를 사용해서 커스터마이징하기
+        
+        
+      </h2>
+    
 
 <p><strong>CustomYieldInstruction</strong> 을 통해 기다리는 기능을 상당히 간단하게 구현이 가능하다. <strong>CustomYieldInstruction</strong> 는 <em>keepWaiting</em> 이라는 abstract 프로퍼티를 통해 값이 <em>false</em> 일 때는 기다리고, <em>true</em> 일 때는 넘어가는 간단한 <strong>IEnumerator</strong> 구현체다. 즉 <strong>CustomYieldInstruction</strong> 을 상속받아 <em>keepWaiting</em> 프로퍼티만 구현하면 끝이다. 아래 transform 의 scale 을 검사해서 일정 값을 초과하게 되면 다음으로 넘어가는 기능을 아래 예제에 첨부했다.</p>
 
@@ -485,8 +503,14 @@
 
 <p>사실 위의 소개한 기능중에 CustomYieldInstruction 이용해 구현한 기능이 있다. <strong>WaitUntil</strong> 과 <strong>WaitWhile</strong> 이다.
 <a href="https://docs.unity3d.com/ScriptReference/CustomYieldInstruction.html">Unity CustomYieldInstruction</a> 을 보면 Update 가 호출된 후, LateUpdate 를 호출하기 전 즉 타이밍이 적혀있는 그림에서 보았을 떄 GameLogic 레이어에서 체크가 된다는 것을 알 수 있다.</p>
-
-<h2>참조</h2>
+      <h2>
+        
+        
+          참조
+        
+        
+      </h2>
+    
 
 <ul>
   <li><a href="https://docs.unity3d.com/kr/current/Manual/Coroutines.html">Unity 코루틴 메뉴얼</a>
@@ -526,7 +550,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

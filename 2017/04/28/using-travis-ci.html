@@ -203,7 +203,14 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <h2>Travis-CI : Continuous Intergration</h2>
+    <h2>
+        
+        
+          Travis-CI : Continuous Intergration
+        
+        
+      </h2>
+    
 
 <p>다른 Github Repository 를 살펴보면서 많은 곳에서 Travis-CI 를 사용하고 있어 한번 시도해 보았다. 블로그를 만들기 이전부터 CI 에 대한 소식은 많이 들었지만 직접 사용해보는 것은 처음이였다. 약간 삽질을 했지만 영어만 읽을 줄 안다면 필요 없는 삽질이였다. 삽질할 때는 몰랐지만 Travis-CI 에서 제공하는 웹 문서들이 꽤 친절하게 되어있어 잘 읽고 따라하면 문제없이 세팅을 할 수 있을것이다. 물론 영어다.(<a href="https://docs.travis-ci.com/">Documentation</a>)</p>
 
@@ -214,8 +221,14 @@
 <p>Travis-ci 를 연동하고 활용하는 방법에 대해서 알아보자.</p>
 
 <!-- more -->
-
-<h2>Github Repository -&gt; Travis-CI 연동하기</h2>
+      <h2>
+        
+        
+          Github Repository -&gt; Travis-CI 연동하기
+        
+        
+      </h2>
+    
 
 <p>세가지 세팅이 필요하다. 저장소의 루트 디렉토리에 .travis.yml 의 이름을 가진 빌드스크립트를 넣어주어야 하고, <a href="https://www.travis-ci.org/">https://www.travis-ci.org/</a> 에 들어가 Github 계정으로 로그인 후 Travis-ci 사용 설정을 해주고, Travis-ci 홈페이지에 가서 사용 설정을 해주면 된다. <a href="https://www.travis-ci.com/">https://www.travis-ci.com/</a> 은 결제가 필요한 Pro 기능이니 결제할게 아니면 <a href="https://www.travis-ci.org/">https://www.travis-ci.org/</a> 로 들어가라.</p>
 
@@ -244,8 +257,14 @@
 <p><img src="/images/travis_ci_my_accounts.png" alt="Travis-CI my accounts" /></p>
 
 <p>위의 사진은 필자의 Travis-CI 설정 화면이다. 여기까지 설정을 한 후 해당 레포지토리에 푸쉬를 하면 알아서 트리거가 되어 빌드 스크립트에 적힌대로 빌드를 실행한다.</p>
-
-<h2>빌드스크립트를 활용한 자동 배포 시스템 만들기</h2>
+      <h2>
+        
+        
+          빌드스크립트를 활용한 자동 배포 시스템 만들기
+        
+        
+      </h2>
+    
 
 <p>간단하게 활용하는 방법에 대해서 알아볼텐데 빌드 스크립트를 활용하여 Travis-CI 에서 빌드가 끝나면 Github 레포지토리에 푸시하는 스크립트를 만드는 방법에 대해서 알아볼 것이다.</p>
 
@@ -321,8 +340,14 @@ branches:
 <p><img src="/images/travis-ci_env_settings.png" alt="Travis-pro authorize" /></p>
 
 <p>이렇게 설정을 하면 after_success 이후의 명령들을 잘 실행될 것이다. <em>TRAVIS_REPO_SLUG</em> 라는 환경변수도 있는데 이는 Travis-CI 에서 지원하는 환경 변수다. 링크를 참조하라. (<a href="https://docs.travis-ci.com/user/environment-variables/">링크</a>)</p>
-
-<h1>참조</h1>
+      <h1>
+        
+        
+          참조
+        
+        
+      </h1>
+    
 
 <ul>
   <li><a href="https://github.com/yous/whiteglass">jekyll 테마 : whiteglass</a></li>
@@ -347,7 +372,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

@@ -315,24 +315,42 @@
 <p>이 게시물에서는 Graphics API 를 공부하면 처음 나오게는 지식들(정점, 폴리곤, UV)에 대해서 알아보고 Unity 에서 이 지식들을 시험해보겠다.</p>
 
 <!-- more -->
-
-<h3>공간을 구성하는 기본 단위 : 정점(vertex)</h3>
+      <h3>
+        
+        
+          공간을 구성하는 기본 단위 : 정점(vertex)
+        
+        
+      </h3>
+    
 
 <p>가장 먼저 알아야것은 정점이다. 영어로는 <em>vertex</em> 인데 이 단어는 다양한 이론에서 상이하게 다뤄지므로 헷갈릴 수도 있다. 우선 그래픽스 분야에서의 정점은 3차원 공간에서 특정 위치를 나타내는 단어다. 수학에서 흔이 쓰이는 점의 정의와 비슷하다.</p>
 
 <p><img src="/images/position_p.png" alt="Position P in math" class="center-image" /></p>
 
 <p>또한 정점은 위의 수학의 점 P 의 정의와 같은 말이다. 모든 3차원 상의 물체는 점으로 이루어져 있다. 하나하나의 점이 특정한 구성 방식으로 모여 선과 면을 정의한다. 정점은 모든 물체를 표현하기 위한 기본적인 단위다.</p>
-
-<h3>그려지는 면의 기본 단위 : 삼각형(polygon, triangle)</h3>
+      <h3>
+        
+        
+          그려지는 면의 기본 단위 : 삼각형(polygon, triangle)
+        
+        
+      </h3>
+    
 
 <p>위에서 정점들은 물체를 표현하기 위한 기본적인 단위라고 설명했다. 그리고 물체를 표현하려면 표면(surface)를 표현할 수 있어야 한다. 정점을 가지고 표면을 정의할 수 있는 방법은 여러가지가 있지만 정점을 최소의 갯수만 가지고 표현하려면 삼각형으로 표현하는 것이 최적의 방법이다. 그리고 Graphics API 에서도 삼각형을 기본 단위로 물체를 그린다.</p>
 
 <p><img src="/images/rabbit_polygons.jpg" alt="Rabbit" class="center-image" /></p>
 
 <p>위와 같이 모든 물체는 삼각형을 기본으로 만들어진다.</p>
-
-<h3>그려지는 정보의 집합체 : Mesh</h3>
+      <h3>
+        
+        
+          그려지는 정보의 집합체 : Mesh
+        
+        
+      </h3>
+    
 
 <p>이 개념은 위에서 언급한 개념들과는 조금 다르다. 점이나 삼각형은 위상 수학에서 나올법한 내용이지만 Mesh 에 대한 내용은 소프트웨어에서 나온 개념이다. Mesh 는 3D 오브젝트가 그려질 때 필요한 정보들을 담아놓고 있는 정보 덩어리라고 할 수 있다. 위에서 언급한 여러개의 정점들과 폴리곤에 대한 여러 정보들을 가지고 있다. 위의 토끼는 결국 여러 정점들과 여러 폴리곤 정보들로 그려진다고 볼 수 있다.</p>
 
@@ -408,7 +426,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

@@ -420,8 +420,14 @@
 <p>여러가지 세팅을 해주어야 하니 차근차근 살펴보자.</p>
 
 <!-- more -->
-
-<h1>Unity 프로젝트 설정하기</h1>
+      <h1>
+        
+        
+          Unity 프로젝트 설정하기
+        
+        
+      </h1>
+    
 
 <p>우선 외부 파일을 세팅하기전에 Unity 프로젝트에서 간단한 세팅을 해주어야 한다. 우선 상위 메뉴의 Edit -&gt; ProjectSettings -&gt; Editor 를 선택해 Inspector 창을 보자. 아래 방법을 따라하면 된다.</p>
 
@@ -436,12 +442,24 @@
 <p><img src="/images/unity_editor_asset_serialization.png" alt="Unity Asset Serialization" class="center-image" /></p>
 
 <p>여기까지 Unity 프로젝트에서 설정해주어야 하는 것들은 끝이다. 다음은 외부에서 설정해주어야 하는 것들을 살펴보자.</p>
-
-<h1>Git 설정 파일 추가하기</h1>
+      <h1>
+        
+        
+          Git 설정 파일 추가하기
+        
+        
+      </h1>
+    
 
 <p>Git 에서는 여러 방식의 설정을 지원한다. 그 중에서도 우리는 많이 쓰이는 두가지 방식의 설정에 대해서 알아볼 것이다. 두가지 방식 모두 파일에 설정 정보를 저장한 후 해당 파일이 스테이징 공간에 들어가게 되면 로컬 레포지토리에 바로 적용된다. 보통은 맨 처음 커밋에 넣어주어 앞으로의 커밋들에 대비한다.</p>
-
-<h2>스테이징 공간의 이름 필터 : .gitignore</h2>
+      <h2>
+        
+        
+          스테이징 공간의 이름 필터 : .gitignore
+        
+        
+      </h2>
+    
 
 <p>Git 에서 새로운 커밋을 만들 때, 파일들을 임시로 담아놓는 공간이 있다. 이 공간을 스테이징 영역이라 하는데 Git 로컬 레포지토리에 등록되어 있고 내용이 변경된 파일이나, 아예 등록되지 않은 파일을 넣어서 커밋으로 만드는 임시 공간이다. 비유를 하자면 장바구니(stage area)에 미리 커밋할 것을 넣어놓고 사는(commit) 행위로 비유할 수 있겠다. 하여튼 스테이징 영역에서 무언가 필터 역할을 하는 특수 옵션 파일이 .gitignore 인데 무언가 무시한다는 것만 알 수 있다.</p>
 
@@ -459,8 +477,14 @@ Temp/*
 <p>위 예시들은 Unity 프로젝트에서 Git 리모트 레포지토리에 보내면 안되는 부모 디렉토리 이름들이다. Library 디렉토리는 프로젝트의 캐시 데이터로써 프로젝트를 실행하려면 Unity 에서 계산을 해서 만드는 파일이지만 굳이 없어도 알아서 만들어지기에 꼭 필요는 없는 파일이다. 자세한 사항은 <a href="/2017/04/02/unity-project-directory-structue">링크</a>에서 확인하라. * 의 뜻은 앞에 적어도 한개 이상의 아무 글자가 있어야 한다는 뜻이다. 즉 Library 디렉토리의 하위의 파일들을 포함한다는 뜻이고, .gitignore 파일안에 있으니 하위의 파일들을 전부 제외한다는 뜻이다.</p>
 
 <p>이런 여러 패턴들을 저장해 쓸데없는 파일들을 스테이징 영역에 들어갈 후보에서 제외해 편하게 스테이징 작업을 할 수 있게 해준다. 거의 모든 프로젝트에서 메타파일들을 제외하기 위해 쓴다. 그만큼 굉장히 유용한 옵션이다. 그리고 굳이 하나하나 패턴을 추가해줄 필요 없이 자동으로 패턴을 가져올 수 있는 사이트가 있다. 바로 <a href="https://www.gitignore.io/">https://www.gitignore.io/</a> 다. 여러 플랫폼을 설정해줄 수 있으니 사용하는 것에 따라 다르게 설정해주면 된다.</p>
-
-<h2>디렉토리별 속성 지정 : .gitattributes</h2>
+      <h2>
+        
+        
+          디렉토리별 속성 지정 : .gitattributes
+        
+        
+      </h2>
+    
 
 <p>Git 시스템은 텍스트 파일을 기준으로 만들어져 있다고 위에서 설명했었다. 그래서 파일을 병합(merge)를 할때나 비교(diff) 할 때 바이너리 파일이면 문제가 있다고도 말했다. .gitattributes 는 디렉토리나 파일 단위로 Git 에서 설정한 것과 다른 설정을 할수도 있다. 파일이 위치하는 디렉토리부터 병합 도구(mergetool)과 비교 도구(difftool) 을 확장자별로 설정할 수도 있고, 파일의 유형을 설정해서 Git 시스템이 다르게 동작하게도 할 수 있다. 즉 디렉토리별로 설정을 하는 방법이라 보면 될듯하다.</p>
 
@@ -507,8 +531,14 @@ Temp/*
 <p>lfs 가 설정되어 있고, lfs 필터를 사용하는 파일이 존재하면 파일마다 서명을 하는지는 모르겠지만 저 창이 뜨면서 계~속 비밀번호를 치라고 한다. 굉장히 귀찮다. 그래서 Github 에서는 사용자들을 위한 Credential-Manager 를 사용하라고 권고한다. 여러 방법이 있지만 가장 좋은 방법은 OS 자체에서 제공하는 방법을 사용하는 것이다. Windows 사용자들은 이 <a href="https://help.github.com/articles/caching-your-github-password-in-git/">링크</a>를 OSX 나 리눅스 사용자들은 이 <a href="https://help.github.com/articles/updating-credentials-from-the-osx-keychain/">링크</a>를 확인하면 된다.</p>
 
 <p>여기까지 두가지 옵션을 설정하는 방법에 대해서 알아보았다. UnityYAMLMerge 와 LFS 설정이 되어 있으면 <a href="https://gist.github.com/nemotoo/b8a1c3a0f1225bb9231979f389fd4f3f">.gitattributes</a> 와 <a href="https://www.gitignore.io">.gitignore</a> 파일만 Git 시스템에 넣어주면 앞으로 편하게 설정이 가능하다. 파일을 구할 수 있는 링크를 이름에 넣어놓았으니 직접 받아서 가져가면 된다.</p>
-
-<h2>참조</h2>
+      <h2>
+        
+        
+          참조
+        
+        
+      </h2>
+    
 
 <ul>
   <li><a href="https://www.gitignore.io">www.gitignore.io</a></li>
@@ -535,7 +565,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

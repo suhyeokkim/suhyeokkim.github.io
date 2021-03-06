@@ -206,14 +206,26 @@
     <p>※ <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html">open-std : EASTL</a>의 내용을 번역하는 포스팅입니다. 시간이 꽤 지난 내용으로 글의 내용은 현재 상황과 다를 수 있습니다.</p>
 
 <!-- more -->
-
-<h2>Abstract</h2>
+      <h2>
+        
+        
+          Abstract
+        
+        
+      </h2>
+    
 
 <p>Gaming platforms and game designs place requirements on game software which differ from requirements of other platforms. Most significantly, game software requires large amounts of memory but has a limited amount to work with. Gaming software is also faced with other limitations such as weaker processor caches, weaker CPUs, and non-default memory alignment requirements. A result of this is that game software needs to be careful with its use of memory and the CPU. The C++ standard library’s containers, iterators, and algorithms are potentially useful for a variety of game programming needs. However, weaknesses and omissions of the standard library prevent it from being ideal for high performance game software. Foremost among these weaknesses is the allocator model. An extended and partially redesigned replacement (EASTL) for the C++ standard library was implemented at Electronic Arts in order to resolve these weaknesses in a portable and consistent way. This paper describes game software development issues, perceived weaknesses of the current C++ standard, and the design of EASTL as a partial solution for these weaknesses.</p>
 
 <p>게이밍 플랫폼과 게이밍 디자인은 다른 플랫폼과 차별화된 것들을 요구한다. 가장 중요한 것은 게임 소프트웨어는 한정된 양의 많은 메모리를 필요로 한다. 또한 게이밍 소프트웨어는 부족한 캐시 히트, 부족한 코어 연산량, 정렬되지 않은 메모리 상태에 직면해있다. 이의 결과는 게임 소프트웨어가 메모리와 CPU의 사용을 조심하도록 만들었다. C++ 표준 라이브러리의 컨테이너, 반복자, 알고리즘은 게임 프로그래밍의 필요의 여러 방면으로 인해 잠재적인 유용함을 가진다. 하지만 표준 라이브러리의 약점과 누락은 고성능이 필요한 게임 소프트웨어의 경우 이상적이지 않다. C++ 표준 라이브러리를 위한 부분적으로 재설계된, 확장된 대체제:EASTL은 portable 하고 일관적인 방법으로 표준 STL의 약점을 보완하기 위해 구현되었다.</p>
-
-<h2>Introduction</h2>
+      <h2>
+        
+        
+          Introduction
+        
+        
+      </h2>
+    
 
 <p>The purpose of this document is to explain the motivation and design of EASTL so that it may help the C++ community better understand the needs of game software development. This document is not a proposal, though some of EASTL’s changes and extensions could form the basis for such discussions. The large majority of EASTL would be useful to any kind of C++ software development.</p>
 
@@ -248,8 +260,14 @@
 <p>Throughout this document there are references to the Appendix. The Appendix contains supplementary material which provides more detail about some item of discussion. This material is placed there in order to avoid getting in the way of the primary text, as the material is a bit verbose and is sometimes tangential to the discussion of EASTL. It was nevertheless felt to be important that the Appendix exist in order to provide a better understanding of practical game development issues.</p>
 
 <p>이 문서를 전체에 Appendix에 대한 참조가 있다. Appendix에는 특정 경우에 대한 논의에 대한 더 디테일한 정보를 담고있는 참고자료가 있다. 이 참고자료는 본문의 주된 논의인 EASTL에서 벗어나지 않고, 디테일한 정보를 담기 위하여 분리되었다. 그럼에도 불구하고 실제 게임 개발의 문제에 대한 더 나은 이해를 제공하기 위해 Appendix를 수록했다.</p>
-
-<h2>Motivation for EASTL</h2>
+      <h2>
+        
+        
+          Motivation for EASTL
+        
+        
+      </h2>
+    
 
 <p>The following is a listing of some of the reasons why std STL and its current implementations are not currently ideal for game development. There are additional reasons, but the list here should hopefully convey to you some sense of the situation. Each of the items listed below deserves a document of its own, as a single sentence alone cannot fully convey the nature or significance of these items. Some of the items refer to the STL design, whereas some of the items refer to existing STL implementations. It would be best if these were discussed independently, but to many users this distinction is often of little practical significance because they have little choice but to use the standard library that comes with their compiler.</p>
 
@@ -281,8 +299,14 @@ The STL implementations that are provided by compiler vendors for the most popul
   <li>1234
 The STL puts an emphasis on correctness before practicality and - performance. This is an understandable policy but in some cases (particularly <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#std_allocator">std::allocator</a>) it gets in the way of usability and optimized performance.</li>
 </ul>
-
-<h2>Differences between std STL and EASTL</h2>
+      <h2>
+        
+        
+          Differences between std STL and EASTL
+        
+        
+      </h2>
+    
 
 <p>First, EASTL provides a set of containers, iterators, and algorithms that are identical in interface and behavior to std STL versions with one exception: allocators. EASTL has a different allocator specification which is simpler, more efficient, more flexible, and easier to use than std::allocator. Both <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#std_allocator">std::allocator</a> and <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#eastl_allocator">eastl::allocator</a> are described below. EASTL follows the <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#defect_report_list">defect reports</a> and <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#TR1">TR1</a> as well. EASTL additionally provides and uses some of the TR1 functionality as well, including most significantly the smart pointers, type traits, and hashing containers.</p>
 
@@ -291,23 +315,52 @@ The STL puts an emphasis on correctness before practicality and - performance. T
 <p>Third, EASTL provides additional containers and algorithms that don’t correspond to std STL. These include intrusive_list, vector_map, fixed_hash_set, slist, ring_buffer, radix_sort, has_trivial_relocate, and others. These are described in detail <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#EASTL_additions">below</a>.</p>
 
 <p>There are additional differences not related to the functional specification. They include a programming philosophy that emphasizes readability, consistency, and optimal performance on limited hardware. See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html#Appendix_23">Appendix item 23</a>.</p>
-
-<h2>EASTL functionality summary</h2>
+      <h2>
+        
+        
+          EASTL functionality summary
+        
+        
+      </h2>
+    
 
 <p>(이곳은 생략합니다.)</p>
-
-<h2>Game software issues</h2>
-
-<h2>std::allocator</h2>
-
-<h2>eastl::allocator</h2>
-
-<h2>참조</h2>
+      <h2>
+        
+        
+          Game software issues
+        
+        
+      </h2>
+    
+      <h2>
+        
+        
+          std::allocator
+        
+        
+      </h2>
+    
+      <h2>
+        
+        
+          eastl::allocator
+        
+        
+      </h2>
+    
+      <h2>
+        
+        
+          참조
+        
+        
+      </h2>
+    
 
 <ul>
   <li><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html">open-std : EASTL</a></li>
 </ul>
-
 
   </div>
 
@@ -326,7 +379,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

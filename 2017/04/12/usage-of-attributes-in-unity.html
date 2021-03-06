@@ -205,8 +205,14 @@
   <div class="post-content" itemprop="articleBody">
     <p>C# 문법은 클래스, 구조체, 열거형, 멤버 변수, 메소드등 여러 타입에 표시를 하는 기능을 제공한다. 이 표시들을 C# 문법에서는 <strong>Attribute</strong>(속성) 라고 칭한다. 그리고 이 속성을 사용하여 Unity 에서는 많은 기능들을 제공한다. 아래 우리가 가장 많이 볼만한 속성을 사용한 예제가 있다.
 <!-- more --></p>
-
-<h2>Property 직렬화 제어</h2>
+      <h2>
+        
+        
+          Property 직렬화 제어
+        
+        
+      </h2>
+    
 
 <figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="c1">// Unity 시스템에 데이터를 직렬화해 멤버변수 초기값을 지정한다.</span>
 <span class="p">[</span><span class="n">UnityEngine</span><span class="p">.</span><span class="n">SerializeField</span><span class="p">]</span>
@@ -254,8 +260,14 @@
 <p>위 세개의 속성들로 Unity 직렬화 시스템을 제어할 수 있다. <strong>UnityEngine.SerializeField</strong> 는 직렬화된 데이터가 필요할 때, <strong>System.NonSerialized</strong> 는 직렬화된 데이터가 전혀 필요 없을 때, <strong>UnityEngine.HideInInspector</strong> 는 개발 도중에 잠시 직렬화된 데이터와 연결을 끊을 때 사용한다.</p>
 
 <p>필자는 확실한 것을 지향하기 때문에 <a href="https://docs.unity3d.com/kr/current/ScriptReference/HideInInspector.html"><strong>UnityEngine.HideInInspector</strong></a> 를 잘 사용하진 않는다. 링크를 타고 들어가면 나오지만 정확한 행동의 정의되지 않았다. 단지 숨기기만 하는건지, 직렬화된 데이터를 없에는건지 설명이 명확하게 되어있지 않다. 또한 현재쓰는 Unity 5.5.2 버젼으로 테스트를 해보면 <strong>UnityEngine.HideInInspector</strong> 가 붙은 직렬화 데이터가 초기화 되는 경우가 있다.</p>
-
-<h2>사용자 정의 자료형 직렬화</h2>
+      <h2>
+        
+        
+          사용자 정의 자료형 직렬화
+        
+        
+      </h2>
+    
 
 <p>Unity 는 위 예제에서 보다시피 C# 의 기본 자료형과 Unity 에서 지원하는 자료형들의 변수를 Inspector 에서 에디팅할 수 있게 지원한다. 아래 스크립트와 그림을 보자.</p>
 
@@ -305,10 +317,22 @@
 <p>위와 같이 속성 하나만 붙여주면 Inspector 에서 에디팅이 가능하고 직렬화가 되어 자동으로 초기화가 가능해진다. 아래 그림과 같이 보일 것이다.</p>
 
 <p><img src="/images/unity_support_inspector_2.png" alt="Inspector" class="center-image" /></p>
-
-<h2>CustomPropertyDrawer 를 이용하여 변수의 Inspector 바꾸기</h2>
-
-<h4>클래스를 사용하여 커스터마이징하기</h4>
+      <h2>
+        
+        
+          CustomPropertyDrawer 를 이용하여 변수의 Inspector 바꾸기
+        
+        
+      </h2>
+    
+      <h4>
+        
+        
+          클래스를 사용하여 커스터마이징하기
+        
+        
+      </h4>
+    
 
 <p>보통 클래스나 구조체를 사용해 자료를 저장하는 경우는 꽤 많다. 그리고 데이터가 많아지면 많아질 수록 넣어야할 변수는 많아지고 Inspector 창은 혼란의 도가니에 빠지게 된다. 아래와 같이 말이다.</p>
 
@@ -371,8 +395,14 @@
 <p>위 코드는 한 변수당 한줄이였던 방식에서 데이터를 한줄에 넣어주는 코드다. <strong>EditorGUI.PrefixLabel</strong> 메소드를 통해 앞에 표시되는 이름을 보여주고, 숫자를 넣어주는 부분의 넓이를 확보하고 나머지 넓이를 문자열을 보여주는데 사용한다.</p>
 
 <p>여기까지 클래스 변수가 Inspector 창에서 보이는 부분을 직접 커스터마이징 하는 방법에 대해서 알아보았다. 이 <strong>PropertyDrawer</strong> 기능을 이용하여 타입별로 고정하는게 아닌 <strong>Attribute</strong> 를 이용하여 필요한 부분만 바꾸는 방법도 있다.</p>
-
-<h4>속성을 사용하여 커스터마이징하기</h4>
+      <h4>
+        
+        
+          속성을 사용하여 커스터마이징하기
+        
+        
+      </h4>
+    
 
 <p>C# 문법은 <strong>Enum</strong> 을 비트플래그로 사용하는 방법이 있다. 아래와 같이 말이다.</p>
 
@@ -440,8 +470,14 @@
 <p>클래스 또는 속성별로 변수별 Inspector 에디터를 바꿔보는 <strong>PropertyDrawer</strong> 설정 방법에 대해서 알아보았다.</p>
 
 <p>여태까지 설명했던 기능들은 전부 <strong>Attribute</strong> 를 사용하여 지원한다. 그리고 설명하지 않은 <strong>Attribute</strong> 문법을 사용하는 기능들도 엄~~청 많다. <strong>Attribute</strong> 에 대해 이해를 하고 있으면 앞으로의 추가적인 기능들을 사용하는데 많은 도움이 될것이다.</p>
-
-<h2>참조</h2>
+      <h2>
+        
+        
+          참조
+        
+        
+      </h2>
+    
 
 <ul>
   <li><a href="https://msdn.microsoft.com/ko-kr/library/mt653982.aspx">C# Attribute Usage</a></li>
@@ -467,7 +503,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

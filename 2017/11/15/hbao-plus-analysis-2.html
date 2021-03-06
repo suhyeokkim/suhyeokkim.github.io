@@ -523,8 +523,14 @@
 <p>이전 <a href="/2017/11/15/hbao-plus-analysis-1">hbao plus analysis 1</a> 글에서 <em>HBAO+</em> 에서 <em>Linearize Depth</em> 와 <em>Deinterleaved Texturing</em> 에 대해서 알아보았다. 이번 글에서는 <em>HBAO+</em> 의 핵심 알고리즘인 <em>Horizon Based Ambient Occlusion</em> 와 AO 블러에 사용되는 <em>Cross Bilateral Filter</em> 에 대해서 알아볼것이다.</p>
 
 <!-- more -->
-
-<h2>Horizon Based Ambient Occlusion</h2>
+      <h2>
+        
+        
+          Horizon Based Ambient Occlusion
+        
+        
+      </h2>
+    
 
 <p><em>Horizon Based Ambient Occlusion</em> 은 xy 평면과(horizon) Depth 값을 사용해서 <em>AO</em> 를 계산한다. 슬라이드에서 가져온 일부를 보자.</p>
 
@@ -553,8 +559,14 @@
 <p><br /></p>
 
 <p>핵심적인 개념은 모두 설명했지만 만족할만한 결과를 얻기 위해 여러가지 보정 방법들이 필요하다. 그래서 <em>HBAO</em> 에서는 두가지 보정을 해주는 개념을 설명한다. <em>HBAO</em> 는 방향을 설정해주고 해당 방향으로 한번만 샘플링 하는게 아니라 여러번 샘플링 한다. 그러므로 거리에 따른 감쇠(attenuation)가 필요하다. 방법은 간단하다. <em>AO</em> 를 계산할때 구했던 <em>Horizon</em> 벡터의 크기에 따라서 <em>AO</em> 값을 줄여준다. 나머지 한가지는 <em>Horizon</em> 벡터와 <em>Tangent</em> 벡터를 이용해 구하는 실질적인 <em>AO</em> 값에 <em>Bias</em> 로 낮은 <em>AO</em> 값들을 무시하는 방법이다. <em>Bias</em> 가 없이 <em>AO</em> 를 생성하게 되면 노이즈가 생기기 때문이다. 또한 <em>Bias</em> 로 생긴 수학적 오차는 코드에서 따로 보정해주기 때문에 크게 문제는 없다.</p>
-
-<h2>Cross Bilateral Filter</h2>
+      <h2>
+        
+        
+          Cross Bilateral Filter
+        
+        
+      </h2>
+    
 
 <p><em>SSAO</em> 의 결과에는 일반적으로 블러를 먹이게 된다. 대부분 근사에 기반한 계산이기 때문이다. <em>HBAO</em> 에서는 <em>Depth</em> 를 이용한 방법을 소개한다. 바로 <em>Cross Bilateral Filter</em> 다.</p>
 
@@ -565,8 +577,14 @@
 <center>출처 : <a href="http://developer.download.nvidia.com/presentations/2008/SIGGRAPH/HBAO_SIG08b.pdf">Siggraph 2008 : Image-Space Horizon-Based Ambient Occlusion</a>
 </center>
 <p><br /></p>
-
-<h1>참조 자료</h1>
+      <h1>
+        
+        
+          참조 자료
+        
+        
+      </h1>
+    
 
 <ul>
   <li><a href="http://docs.nvidia.com/gameworks/content/gameworkslibrary/visualfx/hbao/index.html">NVidia HBAO+</a></li>
@@ -592,7 +610,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

@@ -658,8 +658,14 @@
 <p>위의 소스에서 표준 STL과 사용 방법이 다른 점은 컨테이너의 생성자에 할당자를 식별하기 위한 문자열을 넣는다는 점이다. 이를 통해 컨테이너는 추가적인 메모리 할당이 필요할 시 오버로딩된 new/delete 함수를 호출하여 할당을 받으려 할 것이다. 필자가 구현한 new/delete 는 <a href="https://github.com/suhyeokkim/RenderFromScratch/blob/master/Framework/source/allocators.cpp">RenderFromScratch: allocators.cpp</a> 에서 볼 수 있다.</p>
 
 <p>소개한 커스텀 할당자의 구현 이외에도 EASTL은 SSE 지원을 위한 메모리 정렬을 구현하게 만들고, 고정된 크기의 컨테이너와 컨테이너에서 하나의 노드를 사용자가 직접 정의할 수 있는 instrutive 컨테이너도 지원하고, 이외에도 게임 프로그램에서 필요한 세심한 경우들을 처리해 놓았고, 여러 플랫폼(콘솔, PC 등)에서 테스트가 되었다고 한다. 만약 자신이 게임을 밑바닥부터 구현하고, STL의 사용법을 조금이라도 안다면 EASTL을 사용하는 것도 좋은 방법이라고 생각된다.</p>
-
-<h2>참조</h2>
+      <h2>
+        
+        
+          참조
+        
+        
+      </h2>
+    
 
 <ul>
   <li><a href="https://github.com/electronicarts/EASTL">github : EASTL</a></li>
@@ -668,7 +674,6 @@
   <li><a href="https://jacking75.github.io/Cpp_EASTL/">C++ - EASTL</a></li>
   <li><a href="http://ohyecloudy.com/pnotes/archives/250/">EASTL - 할당자(allocator)</a></li>
 </ul>
-
 
   </div>
 
@@ -687,7 +692,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

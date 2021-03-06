@@ -206,8 +206,14 @@
     <p>C# 언어에는 IEnumerator 를 사용한 몇몇의 기능들이 존재한다. List 같은 컨테이너부터 코드로 반복기를 만들어 제어하는 기능 등 여러가지를 제공하는데 그것들에 대하여 한번 알아보자.</p>
 
 <!-- more -->
-
-<h2><strong>IEnumerator</strong> 가 무엇인가요?</h2>
+      <h2>
+        
+        
+          <strong>IEnumerator</strong> 가 무엇인가요?
+        
+        
+      </h2>
+    
 
 <p><strong>IEnumerator</strong> 는 단순한 반복의 개념을 인터페이스로 정의해놓은 것이다. 아래 코드에 정의를 가져왔다.</p>
 
@@ -236,8 +242,14 @@
 <p>이렇게 <strong>IEnumerator</strong> 는 세가지 필드와 메소드로 컨테이너의 반복을 보여주었다. C# 에서 지원하는 대부분의 컨테이너는 <strong>IEnumerator</strong> 의 서브클래스를 지원하여 반복해서 데이터들을 참조할 수 있게 해준다.</p>
 
 <p>하지만 여기서 <strong>IEnumerator</strong> 의 활용이 끝나는 것은 아니다. C# 은 단순한 데이터의 반복을 코드로도 지원하기 위해 반복기라는 개념을 구현해 놓았다.</p>
-
-<h2>반복기는 또 뭔가요?</h2>
+      <h2>
+        
+        
+          반복기는 또 뭔가요?
+        
+        
+      </h2>
+    
 
 <p>위에서는 구현되어 있는 컨테이너에서 <strong>IEnumerator</strong> 객체를 가져와서 사용했다면, 이번에는 코드로 반복하는 개념을 만들어 볼 수도 있다. 아래 코드를 보자.</p>
 
@@ -261,8 +273,14 @@
 <p><img src="/images/csharp_iterator_run.png" alt="Iterator Run Diagram" class="center-image" /></p>
 
 <p>위 그림에 반복기가 <em>MoveNext</em> 를 호출했을 때 하는 행동에 대해서 나와있다. <em>MoveNext</em> 메소드를 호출하면 <em>yield return</em> 구문이 나오거나 코드가 끝날 때까지 실행한다. <em>yield return</em> 구문이 나와서 뭔가 반환하면 그 값을 <strong>IEnumerator</strong>.<em>Current</em> 에 넣는다. 그리고 true 를 반환하고 끝낸다. <em>yield return</em> 구문이 안나오고, 코드가 끝이나면 false 를 반환하고 끝난다. 결국 반복기의 제어는 <em>MoveNext</em> 에 달려있는 셈이다. 그리고 <strong>IEnumerator</strong>.<em>Reset</em> 은 반복기에서는 지원이 안된다.</p>
-
-<h2>참조</h2>
+      <h2>
+        
+        
+          참조
+        
+        
+      </h2>
+    
 
 <ul>
   <li><a href="https://msdn.microsoft.com/ko-kr/library/system.collections.ienumerator.aspx">MSDN : IEnumerator 인터페이스</a></li>
@@ -286,7 +304,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

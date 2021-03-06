@@ -420,8 +420,14 @@
 <p>언급한 특정한 위치를 <em>Bone</em> : 뼈라고 한다. 뼈를 움직여서 정점들을 직접 움직이는 것이다. 그리고 뼈를 기준으로 움직이는 것을 <em>Skinning</em> 이라고 한다. 사람의 뼈가 움직이면 피부도 따라서 움직이듯이 피부를 직접 설정하는 것을 <em>Skinning</em> 이라고 하는 것이다. 그리고 <em>Bone</em> 의 위치도 상당히 중요하다. 자연스러운 움직임을 만들려면 만들어진 메쉬에 잘 맞게 위치를 설정해주어야 하기 때문이다. 위치 뿐만아니라 여러 움직이는 범위나 뼈의 계층 구조를 잘 설정해주어야 자연스러운 움직임을 나타낼 수 있다. 이러한 작업을 <em>Rigging</em> 이라 한다. 보통 3D 오브젝트를 만들고 <em>Rigging</em> 과 <em>Skinning</em> 을 하는 작업은 그래픽 아티스트가 직접 해주지만 우리는 이 과정을 이해해야 하기에 Unity 에서 직접 만들어 볼 것이다.</p>
 
 <!-- more -->
-
-<h2>Unity 에서 직접 리깅, 스키닝하기</h2>
+      <h2>
+        
+        
+          Unity 에서 직접 리깅, 스키닝하기
+        
+        
+      </h2>
+    
 
 <p>일반적으로 저장된 메쉬에 <em>Rigging</em>, 뼈를 위치시키고 기타 설정을 하는 작업을 먼저한다. 그리고 뼈를 전부 위치시킨 다음 정점들과 뼈 사이의 가중치를 주는 <em>Skinning</em> 작업을 한다. 우리도 이 순서에 맞게 작업을 할 것이다. <a href="https://github.com/hrmrzizon/3DBasicExample">3DBasicExample</a> 의 <em>edu/skin</em> 브랜치로 이동하면 미리 되어 있는것을 확인할 수 있다.</p>
 
@@ -478,8 +484,14 @@ skinnedMeshRenderer.bindposes[0] = boneTransform.worldToLocalMatrix * rootObject
 </code></pre></div></div>
 
 <p>마인크래프트의 케릭터들은 한개의 <em>bone</em> 을 기준으로 케릭터가 움직이기 때문에 <em>bone</em> 을 정점별로 한개씩 설정해 주었다. 여기까지 설정해주면 설정된 <em>bone</em> 들을 따라 그려진다. 여기까지 <em>bone</em> 을 직접 설정해주고, <em>bone</em> 별 변환 행렬을 설정해주고, 정점별로 가중치를 두어 해당 가중치로 <em>bone</em> 을 따라가게 해주었다. 그런데 몇가지 짚고 넘어가야할 것들이 있다. <strong>MeshRenderer</strong> 와 <strong>SkinnedMeshRenderer</strong> 의 디테일한 동작의 차이다. 위에서 <em>skinning</em> 이 적용되냐 마냐의 차이만 있다고 설명했다. 물론 기능상의 차이는 이것 뿐이지만 이 기능 때문에 벌어지는 몇가지 세부사항도 알아야 한다. Unity 시스템에서는 <strong>MeshRenderer</strong> 가 그리는 정점들이 움직이지 않는다는 가정하에 모든 <strong>MeshRenderer</strong> 를 모아서 최적화를 해준다. 물론 <strong>Mesh</strong> 인스턴스가 가진 데이터가 적어야 한다는 한계가 있지만 복수의 오브젝트가 많아질 수록 이 부분은 꽤나 중요해진다. 하지만 <strong>SkinnedMeshRenderer</strong> 는 크게 최적화가 되어있지 않아 많이 쓰면 쓸수록, <strong>Mesh</strong> 인스턴스의 정점의 갯수가 많으면 많을수록 부하는 심해진다. 물론 한두개만 쓰면 크게 문제되는 상황은 없지만 많으면 많을수록 퍼포먼스가 떨어지는 디바이스에서는 문제가 된다. 즉 사용시 주의해서 사용해야 한다.</p>
-
-<h1>참조</h1>
+      <h1>
+        
+        
+          참조
+        
+        
+      </h1>
+    
 
 <ul>
   <li><a href="https://en.wikipedia.org/wiki/Skinning">Wikipedia : Skinning</a></li>
@@ -505,7 +517,7 @@ this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your pag
 */
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://zizon.disqus.com/embed.js';
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();
