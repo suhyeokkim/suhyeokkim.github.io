@@ -30,7 +30,7 @@ exclude:
   - spec
   - textdata
   - tl
-incremental: true
+incremental: false
 
 # Social media
 # facebook_app_id:
