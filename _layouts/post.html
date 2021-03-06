@@ -13,7 +13,7 @@ comments: true
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    {{ content }}
+    {% include anchor_headings.html html=content anchorBody="#" %}
   </div>
 
   {% include disqus.html %}

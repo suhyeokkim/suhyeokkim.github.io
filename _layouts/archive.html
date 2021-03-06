@@ -6,7 +6,7 @@ layout: default
 
   <h1 class="page-heading">Blog Archive</h1>
 
-  {{ content }}
+  {% include anchor_headings.html html=content anchorBody="#" %}
 
   {% capture site_lang %}{{ site.lang | default: "en" }}{% endcapture %}
 
