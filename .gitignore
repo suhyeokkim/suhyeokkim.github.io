@@ -4,3 +4,4 @@
 Gemfile.lock
 _site
 *Thumbs.db
+.jekyll-cache/
