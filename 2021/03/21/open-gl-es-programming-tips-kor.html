@@ -651,7 +651,7 @@ Note: When optimizing shaders, any source code that does not contribute to its o
       <h2>
         
         
-          파이프라인 이전으로 계산을 올리십시오. (P1)
+          파이프라인 윗단계로 계산을 올리십시오. (P1)
         
         
       </h2>
@@ -853,7 +853,7 @@ Note: Barycentric interpolation will not preserve the unit length of these vecto
       <h2>
         
         
-          single-precision 부동소수점 텍스쳐는 언제나 비쌉니다. (T6)
+          single-precision floating 텍스쳐는 언제나 비쌉니다. (T6)
         
         
       </h2>
@@ -899,7 +899,7 @@ If the application is only updating from a sub-rectangle of pixels in client mem
       <h2>
         
         
-          알파 테스팅/블렌딩 렌더링을 분리하십시오. (T10)
+          각각의 알파 테스팅/블렌딩 렌더링을 다른 렌더링과 분리하십시오. (T10)
         
         
       </h2>
@@ -929,7 +929,7 @@ If the application is only updating from a sub-rectangle of pixels in client mem
       <h2>
         
         
-          프레임 버퍼 오브젝트를(FBO) 동적으롸 생성되는 텍스쳐를 위해 사용하십시오. (T13)
+          프레임 버퍼 오브젝트를(FBO) 동적으로 생성되는 텍스쳐를 위해 사용하십시오. (T13)
         
         
       </h2>
@@ -992,7 +992,7 @@ Note: Not all pixel formats are color-renderable. Formats with 3 or 4 components
       <h1>
         
         
-          Optimizing OpenGL ES
+          OpenGL ES 최적화 하기
         
         
       </h1>
@@ -1002,7 +1002,7 @@ Note: Not all pixel formats are color-renderable. Formats with 3 or 4 components
       <h2>
         
         
-          Partition the analysis into manageable chunks
+          관리가능한 청크로 분석 나누기 Partition the analysis into manageable chunks
         
         
       </h2>
@@ -1012,7 +1012,7 @@ Note: Not all pixel formats are color-renderable. Formats with 3 or 4 components
       <h2>
         
         
-          Become familiar with bottlenecks in the graphics pipeline
+          그래픽 파이프라임의 병목에 익숙해지기
         
         
       </h2>
@@ -1022,7 +1022,7 @@ Note: Not all pixel formats are color-renderable. Formats with 3 or 4 components
       <h1>
         
         
-          Avoiding Memory Fragmentation
+          메모리 파편화 피하기
         
         
       </h1>
@@ -1033,7 +1033,7 @@ Fortunately, controlling video memory fragmentation has techniques very similar 
       <h1>
         
         
-          Video Memory Overview
+          비디오 메모리 개괄
         
         
       </h1>
@@ -1051,7 +1051,7 @@ NVIDIA video memory allocation algorithms have to take the following into accoun
       <h1>
         
         
-          Allocating and Freeing Video Memory
+          비디오 메모리 할당/해제
         
         
       </h1>
@@ -1061,7 +1061,7 @@ NVIDIA video memory allocation algorithms have to take the following into accoun
       <h2>
         
         
-          Allocating buffers
+          버퍼 할당
         
         
       </h2>
@@ -1087,7 +1087,7 @@ eglCreatePixmapSurface(EGLDisplay dpy, EGLConfig config, NativePixmapType pixmap
       <h2>
         
         
-          Freeing buffers
+          버퍼 해제
         
         
       </h2>
@@ -1107,7 +1107,7 @@ Conceptually, these calls can be thought of as malloc() and free() for VBOs and 
       <h2>
         
         
-          Updating a Subregion of a Buffer
+          버퍼의 부분지역(subregion) 업데이트
         
         
       </h2>
@@ -1131,7 +1131,7 @@ The glScissor and glViewport functions limit rendering to a subregion of a rende
       <h2>
         
         
-          Using a Buffer Subregion
+          버퍼의 부분지역(subregion) 사용
         
         
       </h2>
@@ -1156,7 +1156,7 @@ For surfaces, the glReadPixels function can be used to read from a subregion of 
       <h1>
         
         
-          Best Practices for Video Memory Management
+          비디오 메모리 관리 좋은 예시
         
         
       </h1>
@@ -1166,7 +1166,7 @@ For surfaces, the glReadPixels function can be used to read from a subregion of 
       <h2>
         
         
-          1. Allocate large buffers early
+          1. 큰 버퍼를 미리 할당하기
         
         
       </h2>
@@ -1176,7 +1176,7 @@ For surfaces, the glReadPixels function can be used to read from a subregion of 
       <h2>
         
         
-          2. Combine many small allocations into a smaller number of larger allocations
+          2. 수많은 적은 메모리 할당을 적은 갯수의 많은 할당으로 합치기
         
         
       </h2>
@@ -1187,7 +1187,7 @@ The ability to load a subregion of a VBO or texture map, and the ability to rend
       <h2>
         
         
-          3. Reduce the variation in size of allocated buffers ideally to a single size
+          3. 할당된 버퍼 사이즈의 분포를 줄이고, 이상적으로 하나의 사이즈로 만들기
         
         
       </h2>
@@ -1199,7 +1199,7 @@ This approach is particularly good for dynamically allocated data, since fixed s
       <h2>
         
         
-          4. Reuse, rather than free and reallocate, buffers whenever possible
+          4. 가능한 버퍼를 해제/재할당 하지말고 재사용하기
         
         
       </h2>
@@ -1209,7 +1209,7 @@ This approach is particularly good for dynamically allocated data, since fixed s
       <h2>
         
         
-          5. Minimize dynamic allocation
+          5. 동적할당 최소화 하기
         
         
       </h2>
@@ -1219,7 +1219,7 @@ This approach is particularly good for dynamically allocated data, since fixed s
       <h2>
         
         
-          6. Try to group dynamic allocations
+          6. 여러 동적 할당을 묶으려 노력하기
         
         
       </h2>
@@ -1230,7 +1230,7 @@ Again, allocations and frees should be replaced whenever possible. Grouping them
       <h1>
         
         
-          Graphics Driver CPU Usage
+          그래픽 드라이버 CPU 사용량
         
         
       </h1>
@@ -1244,7 +1244,7 @@ Again, allocations and frees should be replaced whenever possible. Grouping them
       <h1>
         
         
-          Performance Guidelines
+          성능 가이드라인
         
         
       </h1>
