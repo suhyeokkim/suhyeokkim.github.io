@@ -555,7 +555,7 @@
 
 <p>왼쪽의 그림은 정상적으로 그림자가 보일 때, 두번째는 정말 안좋은 경우들이 겹친 <em>Light Leak</em> 이 발생하는 경우, 세번째 경우는 세팅값을 맞춰주어 <em>Light Leak</em> 을 없엔 장면이다. 하지만 결과를 잘 모르는 경우에는 이 결과들이 맞는지 아닌지 쉽게 구별할 수 있는 정도는 아니다. 즉 아주 정확한 결과를 원하는게 아니라면 그냥 써도 된다는 말이다.</p>
 
-<p>두번째는 데이터 구조와 메모리 레이아웃 최적화다. 가장 맨처음 이를 구현할 때는 링크드 리스트의 2D 그리드의 형태로 만들었다고 한다. 각각의 리스트의 노드는 다음노드를 가리키는 포인터와 <em>G-Buffer</em> 를 참조하기 위한 명시적인<sup id="fnref:C2" role="doc-noteref"><a href="#fn:C2" class="footnote">1</a></sup> 인덱스로 구성되었다고 한다. 하지만 이 구조는 <em>GPU</em> 에서의 두가지 쓰레드 동기화를 필요로 했다. 하나는 <em>Global Node Pool</em> 에서 비어있는 노드를 찾기위한 <em>Global</em> 동기화<sup id="fnref:C1" role="doc-noteref"><a href="#fn:C1" class="footnote">2</a></sup>, 나머지는 헤드 포인터(<em>Light-Space Data</em>)를 업데이트하기 위한 <em>Per-Texel</em> 동기화<sup id="fnref:C1:1" role="doc-noteref"><a href="#fn:C1" class="footnote">2</a></sup>였다. 동기화를 많이 걸면 걸수록 성능상으로는 그다지 좋지않다. 그렇기 때문에 데이터 구조를 바꾸었다고 한다.</p>
+<p>두번째는 데이터 구조와 메모리 레이아웃 최적화다. 가장 맨처음 이를 구현할 때는 링크드 리스트의 2D 그리드의 형태로 만들었다고 한다. 각각의 리스트의 노드는 다음노드를 가리키는 포인터와 <em>G-Buffer</em> 를 참조하기 위한 명시적인<sup id="fnref:C2" role="doc-noteref"><a href="#fn:C2" class="footnote" rel="footnote">1</a></sup> 인덱스로 구성되었다고 한다. 하지만 이 구조는 <em>GPU</em> 에서의 두가지 쓰레드 동기화를 필요로 했다. 하나는 <em>Global Node Pool</em> 에서 비어있는 노드를 찾기위한 <em>Global</em> 동기화<sup id="fnref:C1" role="doc-noteref"><a href="#fn:C1" class="footnote" rel="footnote">2</a></sup>, 나머지는 헤드 포인터(<em>Light-Space Data</em>)를 업데이트하기 위한 <em>Per-Texel</em> 동기화<sup id="fnref:C1:1" role="doc-noteref"><a href="#fn:C1" class="footnote" rel="footnote">2</a></sup>였다. 동기화를 많이 걸면 걸수록 성능상으로는 그다지 좋지않다. 그렇기 때문에 데이터 구조를 바꾸었다고 한다.</p>
 
 <p>여러 시도 끝에 가장 성공적인 결과는 리스트의 각 노드의 크기를 줄이는 것이였다. 이를 위한 준비는 노드를 저장하기 위한 <em>Screen-Space Grid</em> 버퍼를 미리 할당한다. 그리고 각 노드들은 자신을 기준으로한 다음 노드의 오프셋을 저장한다. 이는 <em>Linked-List</em> 의 기준으로 보자면 <em>Next Pointer</em> 가 된다. 이를 논문에서는 간접적인(<em>Implcit</em>) <em>G-Buffer</em> 인덱스라고 부른다. 이렇게 계속 픽셀의 노드 정보를 참조하면서 픽셀의 위치를 <em>Linked-List</em> 의 형태로 나타낼 수 있는 것이다. 아래 중간의 그림의 노란색 화살표는 이를 간단하게 나타냈다.</p>
 
@@ -569,7 +569,7 @@
 
 <p>세번째는 헤드 포인터를 가지고 있는 <em>Light-Space Buffer</em> 의 해상도다. 일반적인 <em>Shadow Mapping</em> 기법의 <em>Shadow Map</em> 의 해상도는 보여지는 정도를 결정하지만, 여기서의 해상도는 퍼포먼스를 결정한다.(<em>La</em>) 1920 x 1080 을 기준으로 추천하는 해상도는 1400 ~ 2500 사이라고 한다.</p>
 
-<p>네번째로는 기존의 <em>Shadow Mapping</em> 의 잘 알려진 기법인 <em>Cascaded Shadow Mapping</em><sup id="fnref:P1" role="doc-noteref"><a href="#fn:P1" class="footnote">3</a></sup> 을 이 기법에 적용시키는 것이다. 이 기법의 원리는 <em>View frustum</em> 을 원하는 갯수대로 쪼갠 후, 쪼개진 <em>frustum</em> 안의 오브젝트들의 <em>Shadow</em> 를 계산한다. 논문에서 쪼개는 방법은 <em>Sample Distribution Shadow Map</em> 과 <em>Logarithm Partitioning</em> 을 언급했다. 여기서는 쪼개진 <em>frustum</em> 마다 전부 <em>IZB</em> 를 생성한다. 이때 각각의 쪼개진 <em>frustum</em> 의 끝부분이 잘 맞도록 신경써야줘야 한다고 언급했다. 논문의 저자는 구현할때 <em>2D Texture Array</em> 를 사용하여 <em>IZB</em> 를 저장하고, 병렬로 각각의 <em>Detph Texture</em> 마다 <em>Light-Space Culling Prepass</em> 를 넣어줬다고 한다. 일반적으로 각각의 <em>Cascade</em> 를 계산할때는 한개당 하나의 <em>Pass</em> 를 사용하여 계산하는데, 여기서는 1 Pass 로 적절히 프리미티브를 나누어 성능 향상을 고려했다고 한다.</p>
+<p>네번째로는 기존의 <em>Shadow Mapping</em> 의 잘 알려진 기법인 <em>Cascaded Shadow Mapping</em><sup id="fnref:P1" role="doc-noteref"><a href="#fn:P1" class="footnote" rel="footnote">3</a></sup> 을 이 기법에 적용시키는 것이다. 이 기법의 원리는 <em>View frustum</em> 을 원하는 갯수대로 쪼갠 후, 쪼개진 <em>frustum</em> 안의 오브젝트들의 <em>Shadow</em> 를 계산한다. 논문에서 쪼개는 방법은 <em>Sample Distribution Shadow Map</em> 과 <em>Logarithm Partitioning</em> 을 언급했다. 여기서는 쪼개진 <em>frustum</em> 마다 전부 <em>IZB</em> 를 생성한다. 이때 각각의 쪼개진 <em>frustum</em> 의 끝부분이 잘 맞도록 신경써야줘야 한다고 언급했다. 논문의 저자는 구현할때 <em>2D Texture Array</em> 를 사용하여 <em>IZB</em> 를 저장하고, 병렬로 각각의 <em>Detph Texture</em> 마다 <em>Light-Space Culling Prepass</em> 를 넣어줬다고 한다. 일반적으로 각각의 <em>Cascade</em> 를 계산할때는 한개당 하나의 <em>Pass</em> 를 사용하여 계산하는데, 여기서는 1 Pass 로 적절히 프리미티브를 나누어 성능 향상을 고려했다고 한다.</p>
 
 <p><em>Cascade</em> 의 적용은 <em>Occluder Geometry</em> 의 <em>Rasterize</em> 퍼포먼스를 안고 가면서 <em>Thread Divergence</em> 의 시간을 줄여준다. 이는 사용시 적절한 타협점을 찾아야 한다는 뜻으로, 보통은 두개의 <em>Cascade</em> 를 사용하고, 복잡한 게임에서는 3개나 4개의 <em>Cascade</em> 를 사용하여 상황에 따라 뜀뛰는 시간을 최소화 시킨다. 아래 그림은 <em>Cascade</em> 의 효과를 증명해준다.</p>
 
@@ -589,7 +589,7 @@
 
 <p>시스템 구현에 대한 디테일한 사항은 여기까지가 끝이다.</p>
 
-<p>마지막으로 <em>Transparency Geometry</em> 를 처리하는 방법에 대해서 써보겠다. 이 기법의 <em>per-pixel</em> 테스트는 <em>Visibility Mask Buffer</em> 에 결과가 저장된다. <em>Visibility Mask Buffer</em> 의 효율적인 사용을 위해 항상 각 픽셀의 여러개의 32bit 데이터를 저장해준다고 한다. 이정도의 크기라면 단지 <em>Visibility</em> 만을 사용하는게 아니라 <em>Opacity</em> 또한 저장이 가능하다. 통상적인 가시성을 위한 투명 오브젝트의 처리 방법은 <em>Alpha to Coverage</em><sup id="fnref:C3" role="doc-noteref"><a href="#fn:C3" class="footnote">4</a></sup> 를 쓴다고 한다. 그리고 여기에서도 비슷한 방법을 사용할 수 있다고한다.</p>
+<p>마지막으로 <em>Transparency Geometry</em> 를 처리하는 방법에 대해서 써보겠다. 이 기법의 <em>per-pixel</em> 테스트는 <em>Visibility Mask Buffer</em> 에 결과가 저장된다. <em>Visibility Mask Buffer</em> 의 효율적인 사용을 위해 항상 각 픽셀의 여러개의 32bit 데이터를 저장해준다고 한다. 이정도의 크기라면 단지 <em>Visibility</em> 만을 사용하는게 아니라 <em>Opacity</em> 또한 저장이 가능하다. 통상적인 가시성을 위한 투명 오브젝트의 처리 방법은 <em>Alpha to Coverage</em><sup id="fnref:C3" role="doc-noteref"><a href="#fn:C3" class="footnote" rel="footnote">4</a></sup> 를 쓴다고 한다. 그리고 여기에서도 비슷한 방법을 사용할 수 있다고한다.</p>
 
 <p>처음에는 <em>Coverage</em> 를 계산하기 위해 <em>Visibility Test</em> 를 해준다. 그리고 해당 알파가 저장된 텍스쳐를 참조하여 투명도를 가져오고, 해당 투명도를 사용하여 <em>Alpha to Coverage</em> 를 실행하여 투명도 마스크를 얻는다. 이를 비트 AND 연산으로 합쳐서 <em>Coverage</em> 를 <em>Visibility Buffer</em> 에 저장한다.</p>
 
