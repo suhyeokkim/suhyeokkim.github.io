@@ -640,322 +640,364 @@ Unconnected geometry can be stitched together with degenerate triangles (alterna
       <h1>
         
         
-          Shader Programs
+          쉐이더 프로그램
         
         
       </h1>
     
+
 <p>Writing efficient shaders is critical to achieving good performance. One should treat shaders like pieces of code that run in the inner-most loops on a CPU. There is a very high cost to littering these with conditionals or recomputing loop invariants. Before optimizing an expensive vertex shader, make sure geometry that is entirely outside the view frustum is being culled on the CPU. Before optimizing an expensive fragment shader, make sure the application is not generating an excess number of fragments with it.
 Note: When optimizing shaders, any source code that does not contribute to its output variables is optimized out by the compiler. This feature can be exploited to gain knowledge about whether the shader is part of the current bottleneck by multiplying the output variable with a null vector to reduce the workload and then measure if frame rate improves. Conversely, at the final stages of optimization one can quickly measure if there is headroom for increasing workload to offload computations to shader unit or to improve image quality by adding meaningless but expensive ALU instructions, or texture sampling, to the output variables.</p>
       <h2>
         
         
-          Move computations up the pipeline (P1)
+          파이프라인 이전으로 계산을 올리십시오. (P1)
         
         
       </h2>
     
+
 <p>As the rendering pipeline is traversed from the CPU to the vertex processor and then to the fragment processor, the required workload tends to increase a few orders of magnitude each time. Computations constant per model, per primitive or per vertex do not belong in the fragment processor and should be moved up to the vertex processor or earlier. Per draw call computations do not belong in the vertex processor and should be moved to the CPU. For instance, if lighting is done in eye-space, the light vector should be transformed into eye-space and stored in a uniform rather than repeating this for each vertex or, even worse, per fragment. The light vector should naturally be stored pre-normalized. Usually the light vector computations are constant for the draw call, so they do not belong in any shader.</p>
       <h2>
         
         
-          Do not write large or generalized shaders (P2)
+          크거나 일반화된 쉐이더를 작성하지 마십시오. (P2)
         
         
       </h2>
     
+
 <p>It is critical to resist the temptation to write shader programs that take different code paths depending on whether one or more constant variable have a particular value. Uniforms are intended as constants for one (or hopefully many) primitives—they are not substitutes for calling UseProgram. Shaders should be minimal and specialized to the task they perform. It is much better to have many small shaders that run fast than a few large shaders that all run slow. Code re-use (when source shaders are supported) should be handled at the application level using the ShaderSource function. If the advice here of not writing generalized shaders goes against the conflicting goal of minimizing shader and state changes, smaller and more specialized shaders are generally preferred. Additionally, be careful with writing shader functions intended for concatenation into the final shader source code - shared functions tend to be overly generic and make it harder to exploit possible shortcuts.</p>
       <h2>
         
         
-          Take advantage of application specific knowledge (P3)
+          응용프로그램의 특정한 지식을 활용하십시오. (P3)
         
         
       </h2>
     
+
 <p>Application specific knowledge can be used to simplify or avoid computations. Math shortcuts should be pursued everywhere because there are optimizations that the shader compiler or the GPU cannot make. For instance, rendering screen-aligned primitives is common for 2D user interface and post-processing effects. In this case, the entire modelview transformation is avoided by defining the vertices in NDC (normalized device coordinates). A full-screen quad has its vertex coordinates in the [-1.0,1.0] range so these can be passed directly from the vertex attribute to gl_Position. The types of matrix transformations applied in the application when creating the modelview matrix should be tracked and exploited when possible. For instance, an orthonormal matrix (e.g. no non-uniform scaling) leads to an opportunity to avoid computations when transforming normals with the inverse-transpose sub-matrix.</p>
       <h2>
         
         
-          Optimize for depth and stencil culling (P4)
+          깊이, 스텐실 컬링을 최적화하십시오. (P4)
         
         
       </h2>
     
-<p>The GPU can quickly reject fragments based on depth or stencil testing before the fragment shader is executed. The depth complexity of a scene is the number of times each fragment gets written. Depth complexity can be measured by incrementing values in a stencil buffer. A high depth complexity in a 3D scene can be a result of rendering opaque objects in a non-optimal order. The worst case is rendering back-to-front (aka painter’s algorithm) because it leads to a large number of fragments being overdrawn. An application with high depth complexity should ensure that opaque objects are rendered sorted front-to-back order with depth testing enabled. Straightforward rendering of 2D user interfaces also leads to a high depth complexity that can often be decreased with the same technique but also by using the stencil buffer to mask fragments. Applications that are heavily fragment limited can be sped up significantly with clever use of these techniques—sometimes up to a factor of 10 or more.
-If vertex processing is not a bottleneck, it is worthwhile to run experiments that prime the depth buffer in a first pass. Disable all color writes with ColorMask on the first pass. The fragments in the depth buffer can then serve as occluders in a second pass when color writes are enabled and the expensive fragment shaders are executed. Disable depth writes with DepthMask in the second pass since there is no point in writing it twice.</p>
+
+<p>The GPU can quickly reject fragments based on depth or stencil testing before the fragment shader is executed. The depth complexity of a scene is the number of times each fragment gets written. Depth complexity can be measured by incrementing values in a stencil buffer. A high depth complexity in a 3D scene can be a result of rendering opaque objects in a non-optimal order. The worst case is rendering back-to-front (aka painter’s algorithm) because it leads to a large number of fragments being overdrawn. An application with high depth complexity should ensure that opaque objects are rendered sorted front-to-back order with depth testing enabled. Straightforward rendering of 2D user interfaces also leads to a high depth complexity that can often be decreased with the same technique but also by using the stencil buffer to mask fragments. Applications that are heavily fragment limited can be sped up significantly with clever use of these techniques—sometimes up to a factor of 10 or more.</p>
+
+<p>If vertex processing is not a bottleneck, it is worthwhile to run experiments that prime the depth buffer in a first pass. Disable all color writes with ColorMask on the first pass. The fragments in the depth buffer can then serve as occluders in a second pass when color writes are enabled and the expensive fragment shaders are executed. Disable depth writes with DepthMask in the second pass since there is no point in writing it twice.</p>
       <h2>
         
         
-          Do not discard fragments, or modify depth, unless absolutely necessary (P5)
+          픽셀 처리 조각(<em>fragment</em>)를 버리거나, 깊이를 수정하지 마십시오. 완전히 필요한게 아니라면, (P5)
         
         
       </h2>
     
+
 <p>Some operations prevent the hardware from enabling its automatic optimization that rejects fragments early in the pipeline (early-Z). In particular, the discard operation that discards fragments based on some criteria will disable early-Z on some platforms. It is critical to limit the use of discarding as much as possible (e.g., alpha testing)—unless depth writing can be disabled. Another example is found in the GL_NV_fragdepth extension available on some platforms, where the depth value can be written from the fragment shader. This operation also forces the GPU to opt out of Early-Z reject in order to ensure correct rendering.</p>
       <h2>
         
         
-          Avoid conditionals in shaders when possible (P6)
+          조건문을 최대한 피하십시오. (P6)
         
         
       </h2>
     
+
 <p>Fragments are processed in chunks and both branches of a conditional may need to be evaluated before the result of the false branch can be discarded by the GPU. Be careful with assuming that conditionals skip computations and reduce the workload. This warning is particularly relevant to fragment shaders. Benchmarking shaders can determine if conditionals in the vertex or fragment shaders actually end up decreasing the workload. Some conditional code can be rewritten in terms of algebra and/or built-in functions. For instance, the dot product between a normal and a light vector may be negative in which case the result is not needed in a lighting equation. Instead of:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if (nDotL &gt; 0.0) ...
 </code></pre></div></div>
 <p>the value can be clamped with:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>clamp(nDotL, 0.0, 1.0)
 </code></pre></div></div>
+
 <p>and unconditionally used in the result (the negative value results in a zero-product). Clamp may be faster than max and/or min for the 0.0 and 1.0 cases, but as always benchmarking will have the final say in the matter. Another reason to make an effort of avoiding conditionals in fragment shaders is that mipmapped textures return undefined results when executed in a block statement that is conditional on run-time values. Although the GLSL functions texture*Lod can be used to bias or specify the mipmap LOD, it is expensive to manually derive the mipmap LOD. In addition, these LOD biasing samplers may not run as fast as the non-LOD samplers.</p>
       <h2>
         
         
-          Use appropriate precision qualifiers (P7)
+          적절한 정확도 한정자를 사용하십시오. (P7)
         
         
       </h2>
     
+
 <p>Recall that the default precision in vertex shaders is highp, and that fragment shaders have no default precision until explicitly set. Precision qualifiers can be valuable hints to the compiler to reduce register pressure and may improve performance for several reasons. Low precision may run twice as fast in hardware as high precision. These optimizations can be approached by initially using highp and gradually reducing the precision to lowp until rendering artifacts appear; if it looks good enough, then it is good enough. As a rule of thumb, vertex position, exponential and trigonometry functions need highp. Texture coordinates may need anything from lowp to highp depending on texture width and height. Many application-defined uniform variables, interpolated colors, normals and texture samples can usually be represented using lowp. However, floating-point texture samplers need more than low precision - this is one of several reasons to minimize the use of floating-point textures (T6).</p>
       <h2>
         
         
-          Use the built-in functions and variable (P8)
+          빌트인 함수와 변수를 사용하십시오. (P8)
         
         
       </h2>
     
+
 <p>The built-ins have a higher chance of compiling optimally and may even be implemented in hardware. For instance, do not write shader code to determine the forward primitive face or compute the reflection vector in terms of dot-products and algebra; instead, use the built-in variable gl_FrontFacing or the built-in function reflect, respectively.</p>
       <h2>
         
         
-          Consider encoding complex functions in textures (P9)
+          복잡한 함수는 텍스쳐에 인코딩하는 것을 고려하십시오. (P9)
         
         
       </h2>
     
-<p>Shaders normally contain both arithmetic (ALU) and texture operations. A batch of ALU operations may hide the latency of fetching samples from texture because they occur in parallel. If a shader is the primary bottleneck, and when the ALU operations significantly outnumber the texture operations, it is worthwhile to investigate if some of these operations can be encoded in textures. Sub-expressions in shaders can sometimes be stored in LUTs (look-up-tables). LUTs can sometimes be implemented in textures with sufficient precision and accessed as 1D or 2D textures with NEAREST filtering.
-Note: The old trick of using cubemaps to normalize vectors is most likely a performance loss on discrete GPUs. If you pursue this idea, then make sure to benchmark to determine if you have improved or worsened the performance!</p>
+
+<p>Shaders normally contain both arithmetic (ALU) and texture operations. A batch of ALU operations may hide the latency of fetching samples from texture because they occur in parallel. If a shader is the primary bottleneck, and when the ALU operations significantly outnumber the texture operations, it is worthwhile to investigate if some of these operations can be encoded in textures. Sub-expressions in shaders can sometimes be stored in LUTs (look-up-tables). LUTs can sometimes be implemented in textures with sufficient precision and accessed as 1D or 2D textures with NEAREST filtering.</p>
+
+<p>Note: The old trick of using cubemaps to normalize vectors is most likely a performance loss on discrete GPUs. If you pursue this idea, then make sure to benchmark to determine if you have improved or worsened the performance!</p>
       <h2>
         
         
-          Limit the amount of indirect texturing (P10)
+          간접 텍스쳐링의 사용을 제한하십시오. (P10)
         
         
       </h2>
     
+
 <p>Indirect texturing can sometimes be useful, but when the result of a texture operation depends on another texture operation, the latency of texture sampling is difficult to hide. It also tends to lead to scattered reads that minimize the benefit of the texture cache. Indirect texturing can sometimes be reduced, or avoided, at the expense of memory. Whether that trade-off makes sense should of course be analyzed and benchmarked.</p>
       <h2>
         
         
-          Do not let GLSL syntax obscure math optimizations (P11)
+          수치 계산 최적화를 모호하게 GLSL 구문을 작성하지 마십시오. (P11)
         
         
       </h2>
     
+
 <p>The GLSL shading language conveniently overloads arithmetic operators for vectors and matrices. Care must be taken to not miss optimization opportunities due to this syntax simplification. For instance, a rotation matrix can, but should not, be defined as homogenous 4x4 matrix just because the other operand is a vec4 vector. A generalized rotation matrix should be described only as a 3 x 3 matrix and applied to vec3 vectors. And a rotation around basic vectors can be done even more efficiently than mat3 * vec3 by directly accessing the relevant vector and matrix components with cos and sin. Take advantage of any specific application knowledge to reduce the number of needed scalar instructions.</p>
       <h2>
         
         
-          Only normalize vectors when it is necessary (P12)
+          정규화는 필요할 때만 하십시오. (P12)
         
         
       </h2>
     
+
 <p>Normalization of vectors is required to efficiently calculate the angle between them, or perhaps more typically, the diffuse component in many commonly used lighting equations. In theory, normalization is required for geometry normals after having transformed them with the normal matrix. In practice, it may not matter depending on the composition of the matrix. It is a common mistake to normalizing vectors where it is not necessary, or at least not visually discernible. As a result, the application may run slower for no good reason. For instance, consider the case of interpolating vertex normals in order to compute lighting per fragment (i.e., Phong shading). If the normal matrix only rotates, there is little reason to normalize the normal vectors before interpolating.
 Note: Barycentric interpolation will not preserve the unit length of these vectors. So normals that are interpolated in varying variables do must be normalized to ensure the dot-product with the light vector obeys the cosine emission law.</p>
       <h1>
         
         
-          Textures
+          텍스쳐
         
         
       </h1>
     
+
 <p>Textures consume the largest amount of the available memory and bandwidth in many applications. One of the best places to look for improvements when short on memory or bandwidth to optimize texture size, format and usage. Careless use of texturing can degrade the frame rate and can even result in inferior image quality.</p>
       <h2>
         
         
-          Use texture compression whenever possible (T1)
+          텍스쳐 압축은 가능한 사용하십시오. (T1)
         
         
       </h2>
     
+
 <p>Texture compression brings several benefits that result from textures taking up less memory: compressed textures use less of the available memory bandwidth, reduces download time, and increases the efficiency of the texture cache. The texture_compression_s3tc and texture_compression_latc extensions both provide block-based lossy texture compression that can be decompressed efficiently in hardware. The S3TC extension gives 8:1 or 4:1 compression ratio and is suitable for color images with 3 or 4 channels (with or without alpha) with relatively low-frequency data. Photographs and other images that compress satisfactory with JPEG are great candidates for S3TC. Images with hard and crisp edges are less good candidates for S3TC and may appear slightly blurred and noisy. The LATC extension yields a 2:1 compression ratio, but improves on the quality and can be useful for high resolution normal maps. The third coordinate is derived in the fragment shader—be sure to benchmark if the application can afford this trade-off between memory and computations! Unlike S3TC, the channels in LATC are compressed separately, and quantization is less hard. Using texture compression does not always result in lower perceived image quality, and with these extensions one can experiment with increasing the texture resolution for the same memory. There are off-line tools to compress textures (even if a GL extension supports compressing them on-the-fly). Search the NVIDIA developer website for “Texture Tools”.</p>
       <h2>
         
         
-          Use mipmaps when appropriate (T2)
+          적절하게 밉맵을 사용하십시오. (T2)
         
         
       </h2>
     
-<p>Mipmaps should be used when there is not an obvious one-to-one mapping between texels and framebuffer pixels. If texture minification occurs in a scene and there are no mipmaps to access, texture cache utilization will be poor due to the sparse sampling. If texture minification occurs more often than not, then the texture size may be too large to begin with. Coloring the mipmap levels differently can provide a visual clue to the amount of minification that is occurring. When reducing the texture size, it may also be worthwhile to perform experiments to see if some degree of magnification is visually acceptable and if it improves frame rate.
-Although the GenerateMipmap function is convenient, it should not be the only option for generating a mipmap chain. This function emphasizes execution speed over image quality by using a simple box filter. Generating mipmaps off-line using more advanced filters (e.g. Lanczos/Sinc) will often yield improved image quality at no extra cost. However, GenerateMipmap may be preferable when generating textures dynamically due to speed. One of the only situations where you do not want to use mipmaps is if there is always a one-to-one mapping between texels and pixels. This is sometimes the case in 3D, but more often the case for 2D user interfaces. Recall that a mipmapped texture takes up 33% more storage than un-mipmapped, but they can provide much better performance and even better image quality through reduced aliasing.</p>
+
+<p>Mipmaps should be used when there is not an obvious one-to-one mapping between texels and framebuffer pixels. If texture minification occurs in a scene and there are no mipmaps to access, texture cache utilization will be poor due to the sparse sampling. If texture minification occurs more often than not, then the texture size may be too large to begin with. Coloring the mipmap levels differently can provide a visual clue to the amount of minification that is occurring. When reducing the texture size, it may also be worthwhile to perform experiments to see if some degree of magnification is visually acceptable and if it improves frame rate.</p>
+
+<p>Although the GenerateMipmap function is convenient, it should not be the only option for generating a mipmap chain. This function emphasizes execution speed over image quality by using a simple box filter. Generating mipmaps off-line using more advanced filters (e.g. Lanczos/Sinc) will often yield improved image quality at no extra cost. However, GenerateMipmap may be preferable when generating textures dynamically due to speed. One of the only situations where you do not want to use mipmaps is if there is always a one-to-one mapping between texels and pixels. This is sometimes the case in 3D, but more often the case for 2D user interfaces. Recall that a mipmapped texture takes up 33% more storage than un-mipmapped, but they can provide much better performance and even better image quality through reduced aliasing.</p>
       <h2>
         
         
-          Use the smallest possible textures size (T3)
+          가능한 최소한의 텍스쳐 사이즈를 사용하십시오. (T3)
         
         
       </h2>
     
+
 <p>Always use the smallest possible texture size for any content that gives acceptable image quality. The appropriate size of a texture should be determined by the size of the framebuffer and the way the textured geometry is projected onto it. But even when you have a one-to-one mapping between texels and framebuffer pixels, there may be cases where a smaller size can be used. For instance, when blending a texture on the existing content in the entire framebuffer, the texture does not necessarily have to be the same width and height as the framebuffer. It may be the case that a significantly smaller texture that is magnified will produce results that are good enough. The bandwidth that is saved from using a smaller and more appropriately sized texture can instead be spent where it actually contributes to better image quality or performance.</p>
       <h2>
         
         
-          Use the smallest possible texture format and data type (T4)
+          가능한 최소한의 텍스쳐 포맷과 데이터 타입을 사용하십시오. (T4)
         
         
       </h2>
     
-<p>If hardware accelerated texture compression cannot be used for some textures, then consider using a texture format with fewer components and/or fewer bits per component. Textures for user interface elements sometimes have hard edges or color gradients that result in inferior image quality when compressed. The S3TC algorithm make assumptions that changes are smooth and colors values can be quantized. If these assumptions do not fit a particular image, but the number of unique colors is still low, then experiment with storing these in a packed texture format using 16 bit/texel (e.g. UNSIGNED_SHORT_5_6_5). Although the colors are remapped with less accuracy it may not be noticeable in the final application. Grayscale images should be stored as LUMINANCE and tinted images can sometimes be stored the same way with the added cost of a dot product with the tint color. If normal maps do not compress satisfactory with the LATC format, then it may be possible to store two of the normals coordinates in uncompressed LUMINANCE_ALPHA and derive the third in a shader assuming the direction (sign) of the normal is implicit (as is the case of a heightmap terrain).
-Note: When optimizing uncompressed textures, the exception case that 24-bit (RGB) textures are not necessarily faster to download or smaller in memory than 32-bit (RGBA) on most GPUs. In this case, it may be possible to use the last component for something useful. For instance, if there already is an 8-bit greyscale texture that is needed at the same time as an opaque color texture, that single component texture can be stored in the unused alpha component of a 32-bit (RGBA). The component could define a specular/reflectance map that describe where and to what degree light is reflected. This is useful for terrain satellite imagery or land cover textures with water/snow/ice areas or for car textures with their metal and glass surfaces or for textures for buildings with glass windows.</p>
+
+<p>If hardware accelerated texture compression cannot be used for some textures, then consider using a texture format with fewer components and/or fewer bits per component. Textures for user interface elements sometimes have hard edges or color gradients that result in inferior image quality when compressed. The S3TC algorithm make assumptions that changes are smooth and colors values can be quantized. If these assumptions do not fit a particular image, but the number of unique colors is still low, then experiment with storing these in a packed texture format using 16 bit/texel (e.g. UNSIGNED_SHORT_5_6_5). Although the colors are remapped with less accuracy it may not be noticeable in the final application. Grayscale images should be stored as LUMINANCE and tinted images can sometimes be stored the same way with the added cost of a dot product with the tint color. If normal maps do not compress satisfactory with the LATC format, then it may be possible to store two of the normals coordinates in uncompressed LUMINANCE_ALPHA and derive the third in a shader assuming the direction (sign) of the normal is implicit (as is the case of a heightmap terrain).</p>
+
+<p>Note: When optimizing uncompressed textures, the exception case that 24-bit (RGB) textures are not necessarily faster to download or smaller in memory than 32-bit (RGBA) on most GPUs. In this case, it may be possible to use the last component for something useful. For instance, if there already is an 8-bit greyscale texture that is needed at the same time as an opaque color texture, that single component texture can be stored in the unused alpha component of a 32-bit (RGBA). The component could define a specular/reflectance map that describe where and to what degree light is reflected. This is useful for terrain satellite imagery or land cover textures with water/snow/ice areas or for car textures with their metal and glass surfaces or for textures for buildings with glass windows.</p>
       <h2>
         
         
-          Store multiple images in each texture object (T5)
+          각각의 텍스쳐 오브젝트에 여러 이미지를 저장하십시오. (T5)
         
         
       </h2>
     
-<p>There is no requirement that there is a one-to-one mapping between an image and a texture object. Textures objects can contain multiple distinct images. These are sometimes referred to as a “texture atlas” or a “texture page”. The geometry defines texture coordinates that only reference a subset of the texture. Texture atlases are useful for minimizing state changes and enables larger batches when rendering. For example, residential houses and office buildings and factories might all use distinct texture images. But the geometry and vertex layout for each is most likely identical so these could share the same buffer object. If the distinct images are stored in a texture atlas instead of as separate textures, then these different kinds of buildings can all be rendered more efficiently in the same draw call (G7). The texture object could be a 2D texture, a cubemap texture or an array texture.
-Note: Note that if mipmapping is enabled, the sub-textures in an atlas must have a border wide enough to ensure that smaller mipmaps are not generated using texels from neighboring images. And if texture tiling (REPEAT or MIRRORED_REPEAT) is needed for a sub-image then it may be better to store it outside the texture atlas.
-Emulating either wrapping mode in a shader by manipulating texture coordinates is possible, but not free. A cubemap texture can sometimes be useful since wrapping and filtering apply per face, but the texture coordinates used must be remapped to a vec3 which may be inconvenient. If all the sub-images have the same or similar size, format and type (e.g. image icons), the images are a good candidate for the array texture extension if supported. Array textures may be more appropriate here than a 2D texture atlas where mipmapping and wrapping restrictions have to be taken into consideration.</p>
+
+<p>There is no requirement that there is a one-to-one mapping between an image and a texture object. Textures objects can contain multiple distinct images. These are sometimes referred to as a “texture atlas” or a “texture page”. The geometry defines texture coordinates that only reference a subset of the texture. Texture atlases are useful for minimizing state changes and enables larger batches when rendering. For example, residential houses and office buildings and factories might all use distinct texture images. But the geometry and vertex layout for each is most likely identical so these could share the same buffer object. If the distinct images are stored in a texture atlas instead of as separate textures, then these different kinds of buildings can all be rendered more efficiently in the same draw call (G7). The texture object could be a 2D texture, a cubemap texture or an array texture.</p>
+
+<p>Note: Note that if mipmapping is enabled, the sub-textures in an atlas must have a border wide enough to ensure that smaller mipmaps are not generated using texels from neighboring images. And if texture tiling (REPEAT or MIRRORED_REPEAT) is needed for a sub-image then it may be better to store it outside the texture atlas.</p>
+
+<p>Emulating either wrapping mode in a shader by manipulating texture coordinates is possible, but not free. A cubemap texture can sometimes be useful since wrapping and filtering apply per face, but the texture coordinates used must be remapped to a vec3 which may be inconvenient. If all the sub-images have the same or similar size, format and type (e.g. image icons), the images are a good candidate for the array texture extension if supported. Array textures may be more appropriate here than a 2D texture atlas where mipmapping and wrapping restrictions have to be taken into consideration.</p>
       <h2>
         
         
-          Float textures are always expensive (T6)
+          single-precision 부동소수점 텍스쳐는 언제나 비쌉니다. (T6)
         
         
       </h2>
     
-<p>Textures with a floating-point format should be avoided whenever possible. If these textures are simply being used to represent a larger range of values, it may be possible to replace these with fixed point textures and scaling instructions. For instance, unsigned 16-bit integers cannot even accurately be represented by half-precision floats (FP16). These would have to be stored using single precision (FP32) leading to twice the memory and bandwidth requirements. It might be better to store these values in two components using 8 bits (LA8) and spend ALU instructions to unpack them in a shader.
-Note: Floating-point textures may not support anything better than nearest filtering.</p>
+
+<p>Textures with a floating-point format should be avoided whenever possible. If these textures are simply being used to represent a larger range of values, it may be possible to replace these with fixed point textures and scaling instructions. For instance, unsigned 16-bit integers cannot even accurately be represented by half-precision floats (FP16). These would have to be stored using single precision (FP32) leading to twice the memory and bandwidth requirements. It might be better to store these values in two components using 8 bits (LA8) and spend ALU instructions to unpack them in a shader.</p>
+
+<p>Note: Floating-point textures may not support anything better than nearest filtering.</p>
       <h2>
         
         
-          Prefer power-of-two (POT) textures in most cases (T7)
+          거의 대부분의 경우 POT(power-of-two) 텍스쳐를 사용하십시오. (T7)
         
         
       </h2>
     
+
 <p>Although Non-Power-of-Two (NPOT) textures are supported in ES2 they come with a CLAMP_TO_EDGE restriction on the wrapping mode (unless relaxed by an extension). More importantly, they cannot be mipmapped (unless relaxed by an extension). For that reason, POT textures should be used when there is not significant memory and bandwidth to be saved from using NPOT. However, an NPOT texture may be padded internally to accommodate alignment restrictions in hardware and that the amount of memory saved might not be quite as large as the width and height suggests. As a rule of thumb, only large (i.e., hundreds of texels) NPOT textures will effectively save a significant amount of memory over POT textures.</p>
       <h2>
         
         
-          Update textures sparingly (T8)
+          텍스쳐 업데이트는 드물게 (T8)
         
         
       </h2>
     
+
 <p>Writing to GPU resources can be expensive—it applies to textures as well. If texture updates are required, then determine if they really need to be updated per frame or if the same texture can be reused for several frames. For environment maps, unless the lighting or the objects in the environment have been transformed (e.g., moved/rotated) sufficiently to invalidate the previous map, the visual difference may not be noticeable but the performance improvement can be. The same applies to the depth texture(s) used for shadow mapping algorithms.</p>
       <h2>
         
         
-          Update textures efficiently (T9)
+          텍스쳐 업데이트는 효율적으로 (T9)
         
         
       </h2>
     
+
 <p>When updating an existing texture, use TexSubImage instead of re-defining its entire contents with TexImage when possible.
 Note: When using TexSubImage it is important to specify the same texture format and data type with which that the texture object was defined; otherwise, there may be an expensive conversion as texels are being updated.
-If the application is only updating from a sub-rectangle of pixels in client memory, then remember that the driver has no knowledge about the stride of pixels in your image. When the width of the image rectangle differs from the texture width, this normally requires a loop through single pixel rows calling TexSubImage repeatedly while updating the client memory offsets with pointer arithmetic. In this case, the unpack_subimage extension can be used (if supported) to set the UNPACK_ROW_LENGTH pixelstore parameter to update the entire region with one TexSubImage call.
 If the application is only updating from a sub-rectangle of pixels in client memory, then remember that the driver has no knowledge about the stride of pixels in your image. When the width of the image rectangle differs from the texture width, this normally requires a loop through single pixel rows calling TexSubImage repeatedly while updating the client memory offsets with pointer arithmetic. In this case, the unpack_subimage extension can be used (if supported) to set the UNPACK_ROW_LENGTH pixelstore parameter to update the entire region with one TexSubImage call.</p>
+
+<p>If the application is only updating from a sub-rectangle of pixels in client memory, then remember that the driver has no knowledge about the stride of pixels in your image. When the width of the image rectangle differs from the texture width, this normally requires a loop through single pixel rows calling TexSubImage repeatedly while updating the client memory offsets with pointer arithmetic. In this case, the unpack_subimage extension can be used (if supported) to set the UNPACK_ROW_LENGTH pixelstore parameter to update the entire region with one TexSubImage call.</p>
       <h2>
         
         
-          Partition rendering based on alpha blending/testing (T10)
+          알파 테스팅/블렌딩 렌더링을 분리하십시오. (T10)
         
         
       </h2>
     
+
 <p>It is sometimes possible to improve performance by splitting up the rendering based on whether alpha blending or alpha testing is required. Use separate draw calls for opaque geometry so these can be rendered with maximum efficiency with blending disabled. Perform other draw calls for transparent geometry with alpha blending enabled, taking into account the draw ordering that transparent geometry requires. As always, benchmarks should be run to determine if this improves or reduces the frame rate since you will be batching less by splitting up draw calls.</p>
       <h2>
         
         
-          Filter textures appropriately (T11)
+          적절하게 텍스쳐 필터링 하십시오. (T11)
         
         
       </h2>
     
+
 <p>Do not automatically set expensive texture filters and enable anisotropic filtering. Remember that nearest-neighbor filtering always fetches one texel, bilinear filtering fetches up to four texels and trilinear fetches up to eight texels. However, it can be incorrect to draw assumptions about the performance cost based on this. Bilinear filtering may not cost four times as much as nearest filtering, and trilinear can be more or less than twice as expensive as bilinear. Even though textures have mipmaps, it does not automatically mean trilinear filtering should be used. That decision should be made entirely from observing the images from the running application. Only then can a judgment be made if any abrupt changes between mipmap levels are visually disturbing enough to justify the cost of interpolating the mipmaps with trilinear filtering. The same applies to anisotropic filtering, which is significantly more expensive and bandwidth intensive than bilinear or trilinear filtering. If the angle between the textured primitives and the projection plane (e.g. near plane) is never very large, there is nothing to be gained from sampling anisotrophically and there is potentially lower performance. Therefore, an application should start off with the simplest possible texture filtering and only enable more expensive filtering after users have inspected the output images. It might be worthwhile to benchmark the changes and take notes along the way. This will provide a better indication of the relative cost of filtering method and if concessions must be made if the performance budget is exceeded.</p>
       <h2>
         
         
-          Try to exploit texture tiling (T12)
+          텍스쳐 타일링을 활용하려 노력하십시오. (T12)
         
         
       </h2>
     
+
 <p>It is common for images to contain the same repeated pattern of pixels. Or an image might repeat a few patterns that are close enough in similarity that they could be replaced with a single pattern without impacting image quality. Tiling textures saves on memory and bandwidth. Some image processing applications can identify repeated patterns and can crop them so they can be tiled infinitely without seams when using textures with the REPEAT wrap mode. Sometimes even a quarter of a tile or shingle may be sufficient to store while using MIRRORED_REPEAT. Consider if tiling variation can be restored or achieved with multi-texturing, using for instance a less expensive grey-scale texture that repeats at a different frequency to modulate the texels from the tiled texture.</p>
       <h2>
         
         
-          Use framebuffer objects (FBO) for dynamically generated textures (T13)
+          프레임 버퍼 오브젝트를(FBO) 동적으롸 생성되는 텍스쳐를 위해 사용하십시오. (T13)
         
         
       </h2>
     
+
 <p>OpenGL ES comes with functions for copying previously rendered pixels from a framebuffer into a texture (TexCopyImage, TexCopySubImage). These functions should be avoided whenever possible for performance reasons. It is better to bind a framebuffer object with a texture attachment and render directly to the texture. Make sure you check for framebuffer completeness.
 Note: Not all pixel formats are color-renderable. Formats with 3 or 4 components in 16 or 32 bits are color-renderable in OpenGL ES 2.0, but LUMINANCE and/or ALPHA may require a fall-back to TexCopyImage functions.</p>
       <h1>
         
         
-          Miscellaneous
+          기타
         
         
       </h1>
     
+
 <p>This topic contains miscellaneous OpenGL ES programming tips.</p>
       <h2>
         
         
-          Avoid reading back the framebuffer contents (M1)
+          FBO 내용을 다시 읽는 것을 피하십시오. (M1)
         
         
       </h2>
     
+
 <p>Reading back the framebuffer flushes the GL pipeline and limits the amount CPU/GPU parallelism. Reading frequently or in the middle of a frame stalls the GPU and limits the throughput with lower frame rate as a result. If the buffer contents must be read back (perhaps for picking 3D objects in a complex scene), it should be done minimally and scheduled at the beginning of the next frame. In the special case that the application is reading back into a sub-rectangle of pixels in client memory, the pack_subimage extension (if supported) is very useful. Setting the PACK_ROW_LENGTH pixel store parameter will reduce the loop overhead that will otherwise be necessary (T9).</p>
       <h2>
         
         
-          Avoid clearing buffers needlessly (M2)
+          필요없는 버퍼 청소를 피하십시오. (M2)
         
         
       </h2>
     
+
 <p>If the application always covers the entire color buffer for each frame, then bandwidth can be saved by not clearing it. It is a common mistake to call Clear(GL_COLOR_BUFFER_BIT) when it is not necessary. If only part of the color buffer is modified, then constrain pixel operations to that region by enabling scissor testing and define a minimal scissor box for the region. The same applies to depth and stencil buffers if full screen testing is not needed.</p>
       <h2>
         
         
-          Disable blending when it is not needed (M3)
+          필요하지 않은 블렌딩은 비활성화 하십시오. (M3)
         
         
       </h2>
     
-<p>Most blending operations require a read and a write to the framebuffer.
-Note: Memory bandwidth is often doubled when rendering with blending is enabled. The number of blended fragments should be kept to a minimum—it can drastically speed up the GL application.</p>
+
+<p>Most blending operations require a read and a write to the framebuffer.</p>
+
+<p>Note: Memory bandwidth is often doubled when rendering with blending is enabled. The number of blended fragments should be kept to a minimum—it can drastically speed up the GL application.</p>
       <h2>
         
         
-          Minimize memory fragmentation (M4)
+          메모리 파편화를 최소화 하십시오. (M4)
         
         
       </h2>
     
-<p>Buffer objects and glTexImage* functions are effectively graphics memory allocations. Reusing existing buffer objects and texture objects will reduce memory fragmentation. If geometry or textures are generated dynamically, the application should allocate a minimal pool of objects for this purpose during application initialization. It may be that two buffers or textures used in a round-robin fashion are optimal for reducing the risk that the GPU is waiting on the resource. Also, recall that sampling a texture that is being rendered to, at the same time, is undefined. This can be another reason to alternate between objects. For more information, see Memory Fragmentation in this appendix.
-Avoiding Memory Fragmentation
-Memory Fragmentation generally is a bad thing. This is especially true for computer graphics applications. In addition to avoiding system memory fragmentation, a graphics application should strive to avoid video memory fragmentation as well.
-Fortunately, controlling video memory fragmentation has techniques very similar to those used to avoid system memory fragmentation. Since system memory fragmentation control is fairly well known, this document will only treat system memory issues in passing and focuses on video memory techniques.</p>
+
+<p>Buffer objects and glTexImage* functions are effectively graphics memory allocations. Reusing existing buffer objects and texture objects will reduce memory fragmentation. If geometry or textures are generated dynamically, the application should allocate a minimal pool of objects for this purpose during application initialization. It may be that two buffers or textures used in a round-robin fashion are optimal for reducing the risk that the GPU is waiting on the resource. Also, recall that sampling a texture that is being rendered to, at the same time, is undefined. This can be another reason to alternate between objects. For more information, see Memory Fragmentation in this appendix.</p>
       <h1>
         
         
-          Optimizing OpenGL ES Applications
+          Optimizing OpenGL ES
         
         
       </h1>
     
+
 <p>Optimization is an iterative process. It can be time consuming, especially without prior experience determining where bottlenecks tend to occur. Effort should be directed towards the critical areas instead of starting a random place in the rendering code. When the graphics application is complex it may be difficult to know where to start or exactly where optimizations will yield the best return.</p>
       <h2>
         
@@ -965,6 +1007,7 @@ Fortunately, controlling video memory fragmentation has techniques very similar 
         
       </h2>
     
+
 <p>Many rendering applications are complex and consist of hundreds of objects. But usually they consist of logically separate rendering code. For example, a rendered image may consist of roads, buildings, landmarks, points of interest, sky, clouds, buildings, water, terrain, icons, and a 2D user interface. It is helpful to write the GL application such that rendering of each type of object can be disabled easily. This allows easy identification of the most expensive objects when benchmarking and therefore makes optimizing the rendering code more manageable.</p>
       <h2>
         
@@ -974,6 +1017,7 @@ Fortunately, controlling video memory fragmentation has techniques very similar 
         
       </h2>
     
+
 <p>It is important to begin optimizations by identifying the performance bottlenecks at the different stages in the graphics pipeline. Because the work introduced in the beginning of the pipeline normally affects the work needed at later stages, it often makes sense to work backwards from the end of the pipeline. An introduction to identifying graphics bottlenecks can be found in the GPU Gems book, “Chapter 28. Graphics Pipeline Performance” (Cem Cebenoyan, NVIDIA).</p>
       <h1>
         
@@ -983,6 +1027,7 @@ Fortunately, controlling video memory fragmentation has techniques very similar 
         
       </h1>
     
+
 <p>Memory Fragmentation generally is a bad thing. This is especially true for computer graphics applications. In addition to avoiding system memory fragmentation, a graphics application should strive to avoid video memory fragmentation as well.
 Fortunately, controlling video memory fragmentation has techniques very similar to those used to avoid system memory fragmentation. Since system memory fragmentation control is fairly well known, this document will only treat system memory issues in passing and focuses on video memory techniques.</p>
       <h1>
@@ -993,6 +1038,7 @@ Fortunately, controlling video memory fragmentation has techniques very similar 
         
       </h1>
     
+
 <p>Video memory is much more heterogenous than system memory.
 NVIDIA video memory allocation algorithms have to take the following into account:</p>
 <ul>
@@ -1022,13 +1068,16 @@ NVIDIA video memory allocation algorithms have to take the following into accoun
     
 
 <p>When using OpenGL ES/EGL, there is only a small set of APIs that actually lead to long-term video memory buffer allocation:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glBufferData(enum target, sizeiptr size, const void *data, enum usage)
  
 glTexImage2D(enum target, int level, int internalFormat, sizei width, sizei height, int border, enum format, enum type, const void *pixels)
  
 glCopyTexImage2D(enum target, int level, enum internalformat, int x, int y, sizei width, sizei height, int border)
 </code></pre></div></div>
+
 <p>Note: The glCopyTexImage2D function allocates only when it copies to a null.</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config, NativeWindowType win, const EGLint *attrib_list)
  
 eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config, const EGLint *attrib_list)
@@ -1043,6 +1092,7 @@ eglCreatePixmapSurface(EGLDisplay dpy, EGLConfig config, NativePixmapType pixmap
         
       </h2>
     
+
 <p>A similar set of APIs free allocated video memory buffers, whether they are textures, VBOs, or surfaces:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glDeleteBuffers(sizei n, uint *buffers)
@@ -1051,6 +1101,7 @@ glDeleteTextures(sizei n const uint *textures)
  
 eglDestroySurface(EGLDisplay dpy, EGLSurface surface)
 </code></pre></div></div>
+
 <p>Note: The glDeleteTextures function works only if the texture object is greater than zero; the default texture can’t be explicitly deleted (although it can be replaced with a texture containing one or two dimensions of zero, which accomplishes the same thing).
 Conceptually, these calls can be thought of as malloc() and free() for VBOs and texture maps, respectively. The same techniques for avoiding fragmentation can also be applied.</p>
       <h2>
@@ -1061,7 +1112,9 @@ Conceptually, these calls can be thought of as malloc() and free() for VBOs and 
         
       </h2>
     
+
 <p>In many cases, avoiding fragmentation means placing multiple objects into the same shared buffer, or reusing a buffer by deleting or overwriting an older object with a newer one. OpenGL ES provides a method for updating an arbitrary section of allocated VBOs, textures, and surfaces:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glBufferSubData(enum target, intptr offset, sizeiptr size, const void *data, enum usage)
  
 glTexSubImage2D(enum target, int level, int xoffset, int yoffset, sizei width, sizei height, enum format, enum type, const void *pixels)
@@ -1072,6 +1125,7 @@ glScissor(int left, int bottom, sizei width, sizei height);
  
 glViewport(int x, int y, sizei w, sizei h)
 </code></pre></div></div>
+
 <p>The glTexSubImage2D and glCopyTexSubImage2D function update a subregion of the target texture image. In the first case, the source comes from an application buffer; in the second, from a rendering surface.
 The glScissor and glViewport functions limit rendering to a subregion of a rendering surface. The first specifies the region of the buffer that the glClear function will affect; the second updates the transforms to limit rendered OpenGL ES primitives to the specified subregion.</p>
       <h2>
@@ -1082,7 +1136,9 @@ The glScissor and glViewport functions limit rendering to a subregion of a rende
         
       </h2>
     
+
 <p>Completing the functionality needed to reuse allocated buffers is the ability to use an arbitrary subregion of a texture, VBO, or surface:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glDrawArrays(enum mode, int first, sizei count)
  
 glReadPixels(int x, int y, sizei width, sizei height, enum format, enum type, void *data)
@@ -1094,8 +1150,9 @@ glCopyTexSubImage2D(enum target, int level, int xoffset, int yoffset, int x, int
 
 <p>For VBOs, the glDrawArrays function allows the application to choose a contiguous subset of a VBO.
 For textures, there’s no explicit call to limit texturing source to a particular subregion. But texture coordinates and wrapping modes can be specified in order to render an arbitrary subregion of texture object.
-For surfaces, the glReadPixels function can be used to read from a subregion of a display, when copying data back to an application-allocated buffer.
-The glCopyTexImage2D and glCopyTexSubImage2D functions also restrict themselves to copying from a subregion of the display surface when transferring data to a texture map. The only area that’s problematic is controlling the direct display of window surface back buffer. OpenGL ES and EGL have no way to show only a subregion of the backbuffer surface, but the native windowing systems may have this functionality.</p>
+For surfaces, the glReadPixels function can be used to read from a subregion of a display, when copying data back to an application-allocated buffer.</p>
+
+<p>The glCopyTexImage2D and glCopyTexSubImage2D functions also restrict themselves to copying from a subregion of the display surface when transferring data to a texture map. The only area that’s problematic is controlling the direct display of window surface back buffer. OpenGL ES and EGL have no way to show only a subregion of the backbuffer surface, but the native windowing systems may have this functionality.</p>
       <h1>
         
         
@@ -1104,6 +1161,7 @@ The glCopyTexImage2D and glCopyTexSubImage2D functions also restrict themselves 
         
       </h1>
     
+
 <p>The following is a list of good practices when allocating video memory to avoid or minimize fragmentation:</p>
       <h2>
         
@@ -1113,6 +1171,7 @@ The glCopyTexImage2D and glCopyTexSubImage2D functions also restrict themselves 
         
       </h2>
     
+
 <p>Ideally allocate large buffers at the start of the program. On average, allocating large surfaces gets more difficult as more allocations occur. When more allocations occur, free space is broken into smaller pieces.</p>
       <h2>
         
@@ -1122,6 +1181,7 @@ The glCopyTexImage2D and glCopyTexSubImage2D functions also restrict themselves 
         
       </h2>
     
+
 <p>Small allocations can disproportionately reduce available free space. Not only does the allocator have a fixed overhead per allocation, regardless of size, but small allocations tend to break up large areas of free space into smaller pieces.
 The ability to load a subregion of a VBO or texture map, and the ability to render that subregion independently, makes it possible to combine VBOs and textures together. For textures, a large texture can be used to hold a grid of smaller images. For VBOs, multiple vertex arrays can be combined end to end into a larger one. Besides reducing fragmentation, combining related images into a single texture, and related vertex arrays into a single VBO often improves rendering time, since it reduces the number of glBindBuffer or glBindTexture calls required to render a set of related objects.</p>
       <h2>
@@ -1132,6 +1192,7 @@ The ability to load a subregion of a VBO or texture map, and the ability to rend
         
       </h2>
     
+
 <p>Allocating buffers of varying sizes, especially sizes that aren’t small multiples of each other, is disruptive of memory space and causes fragmentation. The ability to load and render a subset of a VBO or texture means that data loaded doesn’t have to match the size of the allocated buffer; as long as it’s smaller, it will work.
 This approach does waste space, in that some of the allocated buffer isn’t used, but this waste is often offset by the saving in reduced fragmentation and fixed allocation overhead. This approach can often be combined with approach (2) (combining multiple objects into one allocated buffer) to reduce total wastage. Generally, it’s safe to ignore wastage it it’s a small percentage of the allocated buffer size (say &lt; 5%).
 This approach is particularly good for dynamically allocated data, since fixed size blocks can often be freed and reallocated with little or no fragmentation. If wastage is excessive, a set of buffer sizes can be chosen (often a consecutive set of power of two sizes), and the smallest free buffer that will contain the data is used.</p>
@@ -1143,6 +1204,7 @@ This approach is particularly good for dynamically allocated data, since fixed s
         
       </h2>
     
+
 <p>The ability to reload a previously allocated buffer with new data for both VBOs and textures makes this technique practical. Reuse is particularly important for large buffers; it is often better to create a large buffer at program start, and reuse it during mode switches, etc., even if it requires allocating a larger buffer to handle all possible cases.</p>
       <h2>
         
@@ -1152,6 +1214,7 @@ This approach is particularly good for dynamically allocated data, since fixed s
         
       </h2>
     
+
 <p>If possible, take memory allocation and freeing out of the inner loop of your application. The ability to reuse buffers makes this practical, even for algorithms that require dynamic allocation. Even with reuse, however, it’s still better to organize the code to minimize allocations and frees, and to move the remaining ones out of the main code path as much as possible.</p>
       <h2>
         
@@ -1161,6 +1224,7 @@ This approach is particularly good for dynamically allocated data, since fixed s
         
       </h2>
     
+
 <p>If dynamic allocation is mandatory, try to group similar allocations and frees together. Ideally, an allocation of a buffer is followed by freeing it before another allocation happens. This rarely can be done in practice, but combining a group of related allocations is often nearly as effective.
 Again, allocations and frees should be replaced whenever possible. Grouping them is a last resort.</p>
       <h1>
@@ -1171,7 +1235,9 @@ Again, allocations and frees should be replaced whenever possible. Grouping them
         
       </h1>
     
+
 <p>In some cases, the reported graphics driver CPU usage may be high, but in fact the yield is related to other CPUs. To reduce the reported CPU usage, set the environment variable as follows:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ export __GL_YIELD=USLEEP
 
 </code></pre></div></div>
@@ -1183,19 +1249,8 @@ Again, allocations and frees should be replaced whenever possible. Grouping them
         
       </h1>
     
-<p>The NVIDIA Tegra system on a chip (SOC) includes an extremely powerful and flexible 3D GPU whose power is well matched to the OpenGL ES APIs. For basic guidelines and tips on optimal content rendering, see <a href="https://docs.nvidia.com/drive/drive_os_5.1.6.1L/nvvib_docs/DRIVE_OS_Linux_SDK_Development_Guide/baggage/tegra_gles2_performance.pdf">OpenGL ES Performance for the Tegra Series Guidelines.</a></p>
-      <h2>
-        
-        
-          참조
-        
-        
-      </h2>
-    
 
-<ul>
-  <li><a href="https://docs.nvidia.com/drive/drive_os_5.1.6.1L/nvvib_docs/index.html#page/DRIVE_OS_Linux_SDK_Development_Guide/Graphics/graphics_opengl.html">docs.nvidia : OpenGL ES Programming Tips</a></li>
-</ul>
+<p>The NVIDIA Tegra system on a chip (SOC) includes an extremely powerful and flexible 3D GPU whose power is well matched to the OpenGL ES APIs. For basic guidelines and tips on optimal content rendering, see <a href="https://docs.nvidia.com/drive/drive_os_5.1.6.1L/nvvib_docs/DRIVE_OS_Linux_SDK_Development_Guide/baggage/tegra_gles2_performance.pdf">OpenGL ES Performance for the Tegra Series Guidelines.</a></p>
 
   </div>
 
