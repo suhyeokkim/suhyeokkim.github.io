@@ -269,6 +269,10 @@
 <lastmod>2021-01-31T00:00:00+00:00</lastmod>
 </url>
 <url>
+<loc>https://suhyeokim.github.io/2021/03/21/open-gl-es-programming-tips-kor</loc>
+<lastmod>2021-03-21T00:00:00+00:00</lastmod>
+</url>
+<url>
 <loc>https://suhyeokim.github.io/about/</loc>
 </url>
 <url>
@@ -431,6 +435,12 @@
 <loc>https://suhyeokim.github.io/categories/game-programming/</loc>
 </url>
 <url>
+<loc>https://suhyeokim.github.io/categories/opengles/</loc>
+</url>
+<url>
+<loc>https://suhyeokim.github.io/categories/optimization/</loc>
+</url>
+<url>
 <loc>https://suhyeokim.github.io/posts/2/</loc>
 </url>
 <url>
@@ -450,6 +460,6 @@
 </url>
 <url>
 <loc>https://suhyeokim.github.io/files/CgUsersManual.pdf</loc>
-<lastmod>2021-03-21T08:10:56+00:00</lastmod>
+<lastmod>2021-03-21T11:40:21+00:00</lastmod>
 </url>
 </urlset>
