@@ -646,8 +646,13 @@ Unconnected geometry can be stitched together with degenerate triangles (alterna
       </h1>
     
 
-<p>Writing efficient shaders is critical to achieving good performance. One should treat shaders like pieces of code that run in the inner-most loops on a CPU. There is a very high cost to littering these with conditionals or recomputing loop invariants. Before optimizing an expensive vertex shader, make sure geometry that is entirely outside the view frustum is being culled on the CPU. Before optimizing an expensive fragment shader, make sure the application is not generating an excess number of fragments with it.
-Note: When optimizing shaders, any source code that does not contribute to its output variables is optimized out by the compiler. This feature can be exploited to gain knowledge about whether the shader is part of the current bottleneck by multiplying the output variable with a null vector to reduce the workload and then measure if frame rate improves. Conversely, at the final stages of optimization one can quickly measure if there is headroom for increasing workload to offload computations to shader unit or to improve image quality by adding meaningless but expensive ALU instructions, or texture sampling, to the output variables.</p>
+<p>Writing efficient shaders is critical to achieving good performance. One should treat shaders like pieces of code that run in the inner-most loops on a CPU. There is a very high cost to littering these with conditionals or recomputing loop invariants. Before optimizing an expensive vertex shader, make sure geometry that is entirely outside the view frustum is being culled on the CPU. Before optimizing an expensive fragment shader, make sure the application is not generating an excess number of fragments with it.</p>
+
+<p>효율적인 쉐이더 작성은 좋은 성능을 얻기 위해서 중요합니다. 쉐이더는 CPU에서의 루프 내부에서 실행되는 코드의 일부분으로 다루어야 합니다. 조건문과 <em>loop-invariant</em> 를 재계산하여 쉐이더 코드를 어지르는 것은 굉장히 큰 비용이 듭니다. 값 비싼 정점 쉐이더를 최적화하기 전에, CPU에서 뷰 프러스텀 밖의 기하들을 컬링해주세요. 값 비싼 픽셀(<em>fragment</em>) 쉐이더를 최적화하기 전에, 응용 프로그램이 수많은 <em>fragment</em> 를 생성하지 않게 하세요.</p>
+
+<p>Note: When optimizing shaders, any source code that does not contribute to its output variables is optimized out by the compiler. This feature can be exploited to gain knowledge about whether the shader is part of the current bottleneck by multiplying the output variable with a null vector to reduce the workload and then measure if frame rate improves. Conversely, at the final stages of optimization one can quickly measure if there is headroom for increasing workload to offload computations to shader unit or to improve image quality by adding meaningless but expensive ALU instructions, or texture sampling, to the output variables.</p>
+
+<p>참고: 쉐이더를 최적화 할때, 출력과 상관없는 모든 소스코드는 컴파일러에 의해 제외됩니다. 이 기능을 활용하여 출력 변수에 null 벡터를 곱하여 작업 부하를 줄인 다음, 프레임 속도가 향상되는지 측정하여 어떤 쉐이더가 병목의 한 부분을 차지하는지 알 수 있습니다. 반대로 최적화의 마지막 단계에서, 쉐이더 유닛에서 연산을 더 부담하거나, 값비싼 ALU 명령어들을 이미지 퀄리티를 향상시키기 위해 추가하거나, 텍스쳐 샘플링, 출력 변수들을 위한 여유분이 있는지 빠르게 측정할 수 있습니다.</p>
       <h2>
         
         
