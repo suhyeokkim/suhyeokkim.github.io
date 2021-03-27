@@ -211,9 +211,13 @@ Note: When optimizing shaders, any source code that does not contribute to its o
 
 As the rendering pipeline is traversed from the CPU to the vertex processor and then to the fragment processor, the required workload tends to increase a few orders of magnitude each time. Computations constant per model, per primitive or per vertex do not belong in the fragment processor and should be moved up to the vertex processor or earlier. Per draw call computations do not belong in the vertex processor and should be moved to the CPU. For instance, if lighting is done in eye-space, the light vector should be transformed into eye-space and stored in a uniform rather than repeating this for each vertex or, even worse, per fragment. The light vector should naturally be stored pre-normalized. Usually the light vector computations are constant for the draw call, so they do not belong in any shader.
 
+렌더링 파이프라인이 CPU에서 정점 프로세서로 그리고 _fragment_ 프로세서로 향할 수록, 필요한 처리량은 각 때마다 극단적으로 증가합니다. 모델별, 프리미티브 별 혹은 정점 별 계산 상수는 _fragment_ 처리에 속하지 않고, 반드시 정점 처리나, 그 전 단계로 이동시켜야 합니다. _drawcall_ 별 계산은 정점 처리에서 속하지 않고, CPU로 옮겨야 합니다. 예를 들어, _lighting_ 이 _eye-space_ 에서 끝난다면, 광원 벡터는 반드시 _eye-space_ 로 변환되어야 하고, 각각의 정점별로, 더 안좋은 경우 _fragment_ 별로 반복하는 것 보다 _uniform buffer_ 에 저장해야 합니다. 광원 벡터는 자연스럽게 미리 정규화되어 저장되어야 합니다. 보통 광원 벡터 계산은 _drawcall_ 마다 상수이므로 어떤 쉐이더에도 포함되지 않습니다.
+
 ## 크거나 일반화된 쉐이더를 작성하지 마십시오. (P2)
 
 It is critical to resist the temptation to write shader programs that take different code paths depending on whether one or more constant variable have a particular value. Uniforms are intended as constants for one (or hopefully many) primitives—they are not substitutes for calling UseProgram. Shaders should be minimal and specialized to the task they perform. It is much better to have many small shaders that run fast than a few large shaders that all run slow. Code re-use (when source shaders are supported) should be handled at the application level using the ShaderSource function. If the advice here of not writing generalized shaders goes against the conflicting goal of minimizing shader and state changes, smaller and more specialized shaders are generally preferred. Additionally, be careful with writing shader functions intended for concatenation into the final shader source code - shared functions tend to be overly generic and make it harder to exploit possible shortcuts.
+
+
 
 ## 응용프로그램의 특정한 지식을 활용하십시오. (P3)
 
