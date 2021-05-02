@@ -5,7 +5,7 @@
   
   <link href="https://suhyeokim.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://suhyeokim.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2021-05-02T14:08:17+00:00</updated>
+  <updated>2021-05-02T14:59:13+00:00</updated>
   <id>https://suhyeokim.github.io//</id>
 
   
@@ -360,6 +360,8 @@ Unconnected geometry can be stitched together with degenerate triangles (alterna
 &lt;h1&gt;텍스쳐&lt;/h1&gt;
 
 &lt;p&gt;Textures consume the largest amount of the available memory and bandwidth in many applications. One of the best places to look for improvements when short on memory or bandwidth to optimize texture size, format and usage. Careless use of texturing can degrade the frame rate and can even result in inferior image quality.&lt;/p&gt;
+
+&lt;p&gt;텍스쳐는 많은 응용 프로그램에서 가장 많은 가용 메모리와 대역폭을 소모합니다. 메모리와 대역폭이 부족할 때, 텍스쳐 크기, 포맷 및 사용을 최적화하여 성능 향상을 꾀할 수 있는 가장 좋은 곳 중 하나입니다. 무분별한 텍스쳐의 사용은 프레임을 감소시키고, 심지어 이미지 품질이 저하될 수 도 있습니다.&lt;/p&gt;
 
 &lt;h2&gt;텍스쳐 압축은 가능한 사용하십시오. (T1)&lt;/h2&gt;
 
