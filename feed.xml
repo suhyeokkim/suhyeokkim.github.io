@@ -5,7 +5,7 @@
   
   <link href="https://suhyeokim.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://suhyeokim.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2021-03-27T14:46:19+00:00</updated>
+  <updated>2021-05-02T12:42:46+00:00</updated>
   <id>https://suhyeokim.github.io//</id>
 
   
@@ -268,32 +268,50 @@ Unconnected geometry can be stitched together with degenerate triangles (alterna
 
 &lt;p&gt;It is critical to resist the temptation to write shader programs that take different code paths depending on whether one or more constant variable have a particular value. Uniforms are intended as constants for one (or hopefully many) primitives—they are not substitutes for calling UseProgram. Shaders should be minimal and specialized to the task they perform. It is much better to have many small shaders that run fast than a few large shaders that all run slow. Code re-use (when source shaders are supported) should be handled at the application level using the ShaderSource function. If the advice here of not writing generalized shaders goes against the conflicting goal of minimizing shader and state changes, smaller and more specialized shaders are generally preferred. Additionally, be careful with writing shader functions intended for concatenation into the final shader source code - shared functions tend to be overly generic and make it harder to exploit possible shortcuts.&lt;/p&gt;
 
+&lt;p&gt;상수가 특정 값을 가지냐에 따라 코드 분기를 달리하는 쉐이더를 작성하고 싶은 유혹에 저항하는 것은 굉장히 중요합니다. &lt;em&gt;uniform buffer&lt;/em&gt; 는 하나(다다익선) 프리미티브에 대한 상수로 사용되며, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;UseProgram&lt;/code&gt; 을 대체하진 않습니다. 쉐이더는 반드시 목적에 맞게 특화되고 최소화 되어야 합니다. 느리게 실행되는 큰 쉐이더 몇개 보다, 빠르게 실행되는 수많은 작은 쉐이더가 더 낫습니다. 코드 재사용은 (소스 쉐이더 프로그램이 지원될 때) &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ShaderSource&lt;/code&gt; 함수를 통하여  응용 프로그램 레벨에서 제어되어야 합니다. 여기서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;일반화된 쉐이더를 작성하지 마라&lt;/code&gt; 라는 조언이 쉐이더 크기와 상태 변화를 최소화 하는 목표와 상충된다면, 일반적으론 더 작고 특화된 쉐이더 작성을 선택합니다. 또한, 마지막 쉐이더 소스 코드에 덧붙일 쉐이더 함수를 사용할 때 주의해야 합니다. 쉐이더 함수는 심하게 일반화 되고, 가능한 &lt;em&gt;shortcut&lt;/em&gt; 을 이용하는 것을 어렵게 만듦니다.&lt;/p&gt;
+
 &lt;h2&gt;응용프로그램의 특정한 지식을 활용하십시오. (P3)&lt;/h2&gt;
 
 &lt;p&gt;Application specific knowledge can be used to simplify or avoid computations. Math shortcuts should be pursued everywhere because there are optimizations that the shader compiler or the GPU cannot make. For instance, rendering screen-aligned primitives is common for 2D user interface and post-processing effects. In this case, the entire modelview transformation is avoided by defining the vertices in NDC (normalized device coordinates). A full-screen quad has its vertex coordinates in the [-1.0,1.0] range so these can be passed directly from the vertex attribute to gl_Position. The types of matrix transformations applied in the application when creating the modelview matrix should be tracked and exploited when possible. For instance, an orthonormal matrix (e.g. no non-uniform scaling) leads to an opportunity to avoid computations when transforming normals with the inverse-transpose sub-matrix.&lt;/p&gt;
+
+&lt;p&gt;특정한 응용 프로그램만의 케이스는 계산을 피하거나 단순화할 수 있습니다. 쉐이더 컴파일러나 GPU 가 만들 수 없는 수학적 계산 최적화가 있기 때문에 모든 곳에서 신경써야합니다. 예를 들면, &lt;em&gt;screen-aligned primitive&lt;/em&gt; 는 (화면에 정렬된 도형) 2D UI 나 &lt;em&gt;post-processing&lt;/em&gt; 효과에 자주 쓰입니다. 이 경우, 모든 모델-뷰 변환은 정점을 미리 NDC(normalized device coordinates) 로 정의하여 피할 수 있습니다. 전체 화면 &lt;em&gt;quad&lt;/em&gt; 는 (사각 폴리곤) [-1.0, 1.0] 범위에서 정점 위치를 가지기때문에 &lt;em&gt;vertex attribute&lt;/em&gt; 에서 직접 &lt;em&gt;gl_Position&lt;/em&gt; 으로 통과할 수 있습니다. 이 행렬 변환의 타입들은 모델-뷰 행렬을 만드는 것이 가능한한 추적되거나 활용될 때 응용 프로그램에서 적용 됩니다. 예를 들어 &lt;em&gt;orthonormal&lt;/em&gt; (정규직교) 행렬은 &lt;em&gt;inverse-transpose&lt;/em&gt; 부 행렬과 함께 법선 벡터를 변환시킬 때, 계산을 피할 수 있는 기회를 이끌어 냅니다.&lt;/p&gt;
 
 &lt;h2&gt;깊이, 스텐실 컬링을 최적화하십시오. (P4)&lt;/h2&gt;
 
 &lt;p&gt;The GPU can quickly reject fragments based on depth or stencil testing before the fragment shader is executed. The depth complexity of a scene is the number of times each fragment gets written. Depth complexity can be measured by incrementing values in a stencil buffer. A high depth complexity in a 3D scene can be a result of rendering opaque objects in a non-optimal order. The worst case is rendering back-to-front (aka painter’s algorithm) because it leads to a large number of fragments being overdrawn. An application with high depth complexity should ensure that opaque objects are rendered sorted front-to-back order with depth testing enabled. Straightforward rendering of 2D user interfaces also leads to a high depth complexity that can often be decreased with the same technique but also by using the stencil buffer to mask fragments. Applications that are heavily fragment limited can be sped up significantly with clever use of these techniques—sometimes up to a factor of 10 or more.&lt;/p&gt;
 
+&lt;p&gt;GPU 는 &lt;em&gt;fragment&lt;/em&gt; 쉐이더가 실행되기 전, 깊이 혹은 스텐실 테스팅을 기반으로 &lt;em&gt;fragment&lt;/em&gt; 쉐이더를 빠르게 제외할 수 있습니다. 환경의 &lt;em&gt;depth complexity&lt;/em&gt; (깊이 복잡도)는 각각의 &lt;em&gt;Fragment&lt;/em&gt; 에 쓰는 횟수입니다. &lt;em&gt;depth complexity&lt;/em&gt; 는 스텐실 버퍼를 1씩 증가시켜가며 측정 가능합니다. 3D 환경에서 높은 &lt;em&gt;depth complexity&lt;/em&gt;  은 최적의 순서가 아닌 불투명 오브젝트 렌더링의 결과로 나타날 수 있습니다. 가장 나쁜 경우는 &lt;em&gt;back-to-front&lt;/em&gt; 렌더링 입니다. (다른 말로는, 화가의 알고리즘) 왜냐면, 이는 많은 &lt;em&gt;fragment&lt;/em&gt; 들을 덮어씌우기 때문입니다. 높은 &lt;em&gt;depth complexity&lt;/em&gt; 를 지닌 응용 프로그램은 반드시 &lt;em&gt;depth test&lt;/em&gt; (깊이 검사) 와 함께 정렬된 &lt;em&gt;front-to-back&lt;/em&gt; 순서로 불투명 오브젝트의 렌더링을 보장해야 합니다. 2D UI 의 단순한 렌더링 또한 같은 테크닉 뿐만 아니라 &lt;em&gt;fragment&lt;/em&gt; 마스킹을 위해 스텐실 버퍼를 이용하여 높은 &lt;em&gt;depth complexity&lt;/em&gt; 를 줄일 수 있습니다. 심하게 &lt;em&gt;fragment&lt;/em&gt; 비용이 제한된 응용 프로그램은 이러한 똑똑한 방법의 사용으로 속도를 10배 혹은 그 이상 높일 수 있습니다.&lt;/p&gt;
+
 &lt;p&gt;If vertex processing is not a bottleneck, it is worthwhile to run experiments that prime the depth buffer in a first pass. Disable all color writes with ColorMask on the first pass. The fragments in the depth buffer can then serve as occluders in a second pass when color writes are enabled and the expensive fragment shaders are executed. Disable depth writes with DepthMask in the second pass since there is no point in writing it twice.&lt;/p&gt;
+
+&lt;p&gt;만약 정점 처리가 병목이 아니라면, 첫번째 &lt;em&gt;pass&lt;/em&gt; 에서 깊이 버퍼를 쓰는 실험을 실행하는 것이 의미 있습니다. 첫 &lt;em&gt;pass&lt;/em&gt; 에서 &lt;em&gt;ColorMask&lt;/em&gt; 와 함께 모든 색 쓰기를 비활성화합니다. 깊이 버퍼의 &lt;em&gt;fragment&lt;/em&gt; 는 색 쓰기가 가능하고, 비싼 &lt;em&gt;fragment&lt;/em&gt; 쉐이더가 실행될 때, 두번째 &lt;em&gt;pass&lt;/em&gt; 에서 &lt;em&gt;occluders&lt;/em&gt; (가리는 오브젝트) 를 대신할 수 있습니다. 두번이나 쓸 필요는 없기 때문에, 두번째 &lt;em&gt;pass&lt;/em&gt; 에서는 &lt;em&gt;DepthMask&lt;/em&gt; 와 함께 깊이 쓰기를 비활성화 합니다.&lt;/p&gt;
 
 &lt;h2&gt;픽셀 처리 조각(&lt;em&gt;fragment&lt;/em&gt;)를 버리거나, 깊이를 수정하지 마십시오. 완전히 필요한게 아니라면, (P5)&lt;/h2&gt;
 
 &lt;p&gt;Some operations prevent the hardware from enabling its automatic optimization that rejects fragments early in the pipeline (early-Z). In particular, the discard operation that discards fragments based on some criteria will disable early-Z on some platforms. It is critical to limit the use of discarding as much as possible (e.g., alpha testing)—unless depth writing can be disabled. Another example is found in the GL_NV_fragdepth extension available on some platforms, where the depth value can be written from the fragment shader. This operation also forces the GPU to opt out of Early-Z reject in order to ensure correct rendering.&lt;/p&gt;
 
+&lt;p&gt;몇몇 명령은 파이프라인에서 일찍 &lt;em&gt;fragment&lt;/em&gt; 연산을 제외하는(ealry-Z) 자동 최적화를 하드웨어가 하지 못하도록 합니다. 특히, 특정 기준에 따라서 &lt;em&gt;fragment&lt;/em&gt; 를 버리는 &lt;em&gt;discard&lt;/em&gt; 명령은 몇몇 플랫폼에서 &lt;em&gt;early-Z&lt;/em&gt; 를 비활성화 시킵니다. 깊이 쓰기를 비활성화 할 수 없는 경우, &lt;em&gt;discard&lt;/em&gt; 연산을 최대한 제한하는 것은 중요합니다. 다른 예시를 깊이 값을 &lt;em&gt;fragment&lt;/em&gt; 쉐이더에서 쓰기 가능하고, 특정 플랫폼에서 가능한 &lt;em&gt;GL_NV_fragdepth&lt;/em&gt; 확장에서 찾을 수 있습니다. 이 명령은 또한 정확한 렌더링을 보장하기 위해 &lt;em&gt;early-Z&lt;/em&gt; 거부를 강제로 비활성화 시킵니다.&lt;/p&gt;
+
 &lt;h2&gt;조건문을 최대한 피하십시오. (P6)&lt;/h2&gt;
 
 &lt;p&gt;Fragments are processed in chunks and both branches of a conditional may need to be evaluated before the result of the false branch can be discarded by the GPU. Be careful with assuming that conditionals skip computations and reduce the workload. This warning is particularly relevant to fragment shaders. Benchmarking shaders can determine if conditionals in the vertex or fragment shaders actually end up decreasing the workload. Some conditional code can be rewritten in terms of algebra and/or built-in functions. For instance, the dot product between a normal and a light vector may be negative in which case the result is not needed in a lighting equation. Instead of:&lt;/p&gt;
+
+&lt;p&gt;GPU에 의해 &lt;em&gt;false branch&lt;/em&gt; 의 (실행되지 않을 코드 흐름) 결과를 제외하기 전, &lt;em&gt;fragment&lt;/em&gt; 들은 한꺼번에 처리되고, 각각의 분기내의 코드 흐름을 아마 평가할 필요가 있습니다. 조건문이 계산을 건너 뛴거나, 워크로드를 줄인다는 가정을 조심하십시오. 이 경고는 특히 &lt;em&gt;fragment&lt;/em&gt; 쉐이더와 연관되어 있습니다. 쉐이더 벤치마킹은 정점 혹은 &lt;em&gt;fragment&lt;/em&gt; 쉐이더에서의 조건이 실질적으로 끝내어 워크로드를 줄이는지에 따라 결정됩니다. 몇몇 조건문 코드는 대수 and/or 내장 함수로 다시 쓰일 수 있습니다. 예를 들어 법선 벡터와 빛의 방향 벡터를 내적의 결과가 음수 일 수 있으며, 이 경우 &lt;em&gt;light equation&lt;/em&gt; 내에서 결과가 필요하지 않습니다.&lt;/p&gt;
+
+&lt;p&gt;대신에:&lt;/p&gt;
 
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;if (nDotL &amp;gt; 0.0) ...
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;the value can be clamped with:&lt;/p&gt;
 
+&lt;p&gt;이 값은 &lt;em&gt;clamp&lt;/em&gt; 로 대체할 수 있습니다:&lt;/p&gt;
+
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;clamp(nDotL, 0.0, 1.0)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;and unconditionally used in the result (the negative value results in a zero-product). Clamp may be faster than max and/or min for the 0.0 and 1.0 cases, but as always benchmarking will have the final say in the matter. Another reason to make an effort of avoiding conditionals in fragment shaders is that mipmapped textures return undefined results when executed in a block statement that is conditional on run-time values. Although the GLSL functions texture*Lod can be used to bias or specify the mipmap LOD, it is expensive to manually derive the mipmap LOD. In addition, these LOD biasing samplers may not run as fast as the non-LOD samplers.&lt;/p&gt;
+&lt;p&gt;and unconditionally used in the result (the negative value results in a zero-product). Clamp may be faster than max and/or min for the 0.0 and 1.0 cases, but as always benchmarking will have the final say in the matter. Another reason to make an effort of avoiding conditionals in fragment shaders is that mipmapped textures return undefined results when executed in a block statement that is conditional on run-time values. Although the GLSL functions &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;texture*Lod&lt;/code&gt; can be used to bias or specify the mipmap LOD, it is expensive to manually derive the mipmap LOD. In addition, these LOD biasing samplers may not run as fast as the non-LOD samplers.&lt;/p&gt;
+
+&lt;p&gt;그리고 조건문 없이 결과에 사용될 수 있습니다.(음수가 0 곱하기로 표현되는 경우) &lt;em&gt;clamp&lt;/em&gt; 연산은 아마도 &lt;em&gt;max&lt;/em&gt; ,&lt;em&gt;min&lt;/em&gt; 을 0과 1사이에서 실행하는 것보다 빠를 수 있습니다. &lt;em&gt;fragment&lt;/em&gt; 쉐이더에서 조건문을 피하기 위한 노력의 다른 이유는 밉맵을 가진 텍스쳐는 런타임에 달라지는 조건에 따른 &lt;em&gt;block statement&lt;/em&gt; (조건에 블록 형태로 존재하는 문장: 여러 코드 줄) 에서 실행 될 때, 정의되지 않은 결과를 반환하기 때문입니다. GLSL 함수 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;texture*Lod&lt;/code&gt;를 사용하여 밉맵 LOD 를 &lt;em&gt;bias&lt;/em&gt; (오프셋 처리) 하거나, 지정할 수 있지만, 직접 밉맵 LOD 를 파생시키는 것은 비쌉니다. 또한 이러한 &lt;em&gt;LOD-biasing&lt;/em&gt; 샘플러는 &lt;em&gt;LOD-biasing&lt;/em&gt; 이 아닌 샘플러보다 빠르지 않을 것입니다.&lt;/p&gt;
 
 &lt;h2&gt;적절한 정확도 한정자를 사용하십시오. (P7)&lt;/h2&gt;
 
