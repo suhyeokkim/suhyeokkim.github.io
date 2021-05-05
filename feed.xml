@@ -5,7 +5,7 @@
   
   <link href="https://suhyeokim.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://suhyeokim.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2021-05-02T14:59:13+00:00</updated>
+  <updated>2021-05-05T08:44:13+00:00</updated>
   <id>https://suhyeokim.github.io//</id>
 
   
@@ -351,9 +351,9 @@ Unconnected geometry can be stitched together with degenerate triangles (alterna
 
 &lt;p&gt;Normalization of vectors is required to efficiently calculate the angle between them, or perhaps more typically, the diffuse component in many commonly used lighting equations. In theory, normalization is required for geometry normals after having transformed them with the normal matrix. In practice, it may not matter depending on the composition of the matrix. It is a common mistake to normalizing vectors where it is not necessary, or at least not visually discernible. As a result, the application may run slower for no good reason. For instance, consider the case of interpolating vertex normals in order to compute lighting per fragment (i.e., Phong shading). If the normal matrix only rotates, there is little reason to normalize the normal vectors before interpolating.&lt;/p&gt;
 
-&lt;p&gt;Note: Barycentric interpolation will not preserve the unit length of these vectors. So normals that are interpolated in varying variables do must be normalized to ensure the dot-product with the light vector obeys the cosine emission law.&lt;/p&gt;
-
 &lt;p&gt;벡터의 정규화는 두 벡터의 각이나, 아마도 더 일반적으로, 가장 많이 사용되는 &lt;em&gt;lighting equation&lt;/em&gt; 의 &lt;em&gt;diffuse&lt;/em&gt; 컴포넌트에서 효율적으로 계산하기 위해 필요합니다. 이론상으로, 법선 행렬과 함께 변환된 이후에 지오메트리 법선 벡터를 위해 정규화가 필요합니다. 실전에서는 행렬의 합성에서 딱히 별일이 없습니다. 이는 필요하지 않거나, 적어도 시각적으로 보고 알 수 있지 않아도 정규화를 하는 일반적인 실수입니다. 결과적으론, 별 이유 없이 응용 프로그램은 더 느려집니다. 예를 들어 정점 법선 벡터를 &lt;em&gt;fragment&lt;/em&gt; 별 라이팅 계산을 위해 보간(정점 단계 -&amp;gt; 픽셀 단계에서, 래스터라이저를 거치며 일어나는) 하는 경우를 생각해 봅시다.(즉, 퐁 쉐이딩) 만약에 법선 행렬이 오직 회전만 한다면, 보간 전에 법선 벡터를 정규화할 조그만 이유가 있습니다.&lt;/p&gt;
+
+&lt;p&gt;Note: Barycentric interpolation will not preserve the unit length of these vectors. So normals that are interpolated in varying variables do must be normalized to ensure the dot-product with the light vector obeys the cosine emission law.&lt;/p&gt;
 
 &lt;p&gt;참고: 무게 중심 보간은 정규화를 보장하지 못합니다. 그래서 &lt;em&gt;varying variable&lt;/em&gt; 에서 (래스터라이저를 이후에) 보간된 법선 벡터는 &lt;em&gt;lambert cosine law&lt;/em&gt; 를 따르는 광원 벡터와의 내적을 보장하기 위해 정규화를 해야 합니다.&lt;/p&gt;
 
@@ -367,90 +367,145 @@ Unconnected geometry can be stitched together with degenerate triangles (alterna
 
 &lt;p&gt;Texture compression brings several benefits that result from textures taking up less memory: compressed textures use less of the available memory bandwidth, reduces download time, and increases the efficiency of the texture cache. The texture_compression_s3tc and texture_compression_latc extensions both provide block-based lossy texture compression that can be decompressed efficiently in hardware. The S3TC extension gives 8:1 or 4:1 compression ratio and is suitable for color images with 3 or 4 channels (with or without alpha) with relatively low-frequency data. Photographs and other images that compress satisfactory with JPEG are great candidates for S3TC. Images with hard and crisp edges are less good candidates for S3TC and may appear slightly blurred and noisy. The LATC extension yields a 2:1 compression ratio, but improves on the quality and can be useful for high resolution normal maps. The third coordinate is derived in the fragment shader—be sure to benchmark if the application can afford this trade-off between memory and computations! Unlike S3TC, the channels in LATC are compressed separately, and quantization is less hard. Using texture compression does not always result in lower perceived image quality, and with these extensions one can experiment with increasing the texture resolution for the same memory. There are off-line tools to compress textures (even if a GL extension supports compressing them on-the-fly). Search the NVIDIA developer website for “Texture Tools”.&lt;/p&gt;
 
+&lt;p&gt;텍스쳐 압축은 적은 메모리를 사용하는 텍스쳐로 부터 여러 이익을 가져다 줍니다: 압축된 텍스쳐는 적은 메모리 대역폭, 적은 다운로드 시간 및 텍스쳐 캐시 효율을 증대시켜 줍니다. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;texture_compression_s3tc&lt;/code&gt; 와 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;texture_compression_latc&lt;/code&gt; 확장은 둘 다 하드웨어에서 효율적으로 해제 가능한 블록 기반의 손실 텍스쳐 압축을 제공합니다. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;S3TC&lt;/code&gt; 확장은 8:1 혹은 4:1 압축 비율을 가지며, 비교적 낮은 주파수의 데이터를 가진 3 혹은 4 채널의 색 이미지에 적합합니다. JPEG를 사용하여 만족할 정도로 압축된 사진이나 다른 이미지는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;S3TC&lt;/code&gt; 의 좋은 후보입니다. 튀고 뾰족한 선을 가진 이미지는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;S3TC&lt;/code&gt; 의 덜 좋은 후보이고, 아마도 희미하거나, 노이즈가 끼어있을 수 있습니다. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LATC&lt;/code&gt; 확장은 2:1 압축 비율을 가지지만, 이는 질을 향상시키고, 높은 해상도의 노말맵에 유용합니다. 세번째 좌표는 &lt;em&gt;fragment&lt;/em&gt; 쉐이더에서 유도됩니다-반드시 메모리와 계산 사이에서 응용 프로그램이 수용 가능한지 벤치마크하세요! &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;S3TC&lt;/code&gt; 와 다르게 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LATC&lt;/code&gt;에서는 채널을 분리하여 압축하고, 양자화는 비교적 덜 강하게 됩니다. 텍스쳐 압축을 쓰는 것은 무조건 낮은 퀄리티의 이미지를 만드는게 아니기 때문에 같은 메모리를 사용할 때 해상도를 증가시키는 실험을 앞선 확장과 함께 할 수 있습니다. 오프라인 텍스쳐 압축 툴도 있습니다.(심지어 GL 확장은 바로 압축 또한 지원합니다.)&lt;/p&gt;
+
 &lt;h2&gt;적절하게 밉맵을 사용하십시오. (T2)&lt;/h2&gt;
 
 &lt;p&gt;Mipmaps should be used when there is not an obvious one-to-one mapping between texels and framebuffer pixels. If texture minification occurs in a scene and there are no mipmaps to access, texture cache utilization will be poor due to the sparse sampling. If texture minification occurs more often than not, then the texture size may be too large to begin with. Coloring the mipmap levels differently can provide a visual clue to the amount of minification that is occurring. When reducing the texture size, it may also be worthwhile to perform experiments to see if some degree of magnification is visually acceptable and if it improves frame rate.&lt;/p&gt;
 
+&lt;p&gt;밉맵은 &lt;em&gt;texel&lt;/em&gt; 과 프레임버퍼 픽셀간의 1대1 매핑을 중요하지 않은 경우엔 사용되어야 합니다. 만약 환경에서 텍스쳐 축소가 일어나고 밉맵 접근이 불가능하다면, 텍스쳐 캐시 활용은 드문 드문 샘플링하는 것 때문에 나쁜 성능을 가질 것입니다. 만약 텍스쳐 축소가 자주 일어난다면, 텍스쳐 크기는 시작부터 너무 큰 크기를 가질 것입니다. 밉맵 레벨별로 다르게 색칠하는 것은 축소가 얼마나 일어나는지에 대한 시각적 증거를 제공합니다. 또한 텍스쳐 크기를 줄일 때, 어느 정도의 확대가 시각적으로 괜찮은지, 얼마나 &lt;em&gt;frame rate&lt;/em&gt; 를 올려줄 지 보기 위해 실험을 하는 것 또한 가치있을 것입니다.&lt;/p&gt;
+
 &lt;p&gt;Although the GenerateMipmap function is convenient, it should not be the only option for generating a mipmap chain. This function emphasizes execution speed over image quality by using a simple box filter. Generating mipmaps off-line using more advanced filters (e.g. Lanczos/Sinc) will often yield improved image quality at no extra cost. However, GenerateMipmap may be preferable when generating textures dynamically due to speed. One of the only situations where you do not want to use mipmaps is if there is always a one-to-one mapping between texels and pixels. This is sometimes the case in 3D, but more often the case for 2D user interfaces. Recall that a mipmapped texture takes up 33% more storage than un-mipmapped, but they can provide much better performance and even better image quality through reduced aliasing.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GenerateMipmap&lt;/code&gt; 함수가 간편함에도 불구하고, 이는 밉맵 체인을 생성하는 단 하나만의 옵션은 아닙니다. 이 함수는 간단한 &lt;em&gt;box filter&lt;/em&gt; 를 사용하여 이미지 퀄리티와 상관 없이 실행 속도를 강조합니다. 오프라인에서 더 나은 필터를 사용하는 밉맵 생성은 보통 추가적인 비용 없이 이미지 퀄리티를 올릴 수 있습니다. 하지만 &lt;em&gt;GenerateMipmap&lt;/em&gt; 은 동적으로 텍스쳐를 만들어 낼 때, 아마 속도 때문에 선호됩니다. 당신이 밉맵을 사용하지 않을 상황은 텍셀과 픽셀이 언제나 일대일 매핑되어야 할 때 입니다. 3D 환경에서 근근히 있는 케이스이지만, 2D UI에서 더 자주 있는 일입니다. 정리하자면, 밉맵이 있는 텍스쳐가 33%의 메모리를 더 차지하지만, 더 나은 성능과 심지어 줄여진 &lt;em&gt;aliasing&lt;/em&gt; 을 통해 더 나은 이미지 퀄리티를 제공할 수 있습니다.&lt;/p&gt;
 
 &lt;h2&gt;가능한 최소한의 텍스쳐 사이즈를 사용하십시오. (T3)&lt;/h2&gt;
 
 &lt;p&gt;Always use the smallest possible texture size for any content that gives acceptable image quality. The appropriate size of a texture should be determined by the size of the framebuffer and the way the textured geometry is projected onto it. But even when you have a one-to-one mapping between texels and framebuffer pixels, there may be cases where a smaller size can be used. For instance, when blending a texture on the existing content in the entire framebuffer, the texture does not necessarily have to be the same width and height as the framebuffer. It may be the case that a significantly smaller texture that is magnified will produce results that are good enough. The bandwidth that is saved from using a smaller and more appropriately sized texture can instead be spent where it actually contributes to better image quality or performance.&lt;/p&gt;
 
+&lt;p&gt;무엇이든 간에 수용 가능한 이미지 퀄리티를 제공하는 선에서 항상 최소한의 가능한 텍스쳐 사이즈를 사용해야 합니다. 텍스쳐의 적절한 크기는 프레임 버퍼의 크기와 텍스쳐가 입힌 기하가 어떻게 투영되는지에 따라 결정되어야 합니다. 하지만 심지어 &lt;em&gt;texel&lt;/em&gt; 과 프레임 버퍼의 픽셀의 일대일 매핑을 원할 때도 사용 가능한 가장 작은 크기를 고르게 될 것입니다. 예를 들어 있던 전체 프레임 버퍼와 텍스쳐를 블렌딩 할 때, 텍스쳐는 프레임 버퍼와 같은 가로,세로 크기를 가져야 합니다. 아마도 확대된 상당히 작은 텍스쳐가 충분히 괜찮은 결과를 만들 수 있습니다. 더 작고 적절한 크기의 텍스쳐를 사용하여 얻은 대역폭은 실질적으로 더 나은 이미지 퀄리티와 성능을 위해 대신 사용될 수 있습니다.&lt;/p&gt;
+
 &lt;h2&gt;가능한 최소한의 텍스쳐 포맷과 데이터 타입을 사용하십시오. (T4)&lt;/h2&gt;
 
 &lt;p&gt;If hardware accelerated texture compression cannot be used for some textures, then consider using a texture format with fewer components and/or fewer bits per component. Textures for user interface elements sometimes have hard edges or color gradients that result in inferior image quality when compressed. The S3TC algorithm make assumptions that changes are smooth and colors values can be quantized. If these assumptions do not fit a particular image, but the number of unique colors is still low, then experiment with storing these in a packed texture format using 16 bit/texel (e.g. UNSIGNED_SHORT_5_6_5). Although the colors are remapped with less accuracy it may not be noticeable in the final application. Grayscale images should be stored as LUMINANCE and tinted images can sometimes be stored the same way with the added cost of a dot product with the tint color. If normal maps do not compress satisfactory with the LATC format, then it may be possible to store two of the normals coordinates in uncompressed LUMINANCE_ALPHA and derive the third in a shader assuming the direction (sign) of the normal is implicit (as is the case of a heightmap terrain).&lt;/p&gt;
 
+&lt;p&gt;특정 텍스쳐에서 하드웨어 가속 압축을 사용할 수 없을 때, 컴포넌트나 컴포넌트 별 비트 수를 줄이는 것을 고려해 보세요. UI 요소를 위한 텍스쳐는 가끔 압축을 사용할 때 낮은 이미지 퀄리티를 보여주는 하드 엣지나 컬러 그래디언트를 가질때가 가끔 있습니다. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;S3TC&lt;/code&gt; 알고리즘은 부드럽고 양자회 될 수 있는 색을 변화시킨다고 가정합니다. 만약 이 가정이 특정 이미지에 맞지 않고 유일한 색의 갯수는 여전히 적다면, &lt;em&gt;texel&lt;/em&gt; 별 16비트를 사용하는 패킹된 텍스쳐 포맷을 사용하여 이를 저장하는 실험을 해보세요.(예를들어 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;UNSIGNED_SHORT_5_6_5&lt;/code&gt;) 색이 조금 부정확해지더라도, 마지막 결과에서는 눈에 띄지 않을 것입니다. 그레이스케일 이미지는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LUMINANCE&lt;/code&gt; 로 저장되어야 하고, &lt;em&gt;tinted&lt;/em&gt; 이미지의 경우 가끔 &lt;em&gt;tint color&lt;/em&gt; 와 내적하는 비용과 함께 같은 방법으로 저장될 수 있습니다. 노말 맵을 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LATC&lt;/code&gt; 포맷으로 만족할만큼 압축하지 못한다면, 압축되지 않은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LUMINANCE_ALPHA&lt;/code&gt; 에 두 좌표값을 저장하고, 세번째 좌표값은 쉐이더에서 암시적인 방향을 설정하여 계산할 수 있습니다.(heightmap 지형의 경우)&lt;/p&gt;
+
 &lt;p&gt;Note: When optimizing uncompressed textures, the exception case that 24-bit (RGB) textures are not necessarily faster to download or smaller in memory than 32-bit (RGBA) on most GPUs. In this case, it may be possible to use the last component for something useful. For instance, if there already is an 8-bit greyscale texture that is needed at the same time as an opaque color texture, that single component texture can be stored in the unused alpha component of a 32-bit (RGBA). The component could define a specular/reflectance map that describe where and to what degree light is reflected. This is useful for terrain satellite imagery or land cover textures with water/snow/ice areas or for car textures with their metal and glass surfaces or for textures for buildings with glass windows.&lt;/p&gt;
+
+&lt;p&gt;참고: 압축되지 않은 텍스쳐를 최적화할 때, 24-bit(RGB) 텍스쳐가 빠르게 다운로드 하지 않아도 되거나, 32-bit(RGBA) 보다 메모리가 작을 때는 대부분의 GPU에선 예외입니다. 이 경우, 마지막 컴포넌트를 유용하게 사용할 수 있을 것입니다. 예를들어 이미 8-bit 그레이스케일 텍스쳐가 불투명 색 텍스쳐와 함께 사용될 때, 32-bit(RGBA)의 미사용 알파 컴포넌트를 사용할 수 있습니다. 이 컴포넌트는 어디에, 어느 각도에 빛이 반사되는지 사용하기 위한 &lt;em&gt;specular&lt;/em&gt; 혹은 &lt;em&gt;refelectance&lt;/em&gt; 맵으로 정의할 수 있습니다. 이는 지형 위성 이미지 생성, 땅의 물/눈/얼음 영역, 차의 철과 유리 표면의 구분, 빌딩의 유리창의 구분에 유용하게 사용될 수 있습니다.&lt;/p&gt;
 
 &lt;h2&gt;각각의 텍스쳐 오브젝트에 여러 이미지를 저장하십시오. (T5)&lt;/h2&gt;
 
 &lt;p&gt;There is no requirement that there is a one-to-one mapping between an image and a texture object. Textures objects can contain multiple distinct images. These are sometimes referred to as a “texture atlas” or a “texture page”. The geometry defines texture coordinates that only reference a subset of the texture. Texture atlases are useful for minimizing state changes and enables larger batches when rendering. For example, residential houses and office buildings and factories might all use distinct texture images. But the geometry and vertex layout for each is most likely identical so these could share the same buffer object. If the distinct images are stored in a texture atlas instead of as separate textures, then these different kinds of buildings can all be rendered more efficiently in the same draw call (G7). The texture object could be a 2D texture, a cubemap texture or an array texture.&lt;/p&gt;
 
+&lt;p&gt;이미지와 텍스쳐 오브젝트 간의 반드시 일대일 매핑이 되어야 한다는 요구 사항은 없습니다. 텍스쳐 오브젝트는 여러 구분가능한 이미지를 가질 수 있습니다. 이는 텍스쳐 아틀라스 혹은 텍스쳐 페이지로 종종 불립니다. 기하는 텍스쳐 내의 참조만을 위한 텍스쳐 좌푤르 저장합니다. 텍스쳐 아틀라스는 상태 변화를 최소화 시키고, 한꺼번에 더 많은 렌더링을 가능하게 합니다.(larger batch) 예를들어 단독 주택, 사무실 빌딩 그리고 공장은 서로 다른 텍스쳐 이미지를 사용합니다. 하지만 각각의 기하와 정점 레이아웃은 거의 비슷하기 때문에 같은 버퍼 오브젝트를 공유할 수 있습니다. 만약 다른 이미지가 분리된 텍스쳐 대신 텍스쳐 아틀라스에 저장된다면, 다른 종류의 빌딩이 같은 드로우콜에서 효율적으로 전부 렌더링될 수 있습니다.(G7) 텍스쳐 오브젝트는 2D 텍스쳐, 큐브맵 텍스쳐 혹은 배열 텍스쳐가(array texture) 될 수 있습니다.&lt;/p&gt;
+
 &lt;p&gt;Note: Note that if mipmapping is enabled, the sub-textures in an atlas must have a border wide enough to ensure that smaller mipmaps are not generated using texels from neighboring images. And if texture tiling (REPEAT or MIRRORED_REPEAT) is needed for a sub-image then it may be better to store it outside the texture atlas.&lt;/p&gt;
 
+&lt;p&gt;참고: 밉맵이 활성화 되어 있다면, 각 아틀라스별 실질적인 텍스쳐는 근처 텍셀을 통해 밉맵이 만들어지지 않도록 반드시 적절히 넓은 경계를 가져야 합니다. 만약 텍스쳐 타일링(REPAT, MIRRORED_REPEAT) 이 실질적인 텍스쳐에서 필요하다면 텍스쳐 아틀라스의 바깥에 저장하는 것이 나을 것 입니다.&lt;/p&gt;
+
 &lt;p&gt;Emulating either wrapping mode in a shader by manipulating texture coordinates is possible, but not free. A cubemap texture can sometimes be useful since wrapping and filtering apply per face, but the texture coordinates used must be remapped to a vec3 which may be inconvenient. If all the sub-images have the same or similar size, format and type (e.g. image icons), the images are a good candidate for the array texture extension if supported. Array textures may be more appropriate here than a 2D texture atlas where mipmapping and wrapping restrictions have to be taken into consideration.&lt;/p&gt;
+
+&lt;p&gt;텍스쳐 좌표를 사용하여 쉐이더 내에서 &lt;em&gt;wrapping mode&lt;/em&gt; 를 조작하는 것은 가능하나, 공짜는 아닙니다. 큐브맵 텍스쳐는 &lt;em&gt;wrapping&lt;/em&gt; 및 &lt;em&gt;filtering&lt;/em&gt; 을 표면별로 해주기 때문에 종종 유용하지만, 텍스쳐 좌표가 반드시 vec3 으로 만들어져야해서 불편합니다. 만약 모든 실질적인 텍스쳐가 같거나 더 작은 크기, 포맷 그리고 타입을 가진다면, 이미지는 만약 제공된다면 &lt;em&gt;array texture&lt;/em&gt; 의 좋은 후보입니다. &lt;em&gt;array texture&lt;/em&gt; 들은 밉맵이나 &lt;em&gt;wrapping&lt;/em&gt; 한계를 고려할 때 2D 텍스쳐 아틀라스보다 더 적절합니다.&lt;/p&gt;
 
 &lt;h2&gt;single-precision floating 텍스쳐는 언제나 비쌉니다. (T6)&lt;/h2&gt;
 
 &lt;p&gt;Textures with a floating-point format should be avoided whenever possible. If these textures are simply being used to represent a larger range of values, it may be possible to replace these with fixed point textures and scaling instructions. For instance, unsigned 16-bit integers cannot even accurately be represented by half-precision floats (FP16). These would have to be stored using single precision (FP32) leading to twice the memory and bandwidth requirements. It might be better to store these values in two components using 8 bits (LA8) and spend ALU instructions to unpack them in a shader.&lt;/p&gt;
 
+&lt;p&gt;단일 부동 소수점 포맷 텍스쳐는 가능하면 피하세요. 이런 텍스쳐가 큰 범위의 값을 표현하기 위해 보통 사용된다면, 이는 고정 소수점 텍스쳐와 스케일링 명령으로 바뀔 수 있습니다. 예를 들어 무부호 16-bit 정수는 심지어 반 부동 소수점 숫자로(FP16) 표현할 수 없습니다. 이를 단일 부동 소수점에 저장하는 것은 두배의 메모리와 대역폭을 필요로 하게 됩니다. 이는 8-bit 두 컴포넌트에 저장하고, 이를 쉐이더에서 언팩하는 계산 명령을 소모하는 것이 더 나을 것입니다.&lt;/p&gt;
+
 &lt;p&gt;Note: Floating-point textures may not support anything better than nearest filtering.&lt;/p&gt;
+
+&lt;p&gt;부동 소수점 텍스쳐는 &lt;em&gt;nearest filtering&lt;/em&gt; 보다 더 나은 것을 제공하지 않습니다.&lt;/p&gt;
 
 &lt;h2&gt;거의 대부분의 경우 POT(power-of-two) 텍스쳐를 사용하십시오. (T7)&lt;/h2&gt;
 
 &lt;p&gt;Although Non-Power-of-Two (NPOT) textures are supported in ES2 they come with a CLAMP_TO_EDGE restriction on the wrapping mode (unless relaxed by an extension). More importantly, they cannot be mipmapped (unless relaxed by an extension). For that reason, POT textures should be used when there is not significant memory and bandwidth to be saved from using NPOT. However, an NPOT texture may be padded internally to accommodate alignment restrictions in hardware and that the amount of memory saved might not be quite as large as the width and height suggests. As a rule of thumb, only large (i.e., hundreds of texels) NPOT textures will effectively save a significant amount of memory over POT textures.&lt;/p&gt;
 
+&lt;p&gt;2의 제곱이 아닌(NPOT) 텍스쳐는 ES2 에서 제공되지만, &lt;em&gt;wrapping mode&lt;/em&gt; 에서의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CLAMP_TO_EDGE&lt;/code&gt; 한계를 가집니다. 더 중요한 것은, 밉맵을 사용할 수 없습니다.(확장으로 늘어나지 않는다면) 이 이유 때문에 POT 텍스쳐는 NPOT 텍스쳐가 메모리와 대역폭을 줄일 수 없으므로, 사용되어야 합니다. 하지만 NPOT 텍스쳐는 하드웨어에서 &lt;em&gt;alignment&lt;/em&gt; 한계를 수용하기 위해 내부적으로 패딩되지만, width, height 를 더 늘려서 메모리의 양은 충분히 절약되지 못합니다. 경험적으로 오직 큰 NPOT 텍스쳐들이(즉, 수백개의 텍셀들) POT 텍스쳐 보다 의미있는 메모리 양을 아낄 수 있습니다.&lt;/p&gt;
+
 &lt;h2&gt;텍스쳐 업데이트는 드물게 (T8)&lt;/h2&gt;
 
 &lt;p&gt;Writing to GPU resources can be expensive—it applies to textures as well. If texture updates are required, then determine if they really need to be updated per frame or if the same texture can be reused for several frames. For environment maps, unless the lighting or the objects in the environment have been transformed (e.g., moved/rotated) sufficiently to invalidate the previous map, the visual difference may not be noticeable but the performance improvement can be. The same applies to the depth texture(s) used for shadow mapping algorithms.&lt;/p&gt;
 
+&lt;p&gt;GPU 리소스에 쓰기-텍스쳐에 저장하는 것은 비쌀 수 있습니다. 텍스쳐 업데이트가 필요하다면, 프레임별로 업데이트가 필요한지, 몇 프레임 동안 재사용이 가능한지 결정해야 합니다. 환경 맵의 경우, 이전의 맵이 무효화 되기에 충분할 만큼 라이팅이나 환경의 오브젝트들이 바뀌지 않은 경우, 시각적 차이는 크게 보이지 않지만, 성능 향상은 있을 수 있습니다. &lt;em&gt;shadow mapping&lt;/em&gt; 을 위한 깊이 텍스쳐도 같이 적용 가능합니다.&lt;/p&gt;
+
 &lt;h2&gt;텍스쳐 업데이트는 효율적으로 (T9)&lt;/h2&gt;
 
-&lt;p&gt;When updating an existing texture, use TexSubImage instead of re-defining its entire contents with TexImage when possible.
-Note: When using TexSubImage it is important to specify the same texture format and data type with which that the texture object was defined; otherwise, there may be an expensive conversion as texels are being updated.
-If the application is only updating from a sub-rectangle of pixels in client memory, then remember that the driver has no knowledge about the stride of pixels in your image. When the width of the image rectangle differs from the texture width, this normally requires a loop through single pixel rows calling TexSubImage repeatedly while updating the client memory offsets with pointer arithmetic. In this case, the unpack_subimage extension can be used (if supported) to set the UNPACK_ROW_LENGTH pixelstore parameter to update the entire region with one TexSubImage call.&lt;/p&gt;
+&lt;p&gt;When updating an existing texture, use TexSubImage instead of re-defining its entire contents with TexImage when possible.&lt;/p&gt;
+
+&lt;p&gt;존재하는 텍스쳐를 업데이트할 때, 가능하다면 전체 내용을 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TexImage&lt;/code&gt; 와 함께 재정의 하는 대신 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TexSubImage&lt;/code&gt; 을 사용하세요.&lt;/p&gt;
+
+&lt;p&gt;Note: When using TexSubImage it is important to specify the same texture format and data type with which that the texture object was defined; otherwise, there may be an expensive conversion as texels are being updated.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TexSubImage&lt;/code&gt; 을 사용할 때, 정의된 텍스쳐 오브젝트와 같은 텍스쳐 포맷 및 데이터 타입을 명시하세요; 그렇지 않으면 업데이트 시 각 &lt;em&gt;texel&lt;/em&gt; 들을 비싸게 변환시켜야 합니다.&lt;/p&gt;
 
 &lt;p&gt;If the application is only updating from a sub-rectangle of pixels in client memory, then remember that the driver has no knowledge about the stride of pixels in your image. When the width of the image rectangle differs from the texture width, this normally requires a loop through single pixel rows calling TexSubImage repeatedly while updating the client memory offsets with pointer arithmetic. In this case, the unpack_subimage extension can be used (if supported) to set the UNPACK_ROW_LENGTH pixelstore parameter to update the entire region with one TexSubImage call.&lt;/p&gt;
+
+&lt;p&gt;만약 응용 프로그램이 클라이언트 메모리 내에서 부분 사각형의 픽셀들로부터 업데이트 해야 한다면, 드라이버는 당신의 이미지 내의 픽셀의 스트라이드를 모른다는 것을 기억하세요. 이미지 사각형의 넓이가 텍스쳐 크기에 따라 달라질 때, 보통 한 행별로 클라이언트 메모리에서 포인터 연산을 통해 &lt;em&gt;TexSubImage&lt;/em&gt; 를 호출하는 것을 반복적으로 루프에서 처리해줘야 합니다. 이 경우 &lt;em&gt;unpack_subimage&lt;/em&gt; 확장을(지원한다면) 한번의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TexSubImage&lt;/code&gt; 호출과 함께 전체 영역을 업데이트 하기 위해 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;UNPACK_ROW_LENGTH&lt;/code&gt; 픽셀저장 파라미터를 설정하여 사용할 수 있습니다.&lt;/p&gt;
 
 &lt;h2&gt;각각의 알파 테스팅/블렌딩 렌더링을 다른 렌더링과 분리하십시오. (T10)&lt;/h2&gt;
 
 &lt;p&gt;It is sometimes possible to improve performance by splitting up the rendering based on whether alpha blending or alpha testing is required. Use separate draw calls for opaque geometry so these can be rendered with maximum efficiency with blending disabled. Perform other draw calls for transparent geometry with alpha blending enabled, taking into account the draw ordering that transparent geometry requires. As always, benchmarks should be run to determine if this improves or reduces the frame rate since you will be batching less by splitting up draw calls.&lt;/p&gt;
 
+&lt;p&gt;알파 블렌딩이나 알파 테스팅이 필요한지 아닌지에 따라 렌더링을 분리하는 것은 성능 향상의 가능성을 가지고 있습니다. 불투명 오브젝트를 위해 드로우콜을 분리하세요, 그러면 블렌딩이 비활성화 되어 있어 효율적으로 렌더링할 수 있습니다. 알파 블렌딩이 켜진 상태에서 다른 투명 오브젝트의 드로우콜을 실행하고, 필요한 투명 오브젝트의 정렬을 고려하세요. 항상 그렇듯이, 이는 drawcall 의 batching 을 줄이므로, 이 방법이 &lt;em&gt;frame rate&lt;/em&gt; 를 증가시킬지, 감소시키는지 결정하기 위해 벤치마크를 하세요.&lt;/p&gt;
+
 &lt;h2&gt;적절하게 텍스쳐 필터링 하십시오. (T11)&lt;/h2&gt;
 
 &lt;p&gt;Do not automatically set expensive texture filters and enable anisotropic filtering. Remember that nearest-neighbor filtering always fetches one texel, bilinear filtering fetches up to four texels and trilinear fetches up to eight texels. However, it can be incorrect to draw assumptions about the performance cost based on this. Bilinear filtering may not cost four times as much as nearest filtering, and trilinear can be more or less than twice as expensive as bilinear. Even though textures have mipmaps, it does not automatically mean trilinear filtering should be used. That decision should be made entirely from observing the images from the running application. Only then can a judgment be made if any abrupt changes between mipmap levels are visually disturbing enough to justify the cost of interpolating the mipmaps with trilinear filtering. The same applies to anisotropic filtering, which is significantly more expensive and bandwidth intensive than bilinear or trilinear filtering. If the angle between the textured primitives and the projection plane (e.g. near plane) is never very large, there is nothing to be gained from sampling anisotrophically and there is potentially lower performance. Therefore, an application should start off with the simplest possible texture filtering and only enable more expensive filtering after users have inspected the output images. It might be worthwhile to benchmark the changes and take notes along the way. This will provide a better indication of the relative cost of filtering method and if concessions must be made if the performance budget is exceeded.&lt;/p&gt;
+
+&lt;p&gt;자동으로 비싼 텍스쳐 필터를 설정하지 말고, &lt;em&gt;anisotropic filtering&lt;/em&gt; 을 활성화 하세요. &lt;em&gt;nearest-neighbor filtering&lt;/em&gt; 은 하나의 텍셀, &lt;em&gt;bilinear filtering&lt;/em&gt; 은 4개의 텍셀, &lt;em&gt;trilinear filtering&lt;/em&gt; 은 8개의 텍셀을 가져오는 것을 명심하세요. 하지만 이를 기반으로 성능 비용에 대한 가정을 세우는건 부정확합니다. &lt;em&gt;bilinear filtering&lt;/em&gt; 은 &lt;em&gt;nearist filtering&lt;/em&gt;  처럼 4배만큼 비용이 들지 않으며, &lt;em&gt;trilinear filtering&lt;/em&gt; 은 &lt;em&gt;bilinear filtering&lt;/em&gt; 의 두배 내외의 비용을 가질 수 있습니다. 텍스쳐가 밉맵이 있다면, 자동으로 &lt;em&gt;trilinear filtering&lt;/em&gt; 을 사용하는 것을 의미하는 것은 아닙니다. 이 결정은 실행중인 응용프로그램에서부터 이미지를 관찰하며 전체적으로 만들어져야 합니다. &lt;em&gt;anisotropic filtering&lt;/em&gt; 또한 같이 적용되며, 이는 &lt;em&gt;bilinear&lt;/em&gt;, &lt;em&gt;trilinear&lt;/em&gt; 보다 더 비싸고 대역폭도 많이 차지합니다. 텍스쳐화된 도형과 카메라 평면의 각도가 매우 크다면, 비등방성(&lt;em&gt;anisotropic&lt;/em&gt;) 샘플링에서는 아무것도 얻을 수 없고 낮은 성능을 가질 수 있습니다. 그러므로, 응용 프로그램은 처음에는 가능한 제일 간단한 필터링으로 시작하여,사용자가 더 나은 결과 이미지를 보려한 후에 더 비싼 필터링을 활성화하세요. 변화에 따라 기록하며 벤치마크하는 것은 의미있을 것입니다.&lt;/p&gt;
 
 &lt;h2&gt;텍스쳐 타일링을 활용하려 노력하십시오. (T12)&lt;/h2&gt;
 
 &lt;p&gt;It is common for images to contain the same repeated pattern of pixels. Or an image might repeat a few patterns that are close enough in similarity that they could be replaced with a single pattern without impacting image quality. Tiling textures saves on memory and bandwidth. Some image processing applications can identify repeated patterns and can crop them so they can be tiled infinitely without seams when using textures with the REPEAT wrap mode. Sometimes even a quarter of a tile or shingle may be sufficient to store while using MIRRORED_REPEAT. Consider if tiling variation can be restored or achieved with multi-texturing, using for instance a less expensive grey-scale texture that repeats at a different frequency to modulate the texels from the tiled texture.&lt;/p&gt;
 
+&lt;p&gt;같은 반복되는 패턴의 픽셀을 가진 이미지는 흔합니다. 이미지 퀄리티에 영향을 끼치지 않고 하나의 패턴으로 바꿀만한 충분한 유사성을 가진 몇 패턴을 반복할 수도 있습니다. 텍스쳐 타일링은 메모리와 대역폭을 아낄 수 있습니다. 몇몇 이미지 처리 응용 프로그램은 반복되는 패턴을 인지하고 버릴 수도 있습니다. &lt;em&gt;REPEAT&lt;/em&gt; &lt;em&gt;wrap mode&lt;/em&gt; 의 텍스쳐를 사용할 때 &lt;em&gt;seam&lt;/em&gt; 없이 무한한 타일링이 가능합니다. 심지어 가끔 타일 혹은 지붕 덮개를 &lt;em&gt;MIRRORED_REPEAT&lt;/em&gt; 를 사용하고, 4분의 1만 저장해도 충분할 수도 있습니다. 여러가지 타일링 방법이 여러 텍스쳐와 함께 처리될 수 있는지 고려하세요. 예를들어 덜 비싼 그레이스케일 텍스쳐를 타일링된 텍스쳐와 다른 주파수를 통해 섞을 수도 잇습니다.&lt;/p&gt;
+
 &lt;h2&gt;프레임 버퍼 오브젝트를(FBO) 동적으로 생성되는 텍스쳐를 위해 사용하십시오. (T13)&lt;/h2&gt;
 
-&lt;p&gt;OpenGL ES comes with functions for copying previously rendered pixels from a framebuffer into a texture (TexCopyImage, TexCopySubImage). These functions should be avoided whenever possible for performance reasons. It is better to bind a framebuffer object with a texture attachment and render directly to the texture. Make sure you check for framebuffer completeness.
-Note: Not all pixel formats are color-renderable. Formats with 3 or 4 components in 16 or 32 bits are color-renderable in OpenGL ES 2.0, but LUMINANCE and/or ALPHA may require a fall-back to TexCopyImage functions.&lt;/p&gt;
+&lt;p&gt;OpenGL ES comes with functions for copying previously rendered pixels from a framebuffer into a texture (TexCopyImage, TexCopySubImage). These functions should be avoided whenever possible for performance reasons. It is better to bind a framebuffer object with a texture attachment and render directly to the texture. Make sure you check for framebuffer completeness.&lt;/p&gt;
+
+&lt;p&gt;OpenGL ES 는 프레임버퍼에서 이전에 렌더링된 픽셀을 텍스쳐에 복사하는 기능을 제공합니다. (&lt;em&gt;TexCopyImage&lt;/em&gt;, &lt;em&gt;TexCopySubImage&lt;/em&gt;) 이 기능들은 성능상의 이유로 피해야 합니다. 프레임 버퍼 오브젝트를 참조할 텍스쳐로 사용하여(&lt;em&gt;texture attachment&lt;/em&gt;) 직접 텍스쳐에 렌더링 하는 것이 더 낫습니다. 프레임버퍼 완전성을 확인하세요.&lt;/p&gt;
+
+&lt;p&gt;Note: Not all pixel formats are color-renderable. Formats with 3 or 4 components in 16 or 32 bits are color-renderable in OpenGL ES 2.0, but LUMINANCE and/or ALPHA may require a fall-back to TexCopyImage functions.&lt;/p&gt;
+
+&lt;p&gt;참조: 모든 픽셀이 색 렌더링이 가능한건 아닙니다. 16-bit, 32-bit 컴포넌트를 3,4 개 가진 포맷은 OpenGL ES 2.0 에서 색 렌더링이 가능하지만, &lt;em&gt;LUMINANCE&lt;/em&gt; 와 &lt;em&gt;ALPHA&lt;/em&gt; 는 &lt;em&gt;TexCopyImage&lt;/em&gt; 함수를 사용하는 것을 대비해야 합니다.&lt;/p&gt;
 
 &lt;h1&gt;기타&lt;/h1&gt;
 
 &lt;p&gt;This topic contains miscellaneous OpenGL ES programming tips.&lt;/p&gt;
 
+&lt;p&gt;해당 주제는 기타 OpenGL ES 프로그래밍 팁을 담고 잇습니다.&lt;/p&gt;
+
 &lt;h2&gt;FBO 내용을 다시 읽는 것을 피하십시오. (M1)&lt;/h2&gt;
 
 &lt;p&gt;Reading back the framebuffer flushes the GL pipeline and limits the amount CPU/GPU parallelism. Reading frequently or in the middle of a frame stalls the GPU and limits the throughput with lower frame rate as a result. If the buffer contents must be read back (perhaps for picking 3D objects in a complex scene), it should be done minimally and scheduled at the beginning of the next frame. In the special case that the application is reading back into a sub-rectangle of pixels in client memory, the pack_subimage extension (if supported) is very useful. Setting the PACK_ROW_LENGTH pixel store parameter will reduce the loop overhead that will otherwise be necessary (T9).&lt;/p&gt;
+
+&lt;p&gt;프레임버퍼를 다시 읽는 것은 &lt;em&gt;GL pipeline&lt;/em&gt; 을 비우며, 많은 CPU/GPU 병렬성을 제한합니다. 자주 혹은 프레임 처리 중간에서 읽는 것은 GPU 의 &lt;em&gt;stall&lt;/em&gt; 을 야기하고, 처리량을 제한시켜 결과적으론 낮은 &lt;em&gt;frame rate&lt;/em&gt; 를 가진다. 버퍼 내용이 반드시 다시 읽혀야 한다면(만약에 복잡한 환경에서 3D 오브젝트를 피킹해야 한다면), 최소한으로 실행되고, 다음 프레임의 시작에서 되도록 스케쥴링 해야 합니다. 응용 프로그램이 부분 사각형 내의 픽셀을 클라이언트 메모리로 읽어와야 하는 특별한 경우, &lt;em&gt;pack_subimage&lt;/em&gt; 확장(지원하면)은 유용합니다. &lt;em&gt;PACK_ROW_LENGTH&lt;/em&gt; 파라미터를 설정하여 루프 오버헤드를 필요한 만큼으로 줄일 수 있습니다. (t9)&lt;/p&gt;
 
 &lt;h2&gt;필요없는 버퍼 청소를 피하십시오. (M2)&lt;/h2&gt;
 
 &lt;p&gt;If the application always covers the entire color buffer for each frame, then bandwidth can be saved by not clearing it. It is a common mistake to call Clear(GL_COLOR_BUFFER_BIT) when it is not necessary. If only part of the color buffer is modified, then constrain pixel operations to that region by enabling scissor testing and define a minimal scissor box for the region. The same applies to depth and stencil buffers if full screen testing is not needed.&lt;/p&gt;
 
+&lt;p&gt;응용 프로그램이 항상 각 프레임별로 전체 색 버퍼를 처리하는 경우, 비우지 않음으로써 대역폭을 아낄 수 있습니다. 이는 필요하지 않아도 청소하는(GL_COLOR_BUFFET_BIT) 일반적인 실수입니다. 색 버퍼의 일부만 수정되었다면, &lt;em&gt;scissor testing&lt;/em&gt; 을 활성화하여 픽셀 연산을 제한시키고, 최소한의 &lt;em&gt;scissor box&lt;/em&gt; 를 정의하세요. 전체화면 테스트가 필요하지 않은 경우 깊이 버퍼와 스텐실 버퍼 또한 마찬가지입니다.&lt;/p&gt;
+
 &lt;h2&gt;필요하지 않은 블렌딩은 비활성화 하십시오. (M3)&lt;/h2&gt;
 
 &lt;p&gt;Most blending operations require a read and a write to the framebuffer.&lt;/p&gt;
 
+&lt;p&gt;대부분의 블렌딩 연산은 프레임버퍼 읽기/쓰기 가 필요합니다.&lt;/p&gt;
+
 &lt;p&gt;Note: Memory bandwidth is often doubled when rendering with blending is enabled. The number of blended fragments should be kept to a minimum—it can drastically speed up the GL application.&lt;/p&gt;
+
+&lt;p&gt;보통 메모리 대역폭은 블렌딩이 활성화 된 경우 두배로 커집니다. 블렌드된 _fragment_의 숫자를 최소한으로 유지키세요-이는 GL 응용 프로그램의 엄청난 속도 향상이 가능합니다.&lt;/p&gt;
 
 &lt;h2&gt;메모리 파편화를 최소화 하십시오. (M4)&lt;/h2&gt;
 
 &lt;p&gt;Buffer objects and glTexImage* functions are effectively graphics memory allocations. Reusing existing buffer objects and texture objects will reduce memory fragmentation. If geometry or textures are generated dynamically, the application should allocate a minimal pool of objects for this purpose during application initialization. It may be that two buffers or textures used in a round-robin fashion are optimal for reducing the risk that the GPU is waiting on the resource. Also, recall that sampling a texture that is being rendered to, at the same time, is undefined. This can be another reason to alternate between objects. For more information, see Memory Fragmentation in this appendix.&lt;/p&gt;
+
+&lt;p&gt;버퍼 오브젝트와 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;glTexImage*&lt;/code&gt; 류의 함수는 효과적인 그래픽 메모리 할당입니다. 존재하는 버퍼 오브젝트 및 텍스쳐 오브젝트를 재사용하여 메모리 파편화를 줄일 수 있습니다. 만약 기하 혹은 텍스쳐가 동적으로 만들어진다면, 응용 프로그램은 초기화 동안 최소한의 오브젝트 풀을 할당합니다. 이는 두 버퍼와 텍스쳐를 라운드로빈 방법으로 사용하여 GPU가 리소스를 기다리는 리스크를 줄이는 최적의 방법입니다. 또한 텍스쳐를 동시에 샘플링 하는 것은 정의되지 않았습니다. 이는 오브젝트 간의 대체제를 사용할 다른 이유입니다. 더 많은 정보는 Appendix 의 메모리 파편화 항목을 보세요.&lt;/p&gt;
 
 &lt;h1&gt;OpenGL ES 최적화 하기&lt;/h1&gt;
 
