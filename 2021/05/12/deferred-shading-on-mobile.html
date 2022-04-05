@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Deferred Shading On Mobile</title>
+  <meta name="description" content="VR을 제외한 PC 및 콘솔 플랫폼에선 보통은 deferred shading 을 많이 사용한다. 거의 대부분은 MRT를 사용하여 각각의 프레임 버퍼로 픽셀 데이터를 저장하고, 마지막 패스에서 이를 다시 참조하여 계산한다. 이 방식은 필자가 아는 것 기준으로 10년이 넘어서도 주가되는 방식이다. 하지만 모바일 기기가 등장하고, 거의 대부분의 모바일 GPU 에서는 절대적으로 유닛 갯수가 부족하기 때문에 픽셀을 처리하는 ROP 유닛이 관여하는 부분을 타일로 나누어 locality 를 이용하여 처리한다. (정점 처리는 그대로 간다. 그래서 절대적으로 정점의 한계는 명확하다.) 이 때문에 OpenGL ES 3.x 버젼이 현역인 때의 절대적인 문제점은 deferred shading 을 성능상의 문제로 사용할 수 없다는 점이였다. deferred shading 을 구현하는 방법은 무식하게 프레임버퍼를 크게 할당하여 하나하나 인코딩하는 방법이였는데, 픽셀을 타일 단위로 처리하는 방법을 가진 모바일 GPU 에서는 이전의 방법으로는 만족할만한 성능을 내기 어려웠다. 그래서 2014/2015 년에 MALI 제품군과 몇몇 PowerVR 제품군에서 사용 가능한 pixel local storage 를 OGLES 에 multi-vendor extension 분류로 등록되었다. 사용 방법은 GLES 쉐이더 소스를 수정하면 쉽게 변경 가능하다. deferred shading 을 사용하기 위한 구체적인 예시를 아래에 가져와보았다. 역시 2 패스로 이루어진다.">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://suhyeokkim.github.io/2021/05/12/deferred-shading-on-mobile">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://suhyeokkim.github.io/feed.xml">
+
+  <meta name="google-site-verification" content="o3-a11YI0ZIYwUdcikrWBRObGOUHzk89IJF7CX0ieQk" />
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Deferred Shading On Mobile">
+  <meta name="twitter:description" content="VR을 제외한 PC 및 콘솔 플랫폼에선 보통은 deferred shading 을 많이 사용한다. 거의 대부분은 MRT를 사용하여 각각의 프레임 버퍼로 픽셀 데이터를 저장하고, 마지막 패스에서 이를 다시 참조하여 계산한다. 이 방식은 필자가 아는 것 기준으로 10년이 넘어서도 주가되는 방식이다. 하지만 모바일 기기가 등장하고, 거의 대부분의 모바일 GP...">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-93000374-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Appocrypha</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Deferred Shading On Mobile</h1>
+    
+    <p class="post-meta"><time datetime="2021-05-12T00:00:00+00:00" itemprop="datePublished">May 12, 2021</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Su-Hyeok Kim</span></span> • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/opengles/">opengles</a>,
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/deferred-shading/">deferred_shading</a>
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>VR을 제외한 PC 및 콘솔 플랫폼에선 보통은 deferred shading 을 많이 사용한다. 거의 대부분은 MRT를 사용하여 각각의 프레임 버퍼로 픽셀 데이터를 저장하고, 마지막 패스에서 이를 다시 참조하여 계산한다. 이 방식은 필자가 아는 것 기준으로 10년이 넘어서도 주가되는 방식이다.</p>
+
+<p>하지만 모바일 기기가 등장하고, 거의 대부분의 모바일 GPU 에서는 절대적으로 유닛 갯수가 부족하기 때문에 픽셀을 처리하는 ROP 유닛이 관여하는 부분을 타일로 나누어 <em>locality</em> 를 이용하여 처리한다. (정점 처리는 그대로 간다. 그래서 절대적으로 정점의 한계는 명확하다.) 이 때문에 OpenGL ES 3.x 버젼이 현역인 때의 절대적인 문제점은 deferred shading 을 성능상의 문제로 사용할 수 없다는 점이였다. deferred shading 을 구현하는 방법은 무식하게 프레임버퍼를 크게 할당하여 하나하나 인코딩하는 방법이였는데, 픽셀을 타일 단위로 처리하는 방법을 가진 모바일 GPU 에서는 이전의 방법으로는 만족할만한 성능을 내기 어려웠다.</p>
+
+<p>그래서 2014/2015 년에 MALI 제품군과 몇몇 PowerVR 제품군에서 사용 가능한 <em>pixel local storage</em> 를 OGLES 에 <em>multi-vendor extension</em> 분류로 등록되었다. 사용 방법은 GLES 쉐이더 소스를 수정하면 쉽게 변경 가능하다. <em>deferred shading</em> 을 사용하기 위한 구체적인 예시를 아래에 가져와보았다. 역시 2 패스로 이루어진다.</p>
+
+<!-- more -->
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     (1) Use the extension to write data.
+
+    #version 300 es
+    #extension GL_EXT_shader_pixel_local_storage : enable
+
+    __pixel_localEXT FragDataLocal {
+        layout(r11f_g11f_b10f) mediump vec3 normal;
+        layout(rgb10_a2) highp vec4 color;
+        layout(rgba8ui) mediump uvec4 flags;
+    } gbuf;
+
+    void main()
+    {
+        /* .... */
+        gbuf.normal = v;
+        gbuf.color = texture(sampler, coord);
+        gbuf.flags = material_id;
+    }
+</code></pre></div></div>
+
+<p>위 코드에서는 입력받은 기하를 PLS 에 저장하고, 아래 코드에서는 PLS 에서 참조하여 합치는 작업을 수행한다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    (2) Use the extension to resolve the data.
+
+    #version 300 es
+    #extension GL_EXT_shader_pixel_local_storage : enable
+
+    __pixel_localEXT FragDataLocal {
+        layout(r11f_g11f_b10f) mediump vec3 normal;
+        layout(rgb10_a2) highp vec4 color;
+        layout(rgba8ui) mediump uvec4 flags;
+    } gbuf;
+
+</code></pre></div></div>
+
+<p>하지만 <em>pixel local storage</em> 는 <em>ARB Extension</em> 이 아니기 때문에 모든 벤더가 구현되었다고 볼 수 없고, 실제로 <em>adreno</em> 제품군의 OpenGL 드라이버에는 구현되어 있지 않은 것으로 범용적으로는 쓰일 수 없는 것으로 보인다. OpenGL 드라이버를 사용하여 모바일 환경의 deffered 렌더링을 완벽하게 MRT 를 사용하여 최적화 할 수 없다.</p>
+
+<p>Vulkan 을 사용하여 deffered rendering 을 고안한 방법을 <a href="https://www.khronos.org/assets/uploads/developers/library/2016-vulkan-devday-uk/6-Vulkan-subpasses.pdf">khronos : Vulkan Subpasses</a> 에서 볼 수 있다.</p>
+      <h2>
+        
+        
+          참조
+        
+        
+      </h2>
+    
+
+<ul>
+  <li><a href="https://community.arm.com/developer/tools-software/graphics/b/blog/posts/pixel-local-storage-on-arm-mali-gpus">Pixel Local Storage on ARM Mali GPUs</a></li>
+  <li><a href="https://docs.imgtec.com/Framework_DevGuide/topics/Tips_and_Tricks/Renderpass-PLS_Strategies/c_PVRFramework_subpasses_pls.html">PowerVR Framework Tips and Tricks : Render pass/Pixel Local Storage (PLS) Strategies</a></li>
+  <li><a href="https://developer.apple.com/documentation/metal/gpu_features/understanding_gpu_family_4/about_imageblocks">Apple Developer : About Imageblocks</a></li>
+  <li><a href="https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_shader_pixel_local_storage.txt">khronos : EXT_shader_pixel_local_storage</a></li>
+  <li><a href="https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_shader_pixel_local_storage2.txt">khronos : EXT_shader_pixel_local_storage2</a></li>
+  <li><a href="https://www.khronos.org/assets/uploads/developers/library/2016-vulkan-devday-uk/6-Vulkan-subpasses.pdf">khronos : Vulkan Subpasses</a></li>
+</ul>
+
+  </div>
+
+  
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://suhyeokkim-github-io.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+</article>
+
+      </div>
+    </main>
+    
+    <script>
+      $("script[type='math/tex']").replaceWith(function() {
+          var tex = $(this).text();
+          return katex.renderToString(tex, {displayMode: false});
+      });
+
+      $("script[type='math/tex; mode=display']").replaceWith(function() {
+          var tex = $(this).html();
+          return katex.renderToString(tex.replace(/%.*/g, ''), {displayMode: true});
+      });
+    </script>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+Content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a><br />
+&copy; 2015&ndash;2022 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://suhyeokkim.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

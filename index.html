@@ -16,10 +16,10 @@
   
 
   <link rel="stylesheet" href="/assets/main.css">
-  <link rel="canonical" href="https://suhyeokim.github.io/">
+  <link rel="canonical" href="https://suhyeokkim.github.io/">
   
   
-  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://suhyeokim.github.io/feed.xml">
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://suhyeokkim.github.io/feed.xml">
 
   <meta name="google-site-verification" content="o3-a11YI0ZIYwUdcikrWBRObGOUHzk89IJF7CX0ieQk" />
 
@@ -95,6 +95,258 @@
   
 
   <ul class="post-list">
+    
+      
+      
+
+      <li>
+        <header class="post-header">
+          <h1 class="post-title">
+            <a class="post-link" href="/2021/05/12/deferred-shading-on-mobile">Deferred Shading On Mobile</a>
+          </h1>
+
+          <p class="post-meta">May 12, 2021 • 
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/opengles/">opengles</a>,
+    
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <a href="/categories/deferred-shading/">deferred_shading</a>
+    
+  
+
+</p>
+        </header>
+
+        <div class="post-content">
+          <p>VR을 제외한 PC 및 콘솔 플랫폼에선 보통은 deferred shading 을 많이 사용한다. 거의 대부분은 MRT를 사용하여 각각의 프레임 버퍼로 픽셀 데이터를 저장하고, 마지막 패스에서 이를 다시 참조하여 계산한다. 이 방식은 필자가 아는 것 기준으로 10년이 넘어서도 주가되는 방식이다.</p>
+
+<p>하지만 모바일 기기가 등장하고, 거의 대부분의 모바일 GPU 에서는 절대적으로 유닛 갯수가 부족하기 때문에 픽셀을 처리하는 ROP 유닛이 관여하는 부분을 타일로 나누어 <em>locality</em> 를 이용하여 처리한다. (정점 처리는 그대로 간다. 그래서 절대적으로 정점의 한계는 명확하다.) 이 때문에 OpenGL ES 3.x 버젼이 현역인 때의 절대적인 문제점은 deferred shading 을 성능상의 문제로 사용할 수 없다는 점이였다. deferred shading 을 구현하는 방법은 무식하게 프레임버퍼를 크게 할당하여 하나하나 인코딩하는 방법이였는데, 픽셀을 타일 단위로 처리하는 방법을 가진 모바일 GPU 에서는 이전의 방법으로는 만족할만한 성능을 내기 어려웠다.</p>
+
+<p>그래서 2014/2015 년에 MALI 제품군과 몇몇 PowerVR 제품군에서 사용 가능한 <em>pixel local storage</em> 를 OGLES 에 <em>multi-vendor extension</em> 분류로 등록되었다. 사용 방법은 GLES 쉐이더 소스를 수정하면 쉽게 변경 가능하다. <em>deferred shading</em> 을 사용하기 위한 구체적인 예시를 아래에 가져와보았다. 역시 2 패스로 이루어진다.</p>
+
+
+        </div>
+
+        
+          <p class="post-continue">
+            <a href="/2021/05/12/deferred-shading-on-mobile">Read on &rarr;</a>
+          </p>
+        
+      </li>
     
       
       
@@ -214,6 +466,8 @@
   
     
   
+    
+  
 
   
   
@@ -321,6 +575,8 @@
   
     
       <a href="/categories/optimization/">optimization</a>
+    
+  
     
   
 
@@ -458,6 +714,8 @@
   
     
   
+    
+  
 
   
   
@@ -557,6 +815,8 @@
   
     
       <a href="/categories/unmanaged-language/">unmanaged_language</a>,
+    
+  
     
   
     
@@ -676,6 +936,8 @@
   
     
   
+    
+  
 
   
   
@@ -779,6 +1041,8 @@
   
     
       <a href="/categories/game-programming/">game_programming</a>
+    
+  
     
   
     
@@ -908,6 +1172,8 @@
   
     
       <a href="/categories/eastl/">EASTL</a>
+    
+  
     
   
     
@@ -1057,6 +1323,8 @@
   
     
   
+    
+  
 
   
   
@@ -1166,6 +1434,8 @@
   
     
   
+    
+  
 
 </p>
         </header>
@@ -1201,6 +1471,8 @@
   
     
       <a href="/categories/unity/">unity</a>,
+    
+  
     
   
     
@@ -1410,6 +1682,8 @@
   
     
   
+    
+  
 
 </p>
         </header>
@@ -1560,6 +1834,8 @@
   
     
       <a href="/categories/terminology/">terminology</a>
+    
+  
     
   
     
@@ -1759,6 +2035,8 @@
   
     
   
+    
+  
 
 </p>
         </header>
@@ -1810,6 +2088,8 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
     
   
     
@@ -2003,6 +2283,8 @@
   
     
   
+    
+  
 
 </p>
         </header>
@@ -2054,6 +2336,8 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
     
   
     
@@ -2247,6 +2531,8 @@
   
     
   
+    
+  
 
   
   
@@ -2356,6 +2642,8 @@
   
     
   
+    
+  
 
 </p>
         </header>
@@ -2371,250 +2659,6 @@
         
           <p class="post-continue">
             <a href="/2018/05/22/opaque-as-alpha-test">Read on &rarr;</a>
-          </p>
-        
-      </li>
-    
-      
-      
-
-      <li>
-        <header class="post-header">
-          <h1 class="post-title">
-            <a class="post-link" href="/2018/05/18/IEEE-754-floaing-number">Ieee 754 Floaing Number</a>
-          </h1>
-
-          <p class="post-meta">May 18, 2018 • 
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/math/">math</a>,
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-  
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <a href="/categories/floating-point/">floating_point</a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-
-</p>
-        </header>
-
-        <div class="post-content">
-          <p>코딩을 하던 도중, 비트로 나타내어진 2 byte floating number(half-precision) 데이터를 일반적인 4byte floating number(single-precision) 으로 나타내야 할 일이 있었다. 그래서 귀찮아서 알아보지 않았던 컴퓨터의 소수를 표현하는 방법에 대해서 알아보았다. 이 글에서는 간략하게 어떤식으로 표현되는지에 대해서만 적어보기로 하겠다.</p>
-
-
-        </div>
-
-        
-          <p class="post-continue">
-            <a href="/2018/05/18/IEEE-754-floaing-number">Read on &rarr;</a>
           </p>
         
       </li>
@@ -2657,7 +2701,7 @@
       
 
 Content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a><br />
-&copy; 2015&ndash;2021 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://suhyeokim.github.io/feed.xml">RSS</a>
+&copy; 2015&ndash;2022 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://suhyeokkim.github.io/feed.xml">RSS</a>
 
     </p>
 

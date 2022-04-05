@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ko">
-  <generator uri="http://jekyllrb.com" version="4.2.0">Jekyll</generator>
+  <generator uri="http://jekyllrb.com" version="3.9.0">Jekyll</generator>
   
   
-  <link href="https://suhyeokim.github.io/feed.xml" rel="self" type="application/atom+xml" />
-  <link href="https://suhyeokim.github.io/" rel="alternate" type="text/html" hreflang="ko" />
-  <updated>2021-05-05T08:44:13+00:00</updated>
-  <id>https://suhyeokim.github.io//</id>
+  <link href="https://suhyeokkim.github.io/feed.xml" rel="self" type="application/atom+xml" />
+  <link href="https://suhyeokkim.github.io/" rel="alternate" type="text/html" hreflang="ko" />
+  <updated>2022-04-05T14:32:34+00:00</updated>
+  <id>https://suhyeokkim.github.io//</id>
 
   
     <title type="html">Appocrypha</title>
@@ -28,13 +28,111 @@
   
     <entry>
       
+      <title type="html">Deferred Shading On Mobile</title>
+      
+      <link href="https://suhyeokkim.github.io/2021/05/12/deferred-shading-on-mobile" rel="alternate" type="text/html" title="Deferred Shading On Mobile" />
+      <published>2021-05-12T00:00:00+00:00</published>
+      <updated>2021-05-12T00:00:00+00:00</updated>
+      <id>https://suhyeokkim.github.io/2021/05/12/deferred-shading-on-mobile</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2021/05/12/deferred-shading-on-mobile">&lt;p&gt;VR을 제외한 PC 및 콘솔 플랫폼에선 보통은 deferred shading 을 많이 사용한다. 거의 대부분은 MRT를 사용하여 각각의 프레임 버퍼로 픽셀 데이터를 저장하고, 마지막 패스에서 이를 다시 참조하여 계산한다. 이 방식은 필자가 아는 것 기준으로 10년이 넘어서도 주가되는 방식이다.&lt;/p&gt;
+
+&lt;p&gt;하지만 모바일 기기가 등장하고, 거의 대부분의 모바일 GPU 에서는 절대적으로 유닛 갯수가 부족하기 때문에 픽셀을 처리하는 ROP 유닛이 관여하는 부분을 타일로 나누어 &lt;em&gt;locality&lt;/em&gt; 를 이용하여 처리한다. (정점 처리는 그대로 간다. 그래서 절대적으로 정점의 한계는 명확하다.) 이 때문에 OpenGL ES 3.x 버젼이 현역인 때의 절대적인 문제점은 deferred shading 을 성능상의 문제로 사용할 수 없다는 점이였다. deferred shading 을 구현하는 방법은 무식하게 프레임버퍼를 크게 할당하여 하나하나 인코딩하는 방법이였는데, 픽셀을 타일 단위로 처리하는 방법을 가진 모바일 GPU 에서는 이전의 방법으로는 만족할만한 성능을 내기 어려웠다.&lt;/p&gt;
+
+&lt;p&gt;그래서 2014/2015 년에 MALI 제품군과 몇몇 PowerVR 제품군에서 사용 가능한 &lt;em&gt;pixel local storage&lt;/em&gt; 를 OGLES 에 &lt;em&gt;multi-vendor extension&lt;/em&gt; 분류로 등록되었다. 사용 방법은 GLES 쉐이더 소스를 수정하면 쉽게 변경 가능하다. &lt;em&gt;deferred shading&lt;/em&gt; 을 사용하기 위한 구체적인 예시를 아래에 가져와보았다. 역시 2 패스로 이루어진다.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;     (1) Use the extension to write data.
+
+    #version 300 es
+    #extension GL_EXT_shader_pixel_local_storage : enable
+
+    __pixel_localEXT FragDataLocal {
+        layout(r11f_g11f_b10f) mediump vec3 normal;
+        layout(rgb10_a2) highp vec4 color;
+        layout(rgba8ui) mediump uvec4 flags;
+    } gbuf;
+
+    void main()
+    {
+        /* .... */
+        gbuf.normal = v;
+        gbuf.color = texture(sampler, coord);
+        gbuf.flags = material_id;
+    }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;위 코드에서는 입력받은 기하를 PLS 에 저장하고, 아래 코드에서는 PLS 에서 참조하여 합치는 작업을 수행한다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    (2) Use the extension to resolve the data.
+
+    #version 300 es
+    #extension GL_EXT_shader_pixel_local_storage : enable
+
+    __pixel_localEXT FragDataLocal {
+        layout(r11f_g11f_b10f) mediump vec3 normal;
+        layout(rgb10_a2) highp vec4 color;
+        layout(rgba8ui) mediump uvec4 flags;
+    } gbuf;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;하지만 &lt;em&gt;pixel local storage&lt;/em&gt; 는 &lt;em&gt;ARB Extension&lt;/em&gt; 이 아니기 때문에 모든 벤더가 구현되었다고 볼 수 없고, 실제로 &lt;em&gt;adreno&lt;/em&gt; 제품군의 OpenGL 드라이버에는 구현되어 있지 않은 것으로 범용적으로는 쓰일 수 없는 것으로 보인다. OpenGL 드라이버를 사용하여 모바일 환경의 deffered 렌더링을 완벽하게 MRT 를 사용하여 최적화 할 수 없다.&lt;/p&gt;
+
+&lt;p&gt;Vulkan 을 사용하여 deffered rendering 을 고안한 방법을 &lt;a href=&quot;https://www.khronos.org/assets/uploads/developers/library/2016-vulkan-devday-uk/6-Vulkan-subpasses.pdf&quot;&gt;khronos : Vulkan Subpasses&lt;/a&gt; 에서 볼 수 있다.&lt;/p&gt;
+
+&lt;h2&gt;참조&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://community.arm.com/developer/tools-software/graphics/b/blog/posts/pixel-local-storage-on-arm-mali-gpus&quot;&gt;Pixel Local Storage on ARM Mali GPUs&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.imgtec.com/Framework_DevGuide/topics/Tips_and_Tricks/Renderpass-PLS_Strategies/c_PVRFramework_subpasses_pls.html&quot;&gt;PowerVR Framework Tips and Tricks : Render pass/Pixel Local Storage (PLS) Strategies&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.apple.com/documentation/metal/gpu_features/understanding_gpu_family_4/about_imageblocks&quot;&gt;Apple Developer : About Imageblocks&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_shader_pixel_local_storage.txt&quot;&gt;khronos : EXT_shader_pixel_local_storage&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_shader_pixel_local_storage2.txt&quot;&gt;khronos : EXT_shader_pixel_local_storage2&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.khronos.org/assets/uploads/developers/library/2016-vulkan-devday-uk/6-Vulkan-subpasses.pdf&quot;&gt;khronos : Vulkan Subpasses&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Su-Hyeok Kim</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="opengles" />
+      
+        <category term="deferred_shading" />
+      
+
+      
+
+      
+        <summary type="html">VR을 제외한 PC 및 콘솔 플랫폼에선 보통은 deferred shading 을 많이 사용한다. 거의 대부분은 MRT를 사용하여 각각의 프레임 버퍼로 픽셀 데이터를 저장하고, 마지막 패스에서 이를 다시 참조하여 계산한다. 이 방식은 필자가 아는 것 기준으로 10년이 넘어서도 주가되는 방식이다. 하지만 모바일 기기가 등장하고, 거의 대부분의 모바일 GPU 에서는 절대적으로 유닛 갯수가 부족하기 때문에 픽셀을 처리하는 ROP 유닛이 관여하는 부분을 타일로 나누어 locality 를 이용하여 처리한다. (정점 처리는 그대로 간다. 그래서 절대적으로 정점의 한계는 명확하다.) 이 때문에 OpenGL ES 3.x 버젼이 현역인 때의 절대적인 문제점은 deferred shading 을 성능상의 문제로 사용할 수 없다는 점이였다. deferred shading 을 구현하는 방법은 무식하게 프레임버퍼를 크게 할당하여 하나하나 인코딩하는 방법이였는데, 픽셀을 타일 단위로 처리하는 방법을 가진 모바일 GPU 에서는 이전의 방법으로는 만족할만한 성능을 내기 어려웠다. 그래서 2014/2015 년에 MALI 제품군과 몇몇 PowerVR 제품군에서 사용 가능한 pixel local storage 를 OGLES 에 multi-vendor extension 분류로 등록되었다. 사용 방법은 GLES 쉐이더 소스를 수정하면 쉽게 변경 가능하다. deferred shading 을 사용하기 위한 구체적인 예시를 아래에 가져와보았다. 역시 2 패스로 이루어진다.</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
       <title type="html">Open Gl Es Programming Tips Kor</title>
       
-      <link href="https://suhyeokim.github.io/2021/03/21/open-gl-es-programming-tips-kor" rel="alternate" type="text/html" title="Open Gl Es Programming Tips Kor" />
+      <link href="https://suhyeokkim.github.io/2021/03/21/open-gl-es-programming-tips-kor" rel="alternate" type="text/html" title="Open Gl Es Programming Tips Kor" />
       <published>2021-03-21T00:00:00+00:00</published>
       <updated>2021-03-21T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2021/03/21/open-gl-es-programming-tips-kor</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2021/03/21/open-gl-es-programming-tips-kor">&lt;p&gt;※ &lt;a href=&quot;https://docs.nvidia.com/drive/drive_os_5.1.6.1L/nvvib_docs/index.html#page/DRIVE_OS_Linux_SDK_Development_Guide/Graphics/graphics_opengl.html&quot;&gt;docs.nvidia : OpenGL ES Programming Tips&lt;/a&gt;의 내용을 번역하는 포스팅입니다. 시간이 꽤 지난 내용으로 글의 내용은 현재 상황과 다를 수 있습니다. 또한 모든 내용이 번역되어 있지 않을 수도 있습니다.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2021/03/21/open-gl-es-programming-tips-kor</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2021/03/21/open-gl-es-programming-tips-kor">&lt;p&gt;※ &lt;a href=&quot;https://docs.nvidia.com/drive/drive_os_5.1.6.1L/nvvib_docs/index.html#page/DRIVE_OS_Linux_SDK_Development_Guide/Graphics/graphics_opengl.html&quot;&gt;docs.nvidia : OpenGL ES Programming Tips&lt;/a&gt;의 내용을 번역하는 포스팅입니다. 시간이 꽤 지난 내용으로 글의 내용은 현재 상황과 다를 수 있습니다. 또한 모든 내용이 번역되어 있지 않을 수도 있습니다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -691,11 +789,11 @@ Again, allocations and frees should be replaced whenever possible. Grouping them
       
       <title type="html">Eastl Allocator</title>
       
-      <link href="https://suhyeokim.github.io/2021/01/31/eastl-allocator" rel="alternate" type="text/html" title="Eastl Allocator" />
+      <link href="https://suhyeokkim.github.io/2021/01/31/eastl-allocator" rel="alternate" type="text/html" title="Eastl Allocator" />
       <published>2021-01-31T00:00:00+00:00</published>
       <updated>2021-01-31T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2021/01/31/eastl-allocator</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2021/01/31/eastl-allocator">&lt;p&gt;C++ 에서 메모리 관리는 중요한 문제다. &lt;em&gt;garbage collector&lt;/em&gt; 를 지원하는 현대의 많은 언어들과 달리 C++은 OS에서 제공하는 시스템콜을 사용하여 메모리를 직접 할당 받고 반환한다. 하지만 메모리 할당/해제 시스템콜은 가상 페이지 로드 및 병합 비용이 큰 편이고, 성능에 민감한 프로그래머들은 이를 줄이기 위해 고민의 벽에 부딫친다. 이를 개선시키기 위해 많은 사람들이 방법을 고민했다. 그 중에서 필자가 일반적으로 사용하는 방법은 영구/가변 메모리 영역 처럼 단계를 나누어 가상 메모리 페이지 크기 이상의 단위로 할당받아 각각의 뭉텅이에서 공간을 나눠쓰는 방법이다.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2021/01/31/eastl-allocator</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2021/01/31/eastl-allocator">&lt;p&gt;C++ 에서 메모리 관리는 중요한 문제다. &lt;em&gt;garbage collector&lt;/em&gt; 를 지원하는 현대의 많은 언어들과 달리 C++은 OS에서 제공하는 시스템콜을 사용하여 메모리를 직접 할당 받고 반환한다. 하지만 메모리 할당/해제 시스템콜은 가상 페이지 로드 및 병합 비용이 큰 편이고, 성능에 민감한 프로그래머들은 이를 줄이기 위해 고민의 벽에 부딫친다. 이를 개선시키기 위해 많은 사람들이 방법을 고민했다. 그 중에서 필자가 일반적으로 사용하는 방법은 영구/가변 메모리 영역 처럼 단계를 나누어 가상 메모리 페이지 크기 이상의 단위로 할당받아 각각의 뭉텅이에서 공간을 나눠쓰는 방법이다.&lt;/p&gt;
 
 &lt;p&gt;그렇지만 단순히 할당자를 구현하는 것만으로 끝날 문제는 아니다. 직접 컨테이너를 구현하면 입맛에 맞게 쓸 수 있겠지만 여러 비용이 허락해야 가능하고, 사용자 정의 할당자를 지원하는 표준 STL은 여러 제약사항이 존재하기에 쉽지 않다. 하지만 표준 STL과 비슷하게 게임 응용 프로그램을 위해 표준 STL을 개량한 EASTL이라는 대체제를 통해 원하는 메모리 할당자 기능을 쉽게 구현할 수 있었다. 이 글에서는  EASTL에서의 커스텀 메모리 할당자 및 이의 장단점을 서술한다. 해당 포스팅은 EASTL 3.17.06을 기준으로 작성되었다.&lt;/p&gt;
 
@@ -886,11 +984,11 @@ Again, allocations and frees should be replaced whenever possible. Grouping them
       
       <title type="html">Eastl Kor</title>
       
-      <link href="https://suhyeokim.github.io/2021/01/31/EASTL-KOR" rel="alternate" type="text/html" title="Eastl Kor" />
+      <link href="https://suhyeokkim.github.io/2021/01/31/EASTL-KOR" rel="alternate" type="text/html" title="Eastl Kor" />
       <published>2021-01-31T00:00:00+00:00</published>
       <updated>2021-01-31T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2021/01/31/EASTL-KOR</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2021/01/31/EASTL-KOR">&lt;p&gt;※ &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html&quot;&gt;open-std : EASTL&lt;/a&gt;의 내용을 번역하는 포스팅입니다. 시간이 꽤 지난 내용으로 글의 내용은 현재 상황과 다를 수 있습니다. 또한 모든 내용이 번역되어 있지 않을 수도 있습니다.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2021/01/31/EASTL-KOR</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2021/01/31/EASTL-KOR">&lt;p&gt;※ &lt;a href=&quot;http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2271.html&quot;&gt;open-std : EASTL&lt;/a&gt;의 내용을 번역하는 포스팅입니다. 시간이 꽤 지난 내용으로 글의 내용은 현재 상황과 다를 수 있습니다. 또한 모든 내용이 번역되어 있지 않을 수도 있습니다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -1023,11 +1121,11 @@ The STL puts an emphasis on correctness before practicality and - performance. T
       
       <title type="html">What Is Color Spaces And Gamuts</title>
       
-      <link href="https://suhyeokim.github.io/2019/07/11/what-is-color-spaces-and-gamuts" rel="alternate" type="text/html" title="What Is Color Spaces And Gamuts" />
+      <link href="https://suhyeokkim.github.io/2019/07/11/what-is-color-spaces-and-gamuts" rel="alternate" type="text/html" title="What Is Color Spaces And Gamuts" />
       <published>2019-07-11T00:00:00+00:00</published>
       <updated>2019-07-11T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2019/07/11/what-is-color-spaces-and-gamuts</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2019/07/11/what-is-color-spaces-and-gamuts">&lt;p&gt;HDR 에 대한 내용들을 찾다보면 &lt;em&gt;color space&lt;/em&gt; 에 대한 개념을 기본적으로 알고 있어야 수학적인 내용을 배울 때 단계적으로 학습해야 하는 것처럼 대부분의 내용들을 쉽게 이해할 수 있다. 필자의 경우 이에 대한 학습이 전혀 없었고, 직접 자료를 찾아보기 전까지 무슨 소리인지 전혀 몰랐던 상태였다. 다행히 여러 분야에 걸쳐 꽤 많이 알려진 지식들이고 받아들이기에 어려운 개념은 아니라서 이에 대해 글을 쓰면서 정리해보려 한다.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2019/07/11/what-is-color-spaces-and-gamuts</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2019/07/11/what-is-color-spaces-and-gamuts">&lt;p&gt;HDR 에 대한 내용들을 찾다보면 &lt;em&gt;color space&lt;/em&gt; 에 대한 개념을 기본적으로 알고 있어야 수학적인 내용을 배울 때 단계적으로 학습해야 하는 것처럼 대부분의 내용들을 쉽게 이해할 수 있다. 필자의 경우 이에 대한 학습이 전혀 없었고, 직접 자료를 찾아보기 전까지 무슨 소리인지 전혀 몰랐던 상태였다. 다행히 여러 분야에 걸쳐 꽤 많이 알려진 지식들이고 받아들이기에 어려운 개념은 아니라서 이에 대해 글을 쓰면서 정리해보려 한다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -1265,11 +1363,11 @@ $$
       
       <title type="html">What Is Srp Batcher In Unity</title>
       
-      <link href="https://suhyeokim.github.io/2019/07/02/what-is-srp-batcher-in-unity" rel="alternate" type="text/html" title="What Is Srp Batcher In Unity" />
+      <link href="https://suhyeokkim.github.io/2019/07/02/what-is-srp-batcher-in-unity" rel="alternate" type="text/html" title="What Is Srp Batcher In Unity" />
       <published>2019-07-02T00:00:00+00:00</published>
       <updated>2019-07-02T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2019/07/02/what-is-srp-batcher-in-unity</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2019/07/02/what-is-srp-batcher-in-unity">&lt;p&gt;Unity의 SRP 의 개발과 같이 여러 기능들이 생겨나는 것 같다. 아마도 기존의 Unity 의 렌더링 모듈들을 최대한 개선하려는 시도로 보인다. 이번 년초에 공개된 &lt;em&gt;SRP Batcher&lt;/em&gt; 또한 효율을 개선하기 위한 것으로 보인다.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2019/07/02/what-is-srp-batcher-in-unity</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2019/07/02/what-is-srp-batcher-in-unity">&lt;p&gt;Unity의 SRP 의 개발과 같이 여러 기능들이 생겨나는 것 같다. 아마도 기존의 Unity 의 렌더링 모듈들을 최대한 개선하려는 시도로 보인다. 이번 년초에 공개된 &lt;em&gt;SRP Batcher&lt;/em&gt; 또한 효율을 개선하기 위한 것으로 보인다.&lt;/p&gt;
 
 &lt;p&gt;종종 보이는 용어 &lt;em&gt;batch&lt;/em&gt; 라는 용어는 “한꺼번에 처리한다.” 라는 뜻으로 보통 쓰인다. 일반적인 렌더링 시스템에서의 &lt;em&gt;batch&lt;/em&gt; 는 최소한의 drawcall-driver overhead- 을 위해 렌더링할 것들의 데이터들을 최대한 묶어주는 시스템의 기능을 말하기 위해 사용되는 것 같다. 그리고 Unity 또한 기존의 &lt;em&gt;built-in batcher&lt;/em&gt; 시스템이 존재한다. 근데 이에 성능을 향상시키기 위해 &lt;em&gt;SRP batcher&lt;/em&gt; 라는게 만들어 졌다고 한다. 이는 곧 기존의 &lt;em&gt;built-in batcher&lt;/em&gt; 시스템에 비효율적인 부분이 존재한다는 것을 알 수 있다.&lt;/p&gt;
 
@@ -1349,11 +1447,11 @@ $$
       
       <title type="html">Steradian And Solid Angle</title>
       
-      <link href="https://suhyeokim.github.io/2019/03/08/steradian-and-solid-angle" rel="alternate" type="text/html" title="Steradian And Solid Angle" />
+      <link href="https://suhyeokkim.github.io/2019/03/08/steradian-and-solid-angle" rel="alternate" type="text/html" title="Steradian And Solid Angle" />
       <published>2019-03-08T00:00:00+00:00</published>
       <updated>2019-03-08T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2019/03/08/steradian-and-solid-angle</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2019/03/08/steradian-and-solid-angle">&lt;p&gt;solid angle 은 우리가 일반적으로 알고있는 angle 과는 다르게 생소할 가능성이 높다. 이의 단위는 steradian(sr) 으로 교과과정에서 많이 보이는 radian 과 이름이 비슷하다.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2019/03/08/steradian-and-solid-angle</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2019/03/08/steradian-and-solid-angle">&lt;p&gt;solid angle 은 우리가 일반적으로 알고있는 angle 과는 다르게 생소할 가능성이 높다. 이의 단위는 steradian(sr) 으로 교과과정에서 많이 보이는 radian 과 이름이 비슷하다.&lt;/p&gt;
 
 &lt;p&gt;먼저 이름이 비슷한 radian 의 정의를 잘 보여주는 아래 이미지를 보자.&lt;/p&gt;
 
@@ -1436,11 +1534,11 @@ $$
       
       <title type="html">Unit Of Light Radiation</title>
       
-      <link href="https://suhyeokim.github.io/2019/02/10/unit-of-light-radiation" rel="alternate" type="text/html" title="Unit Of Light Radiation" />
+      <link href="https://suhyeokkim.github.io/2019/02/10/unit-of-light-radiation" rel="alternate" type="text/html" title="Unit Of Light Radiation" />
       <published>2019-02-10T00:00:00+00:00</published>
       <updated>2019-02-10T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2019/02/10/unit-of-light-radiation</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2019/02/10/unit-of-light-radiation">&lt;p&gt;real-time rendering 분야에서 PBR 이 정착하게 되면서, 빛에 대한 측정 기준을 알아야 되게 되었다. 단순하지만 확실하게 정의해놓지 않으면 헷갈리는 개념이기 때문에 정리 해보려 한다.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2019/02/10/unit-of-light-radiation</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2019/02/10/unit-of-light-radiation">&lt;p&gt;real-time rendering 분야에서 PBR 이 정착하게 되면서, 빛에 대한 측정 기준을 알아야 되게 되었다. 단순하지만 확실하게 정의해놓지 않으면 헷갈리는 개념이기 때문에 정리 해보려 한다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -1636,11 +1734,11 @@ $$
       
       <title type="html">How To Represent Transparency Object</title>
       
-      <link href="https://suhyeokim.github.io/2018/05/27/how-to-represent-transparency-object" rel="alternate" type="text/html" title="How To Represent Transparency Object" />
+      <link href="https://suhyeokkim.github.io/2018/05/27/how-to-represent-transparency-object" rel="alternate" type="text/html" title="How To Represent Transparency Object" />
       <published>2018-05-27T00:00:00+00:00</published>
       <updated>2018-05-27T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2018/05/27/how-to-represent-transparency-object</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2018/05/27/how-to-represent-transparency-object">&lt;p&gt;오래전부터 게임같은 실시간으로 안정적인 성능을 뽑아내야하는 컴퓨터 그래픽에서의 투명한 물체는 항상 골칫거리였다. “투명” 하다보니 일반적으로 사용되는 최적화 방법도 사용할 수 없기 때문에 퍼포먼스의 문제가 있으며, 일반적으로 지원하는 &lt;em&gt;Alpha Blending&lt;/em&gt; 을 사용할시에는 물체의 순서를 직접 소팅해주어야 했다. 투명한 물체를 그리는 일반적인 방법의 문제에 대해서 알아보고, 문제를 부분적으로 해결할 수 있는 몇가지 방법들을 적어보겠다.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2018/05/27/how-to-represent-transparency-object</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2018/05/27/how-to-represent-transparency-object">&lt;p&gt;오래전부터 게임같은 실시간으로 안정적인 성능을 뽑아내야하는 컴퓨터 그래픽에서의 투명한 물체는 항상 골칫거리였다. “투명” 하다보니 일반적으로 사용되는 최적화 방법도 사용할 수 없기 때문에 퍼포먼스의 문제가 있으며, 일반적으로 지원하는 &lt;em&gt;Alpha Blending&lt;/em&gt; 을 사용할시에는 물체의 순서를 직접 소팅해주어야 했다. 투명한 물체를 그리는 일반적인 방법의 문제에 대해서 알아보고, 문제를 부분적으로 해결할 수 있는 몇가지 방법들을 적어보겠다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -1814,11 +1912,11 @@ $$
       
       <title type="html">Opaque As Alpha Test</title>
       
-      <link href="https://suhyeokim.github.io/2018/05/22/opaque-as-alpha-test" rel="alternate" type="text/html" title="Opaque As Alpha Test" />
+      <link href="https://suhyeokkim.github.io/2018/05/22/opaque-as-alpha-test" rel="alternate" type="text/html" title="Opaque As Alpha Test" />
       <published>2018-05-22T00:00:00+00:00</published>
       <updated>2018-05-22T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2018/05/22/opaque-as-alpha-test</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2018/05/22/opaque-as-alpha-test">&lt;p&gt;&lt;em&gt;Shader&lt;/em&gt; 에서 샘플링하는 &lt;em&gt;Texutre&lt;/em&gt; 에서 &lt;em&gt;Alpha&lt;/em&gt; 값을 가지고 있어, &lt;em&gt;Alpha&lt;/em&gt; 을 참조해서 실제 픽셀에 출력을 하는지 안하는지를 결정하는 것을 &lt;em&gt;Alpha Test&lt;/em&gt; 라고 한다. 이런 &lt;em&gt;Material&lt;/em&gt; 이나 &lt;em&gt;Texture&lt;/em&gt; 를  &lt;em&gt;Cutout&lt;/em&gt; 이라고 통칭하는 경우가 많다.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2018/05/22/opaque-as-alpha-test</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2018/05/22/opaque-as-alpha-test">&lt;p&gt;&lt;em&gt;Shader&lt;/em&gt; 에서 샘플링하는 &lt;em&gt;Texutre&lt;/em&gt; 에서 &lt;em&gt;Alpha&lt;/em&gt; 값을 가지고 있어, &lt;em&gt;Alpha&lt;/em&gt; 을 참조해서 실제 픽셀에 출력을 하는지 안하는지를 결정하는 것을 &lt;em&gt;Alpha Test&lt;/em&gt; 라고 한다. 이런 &lt;em&gt;Material&lt;/em&gt; 이나 &lt;em&gt;Texture&lt;/em&gt; 를  &lt;em&gt;Cutout&lt;/em&gt; 이라고 통칭하는 경우가 많다.&lt;/p&gt;
 
 &lt;p&gt;보통 게임에서의 &lt;em&gt;Alpha Test&lt;/em&gt; 를 사용하는 것들은 나무, 풀 같은 식생들(&lt;em&gt;Vegetation&lt;/em&gt;)이 있고, 중간에 구멍이 뚫린 펜스같은 것들도 존재한다. 자연을 배경으로하는 게임의 경우에는 식생들이 굉장히 많기 때문에 &lt;em&gt;Alpha Test&lt;/em&gt; 를 사용하는 &lt;em&gt;Shader&lt;/em&gt; 가 굉장히 많이 사용될 것이다.&lt;/p&gt;
 
@@ -2065,11 +2163,11 @@ $$
       
       <title type="html">Ieee 754 Floaing Number</title>
       
-      <link href="https://suhyeokim.github.io/2018/05/18/IEEE-754-floaing-number" rel="alternate" type="text/html" title="Ieee 754 Floaing Number" />
+      <link href="https://suhyeokkim.github.io/2018/05/18/IEEE-754-floaing-number" rel="alternate" type="text/html" title="Ieee 754 Floaing Number" />
       <published>2018-05-18T00:00:00+00:00</published>
       <updated>2018-05-18T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2018/05/18/IEEE-754-floaing-number</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2018/05/18/IEEE-754-floaing-number">&lt;p&gt;코딩을 하던 도중, 비트로 나타내어진 2 byte floating number(half-precision) 데이터를 일반적인 4byte floating number(single-precision) 으로 나타내야 할 일이 있었다. 그래서 귀찮아서 알아보지 않았던 컴퓨터의 소수를 표현하는 방법에 대해서 알아보았다. 이 글에서는 간략하게 어떤식으로 표현되는지에 대해서만 적어보기로 하겠다.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2018/05/18/IEEE-754-floaing-number</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2018/05/18/IEEE-754-floaing-number">&lt;p&gt;코딩을 하던 도중, 비트로 나타내어진 2 byte floating number(half-precision) 데이터를 일반적인 4byte floating number(single-precision) 으로 나타내야 할 일이 있었다. 그래서 귀찮아서 알아보지 않았던 컴퓨터의 소수를 표현하는 방법에 대해서 알아보았다. 이 글에서는 간략하게 어떤식으로 표현되는지에 대해서만 적어보기로 하겠다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -2167,11 +2265,11 @@ $$
       
       <title type="html">Anisotropic Filtering</title>
       
-      <link href="https://suhyeokim.github.io/2018/05/13/anisotropic-filtering" rel="alternate" type="text/html" title="Anisotropic Filtering" />
+      <link href="https://suhyeokkim.github.io/2018/05/13/anisotropic-filtering" rel="alternate" type="text/html" title="Anisotropic Filtering" />
       <published>2018-05-13T00:00:00+00:00</published>
       <updated>2018-05-13T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2018/05/13/anisotropic-filtering</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2018/05/13/anisotropic-filtering">&lt;p&gt;보통 사용되는 &lt;em&gt;Texture Fltering&lt;/em&gt; 들은 &lt;em&gt;Axis Align&lt;/em&gt; 된 방향을 기준으로 추가적인 샘플링을 하는 방법들이 대부분이다.(bilinear, bicubic, etc..) 하지만 특이한 것이 하나 있다. 바로 &lt;em&gt;Anisotropic Filtering&lt;/em&gt; 이다.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2018/05/13/anisotropic-filtering</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2018/05/13/anisotropic-filtering">&lt;p&gt;보통 사용되는 &lt;em&gt;Texture Fltering&lt;/em&gt; 들은 &lt;em&gt;Axis Align&lt;/em&gt; 된 방향을 기준으로 추가적인 샘플링을 하는 방법들이 대부분이다.(bilinear, bicubic, etc..) 하지만 특이한 것이 하나 있다. 바로 &lt;em&gt;Anisotropic Filtering&lt;/em&gt; 이다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -2238,11 +2336,11 @@ $$
       
       <title type="html">Recommandation Of Gpu Skinning In Github</title>
       
-      <link href="https://suhyeokim.github.io/2018/03/13/recommandation-of-gpu-skinning-in-github" rel="alternate" type="text/html" title="Recommandation Of Gpu Skinning In Github" />
+      <link href="https://suhyeokkim.github.io/2018/03/13/recommandation-of-gpu-skinning-in-github" rel="alternate" type="text/html" title="Recommandation Of Gpu Skinning In Github" />
       <published>2018-03-13T00:00:00+00:00</published>
       <updated>2018-03-13T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2018/03/13/recommandation-of-gpu-skinning-in-github</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2018/03/13/recommandation-of-gpu-skinning-in-github">&lt;p&gt;최근 급하게 어떤 프로젝트에 투입되서 작업을 하고 있다. 다른 회사와 같이 일을 하고 있는데, 다른 회사에서 해놓은 것들이 너무 느려서 최적화를 해야했다. 결국 일반적인 잔머리로는 도저히 해결할 수 없는 상황에 봉착했다. 1년 전의 필자였다면 포기하고 안된다고 했었겠지만 다행히 약간의 노하우를 통해 해결할 수 있었다.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2018/03/13/recommandation-of-gpu-skinning-in-github</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2018/03/13/recommandation-of-gpu-skinning-in-github">&lt;p&gt;최근 급하게 어떤 프로젝트에 투입되서 작업을 하고 있다. 다른 회사와 같이 일을 하고 있는데, 다른 회사에서 해놓은 것들이 너무 느려서 최적화를 해야했다. 결국 일반적인 잔머리로는 도저히 해결할 수 없는 상황에 봉착했다. 1년 전의 필자였다면 포기하고 안된다고 했었겠지만 다행히 약간의 노하우를 통해 해결할 수 있었다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -2312,11 +2410,11 @@ $$
       
       <title type="html">Dualized Asset Management Of Unity</title>
       
-      <link href="https://suhyeokim.github.io/2018/03/06/dualized-asset-management-of-unity" rel="alternate" type="text/html" title="Dualized Asset Management Of Unity" />
+      <link href="https://suhyeokkim.github.io/2018/03/06/dualized-asset-management-of-unity" rel="alternate" type="text/html" title="Dualized Asset Management Of Unity" />
       <published>2018-03-06T00:00:00+00:00</published>
       <updated>2018-03-06T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2018/03/06/dualized-asset-management-of-unity</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2018/03/06/dualized-asset-management-of-unity">&lt;p&gt;&lt;em&gt;Unity&lt;/em&gt; 에서는 모든 사용자의 작업물을 &lt;em&gt;Assets&lt;/em&gt; 폴더에 저장한다. 그리고 &lt;em&gt;Assets&lt;/em&gt; 폴더안의 파일의 변경이 발생할 시 안의 파일들을 재가공하여 다시 로드한다. 보통 파일의 변경은 &lt;em&gt;assetDatabaseX&lt;/em&gt; 바이너리 파일로 들어가게 되며, 스크립트, 바이너리의 변경은 다시 컴파일을 함으로써 현재 변경사항을 프로젝트에 적용시킨다.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2018/03/06/dualized-asset-management-of-unity</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2018/03/06/dualized-asset-management-of-unity">&lt;p&gt;&lt;em&gt;Unity&lt;/em&gt; 에서는 모든 사용자의 작업물을 &lt;em&gt;Assets&lt;/em&gt; 폴더에 저장한다. 그리고 &lt;em&gt;Assets&lt;/em&gt; 폴더안의 파일의 변경이 발생할 시 안의 파일들을 재가공하여 다시 로드한다. 보통 파일의 변경은 &lt;em&gt;assetDatabaseX&lt;/em&gt; 바이너리 파일로 들어가게 되며, 스크립트, 바이너리의 변경은 다시 컴파일을 함으로써 현재 변경사항을 프로젝트에 적용시킨다.&lt;/p&gt;
 
 &lt;p&gt;이러한 시스템을 위해 &lt;em&gt;Unity&lt;/em&gt; 에서는 모든 파일, 디렉토리에 &lt;em&gt;meta&lt;/em&gt; 파일을 생성한다. 파일별 &lt;em&gt;meta&lt;/em&gt; 파일에는 해당 파일의 순수한 정보가 아닌 메타 정보가 들어간다. 중요한 정보는 두개로 나뉜다.&lt;/p&gt;
 
@@ -2375,11 +2473,11 @@ MonoImporter:
       
       <title type="html">What Is Ddx And Ddy</title>
       
-      <link href="https://suhyeokim.github.io/2018/03/04/what-is-ddx-and-ddy" rel="alternate" type="text/html" title="What Is Ddx And Ddy" />
+      <link href="https://suhyeokkim.github.io/2018/03/04/what-is-ddx-and-ddy" rel="alternate" type="text/html" title="What Is Ddx And Ddy" />
       <published>2018-03-04T00:00:00+00:00</published>
       <updated>2018-03-04T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2018/03/04/what-is-ddx-and-ddy</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2018/03/04/what-is-ddx-and-ddy">&lt;p&gt;&lt;em&gt;HLSL&lt;/em&gt; 에는 &lt;em&gt;ddx&lt;/em&gt; 와 &lt;em&gt;ddy&lt;/em&gt; &lt;em&gt;intrisic&lt;/em&gt; 이 &lt;em&gt;Shader Model 2.0&lt;/em&gt; 부터 존재했다. 필자는 이를 이해하기 위해 자료를 찾아보았지만 쉽게 이해되는 것들은 거의 없었다. 이해한 것을 정리하기 위해 이글을 쓴다.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2018/03/04/what-is-ddx-and-ddy</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2018/03/04/what-is-ddx-and-ddy">&lt;p&gt;&lt;em&gt;HLSL&lt;/em&gt; 에는 &lt;em&gt;ddx&lt;/em&gt; 와 &lt;em&gt;ddy&lt;/em&gt; &lt;em&gt;intrisic&lt;/em&gt; 이 &lt;em&gt;Shader Model 2.0&lt;/em&gt; 부터 존재했다. 필자는 이를 이해하기 위해 자료를 찾아보았지만 쉽게 이해되는 것들은 거의 없었다. 이해한 것을 정리하기 위해 이글을 쓴다.&lt;/p&gt;
 
 &lt;p&gt;예전부터 &lt;em&gt;Pixel Shader&lt;/em&gt; 를 처리할 때 픽셀 단위로 하나하나 처리하는게 아닌 적어도 2x2 개의 픽셀들을 한꺼번에 처리했다고 한다. 그래서 이러한 아키텍쳐를 이용한 키워드가 &lt;em&gt;ddx&lt;/em&gt; 와 &lt;em&gt;ddy&lt;/em&gt; 다. 기본적으로 쉐이더는 병렬로 처리되기 때문에, 4개의 &lt;em&gt;Pixel Shader&lt;/em&gt; 가 한꺼번에 실행되는 것으로 생각할 수 있다. 아래 코드를 보면서 생각해보자.&lt;/p&gt;
 
@@ -2436,11 +2534,11 @@ MonoImporter:
       
       <title type="html">Gpu Branching And Divergence</title>
       
-      <link href="https://suhyeokim.github.io/2018/02/19/gpu-branching-and-divergence" rel="alternate" type="text/html" title="Gpu Branching And Divergence" />
+      <link href="https://suhyeokkim.github.io/2018/02/19/gpu-branching-and-divergence" rel="alternate" type="text/html" title="Gpu Branching And Divergence" />
       <published>2018-02-19T00:00:00+00:00</published>
       <updated>2018-02-19T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2018/02/19/gpu-branching-and-divergence</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2018/02/19/gpu-branching-and-divergence">&lt;p&gt;요즘은 꽤나 많은 것들을 GPU 로 처리할 수 있다. GPGPU 기술이 나온지 10년이 넘어가는 이 시점에서 꽤나 많은 것들이 GPU 로 처리되고 있다. 그 중에서도 GPGPU 를 다뤄볼 사람이라면 필수적인 상식하나가 있다. 아래 그림을 보자.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2018/02/19/gpu-branching-and-divergence</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2018/02/19/gpu-branching-and-divergence">&lt;p&gt;요즘은 꽤나 많은 것들을 GPU 로 처리할 수 있다. GPGPU 기술이 나온지 10년이 넘어가는 이 시점에서 꽤나 많은 것들이 GPU 로 처리되고 있다. 그 중에서도 GPGPU 를 다뤄볼 사람이라면 필수적인 상식하나가 있다. 아래 그림을 보자.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -2506,11 +2604,11 @@ MonoImporter:
       
       <title type="html">Frustum Traced Shadow With Irrelgular Z Buffer 2</title>
       
-      <link href="https://suhyeokim.github.io/2018/01/14/frustum-traced-shadow-with-irrelgular-z-buffer-2" rel="alternate" type="text/html" title="Frustum Traced Shadow With Irrelgular Z Buffer 2" />
+      <link href="https://suhyeokkim.github.io/2018/01/14/frustum-traced-shadow-with-irrelgular-z-buffer-2" rel="alternate" type="text/html" title="Frustum Traced Shadow With Irrelgular Z Buffer 2" />
       <published>2018-01-14T00:00:00+00:00</published>
       <updated>2018-01-14T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2018/01/14/frustum-traced-shadow-with-irrelgular-z-buffer-2</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2018/01/14/frustum-traced-shadow-with-irrelgular-z-buffer-2">&lt;p&gt;&lt;a href=&quot;/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1&quot;&gt;frustum Traced Shadow with Irregular Z-Buffer 1&lt;/a&gt; 에서 포괄적인 전체 시스템과 복잡도에 대하여 알아보았다. 이번 글에서는 시스템 구현에 관한 디테일한 사항들을 알아볼 것이다.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2018/01/14/frustum-traced-shadow-with-irrelgular-z-buffer-2</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2018/01/14/frustum-traced-shadow-with-irrelgular-z-buffer-2">&lt;p&gt;&lt;a href=&quot;/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1&quot;&gt;frustum Traced Shadow with Irregular Z-Buffer 1&lt;/a&gt; 에서 포괄적인 전체 시스템과 복잡도에 대하여 알아보았다. 이번 글에서는 시스템 구현에 관한 디테일한 사항들을 알아볼 것이다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -2547,7 +2645,7 @@ MonoImporter:
 
 &lt;p&gt;왼쪽의 그림은 정상적으로 그림자가 보일 때, 두번째는 정말 안좋은 경우들이 겹친 &lt;em&gt;Light Leak&lt;/em&gt; 이 발생하는 경우, 세번째 경우는 세팅값을 맞춰주어 &lt;em&gt;Light Leak&lt;/em&gt; 을 없엔 장면이다. 하지만 결과를 잘 모르는 경우에는 이 결과들이 맞는지 아닌지 쉽게 구별할 수 있는 정도는 아니다. 즉 아주 정확한 결과를 원하는게 아니라면 그냥 써도 된다는 말이다.&lt;/p&gt;
 
-&lt;p&gt;두번째는 데이터 구조와 메모리 레이아웃 최적화다. 가장 맨처음 이를 구현할 때는 링크드 리스트의 2D 그리드의 형태로 만들었다고 한다. 각각의 리스트의 노드는 다음노드를 가리키는 포인터와 &lt;em&gt;G-Buffer&lt;/em&gt; 를 참조하기 위한 명시적인&lt;sup id=&quot;fnref:C2&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C2&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 인덱스로 구성되었다고 한다. 하지만 이 구조는 &lt;em&gt;GPU&lt;/em&gt; 에서의 두가지 쓰레드 동기화를 필요로 했다. 하나는 &lt;em&gt;Global Node Pool&lt;/em&gt; 에서 비어있는 노드를 찾기위한 &lt;em&gt;Global&lt;/em&gt; 동기화&lt;sup id=&quot;fnref:C1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;, 나머지는 헤드 포인터(&lt;em&gt;Light-Space Data&lt;/em&gt;)를 업데이트하기 위한 &lt;em&gt;Per-Texel&lt;/em&gt; 동기화&lt;sup id=&quot;fnref:C1:1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;였다. 동기화를 많이 걸면 걸수록 성능상으로는 그다지 좋지않다. 그렇기 때문에 데이터 구조를 바꾸었다고 한다.&lt;/p&gt;
+&lt;p&gt;두번째는 데이터 구조와 메모리 레이아웃 최적화다. 가장 맨처음 이를 구현할 때는 링크드 리스트의 2D 그리드의 형태로 만들었다고 한다. 각각의 리스트의 노드는 다음노드를 가리키는 포인터와 &lt;em&gt;G-Buffer&lt;/em&gt; 를 참조하기 위한 명시적인&lt;sup id=&quot;fnref:C2&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C2&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 인덱스로 구성되었다고 한다. 하지만 이 구조는 &lt;em&gt;GPU&lt;/em&gt; 에서의 두가지 쓰레드 동기화를 필요로 했다. 하나는 &lt;em&gt;Global Node Pool&lt;/em&gt; 에서 비어있는 노드를 찾기위한 &lt;em&gt;Global&lt;/em&gt; 동기화&lt;sup id=&quot;fnref:C1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;, 나머지는 헤드 포인터(&lt;em&gt;Light-Space Data&lt;/em&gt;)를 업데이트하기 위한 &lt;em&gt;Per-Texel&lt;/em&gt; 동기화&lt;sup id=&quot;fnref:C1:1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;였다. 동기화를 많이 걸면 걸수록 성능상으로는 그다지 좋지않다. 그렇기 때문에 데이터 구조를 바꾸었다고 한다.&lt;/p&gt;
 
 &lt;p&gt;여러 시도 끝에 가장 성공적인 결과는 리스트의 각 노드의 크기를 줄이는 것이였다. 이를 위한 준비는 노드를 저장하기 위한 &lt;em&gt;Screen-Space Grid&lt;/em&gt; 버퍼를 미리 할당한다. 그리고 각 노드들은 자신을 기준으로한 다음 노드의 오프셋을 저장한다. 이는 &lt;em&gt;Linked-List&lt;/em&gt; 의 기준으로 보자면 &lt;em&gt;Next Pointer&lt;/em&gt; 가 된다. 이를 논문에서는 간접적인(&lt;em&gt;Implcit&lt;/em&gt;) &lt;em&gt;G-Buffer&lt;/em&gt; 인덱스라고 부른다. 이렇게 계속 픽셀의 노드 정보를 참조하면서 픽셀의 위치를 &lt;em&gt;Linked-List&lt;/em&gt; 의 형태로 나타낼 수 있는 것이다. 아래 중간의 그림의 노란색 화살표는 이를 간단하게 나타냈다.&lt;/p&gt;
 
@@ -2561,7 +2659,7 @@ MonoImporter:
 
 &lt;p&gt;세번째는 헤드 포인터를 가지고 있는 &lt;em&gt;Light-Space Buffer&lt;/em&gt; 의 해상도다. 일반적인 &lt;em&gt;Shadow Mapping&lt;/em&gt; 기법의 &lt;em&gt;Shadow Map&lt;/em&gt; 의 해상도는 보여지는 정도를 결정하지만, 여기서의 해상도는 퍼포먼스를 결정한다.(&lt;em&gt;La&lt;/em&gt;) 1920 x 1080 을 기준으로 추천하는 해상도는 1400 ~ 2500 사이라고 한다.&lt;/p&gt;
 
-&lt;p&gt;네번째로는 기존의 &lt;em&gt;Shadow Mapping&lt;/em&gt; 의 잘 알려진 기법인 &lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt;&lt;sup id=&quot;fnref:P1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:P1&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt; 을 이 기법에 적용시키는 것이다. 이 기법의 원리는 &lt;em&gt;View frustum&lt;/em&gt; 을 원하는 갯수대로 쪼갠 후, 쪼개진 &lt;em&gt;frustum&lt;/em&gt; 안의 오브젝트들의 &lt;em&gt;Shadow&lt;/em&gt; 를 계산한다. 논문에서 쪼개는 방법은 &lt;em&gt;Sample Distribution Shadow Map&lt;/em&gt; 과 &lt;em&gt;Logarithm Partitioning&lt;/em&gt; 을 언급했다. 여기서는 쪼개진 &lt;em&gt;frustum&lt;/em&gt; 마다 전부 &lt;em&gt;IZB&lt;/em&gt; 를 생성한다. 이때 각각의 쪼개진 &lt;em&gt;frustum&lt;/em&gt; 의 끝부분이 잘 맞도록 신경써야줘야 한다고 언급했다. 논문의 저자는 구현할때 &lt;em&gt;2D Texture Array&lt;/em&gt; 를 사용하여 &lt;em&gt;IZB&lt;/em&gt; 를 저장하고, 병렬로 각각의 &lt;em&gt;Detph Texture&lt;/em&gt; 마다 &lt;em&gt;Light-Space Culling Prepass&lt;/em&gt; 를 넣어줬다고 한다. 일반적으로 각각의 &lt;em&gt;Cascade&lt;/em&gt; 를 계산할때는 한개당 하나의 &lt;em&gt;Pass&lt;/em&gt; 를 사용하여 계산하는데, 여기서는 1 Pass 로 적절히 프리미티브를 나누어 성능 향상을 고려했다고 한다.&lt;/p&gt;
+&lt;p&gt;네번째로는 기존의 &lt;em&gt;Shadow Mapping&lt;/em&gt; 의 잘 알려진 기법인 &lt;em&gt;Cascaded Shadow Mapping&lt;/em&gt;&lt;sup id=&quot;fnref:P1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:P1&quot; class=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt; 을 이 기법에 적용시키는 것이다. 이 기법의 원리는 &lt;em&gt;View frustum&lt;/em&gt; 을 원하는 갯수대로 쪼갠 후, 쪼개진 &lt;em&gt;frustum&lt;/em&gt; 안의 오브젝트들의 &lt;em&gt;Shadow&lt;/em&gt; 를 계산한다. 논문에서 쪼개는 방법은 &lt;em&gt;Sample Distribution Shadow Map&lt;/em&gt; 과 &lt;em&gt;Logarithm Partitioning&lt;/em&gt; 을 언급했다. 여기서는 쪼개진 &lt;em&gt;frustum&lt;/em&gt; 마다 전부 &lt;em&gt;IZB&lt;/em&gt; 를 생성한다. 이때 각각의 쪼개진 &lt;em&gt;frustum&lt;/em&gt; 의 끝부분이 잘 맞도록 신경써야줘야 한다고 언급했다. 논문의 저자는 구현할때 &lt;em&gt;2D Texture Array&lt;/em&gt; 를 사용하여 &lt;em&gt;IZB&lt;/em&gt; 를 저장하고, 병렬로 각각의 &lt;em&gt;Detph Texture&lt;/em&gt; 마다 &lt;em&gt;Light-Space Culling Prepass&lt;/em&gt; 를 넣어줬다고 한다. 일반적으로 각각의 &lt;em&gt;Cascade&lt;/em&gt; 를 계산할때는 한개당 하나의 &lt;em&gt;Pass&lt;/em&gt; 를 사용하여 계산하는데, 여기서는 1 Pass 로 적절히 프리미티브를 나누어 성능 향상을 고려했다고 한다.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Cascade&lt;/em&gt; 의 적용은 &lt;em&gt;Occluder Geometry&lt;/em&gt; 의 &lt;em&gt;Rasterize&lt;/em&gt; 퍼포먼스를 안고 가면서 &lt;em&gt;Thread Divergence&lt;/em&gt; 의 시간을 줄여준다. 이는 사용시 적절한 타협점을 찾아야 한다는 뜻으로, 보통은 두개의 &lt;em&gt;Cascade&lt;/em&gt; 를 사용하고, 복잡한 게임에서는 3개나 4개의 &lt;em&gt;Cascade&lt;/em&gt; 를 사용하여 상황에 따라 뜀뛰는 시간을 최소화 시킨다. 아래 그림은 &lt;em&gt;Cascade&lt;/em&gt; 의 효과를 증명해준다.&lt;/p&gt;
 
@@ -2581,7 +2679,7 @@ MonoImporter:
 
 &lt;p&gt;시스템 구현에 대한 디테일한 사항은 여기까지가 끝이다.&lt;/p&gt;
 
-&lt;p&gt;마지막으로 &lt;em&gt;Transparency Geometry&lt;/em&gt; 를 처리하는 방법에 대해서 써보겠다. 이 기법의 &lt;em&gt;per-pixel&lt;/em&gt; 테스트는 &lt;em&gt;Visibility Mask Buffer&lt;/em&gt; 에 결과가 저장된다. &lt;em&gt;Visibility Mask Buffer&lt;/em&gt; 의 효율적인 사용을 위해 항상 각 픽셀의 여러개의 32bit 데이터를 저장해준다고 한다. 이정도의 크기라면 단지 &lt;em&gt;Visibility&lt;/em&gt; 만을 사용하는게 아니라 &lt;em&gt;Opacity&lt;/em&gt; 또한 저장이 가능하다. 통상적인 가시성을 위한 투명 오브젝트의 처리 방법은 &lt;em&gt;Alpha to Coverage&lt;/em&gt;&lt;sup id=&quot;fnref:C3&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C3&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;4&lt;/a&gt;&lt;/sup&gt; 를 쓴다고 한다. 그리고 여기에서도 비슷한 방법을 사용할 수 있다고한다.&lt;/p&gt;
+&lt;p&gt;마지막으로 &lt;em&gt;Transparency Geometry&lt;/em&gt; 를 처리하는 방법에 대해서 써보겠다. 이 기법의 &lt;em&gt;per-pixel&lt;/em&gt; 테스트는 &lt;em&gt;Visibility Mask Buffer&lt;/em&gt; 에 결과가 저장된다. &lt;em&gt;Visibility Mask Buffer&lt;/em&gt; 의 효율적인 사용을 위해 항상 각 픽셀의 여러개의 32bit 데이터를 저장해준다고 한다. 이정도의 크기라면 단지 &lt;em&gt;Visibility&lt;/em&gt; 만을 사용하는게 아니라 &lt;em&gt;Opacity&lt;/em&gt; 또한 저장이 가능하다. 통상적인 가시성을 위한 투명 오브젝트의 처리 방법은 &lt;em&gt;Alpha to Coverage&lt;/em&gt;&lt;sup id=&quot;fnref:C3&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C3&quot; class=&quot;footnote&quot;&gt;4&lt;/a&gt;&lt;/sup&gt; 를 쓴다고 한다. 그리고 여기에서도 비슷한 방법을 사용할 수 있다고한다.&lt;/p&gt;
 
 &lt;p&gt;처음에는 &lt;em&gt;Coverage&lt;/em&gt; 를 계산하기 위해 &lt;em&gt;Visibility Test&lt;/em&gt; 를 해준다. 그리고 해당 알파가 저장된 텍스쳐를 참조하여 투명도를 가져오고, 해당 투명도를 사용하여 &lt;em&gt;Alpha to Coverage&lt;/em&gt; 를 실행하여 투명도 마스크를 얻는다. 이를 비트 AND 연산으로 합쳐서 &lt;em&gt;Coverage&lt;/em&gt; 를 &lt;em&gt;Visibility Buffer&lt;/em&gt; 에 저장한다.&lt;/p&gt;
 
@@ -2652,11 +2750,11 @@ MonoImporter:
       
       <title type="html">Frustum Traced Shadow With Irrelgular Z Buffer 1</title>
       
-      <link href="https://suhyeokim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1" rel="alternate" type="text/html" title="Frustum Traced Shadow With Irrelgular Z Buffer 1" />
+      <link href="https://suhyeokkim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1" rel="alternate" type="text/html" title="Frustum Traced Shadow With Irrelgular Z Buffer 1" />
       <published>2018-01-13T00:00:00+00:00</published>
       <updated>2018-01-13T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1">&lt;p&gt;&lt;a href=&quot;/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0&quot;&gt;frustum Traced Shadow with Irregular Z-Buffer 0&lt;/a&gt; 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-1">&lt;p&gt;&lt;a href=&quot;/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0&quot;&gt;frustum Traced Shadow with Irregular Z-Buffer 0&lt;/a&gt; 에서 기법의 아이디어를 둘러봄으러써 대강 이 알고리즘이 무엇인지 살펴보았다. 이번 글에서는 논문에 수록된 포괄적인 전체 시스템과 복잡도에 대하여 알아볼 것이다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -2664,7 +2762,7 @@ MonoImporter:
 
 &lt;p&gt;&lt;a href=&quot;/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0&quot;&gt;이전 글&lt;/a&gt;에서 두가지 단계에 대해서 자세한 설명을 했었다. &lt;em&gt;Irregular Z-Buffer&lt;/em&gt; 를 생성하고 &lt;em&gt;Visibility Test&lt;/em&gt; 를 하는 것이였다. 실제 구현된 단계는 총 6개의 단계로 이루어진다고 한다.&lt;/p&gt;
 
-&lt;p&gt;첫번째로는 &lt;em&gt;Eye-Space Z-Prepass&lt;/em&gt; 를 해준다. 요즘의 엔진들이나 큰 규모가 아닌 게임이더라도 &lt;em&gt;Z-Prepass&lt;/em&gt;&lt;sup id=&quot;fnref:L1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:L1&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 는 거의 대부분 해준다. &lt;em&gt;Geometry Pass&lt;/em&gt; 가 두번 걸리기는 하지만 &lt;em&gt;Fill Rate&lt;/em&gt; 의 부하가 &lt;em&gt;Geometry Pass&lt;/em&gt; 의 부하보다 많이 커서 그런 듯하다. 중요한건 단순히 언급한 &lt;em&gt;Eye-Space Z-Prepass&lt;/em&gt; 를 뜻하는게 아니다. 이전에 언급한 &lt;em&gt;μQuad&lt;/em&gt; 의 빠른 계산을 위해 &lt;em&gt;G-Buffer&lt;/em&gt; 에 3개의 실수 값들을 넣는다. 이 3개의 실수는 실제 그려지는 카메라의 위치와 &lt;em&gt;Tangent Plane&lt;/em&gt; 의 4개의 코너중에 3개의 거리를 나타낸다. 이는 &lt;em&gt;μQuad&lt;/em&gt; 를 다시 계산하기에 충분하다고 한다.&lt;/p&gt;
+&lt;p&gt;첫번째로는 &lt;em&gt;Eye-Space Z-Prepass&lt;/em&gt; 를 해준다. 요즘의 엔진들이나 큰 규모가 아닌 게임이더라도 &lt;em&gt;Z-Prepass&lt;/em&gt;&lt;sup id=&quot;fnref:L1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:L1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 는 거의 대부분 해준다. &lt;em&gt;Geometry Pass&lt;/em&gt; 가 두번 걸리기는 하지만 &lt;em&gt;Fill Rate&lt;/em&gt; 의 부하가 &lt;em&gt;Geometry Pass&lt;/em&gt; 의 부하보다 많이 커서 그런 듯하다. 중요한건 단순히 언급한 &lt;em&gt;Eye-Space Z-Prepass&lt;/em&gt; 를 뜻하는게 아니다. 이전에 언급한 &lt;em&gt;μQuad&lt;/em&gt; 의 빠른 계산을 위해 &lt;em&gt;G-Buffer&lt;/em&gt; 에 3개의 실수 값들을 넣는다. 이 3개의 실수는 실제 그려지는 카메라의 위치와 &lt;em&gt;Tangent Plane&lt;/em&gt; 의 4개의 코너중에 3개의 거리를 나타낸다. 이는 &lt;em&gt;μQuad&lt;/em&gt; 를 다시 계산하기에 충분하다고 한다.&lt;/p&gt;
 
 &lt;p&gt;이 방법은 &lt;em&gt;Visibility Test&lt;/em&gt; 의 속도를 빠르게 하는데 도움이 되지만, 당연히 &lt;em&gt;G-Buffer&lt;/em&gt; 의 공간이 부족한 경우에는 쓰지 못한다. AAA 급의 게임들은 &lt;em&gt;G-Buffer&lt;/em&gt; 를 bit 단위로 최대한 아껴쓰기 경우가 많기 때문에 이와 같은 상황이 일어날 수도 있다. 이런 경우에는 명시적으로 &lt;em&gt;Visibility Test&lt;/em&gt; 를 할때 &lt;em&gt;μQuad&lt;/em&gt; 를 계산한다고 한다. 아래 그림은 2009년에 발매된 &lt;em&gt;KillZone 2&lt;/em&gt; 의 &lt;em&gt;G-Buffer&lt;/em&gt; 사용을 나타내는 PT의 한 부분이다.&lt;/p&gt;
 
@@ -2674,7 +2772,7 @@ MonoImporter:
 &lt;/center&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;두번째로는 씬의 경계를 설정해주는 것이다. &lt;em&gt;Shadow Mapping&lt;/em&gt; 에서 &lt;em&gt;Light-Space Projection&lt;/em&gt; 행렬은 씬에 딱 맞게 해주어야 한다.&lt;sup id=&quot;fnref:C1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; 딱 맞지 않는 경우에는 &lt;em&gt;IZB&lt;/em&gt; 에 쓸모없는 텍셀을 생기게 하기 때문이다. 그래서 &lt;em&gt;Light-Space Projection&lt;/em&gt; 행렬을 계산하기 위해 &lt;em&gt;Compute Shader&lt;/em&gt; 와 &lt;em&gt;Z-Buffer&lt;/em&gt; 를 사용하여 &lt;em&gt;Bounding Box&lt;/em&gt; 를 계산한다. 이 계산은 화면의 해상도에 따라서 달라진다. 하지만 논문의 저자는 이 비용이 병목의 큰 원인이 아니기 때문에 특별한 해결 방법을 제시하지는 않는다.&lt;/p&gt;
+&lt;p&gt;두번째로는 씬의 경계를 설정해주는 것이다. &lt;em&gt;Shadow Mapping&lt;/em&gt; 에서 &lt;em&gt;Light-Space Projection&lt;/em&gt; 행렬은 씬에 딱 맞게 해주어야 한다.&lt;sup id=&quot;fnref:C1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; 딱 맞지 않는 경우에는 &lt;em&gt;IZB&lt;/em&gt; 에 쓸모없는 텍셀을 생기게 하기 때문이다. 그래서 &lt;em&gt;Light-Space Projection&lt;/em&gt; 행렬을 계산하기 위해 &lt;em&gt;Compute Shader&lt;/em&gt; 와 &lt;em&gt;Z-Buffer&lt;/em&gt; 를 사용하여 &lt;em&gt;Bounding Box&lt;/em&gt; 를 계산한다. 이 계산은 화면의 해상도에 따라서 달라진다. 하지만 논문의 저자는 이 비용이 병목의 큰 원인이 아니기 때문에 특별한 해결 방법을 제시하지는 않는다.&lt;/p&gt;
 
 &lt;p&gt;세번째는 &lt;em&gt;Irregular Z-Buffer&lt;/em&gt; 를 만드는 것이다. 이전 글에서 &lt;em&gt;IZB&lt;/em&gt; 에 대한 대략적인 아이디어는 언급했었다. 더 디테일하게 이를 말해보면, 우선 &lt;em&gt;Eye-Space Z Buffer&lt;/em&gt; 를 참조해 &lt;em&gt;Light-Space&lt;/em&gt; 로 변환한 후에 &lt;em&gt;Light-Space A-Buffer&lt;/em&gt; 의 텍셀의 &lt;em&gt;Linked-List&lt;/em&gt; 에 넣는다.&lt;/p&gt;
 
@@ -2780,11 +2878,11 @@ MonoImporter:
       
       <title type="html">Frustum Traced Shadow With Irrelgular Z Buffer 0</title>
       
-      <link href="https://suhyeokim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0" rel="alternate" type="text/html" title="Frustum Traced Shadow With Irrelgular Z Buffer 0" />
+      <link href="https://suhyeokkim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0" rel="alternate" type="text/html" title="Frustum Traced Shadow With Irrelgular Z Buffer 0" />
       <published>2018-01-13T00:00:00+00:00</published>
       <updated>2018-01-13T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0">&lt;p&gt;&lt;a href=&quot;/2017/12/27/percentage-closer-soft-shadows&quot;&gt;Percentage-Closer Filtering Shadows&lt;/a&gt; 에서 &lt;em&gt;PCF&lt;/em&gt; 를 응용한 &lt;em&gt;PCSS&lt;/em&gt; 라는 &lt;em&gt;Soft Shadow&lt;/em&gt; 를 나타내는 기법에 대해서 알아보았다. 이번 글에서는 여태까지 알아본 것들에 비해 굉장히 최근에 나온 기법인 &lt;em&gt;frustum-Traced Shadow&lt;/em&gt; 에 대해서 알아볼것이다.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0">&lt;p&gt;&lt;a href=&quot;/2017/12/27/percentage-closer-soft-shadows&quot;&gt;Percentage-Closer Filtering Shadows&lt;/a&gt; 에서 &lt;em&gt;PCF&lt;/em&gt; 를 응용한 &lt;em&gt;PCSS&lt;/em&gt; 라는 &lt;em&gt;Soft Shadow&lt;/em&gt; 를 나타내는 기법에 대해서 알아보았다. 이번 글에서는 여태까지 알아본 것들에 비해 굉장히 최근에 나온 기법인 &lt;em&gt;frustum-Traced Shadow&lt;/em&gt; 에 대해서 알아볼것이다.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -2817,7 +2915,7 @@ MonoImporter:
 &lt;/center&gt;
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;간단하게 이런식으로 &lt;em&gt;IZB&lt;/em&gt; 가 구성되는 것을 알 수 있다. 이제 &lt;em&gt;Geometry&lt;/em&gt; 와 비교하는 &lt;em&gt;Visibility Test&lt;/em&gt; 가 필요하다. 일반적인 &lt;em&gt;Shadow Mapping&lt;/em&gt; 의 &lt;em&gt;Visibility Test&lt;/em&gt; 와는 조금 다르다. 기존의 &lt;em&gt;Shadow Mapping&lt;/em&gt; 은 정점을 &lt;em&gt;Light-Space&lt;/em&gt; 로 바꾸어 &lt;em&gt;Z&lt;/em&gt; 값을 비교하여 &lt;em&gt;Visibility Test&lt;/em&gt; 를 한다. 하지만 이 기법에서의 &lt;em&gt;Visibility Test&lt;/em&gt; 는 다르다. 위에서 언급한 것과 같이 &lt;em&gt;IZB&lt;/em&gt; 를 만든다. 그 다음 &lt;em&gt;Occlluder Geometry&lt;/em&gt; 들을 &lt;em&gt;Light-Space&lt;/em&gt; 를 기준으로 &lt;em&gt;Conservative Rasterization&lt;/em&gt; 을 해준다.&lt;sup id=&quot;fnref:C1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 그렇게 나온 결과를 통해 &lt;em&gt;IZB&lt;/em&gt; 와 함께 &lt;em&gt;Visibility Test&lt;/em&gt; 를 한다. &lt;em&gt;Conservative Rasterization&lt;/em&gt; 의 결과는 거의 &lt;em&gt;Flag&lt;/em&gt; 로 사용될것으로 예측되고, &lt;em&gt;Eye-Space&lt;/em&gt; 픽셀의 그림자 계산은 복잡한 계산을 통해 구한다. 아래는 논문에 있던 &lt;em&gt;IZB&lt;/em&gt; 를 기준으로 쓰여진 수도 코드다.&lt;/p&gt;
+&lt;p&gt;간단하게 이런식으로 &lt;em&gt;IZB&lt;/em&gt; 가 구성되는 것을 알 수 있다. 이제 &lt;em&gt;Geometry&lt;/em&gt; 와 비교하는 &lt;em&gt;Visibility Test&lt;/em&gt; 가 필요하다. 일반적인 &lt;em&gt;Shadow Mapping&lt;/em&gt; 의 &lt;em&gt;Visibility Test&lt;/em&gt; 와는 조금 다르다. 기존의 &lt;em&gt;Shadow Mapping&lt;/em&gt; 은 정점을 &lt;em&gt;Light-Space&lt;/em&gt; 로 바꾸어 &lt;em&gt;Z&lt;/em&gt; 값을 비교하여 &lt;em&gt;Visibility Test&lt;/em&gt; 를 한다. 하지만 이 기법에서의 &lt;em&gt;Visibility Test&lt;/em&gt; 는 다르다. 위에서 언급한 것과 같이 &lt;em&gt;IZB&lt;/em&gt; 를 만든다. 그 다음 &lt;em&gt;Occlluder Geometry&lt;/em&gt; 들을 &lt;em&gt;Light-Space&lt;/em&gt; 를 기준으로 &lt;em&gt;Conservative Rasterization&lt;/em&gt; 을 해준다.&lt;sup id=&quot;fnref:C1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; 그렇게 나온 결과를 통해 &lt;em&gt;IZB&lt;/em&gt; 와 함께 &lt;em&gt;Visibility Test&lt;/em&gt; 를 한다. &lt;em&gt;Conservative Rasterization&lt;/em&gt; 의 결과는 거의 &lt;em&gt;Flag&lt;/em&gt; 로 사용될것으로 예측되고, &lt;em&gt;Eye-Space&lt;/em&gt; 픽셀의 그림자 계산은 복잡한 계산을 통해 구한다. 아래는 논문에 있던 &lt;em&gt;IZB&lt;/em&gt; 를 기준으로 쓰여진 수도 코드다.&lt;/p&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
@@ -2871,9 +2969,9 @@ end for
 
 &lt;p&gt;또한 그림자를 멀티샘플링 하기 위해서는 여기서 언급한 &lt;em&gt;Shadow Volume&lt;/em&gt; 의 &lt;em&gt;Shadow Plane&lt;/em&gt; 들을 이용한다고 한다.&lt;/p&gt;
 
-&lt;p&gt;마지막으로 &lt;em&gt;Visibility Computation&lt;/em&gt; 이 남아있다. 이 부분의 대략적인 것은 위에서 언급했다. 자세한 계산방식을 말해보겠다. 위에서 언급한 &lt;em&gt;μQuad&lt;/em&gt; 와 &lt;em&gt;Shadow Plane&lt;/em&gt; 사용해서 해당 폴리곤들의 데이터 누적을 위해서는 &lt;em&gt;μQuad&lt;/em&gt; 에서 이산화된 &lt;em&gt;binary&lt;/em&gt; 샘플링이 필요하다. 논문의 저자는 32 번의 &lt;em&gt;Halton sampling&lt;/em&gt;&lt;sup id=&quot;fnref:C2&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C2&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; 을 사용했다고 한다.&lt;/p&gt;
+&lt;p&gt;마지막으로 &lt;em&gt;Visibility Computation&lt;/em&gt; 이 남아있다. 이 부분의 대략적인 것은 위에서 언급했다. 자세한 계산방식을 말해보겠다. 위에서 언급한 &lt;em&gt;μQuad&lt;/em&gt; 와 &lt;em&gt;Shadow Plane&lt;/em&gt; 사용해서 해당 폴리곤들의 데이터 누적을 위해서는 &lt;em&gt;μQuad&lt;/em&gt; 에서 이산화된 &lt;em&gt;binary&lt;/em&gt; 샘플링이 필요하다. 논문의 저자는 32 번의 &lt;em&gt;Halton sampling&lt;/em&gt;&lt;sup id=&quot;fnref:C2&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C2&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; 을 사용했다고 한다.&lt;/p&gt;
 
-&lt;p&gt;가시성을 계산하기 위해서는 &lt;em&gt;Shadow Plane&lt;/em&gt; 을 &lt;em&gt;μQuad&lt;/em&gt; 에 &lt;em&gt;Projection&lt;/em&gt; 해줘야 한다. 그러면 &lt;em&gt;μQuad&lt;/em&gt; 는 최대 3개의 &lt;em&gt;line&lt;/em&gt; 을 얻게 된다. 논문에서는 이 &lt;em&gt;line&lt;/em&gt; 을 &lt;em&gt;μQuad&lt;/em&gt; 를 기준으로 극좌표계&lt;sup id=&quot;fnref:C3&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C3&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt; 데이터로 저장한다고 한다. 반지름과 각도가 5bit 크기로 저장된다. 해당 10bit 데이터를 사용하여 미리 계산된 테이블에서 32개의 이진 가시성 샘플을 가져온다. 결과와  bit 단위의 and 연산을 통해 &lt;em&gt;μQuad&lt;/em&gt; 의 가시성을 계산할 수 있다고 한다.&lt;/p&gt;
+&lt;p&gt;가시성을 계산하기 위해서는 &lt;em&gt;Shadow Plane&lt;/em&gt; 을 &lt;em&gt;μQuad&lt;/em&gt; 에 &lt;em&gt;Projection&lt;/em&gt; 해줘야 한다. 그러면 &lt;em&gt;μQuad&lt;/em&gt; 는 최대 3개의 &lt;em&gt;line&lt;/em&gt; 을 얻게 된다. 논문에서는 이 &lt;em&gt;line&lt;/em&gt; 을 &lt;em&gt;μQuad&lt;/em&gt; 를 기준으로 극좌표계&lt;sup id=&quot;fnref:C3&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:C3&quot; class=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt; 데이터로 저장한다고 한다. 반지름과 각도가 5bit 크기로 저장된다. 해당 10bit 데이터를 사용하여 미리 계산된 테이블에서 32개의 이진 가시성 샘플을 가져온다. 결과와  bit 단위의 and 연산을 통해 &lt;em&gt;μQuad&lt;/em&gt; 의 가시성을 계산할 수 있다고 한다.&lt;/p&gt;
 
 &lt;p&gt;해당 기법을 고안한 사람은 두가지의 아이디어 : &lt;em&gt;Irregular Z-Buffer&lt;/em&gt; 와 &lt;em&gt;frustum-Triangle Test&lt;/em&gt; 를 통해  &lt;em&gt;Sub-pixel Hard Shadow&lt;/em&gt; 의 이론을 만들었다. 하지만 이 아이디어들과 구현을 위한 노력의 차이는 꽤 큰듯하다. 논문을 보면 아이디어에 대한 텍스트보다 최적화를 위한 텍스트가 2배가 될정도로 많다. 다음 글에서는 논문에서 나온 전체 과정과 디테일한 구현 사항에 대해 적어보겠다.&lt;/p&gt;
 
@@ -2941,11 +3039,11 @@ end for
       
       <title type="html">Unity Scripted Importer</title>
       
-      <link href="https://suhyeokim.github.io/2018/01/11/unity-scripted-importer" rel="alternate" type="text/html" title="Unity Scripted Importer" />
+      <link href="https://suhyeokkim.github.io/2018/01/11/unity-scripted-importer" rel="alternate" type="text/html" title="Unity Scripted Importer" />
       <published>2018-01-11T00:00:00+00:00</published>
       <updated>2018-01-11T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2018/01/11/unity-scripted-importer</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2018/01/11/unity-scripted-importer">&lt;p&gt;Unity 의 에디터 시스템은 꽤나 유연하다. 이번 글에서는 &lt;em&gt;AssetImporter&lt;/em&gt; 에 대한 기능들에 대하여 알아볼 것이다.&lt;/p&gt;
+      <id>https://suhyeokkim.github.io/2018/01/11/unity-scripted-importer</id>
+      <content type="html" xml:base="https://suhyeokkim.github.io/2018/01/11/unity-scripted-importer">&lt;p&gt;Unity 의 에디터 시스템은 꽤나 유연하다. 이번 글에서는 &lt;em&gt;AssetImporter&lt;/em&gt; 에 대한 기능들에 대하여 알아볼 것이다.&lt;/p&gt;
 
 &lt;p&gt;Unity 의 각각의 Asset 들은 확장자의 이름에 따라서 &lt;em&gt;AssetImporter&lt;/em&gt; 가 하나씩 만들어지고, 해당 &lt;em&gt;AssetImporter&lt;/em&gt; 에 따라서 &lt;em&gt;Post-Process&lt;/em&gt; 가 진행된다. 필자가 많이 봤던 &lt;em&gt;AssetImporter&lt;/em&gt; 는 &lt;a href=&quot;https://docs.unity3d.com/ScriptReference/TextureImporter.html&quot;&gt;&lt;em&gt;TextureImporter&lt;/em&gt;&lt;/a&gt; 와 &lt;a href=&quot;https://docs.unity3d.com/ScriptReference/ModelImporter.html&quot;&gt;&lt;em&gt;ModelImporter&lt;/em&gt;&lt;/a&gt; 가 있었다. 확인할 당시에는 당연히 &lt;em&gt;AssetImporter&lt;/em&gt; 를 커스터마이징 할 수 있겠다는 생각이 들어 찾아봤지만 전혀 없었다.(Unity 5 버젼을 사용할 때다.) 이렇게 시스템을 만들어 놓고 왜 없냐는 의문이 들었지만 이는 정말 할수있는게 없었기에 넘어갔었다.&lt;/p&gt;
 
@@ -2982,160 +3080,6 @@ end for
 
       
         <summary type="html">Unity 의 에디터 시스템은 꽤나 유연하다. 이번 글에서는 AssetImporter 에 대한 기능들에 대하여 알아볼 것이다. Unity 의 각각의 Asset 들은 확장자의 이름에 따라서 AssetImporter 가 하나씩 만들어지고, 해당 AssetImporter 에 따라서 Post-Process 가 진행된다. 필자가 많이 봤던 AssetImporter 는 TextureImporter 와 ModelImporter 가 있었다. 확인할 당시에는 당연히 AssetImporter 를 커스터마이징 할 수 있겠다는 생각이 들어 찾아봤지만 전혀 없었다.(Unity 5 버젼을 사용할 때다.) 이렇게 시스템을 만들어 놓고 왜 없냐는 의문이 들었지만 이는 정말 할수있는게 없었기에 넘어갔었다. 그런데 이번에 Unity 2018.1 베타가 릴리즈 되면서 SRP 를 살펴보던 도중 Expremental 기능들 중에 ScriptedImporter 라는 기능이 있는 것을 발견했다. 이 기능은 말그대로 예전의 내가 원하던 기능이였다. AssetImporter 클래스와 다른점은 딱 한가지다. 가상 OnImportAsset 메소드가 존재하는 것이다. 즉 ScriptedImporter 를 상속하여 OnImportAsset 를 구현하면 간단하게 에셋을 Customize 할 수 있는 것이다. 또한 에디터 기능을 지원하는 ScriptedImporterEditor 라는 클래스를 사용하면 에디터를 손쉽게 바꿀 수 있다. 자세한 사항은 글에서 언급된 링크를 통해 보면 된다. 참조 Unity Documentation : ScriptedImporter Unity Reference : ScriptedImporter Unity Reference : ScriptedImporterEditor</summary>
-      
-
-      
-      
-    </entry>
-  
-  
-  
-    <entry>
-      
-      <title type="html">Percentage Closer Soft Shadows</title>
-      
-      <link href="https://suhyeokim.github.io/2017/12/27/percentage-closer-soft-shadows" rel="alternate" type="text/html" title="Percentage Closer Soft Shadows" />
-      <published>2017-12-27T00:00:00+00:00</published>
-      <updated>2017-12-27T00:00:00+00:00</updated>
-      <id>https://suhyeokim.github.io/2017/12/27/percentage-closer-soft-shadows</id>
-      <content type="html" xml:base="https://suhyeokim.github.io/2017/12/27/percentage-closer-soft-shadows">&lt;p&gt;&lt;a href=&quot;/2017/12/19/shadow-map-filtering&quot;&gt;Shadow Map Filtering&lt;/a&gt; 에서 &lt;em&gt;PCF&lt;/em&gt; 와 &lt;em&gt;VSM&lt;/em&gt; 에 대하여 간단히 알아보았다. 이번 글에서 설명할 것은 &lt;em&gt;PCF&lt;/em&gt; 를 활용한 &lt;em&gt;PCSS&lt;/em&gt; 다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;PCSS&lt;/em&gt; 는 &lt;em&gt;Soft Shadow&lt;/em&gt; 를 구현하는 기법 중 하나로써 2005년에 발표되어 여태까지도 꽤나 알려진 기법이다. 우선 &lt;em&gt;Soft Shadow&lt;/em&gt; 가 무엇인지 알아보자.&lt;/p&gt;
-
-&lt;!-- more --&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/soft_vs_hardshadow.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://www.assignmentpoint.com/science/computer/real-time-soft-shadow-rendering.html&quot;&gt;assignmentpoint.com : Real Time Soft Shadow Rendering&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;위와 같이 빛을 가린 물체와 거리가 멀어지면 멀어질수록 밝아지는 그림자를 &lt;em&gt;Soft Shadow&lt;/em&gt; 라고 한다. 완전한 &lt;em&gt;Hard Shadow&lt;/em&gt; 는 어색하기 때문에 보통 &lt;em&gt;PCF&lt;/em&gt; 를 사용하여 끝부분을 부드럽게 처리했으나, 태양광 처럼 길게 그림자를 만드는 경우가 있으면 끝 부분이 가면 갈수록 부드러워져야 한다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/tree_shadow.jpg&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;https://www.youtube.com/watch?v=Ax8G8P3tA28&quot;&gt;Youtube
-&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;태양 빛에의해 만들어진 나무의 그림자다. 짧은 길이의 그림자는 적당히 &lt;em&gt;PCF&lt;/em&gt; 로 대략 표현이 가능하나 이런 길은 그림자를 고정된 사이즈의 &lt;em&gt;PCF&lt;/em&gt; 로 표현하기엔 무리가 있다. 그래서 나온것이 &lt;em&gt;PCSS&lt;/em&gt; 다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;PCSS&lt;/em&gt; 를 보기전에, 우리가 알아야할 용어들이 있다. 바로 &lt;em&gt;Umbra&lt;/em&gt; 와 &lt;em&gt;Penumbra&lt;/em&gt; 다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/umbra_penumbra_antumbra.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;https://en.wikipedia.org/wiki/Umbra,_penumbra_and_antumbra&quot;&gt;Wikipedia : Umbra, penumbra and antumbra &lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Soft Shadow&lt;/em&gt; 가 표현하는 부드러운 부분의 그림자는 위 그림에서도 보이듯이 &lt;em&gt;Penumbra&lt;/em&gt; 라고 한다. &lt;em&gt;PCSS&lt;/em&gt; 에서는 부드러운 부분의 그림자를 &lt;em&gt;Penumbra&lt;/em&gt; 라고 한다. &lt;em&gt;PCSS&lt;/em&gt; 에서는 &lt;em&gt;Penumbra&lt;/em&gt; 의 크기를 사용하여 &lt;em&gt;PCF&lt;/em&gt; 의 샘플링 범위를 정해준다. 우선 &lt;em&gt;PCSS&lt;/em&gt; 의 &lt;em&gt;Penumbra&lt;/em&gt; 를 계산하는 방법을 보자.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/PCSS_PenumbraSizeEstimation.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;https://http.download.nvidia.com/developer/presentations/2005/SIGGRAPH/Percentage_Closer_Soft_Shadows.pdf&quot;&gt;Siggraph 2005 : Percentage-Closer Soft Shadows&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;맨위의 노란색으로 표시된 부분은 광원을 뜻하며, 일정한 범위로 빛을 비추는 &lt;em&gt;Area Light&lt;/em&gt; 로 가정한 후 계산한다. W - light 는 &lt;em&gt;Area Light&lt;/em&gt; 의 범위를 뜻한다. 중간에 있는 &lt;em&gt;Blocker&lt;/em&gt; 는 빛을 가리는 물체를 뜻하며, d blocker 는 가리는 물체와 빛과의 거리, d receiver 는 그림자가 비추는 물체와 광원 사이의 거리를 뜻한다. 그림자를 받는 부분과 빛을 가리는 물체와 광원을 서로 평행하다고 가정해서 계산한다. 2차원의 그림을 3차원으로 바꿔보자.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/PCSS_Scheme.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://developer.download.nvidia.com/shaderlibrary/docs/shadow_PCSS.pdf&quot;&gt;NVidia : Percentage-Closer Soft Shadows&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;보통 &lt;em&gt;Pixel Shader&lt;/em&gt; 에서 그림자의 비춘 정도를 계산하기 때문에 &lt;em&gt;Receiver&lt;/em&gt; 의 작은 부분을 기준으로 그림이 그려져 있다. 작은 부분을 기준으로 &lt;em&gt;Area Light&lt;/em&gt; 와의 &lt;em&gt;frustum&lt;/em&gt; 과 &lt;em&gt;Blocker&lt;/em&gt; 가 얼마나 충돌되는지 체크한다. 우리는 &lt;em&gt;Shadow Map&lt;/em&gt; 을 사용하기 때문에 아래 그림이 조금 더 실제 계산과 비슷하다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/PCSS_Scheme2.png&quot; alt=&quot;&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;http://developer.download.nvidia.com/shaderlibrary/docs/shadow_PCSS.pdf&quot;&gt;NVidia : Percentage-Closer Soft Shadows&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;그래서 &lt;em&gt;Shadow Map&lt;/em&gt; 의 빨간색으로 하이라이트 된 부분을 샘플링해 얼마나 가리고 있는지를 확인한다. 그러면 빛을 받는 정도를 알 수 있게 되는것이다. 해당 부분을 적당히 샘플링한 다음 평균을 구해서 &lt;em&gt;PCF&lt;/em&gt; 로 샘플링하는 범위를 계산한다. 계산하여 &lt;em&gt;PCF&lt;/em&gt; 에서 범위를 사용해 계산한다. 코드를 보면서 이해해보자.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;float&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;PCSS_Shadow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;float2&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;uv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;float&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;z&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;float2&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dz_duv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;float&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;zEye&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-	&lt;span class=&quot;c1&quot;&gt;// ------------------------&lt;/span&gt;
-	&lt;span class=&quot;c1&quot;&gt;// STEP 1: blocker search&lt;/span&gt;
-	&lt;span class=&quot;c1&quot;&gt;// ------------------------&lt;/span&gt;
-	&lt;span class=&quot;kt&quot;&gt;float&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;accumBlockerDepth&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	&lt;span class=&quot;kt&quot;&gt;float&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numBlockers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;float2&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;searchRegionRadiusUV&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SearchRegionRadiusUV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zEye&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;FindBlocker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;accumBlockerDepth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numBlockers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g_shadowMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;uv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;z&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dz_duv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;searchRegionRadiusUV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-	&lt;span class=&quot;c1&quot;&gt;// Early out if not in the penumbra&lt;/span&gt;
-	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numBlockers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-		&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numBlockers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BLOCKER_SEARCH_COUNT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-		&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-	&lt;span class=&quot;c1&quot;&gt;// ------------------------&lt;/span&gt;
-	&lt;span class=&quot;c1&quot;&gt;// STEP 2: penumbra size&lt;/span&gt;
-	&lt;span class=&quot;c1&quot;&gt;// ------------------------&lt;/span&gt;
-	&lt;span class=&quot;kt&quot;&gt;float&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;avgBlockerDepth&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;accumBlockerDepth&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numBlockers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	&lt;span class=&quot;kt&quot;&gt;float&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;avgBlockerDepthWorld&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ZClipToZEye&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;avgBlockerDepth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;float2&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;penumbraRadiusUV&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PenumbraRadiusUV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zEye&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;avgBlockerDepthWorld&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;float2&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;filterRadiusUV&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ProjectToLightUV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;penumbraRadiusUV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;zEye&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-	&lt;span class=&quot;c1&quot;&gt;// ------------------------&lt;/span&gt;
-	&lt;span class=&quot;c1&quot;&gt;// STEP 3: filtering&lt;/span&gt;
-	&lt;span class=&quot;c1&quot;&gt;// ------------------------&lt;/span&gt;
-	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PCF_Filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;uv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;z&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dz_duv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;filterRadiusUV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;center&gt;출처 : &lt;a href=&quot;https://github.com/NVIDIAGameWorks/D3DSamples&quot;&gt;Github NVIDIAGameWorks : D3DSamples&lt;/a&gt;
-&lt;/center&gt;
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
-&lt;p&gt;해당 픽셀이 어두워지는 정도를 반환하는 &lt;em&gt;PCSS&lt;/em&gt; 계산 함수다. 코드의 주석에서는 계산을 세단계로 나눈다. 첫번째로는 &lt;em&gt;Shadow Map&lt;/em&gt; 을 샘플링해서 얼마나 빛이 얼마나 가려지는지 계산한다. 이를 &lt;em&gt;STEP 1: blocker search&lt;/em&gt; 라고 표기해놓았고, 두번째는 &lt;em&gt;PCF&lt;/em&gt; 에서 샘플링할 범위를 결정하는 넓이를 계산한다. 이를 &lt;em&gt;STEP 2: penumbra size&lt;/em&gt; 라고 한다. 세번째로는 &lt;em&gt;PCF&lt;/em&gt; 를 계산해서 가려지는 정도를 반환한다. 자세한 코드는 출처에서 &lt;em&gt;SoftShadows&lt;/em&gt; 항목을 들어가면 볼 수 있다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;PCSS&lt;/em&gt; 의 장점은 아무래도 확실한 &lt;em&gt;Soft Shadow&lt;/em&gt; 를 구현했다는 점이다. 비록 대략적으로 가정한 부분이 많지만 장면별로 잘 맞춰주기만 한다면 괜찮은 결과가 나올것 같다. 하지만 샘플링 횟수가 꽤나 된다. &lt;em&gt;PCF&lt;/em&gt; 만 하더라도 가볍지는 않은 편인데, &lt;em&gt;Blocker&lt;/em&gt; 를 계산하느라 더 많이 샘플링을 한다. 하지만 잘 만들어진 게임과 요즘의 GPU 에서는 아주 큰 오버헤드는 없는걸로 보인다. (&lt;a href=&quot;https://www.reddit.com/r/nvidia/comments/49idz3/nvidia_hfts_the_division/&quot;&gt;Redit : Nvidia HFTS (The Division)&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2&gt;참조&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://http.download.nvidia.com/developer/presentations/2005/SIGGRAPH/Percentage_Closer_Soft_Shadows.pdf&quot;&gt;Siggraph 2005 : Percentage-Closer Soft Shadows&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://developer.download.nvidia.com/shaderlibrary/docs/shadow_PCSS.pdf&quot;&gt;NVidia : Percentage-Closer Soft Shadows&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/NVIDIAGameWorks/D3DSamples&quot;&gt;Github NVidiaGameWorks : D3DSample&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content>
-
-      
-      
-      
-      
-      
-
-      
-        <author>
-            <name>Su-Hyeok Kim</name>
-          
-          
-        </author>
-      
-
-      
-        <category term="shader" />
-      
-        <category term="shadow" />
-      
-        <category term="rendering" />
-      
-        <category term="pcss" />
-      
-
-      
-
-      
-        <summary type="html">Shadow Map Filtering 에서 PCF 와 VSM 에 대하여 간단히 알아보았다. 이번 글에서 설명할 것은 PCF 를 활용한 PCSS 다. PCSS 는 Soft Shadow 를 구현하는 기법 중 하나로써 2005년에 발표되어 여태까지도 꽤나 알려진 기법이다. 우선 Soft Shadow 가 무엇인지 알아보자.</summary>
       
 
       

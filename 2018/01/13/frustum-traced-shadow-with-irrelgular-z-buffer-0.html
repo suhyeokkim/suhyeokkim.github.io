@@ -16,10 +16,10 @@
   
 
   <link rel="stylesheet" href="/assets/main.css">
-  <link rel="canonical" href="https://suhyeokim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0">
+  <link rel="canonical" href="https://suhyeokkim.github.io/2018/01/13/frustum-traced-shadow-with-irrelgular-z-buffer-0">
   
   
-  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://suhyeokim.github.io/feed.xml">
+  <link rel="alternate" type="application/rss+xml" title="Appocrypha" href="https://suhyeokkim.github.io/feed.xml">
 
   <meta name="google-site-verification" content="o3-a11YI0ZIYwUdcikrWBRObGOUHzk89IJF7CX0ieQk" />
 
@@ -124,6 +124,8 @@
   
     
       <a href="/categories/shader/">shader</a>,
+    
+  
     
   
     
@@ -311,6 +313,8 @@
   
     
   
+    
+  
 
   
   
@@ -336,6 +340,8 @@
   
     
       <a href="/categories/rendering/">rendering</a>,
+    
+  
     
   
     
@@ -529,6 +535,8 @@
   
     
   
+    
+  
 
 </p>
   </header>
@@ -573,7 +581,7 @@
 </center>
 <p><br /></p>
 
-<p>간단하게 이런식으로 <em>IZB</em> 가 구성되는 것을 알 수 있다. 이제 <em>Geometry</em> 와 비교하는 <em>Visibility Test</em> 가 필요하다. 일반적인 <em>Shadow Mapping</em> 의 <em>Visibility Test</em> 와는 조금 다르다. 기존의 <em>Shadow Mapping</em> 은 정점을 <em>Light-Space</em> 로 바꾸어 <em>Z</em> 값을 비교하여 <em>Visibility Test</em> 를 한다. 하지만 이 기법에서의 <em>Visibility Test</em> 는 다르다. 위에서 언급한 것과 같이 <em>IZB</em> 를 만든다. 그 다음 <em>Occlluder Geometry</em> 들을 <em>Light-Space</em> 를 기준으로 <em>Conservative Rasterization</em> 을 해준다.<sup id="fnref:C1" role="doc-noteref"><a href="#fn:C1" class="footnote" rel="footnote">1</a></sup> 그렇게 나온 결과를 통해 <em>IZB</em> 와 함께 <em>Visibility Test</em> 를 한다. <em>Conservative Rasterization</em> 의 결과는 거의 <em>Flag</em> 로 사용될것으로 예측되고, <em>Eye-Space</em> 픽셀의 그림자 계산은 복잡한 계산을 통해 구한다. 아래는 논문에 있던 <em>IZB</em> 를 기준으로 쓰여진 수도 코드다.</p>
+<p>간단하게 이런식으로 <em>IZB</em> 가 구성되는 것을 알 수 있다. 이제 <em>Geometry</em> 와 비교하는 <em>Visibility Test</em> 가 필요하다. 일반적인 <em>Shadow Mapping</em> 의 <em>Visibility Test</em> 와는 조금 다르다. 기존의 <em>Shadow Mapping</em> 은 정점을 <em>Light-Space</em> 로 바꾸어 <em>Z</em> 값을 비교하여 <em>Visibility Test</em> 를 한다. 하지만 이 기법에서의 <em>Visibility Test</em> 는 다르다. 위에서 언급한 것과 같이 <em>IZB</em> 를 만든다. 그 다음 <em>Occlluder Geometry</em> 들을 <em>Light-Space</em> 를 기준으로 <em>Conservative Rasterization</em> 을 해준다.<sup id="fnref:C1" role="doc-noteref"><a href="#fn:C1" class="footnote">1</a></sup> 그렇게 나온 결과를 통해 <em>IZB</em> 와 함께 <em>Visibility Test</em> 를 한다. <em>Conservative Rasterization</em> 의 결과는 거의 <em>Flag</em> 로 사용될것으로 예측되고, <em>Eye-Space</em> 픽셀의 그림자 계산은 복잡한 계산을 통해 구한다. 아래는 논문에 있던 <em>IZB</em> 를 기준으로 쓰여진 수도 코드다.</p>
 
 <p><br /></p>
 
@@ -627,9 +635,9 @@ end for
 
 <p>또한 그림자를 멀티샘플링 하기 위해서는 여기서 언급한 <em>Shadow Volume</em> 의 <em>Shadow Plane</em> 들을 이용한다고 한다.</p>
 
-<p>마지막으로 <em>Visibility Computation</em> 이 남아있다. 이 부분의 대략적인 것은 위에서 언급했다. 자세한 계산방식을 말해보겠다. 위에서 언급한 <em>μQuad</em> 와 <em>Shadow Plane</em> 사용해서 해당 폴리곤들의 데이터 누적을 위해서는 <em>μQuad</em> 에서 이산화된 <em>binary</em> 샘플링이 필요하다. 논문의 저자는 32 번의 <em>Halton sampling</em><sup id="fnref:C2" role="doc-noteref"><a href="#fn:C2" class="footnote" rel="footnote">2</a></sup> 을 사용했다고 한다.</p>
+<p>마지막으로 <em>Visibility Computation</em> 이 남아있다. 이 부분의 대략적인 것은 위에서 언급했다. 자세한 계산방식을 말해보겠다. 위에서 언급한 <em>μQuad</em> 와 <em>Shadow Plane</em> 사용해서 해당 폴리곤들의 데이터 누적을 위해서는 <em>μQuad</em> 에서 이산화된 <em>binary</em> 샘플링이 필요하다. 논문의 저자는 32 번의 <em>Halton sampling</em><sup id="fnref:C2" role="doc-noteref"><a href="#fn:C2" class="footnote">2</a></sup> 을 사용했다고 한다.</p>
 
-<p>가시성을 계산하기 위해서는 <em>Shadow Plane</em> 을 <em>μQuad</em> 에 <em>Projection</em> 해줘야 한다. 그러면 <em>μQuad</em> 는 최대 3개의 <em>line</em> 을 얻게 된다. 논문에서는 이 <em>line</em> 을 <em>μQuad</em> 를 기준으로 극좌표계<sup id="fnref:C3" role="doc-noteref"><a href="#fn:C3" class="footnote" rel="footnote">3</a></sup> 데이터로 저장한다고 한다. 반지름과 각도가 5bit 크기로 저장된다. 해당 10bit 데이터를 사용하여 미리 계산된 테이블에서 32개의 이진 가시성 샘플을 가져온다. 결과와  bit 단위의 and 연산을 통해 <em>μQuad</em> 의 가시성을 계산할 수 있다고 한다.</p>
+<p>가시성을 계산하기 위해서는 <em>Shadow Plane</em> 을 <em>μQuad</em> 에 <em>Projection</em> 해줘야 한다. 그러면 <em>μQuad</em> 는 최대 3개의 <em>line</em> 을 얻게 된다. 논문에서는 이 <em>line</em> 을 <em>μQuad</em> 를 기준으로 극좌표계<sup id="fnref:C3" role="doc-noteref"><a href="#fn:C3" class="footnote">3</a></sup> 데이터로 저장한다고 한다. 반지름과 각도가 5bit 크기로 저장된다. 해당 10bit 데이터를 사용하여 미리 계산된 테이블에서 32개의 이진 가시성 샘플을 가져온다. 결과와  bit 단위의 and 연산을 통해 <em>μQuad</em> 의 가시성을 계산할 수 있다고 한다.</p>
 
 <p>해당 기법을 고안한 사람은 두가지의 아이디어 : <em>Irregular Z-Buffer</em> 와 <em>frustum-Triangle Test</em> 를 통해  <em>Sub-pixel Hard Shadow</em> 의 이론을 만들었다. 하지만 이 아이디어들과 구현을 위한 노력의 차이는 꽤 큰듯하다. 논문을 보면 아이디어에 대한 텍스트보다 최적화를 위한 텍스트가 2배가 될정도로 많다. 다음 글에서는 논문에서 나온 전체 과정과 디테일한 구현 사항에 대해 적어보겠다.</p>
       <h2>
@@ -714,7 +722,7 @@ s.setAttribute('data-timestamp', +new Date());
       
 
 Content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a><br />
-&copy; 2015&ndash;2021 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://suhyeokim.github.io/feed.xml">RSS</a>
+&copy; 2015&ndash;2022 - <a href="/about/">Su-Hyeok Kim</a> - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://suhyeokkim.github.io/feed.xml">RSS</a>
 
     </p>
 
