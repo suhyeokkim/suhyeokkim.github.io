@@ -14,5 +14,5 @@ permalink: /about/
 
 # Su-Hyeok Kim
 
- - [Github](https://github.com/hrmrzizon)
- - [LinkedIn](https://www.linkedin.com/in/%EC%88%98%ED%98%81-%EA%B9%80-3b502413b/)
+ - [Github](https://github.com/suhyeokkim)
+ - [LinkedIn](https://www.linkedin.com/in/su-hyeok-kim-3b502413b/)
