@@ -1,7 +1,10 @@
+# clean up prev local data
+rm -r -f _site
+
 # setting site info for git setting
 git clone -b master --depth 1 "https://github.com/suhyeokkim/suhyeokkim.github.io.git" _site
 
-# clean up data
+# clean up prev repo data
 rm -r _site/*
 
 # build in "_site" directory
