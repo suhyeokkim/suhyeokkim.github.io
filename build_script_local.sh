@@ -10,14 +10,16 @@ rm -r _site/*
 # build in "_site" directory
 bundle exec jekyll build
 
-# move to _site & commit/push
-cd _site
-git add -A
-git commit -m "local update at $(date -u +'%Y-%m-%d %H:%M:%S %Z')"
-git push origin master
+if [ -d "_site" ]; then 
+    # move to _site & commit/push
+    cd _site
+    git add -A
+    git commit -m "local update at $(date -u +'%Y-%m-%d %H:%M:%S %Z')"
+    git push origin master
 
-# remove git
-rm -r -f ./.git
+    # remove git
+    rm -r -f ./.git
 
-# recover origin path
-cd ../
+    # recover origin path
+    cd ../
+fi
