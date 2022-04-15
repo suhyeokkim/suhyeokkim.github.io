@@ -43,7 +43,7 @@ plugins:
   - jekyll-paginate
   - jekyll-redirect-from
   - jekyll-sitemap
-  - jekyll-youtube
+  - jekyll-spaceship
   - kramdown-parser-gfm
 
 # Build settings

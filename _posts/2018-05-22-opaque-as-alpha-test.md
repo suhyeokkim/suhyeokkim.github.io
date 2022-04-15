@@ -123,7 +123,8 @@ _pixScale_ 을 그냥 계산하는 대신, _discretize_ 된 두개의 스케일�
 
 자세한 사항은 논문에서 확인할 수 있다([[Cwyman17]](http://cwyman.org/papers/tvcg17_hashedAlphaExtended.pdf)). 결과는 아래 유튜브 영상에서 확인할 수 있다.
 
-{% youtube "https://www.youtube.com/watch?v=p4TYf5DDpbQ" %}
+![](https://www.youtube.com/watch?v=p4TYf5DDpbQ)
+
 
 이를 통해 전보다 훨씬 나은 _Alpha Test_ 품질을 얻을 수 있게 되었다. 하지만 _Hashed Alpha Testing_ 의 결과는 _Stochastic Test_ 처럼 픽셀이 흩뿌려진 느낌을 지울 수 없다. 어느정도의 랜덤값에서 생성이되니 이는 어쩔 수 없는 결과다.
 
@@ -185,7 +186,7 @@ _Alpha Pyramid_ 는 순서대로 텍스쳐의 층을 쌓은 후 최상층에서 
 
 방법만 봐도 여러가지 이유로 _Alpha Pyramid_ 이 _Error Diffusion_ 보다는 더 나은 _Alpha Test_ 를 제공할 것 같다는 생각이 든다. 논문에서도 실제로 더 나은 품질을 보여준다고 한다.
 
-{% youtube "https://www.youtube.com/watch?v=cjHfPi9lQik" %}
+![]("https://www.youtube.com/watch?v=cjHfPi9lQik")
 
 절대적으로 좋은 결과를 내게하는 방법은 없다. _Alpha Distribution_ 역시 단점을 가지고 있다. 미리 처리를 하기 때문에 이미지가 고정되어 타일링처럼 보일 수가 있다. 또한 확대시 아무것도 처리하지 않고, _Bilinear Filtering_ 만 걸은 것보다 안좋은 결과를 보여줄 수도 있다.
 

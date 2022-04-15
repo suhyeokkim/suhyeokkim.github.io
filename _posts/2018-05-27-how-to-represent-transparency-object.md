@@ -119,7 +119,7 @@ _WBOIT_ 또한 단점이 몇가지 존재한다. 첫번째로 불투명한 물�
 
 하지만 위의 단점은 충분히 안고갈만한 단점이기 때문에 투명한 물체를 그릴 때는 _Weighted Blended OIT_ 가 가장 나은 방법이라고 본다. 아래 _Alpha Blend, Detph Peeling, _Weighted Blended OIT_ 이 세가지 방법에 대한 비교 영상이 있다.
 
-{% youtube "https://www.youtube.com/watch?v=JVa9xXddgbM" %}
+![]("https://www.youtube.com/watch?v=JVa9xXddgbM")
 
 위에서 언급한 [Rendering Technology in 'Agents of Mayhem'](https://www.dsvolition.com/publications/rendering-technology-in-agents-of-mayhem/) PT 에서는 기존의 _WBOIT_ 에서 _Emmisive_ 한 물체를 위해 추가적인 화면 해상도에 비례하는 버퍼를 사용하여 빛나는 투명 물체를 표현하는 방법을 서술해놓았다. 또한 해당 논문의 저자가 1년전에 고안한 [_Phenomenological Transparency_](https://www.youtube.com/watch?v=jWe5Ae22Ffs&t=555s) 라는 방법도 있다.
 
