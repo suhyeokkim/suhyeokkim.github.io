@@ -1,11 +1,10 @@
 source 'https://rubygems.org'
 
 gem 'jekyll'
-gem 'jekyll-whiteglass'
 gem 'jekyll-gist'
 gem 'jekyll-redirect-from'
 gem 'jekyll-sitemap'
-gem 'jekyll-youtube'
+gem 'jekyll-spaceship'
 gem 'kramdown-parser-gfm'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
