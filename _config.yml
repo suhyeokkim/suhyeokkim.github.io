@@ -19,7 +19,6 @@ description: store limitless knowledges
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://suhyeokkim.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 lang: ko
-theme: jekyll-whiteglass
 timezone: UTC
 exclude:
   - Gemfile
