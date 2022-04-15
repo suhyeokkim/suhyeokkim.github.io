@@ -12,6 +12,8 @@ permalink: /about/
 
 대부분의 내용들이 누구의 도움없이 독학한 내용이므로 내용의 오류가 있을 수 있습니다. 오류에 대한 명시적인 지적을 해주시면 감사하겠습니다.
 
+1234
+
 # Su-Hyeok Kim
 
  - [Github](https://github.com/suhyeokkim)
