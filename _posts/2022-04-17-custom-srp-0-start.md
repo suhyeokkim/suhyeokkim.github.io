@@ -7,9 +7,7 @@ categories:
   - srp
 ---
 
-# step by step : SRP
-
-## 당위
+# 당위
 
 srp 의 첫 등장은 unity 2018 이였고, 현재 글 작성 시점에선 시간이 꽤 많이 흘렀다. 처음에는 수많은 버그가 예측되어 잘 사용하지 않지만, 지금은 시간이 꽤나 흘러 프로덕션에의 도입도 고려해볼 법 하다. 수많은 [버그 픽스]({{ site.baseurl }}{% post_url 2022-04-11-unity-core-rp-changelog-unique %})를 통해 어느 정도 안정되었을 것 같다? 라고 생각한다. 아직은 어떤 프로덕트에서 쓰였다는 소식은 듣지 못했지만, 추후 사용을 위해 간단하게 접근해본다.
 
@@ -19,9 +17,9 @@ srp 의 첫 등장은 unity 2018 이였고, 현재 글 작성 시점에선 시�
 
 <!-- more -->
 
-## 시작
+# 시작
 
-### 프로젝트 세팅
+## 프로젝트 세팅
 
 Unity 의 pre-buitld srp 는 사용하지 않으므로, 이를 제외한 아무 프로젝트나 만든다.
 
@@ -53,7 +51,7 @@ public sealed class S0RenderPipelineAsset : RenderPipelineAsset
 ![create rp assets](/images/step-0-create-rp-assets.PNG)
 ![empty scene](/images/step-0-empty-scene.PNG)
 
-### Render Pipeline
+## Render Pipeline
 
 이제 본격적으로 `Render Pipline` 코딩을 해보자. `UnityEngine.Rendering.RenderPipeline` 을 상속받아 `Render` 메소드를 구현하자. 시작은 간단하게 스카이박스만 뿌린다.
 
@@ -132,7 +130,7 @@ protected override void Render(ScriptableRenderContext context, Camera[] cameras
 
 [저장소](https://github.com/suhyeokkim/CustomSRPPractice/tree/step-0)에서 연관 소스를 받을 수 있다. 블로그의 글과는 구조가 약간 다르다. 컨텍스트/렌더러 를 아예 나누고, 연관 CommandBuffer 를 미리 할당해두었다.
 
-## 참조 문서
+# 참조 문서
 
 - [CHANGELOG : com.unity.render-pipelines.core@14.0](https://docs.unity3d.com/Packages/com.unity.render-pipelines.core@14.0/changelog/CHANGELOG.html)
 - [catlikecoding : Custom Pipeline](https://catlikecoding.com/unity/tutorials/scriptable-render-pipeline/custom-pipeline/)
