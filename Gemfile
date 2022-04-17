@@ -2,8 +2,10 @@ source 'https://rubygems.org'
 
 gem 'jekyll'
 gem 'jekyll-gist'
+gem 'jekyll-archives'
 gem 'jekyll-redirect-from'
 gem 'jekyll-sitemap'
+gem 'jekyll-paginate'
 gem 'jekyll-spaceship'
 gem 'kramdown-parser-gfm'
 
