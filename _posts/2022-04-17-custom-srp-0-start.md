@@ -21,7 +21,7 @@ srp 의 첫 등장은 unity 2018 이였고, 현재 글 작성 시점에선 시�
 
 ## 프로젝트 세팅
 
-Unity 의 pre-buitld srp 는 사용하지 않으므로, 이를 제외한 아무 프로젝트나 만든다.
+Unity 의 pre-buitled srp 는 사용하지 않으므로, 이를 제외한 아무 프로젝트나 만든다.
 
 ![create project](/images/step-0-create-project.PNG)
 
@@ -29,7 +29,7 @@ _Core RP_ 라이브러리를 설치해준다. _Windwos -> Package Manager_ 에�
 
 ![install core rp](/images/step-0-install-core-rp.PNG)
 
-_ProjectSettings -> Graphics_ 에 들어가면 나오느 비어있는 _render pipeline assets_ 에다가 `ScriptableObject` 기반인 `RenderPipelineAssets` 를 만들어 넣어주면 된다. 빌트인으로 만들어서 아무것도 없다.
+_ProjectSettings -> Graphics_ 에 들어가면 나온 비어있는 _render pipeline assets_ 에다가 `ScriptableObject` 기반인 `RenderPipelineAssets` 를 만들어 넣어주면 된다. 빌트인으로 만들어서 아무것도 없다.
 
 ![graphics settings empty](/images/step-0-graphics-settings-empty.PNG)
 
@@ -53,7 +53,7 @@ public sealed class S0RenderPipelineAsset : RenderPipelineAsset
 
 ## Render Pipeline
 
-이제 본격적으로 `Render Pipline` 코딩을 해보자. `UnityEngine.Rendering.RenderPipeline` 을 상속받아 `Render` 메소드를 구현하자. 시작은 간단하게 스카이박스만 뿌린다.
+이제 본격적으로 `Render Pipline` 코딩을 하기 위해 `UnityEngine.Rendering.RenderPipeline` 을 상속받아 `Render` 메소드를 구현하자. 시작은 간단하게 스카이박스만 뿌린다.
 
 ``` csharp
 [CreateAssetMenu]
@@ -84,7 +84,7 @@ public class S0RenderPipeline : RenderPipeline
 }
 ```
 
-`RenderPipeline.Render` 는 넘겨준 context 와 전체 활성화된 카메라를 준다. 이를 활용해 렌더링을 하면되고, skybox 만 그려주었다. `SetupCameraProperties` 에선 카메라의 회전을 포함한 인자를 세팅하고, `DrawSkybox` 에선 스카이박스 렌더링 세팅을 한다. 그리고 마지막에 세팅된 모든 것들을 `Submit` 한다. 아마 실질적인 렌더링은 여기서 이루어지는 것 같다. 이러한 구조는 DX12 나 Vulkan 에서 아이디어를 얻은 것으로 보인다. 이전부터 지원하던 `CommandBuffer` 의 확장판 같다.
+`RenderPipeline.Render` 는 넘겨준 context 와 전체 활성화된 카메라를 준다. 여기선 이를 활용해 skybox 만 그려주었다. `SetupCameraProperties` 에선 카메라의 회전을 포함한 인자를 세팅하고, `DrawSkybox` 에선 스카이박스 렌더링 세팅을 한다. 그리고 마지막에 세팅된 모든 것들을 `Submit` 한다. 아마 실질적인 렌더링은 여기서 이루어지는 것 같다. 이러한 구조는 DX12 나 Vulkan 에서 아이디어를 얻은 것으로 보인다. 이전부터 지원하던 `CommandBuffer` 의 확장판 같다.
 
 이제 오브젝트를 그려보자. `Scene` 에 기본으로 생성 가능한 오브젝트를 만들고, 코드를 아래처럼 고친다.
 
@@ -118,13 +118,15 @@ protected override void Render(ScriptableRenderContext context, Camera[] cameras
 
 추가된 코드의 절차는 다음과 같다.
 
-1. 컬링하기
-2. 카메라 기준으로 소팅하기
-3. 어떤 태그의 메터리얼을 그릴지, 소팅은 어떻게 할지 결정하기
-4. 어떤 RenderQueue 를 그릴지 필터링 하기
+1. 컬링하기 : frustum culling / umbra occlusion culling
+2. 카메라 소팅 설정 가져오기
+3. 어떤 태그의 메터리얼을 그릴지(`FORWARDBASE`), 소팅할 방법 설정
+4. 어떤 RenderQueue 를 그릴지 필터링 설정 가져오기
 5. 위 정보를 기반으로 MeshRenderer/SkinnedMeshRenderer 그리기
 
-그러면 아래와 같이 cube 들이 나온다. `FORWARDBASE` 는 Standard 쉐이더의 일부다.
+그러면 간단하게 아래와 같이 cube 들이 나온다. 간단하게 그릴 것만 그려서 처리가 안된 것들이 많다. 이는 다음 포스팅에서 다룬다.
+
+\+ `RenderQueueRange.all` 는 유니티에서 설정한 수치 설정 범위이고, `FORWARDBASE` 는 Standard 쉐이더에서 붙루명 오브젝트를 렌더링하기 위한 variant 이다.
 
 ![render standard cube](/images/step-0-render-standard-cube.PNG)
 
