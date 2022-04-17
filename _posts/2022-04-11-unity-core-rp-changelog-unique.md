@@ -11,6 +11,8 @@ categories:
 
 - [마지막 참조 : com.unity.render-pipelines.core@14.0](https://docs.unity3d.com/Packages/com.unity.render-pipelines.core@14.0/changelog/CHANGELOG.html)
 
+<!-- more -->
+
 # 2020
 
 ## [10.1.0] - 2020-10-12
