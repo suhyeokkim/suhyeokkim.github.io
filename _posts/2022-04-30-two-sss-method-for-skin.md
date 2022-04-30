@@ -140,14 +140,14 @@ _pcf_/_vsm_ 같은 끝을 부드럽게하는 방법에 기초한다. 이들은 �
 
 두가지 피부 표현을 위한 _sss_ 방법을 알아보았다. _Efficient Rendering of Human Skin_ 은 너무 많이 언급되어서 확인할 필요성을 느꼈었다. 내용이 풍부해서 처음 보기엔 너무 많긴 하다. 하지만 실용적인 방법만 있는게 아니라서 여러모로 처음 참고하기 좋았다. _Pre-Integrated Skin Shading_ 은 조금 더 실용적이라는 소리를 듣고 알아보았다. 모바일/VR 의 경우에는 확실히 _Pre-Integrated Skin Shading_ 를 사용할 수 있겠다는 생각이 들었다. 또한 _deferred rendering_ 기반에서도 _framebuffer_ 자원을 아껴야 한다면 고려해봄직 하다는 생각이 들었다.
  
-## 참조
+# 참조
 
 - [MJP Blog : An Introduction To Real-Time Subsurface Scattering](https://therealmjp.github.io/posts/sss-intro/)
 - [Eugene d’Eon, David Luebke, and Eric Enderton : Efficient Rendering of Human Skin](http://www.eugenedeon.com/wp-content/uploads/2014/04/efficientskin.pdf)
 - [GPU Gems 3 : Chapter 14. Advanced Techniques for Realistic Real-Time Skin Rendering](https://developer.nvidia.com/gpugems/gpugems3/part-iii-rendering/chapter-14-advanced-techniques-realistic-real-time-skin)
 - [Sigraph 2011, Eric Penner : Pre-Integrated Skin Rendering](https://advances.realtimerendering.com/s2011/Penner%20-%20Pre-Integrated%20Skin%20Rendering%20(Siggraph%202011%20Advances%20in%20Real-Time%20Rendering%20Course).pptx)
 
-## 각주
+# 각주
 
 [^1]: 물론 diffuse 가 polarized 된 경우만 고려하는 경우도 있다. 이 글에선 _sss_ 에 관점을 맞추어 표현했다.
 [^2]: incident light function 과 convolution 하기 위한 specular lobe 때문에 표현을 둘러서 했다.
