@@ -114,7 +114,7 @@ public void OnProcessShader(Shader shader, ShaderSnippetData snippet, IList<Shad
 
 일반적으로는 예제 코드처럼 단순히 사용하지 않는 기능을 제외하는 방법을 사용하는게 제일 쉽다. 다만 키워드가 어떤 역할을 하는지 확인 후 사용을 해야한다. 이조차도 부족하다면 프로젝트 리소스에서 사용하지 않는 _shader variants_ 를 찾아내어 제거하는 것도 좋다. 특히 프로젝트의 리소스 자체가 적다면 맨 처음에는 많은 효과를 얻을 수 있다. 다만 빌드 후 결정되는 키워드를 정확히 알아야 실수를 방지할 수 있다.
 
-_shader varaints_ 를 줄이는 세가지 방법을 살펴보았다. 결국 메모리 vs 성능 문제의 연장선상이기 때문에, `#pragma multi_compile` 을 적절히 사용하는게 중요할 듯
+_shader varaints_ 를 줄이는 세가지 방법을 살펴보았다.
 
 # 참조
 
