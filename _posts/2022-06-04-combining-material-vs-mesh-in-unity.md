@@ -98,9 +98,10 @@ https://docs.unity3d.com/2022.1/Documentation/Manual/dots-instancing-shaders.htm
 
 # 참조
 
-- [Draw call batching](https://docs.unity3d.com/2019.4/Documentation/Manual/DrawCallBatching.html)
-- [GPU Instancing](https://docs.unity3d.com/2019.4/Documentation/Manual/GPUInstancing.html)
+- [Unity Manual : Draw call batching](https://docs.unity3d.com/2019.4/Documentation/Manual/DrawCallBatching.html)
+- [Unity Manual : GPU Instancing](https://docs.unity3d.com/2019.4/Documentation/Manual/GPUInstancing.html)
 - [Unity Forum : How static batching works?](https://answers.unity.com/questions/593206/how-static-batching-works.html)
+
 <!--
 - https://docs.unity3d.com/Manual/SRPBatcher.html
 - https://forum.unity.com/threads/srp-batcher-and-gpu-instancing.833362/
